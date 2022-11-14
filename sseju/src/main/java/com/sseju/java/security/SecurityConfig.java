@@ -41,14 +41,14 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((requests) -> 
 							requests
-							.antMatchers("/", "/login", "/dashboard").permitAll()
+							.antMatchers("/", "/login", "/accountform").permitAll()
 							.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
 							.anyRequest().authenticated())
 				.formLogin().loginPage("/login")
 							.usernameParameter("userId")
 							.loginProcessingUrl("/login")
 							.successHandler(successHandler())
-							.defaultSuccessUrl("/dashboard")
+//							.defaultSuccessUrl("/dashboard")
 							.and()
 				.logout().logoutUrl("/logout")
 					      .logoutSuccessUrl("/login")
@@ -61,7 +61,7 @@ public class SecurityConfig {
 				// .csrf().disable()
 			    // .userDetailsService(userService());
 					     ;
-
+		
 		return http.build();
 	}
 
@@ -74,8 +74,8 @@ public class SecurityConfig {
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		String loginSql = "select EMP_ID, PASSWORD, 1 from EMPLOYEE where EMP_ID = ?";
-		String authSql = "select EMP_ID, EMP_AUTH from EMPLOYEE where EMP_ID = ?";		
+		String loginSql = "select ID, PASSWORD, 1 from LOGIN where ID = ?";
+		String authSql = "select ID, AUTH from LOGIN where ID = ?";		
 		auth.jdbcAuthentication()
 		    .dataSource(dataSource)
 		    .usersByUsernameQuery(loginSql)

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layout}">
+
+<head>
+   <meta charset="UTF-8">
+   <title>eqmList</title>
+
+<style>
+	body {
+  	margin-top: 60px;
+  	padding: 20px 30px;
+  	transition: all 0.3s;
+	}
+</style>
+</head>
+
+<body>
+<br>
+
+   <div layout:fragment="content" class="container">
+      <div class="row">
+               <h4>설비정보 관리</h4>
+               &nbsp;&nbsp;
+               <button type="button" style="width: 160px; background-color: black; color:white"
+                  data-bs-toggle="modal" data-bs-target="#noOrderModal">미지시 계획 조회</button>
+      </div>
+      <div class="row">
+         <div id="lineGrid" class="col-4">
+            라인정보
+         </div>
+         <div id="eqmGrid"class="col-8">
+           <h3>설비정보</h3>           
+          <div class="row">
+           	<div class="col">
+            	<label for="eqmCode">설비코드</label></div>
+            	<div class="col">
+           		<input type="text" id="eqmCode" name="eqmCode">
+           		</div>
+           	<div class="col">
+           		<label for="eqmName">설비명</label>
+           		<div class="col">
+           		<input type="text" id="eqmName" name="eqmName">
+           		</div>
+           	</div>
+           </div>
+         </div>
+      </div>
+      
+<!-- 미지시 계획 조회 모달 -->
+   <div class="modal fade" id="noOrderModal" tabindex="-1" aria-labelledby="noOrderModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="noOrderModalLabel">미지시 생산계획 목록</h5>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+               <div>
+                  <div id="modalGrid" style="width: 100%;"></div>
+               </div>
+            </div>
+
+         </div>
+      </div>
+   </div>
+   <script>
+      // toast - grid
+      var lineGrid = new tui.Grid({
+         el: document.getElementById('lineGrid'),
+         // 임시 데이터
+         data: [{
+            boardNum: '1',
+            planCode: 'pro_123456',
+            planName: '얇은피 김치만두200',
+            planDCode: 'prod_123456',
+            productName: '얇은피 김치만두',
+            planAmt: '300',
+            prio: '1',
+            days: '2',
+            status: '지시완료'
+         }],
+         // data 가져오는 법
+         // data: {
+         //    api: {
+         //       readData: {
+         //          url: '/api/readData',
+         //          method: 'GET'
+         //       }
+         //    }
+         // },
+         scrollX: false,
+         scrollY: false,
+         // rowHeaders: ['checkbox'],
+         // columnOptions: {
+         //    minWidth: 180
+         // },
+         columns: [{
+               header: 'No',
+               name: 'boardNum',
+               width: 'auto'
+            },
+            {
+               header: '생산계획코드',
+               name: 'planCode',
+            },
+            {
+               header: '계획명',
+               name: 'planName'
+            },
+            {
+               header: '상세계획코드',
+               name: 'planDCode'
+            },
+            {
+               header: '제품명',
+               name: 'productName',
+            },
+            {
+               header: '계획량',
+               name: 'planAmt',
+            },
+            {
+               header: '작업우선순위',
+               name: 'prio',
+            },
+            {
+               header: '생산일수',
+               name: 'days',
+            },
+            {
+               header: '진행구분',
+               name: 'status',
+            },
+         ]
+      });
+   </script>
+
+   
+
+   <script>
+      var eqmGrid = new tui.Grid({
+         el: document.getElementById('eqmGrid'),
+         // 임시 데이터
+         data: [{
+            boardNum: '1',
+            planCode: 'pro_123456',
+            planName: '얇은피 김치만두 200',
+            planDCode: 'pro_123456',
+            productName: '얇은피 김치만두'
+         }],
+         // data 가져오는 법
+         // data: {
+         //    api: {
+         //       readData: {
+         //          url: '/api/readData',
+         //          method: 'GET'
+         //       }
+         //    }
+         // },
+         scrollX: false,
+         scrollY: false,
+         columns: [{
+               header: 'No',
+               name: 'boardNum',
+            },
+            {
+               header: '계획코드',
+               name: 'planCode',
+            },
+            {
+               header: '계획명',
+               name: 'planName', //납기일자명 수정
+            },
+            {
+               header: '상세계획코드',
+               name: 'planDCode'
+            },
+            {
+               header: '제품명',
+               name: 'productName'
+            }
+         ]
+      });
+   </script>
+   
+   </div>
+<!-- 본문 끝 -->
+
+</body>
+
+</html>
