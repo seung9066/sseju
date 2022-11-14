@@ -36,3 +36,4 @@ build/
 /maven-wrapper.jar
 /maven-wrapper.properties
 .mvn/
+sseju/target/
