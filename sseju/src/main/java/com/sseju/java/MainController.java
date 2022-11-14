@@ -24,7 +24,12 @@ public class MainController {
 	
 	@GetMapping("/dashboard")
 	public String dashboard() {
-		return "dashboard";
-	}	
+		return "/admin/dashboard";
+	}
+	
+	@GetMapping("/accountform")
+	public String accountform() {
+		return "newaccount";
+	}
 
 }
