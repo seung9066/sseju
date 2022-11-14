@@ -32,21 +32,15 @@ public class MainController {
 	
 	@GetMapping("/dashboard")
 	public String dashboard() {
-		return "dashboard";
-	}	
+		return "/admin/dashboard";
+	}
 	
-//	@GetMapping("/eqmCode")
-//	public String eqmCode() {
-//		return "/admin/eqm/eqmCode";
-//	}	
-	
-	@RequestMapping("/eqmList")
-	public String getEqmList(Model model) { //데이터를 보낼때 model
-		model.addAttribute("eqmList", eqmService.selectEqmList());
-		return "/admin/eqm/eqmList";
+	@GetMapping("/accountform")
+	public String accountform() {
+		return "newaccount";
 	}
 
 	
-	
+
 
 }

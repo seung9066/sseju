@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
 <head>
 <meta charset="utf-8">
@@ -48,9 +49,10 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
-  
-      <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 </head>
 
 <body>
@@ -203,13 +205,13 @@
 			<li class="nav-item dropdown pe-3"><a
 				class="nav-link nav-profile d-flex align-items-center pe-0" href="#"
 				data-bs-toggle="dropdown"> <span
-					class="d-none d-md-block dropdown-toggle ps-2">Admin</span>
+					class="d-none d-md-block dropdown-toggle ps-2" sec:authentication="name"></span>
 			</a> <!-- End Profile Iamge Icon -->
 
 				<ul
 					class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
 					<li class="dropdown-header">
-						<h6>관리자</h6> <span>Admin</span>
+						<h6>[[${session.user.empName}]]</h6> <span></span>
 					</li>
 					<li>
 						<hr class="dropdown-divider">
@@ -223,9 +225,14 @@
 						<hr class="dropdown-divider">
 					</li>
 
-					<li><a class="dropdown-item d-flex align-items-center"
-						href="#"> <i class="bi bi-box-arrow-right"></i> <span>Logout</span>
-					</a></li>
+					<li><form action="logout" method="post">
+							<input type="hidden" th:name="${_csrf.parameterName}"
+								th:value="${_csrf.token}" /> <a
+								class="dropdown-item d-flex align-items-center"> <i
+								class="bi bi-box-arrow-right"></i> <span>
+								<button type="submit" style="border:0; background-color:rgba(0, 0, 0, 0); width:200px; text-align:left;">Logout</button></span>
+							</a>
+						</form></li>
 
 				</ul> <!-- End Profile Dropdown Items --></li>
 			<!-- End Profile Nav -->
@@ -276,7 +283,7 @@
 							class="bi bi-circle"></i><span>공정/창고</span>
 					</a></li>
 					<li><a href="components-carousel.html"> <i
-							class="bi bi-circle"></i><span>거채러정보</span>
+							class="bi bi-circle"></i><span>거래처정보</span>
 					</a></li>
 					<li><a href="components-carousel.html"> <i
 							class="bi bi-circle"></i><span>사원정보</span>
