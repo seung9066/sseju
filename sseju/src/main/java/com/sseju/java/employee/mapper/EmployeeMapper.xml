@@ -5,7 +5,7 @@
   
 <mapper namespace="com.sseju.java.employee.mapper.EmployeeMapper">
 	<select id="getEmpInfo" resultType="EmployeeVO">
-		SELECT * FROM login WHERE id = #{empId}
+		SELECT * FROM employee WHERE emp_id = #{empId}
 	</select>
 	
 	<insert id="insertEmp" parameterType="EmployeeVO">
