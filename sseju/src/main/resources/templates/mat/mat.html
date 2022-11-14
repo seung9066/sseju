@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="bootstrap/css/tui-grid.css" rel="stylesheet">
+<script src="bootstrap/js/tui-grid.js"></script>
+
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script
+	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+<style>
+
+/* body {
+  margin-top: 60px;
+  padding: 20px 30px;
+  transition: all 0.3s;
+} */
+:root {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  background: #f6f9ff;
+  color: #444444;
+}
+
+#main {
+  margin-top: 60px;
+  padding: 20px 30px;
+  transition: all 0.3s;
+}
+
+@media (max-width: 1199px) {
+  #main {
+    padding: 20px;
+  }
+}
+</style>
+</head>
+<body>
+	<div class="container" layout:fragment="content">
+	<!-- 		<main class="main" id="main"> -->
+			<div class="row">
+
+				<div id="grid" class="col-6"></div>
+				<div id="grid2" class="col-6"></div>
+
+			</div>
+			<div class="row">
+
+				<div id="grid3" class="col-6"></div>
+				<div id="grid4" class="col-6"></div>
+
+			</div>
+			<div>
+				실험중<input type="text" data-bs-toggle="modal"
+					data-bs-target="#exampleModal">
+			</div>
+
+
+			<!-- Button trigger modal -->
+			<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+				data-bs-target="#exampleModal">Launch demo modal</button>
+
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModal" tabindex="-1"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">...</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary">Save
+								changes</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script>
+			const grid = new tui.Grid({
+				el : document.getElementById('grid'),
+				data : [ {
+					odDate : '2022-11-01',
+					odCd : 'ORD-20221101-001',
+					prdCd : 'MD-00100',
+					prdNm : '얇은피 고기만두',
+					odAmt : 200,
+					actCd : 'VDR-1004',
+					actNm : 'YD 마트',
+					deDate : '2022-11-04',
+					sts : '완료'
+				} ],
+				rowHeaders : [ 'checkbox' ],
+				scrollX : false,
+				scrollY : false,
+				columns : [ {
+					header : '주문 일자',
+					name : 'odDate'
+				}, {
+					header : '주문 코드',
+					name : 'odCd'
+				}, {
+					header : '제품 코드',
+					name : 'prdCd'
+				}, {
+					header : '제품명',
+					name : 'prdNm'
+				}, {
+					header : '주문량',
+					name : 'odAmt'
+				}, {
+					header : '거래처 코드',
+					name : 'actCd'
+				}, {
+					header : '거래처명',
+					name : 'actNm'
+				}, {
+					header : '납기 일자',
+					name : 'deDate'
+				}, {
+					header : '진행 상황',
+					name : 'sts'
+				}, ]
+			});
+		</script>
+			<script>
+			const grid2 = new tui.Grid({
+				el : document.getElementById('grid2'),
+				data : [ {
+					odDate : '2022-11-01',
+					odCd : 'ORD-20221101-001',
+					prdCd : 'MD-00100',
+					prdNm : '얇은피 고기만두',
+					odAmt : 200,
+					actCd : 'VDR-1004',
+					actNm : 'YD 마트',
+					deDate : '2022-11-04',
+					sts : '완료'
+				} ],
+				rowHeaders : [ 'checkbox' ],
+				scrollX : false,
+				scrollY : false,
+				columns : [ {
+					header : '주문 일자',
+					name : 'odDate'
+				}, {
+					header : '주문 코드',
+					name : 'odCd'
+				}, {
+					header : '제품 코드',
+					name : 'prdCd'
+				}, {
+					header : '제품명',
+					name : 'prdNm'
+				}, {
+					header : '주문량',
+					name : 'odAmt'
+				}, {
+					header : '거래처 코드',
+					name : 'actCd'
+				}, {
+					header : '거래처명',
+					name : 'actNm'
+				}, {
+					header : '납기 일자',
+					name : 'deDate'
+				}, {
+					header : '진행 상황',
+					name : 'sts'
+				}, ]
+			});
+		</script>
+			<script>
+			const grid3 = new tui.Grid({
+				el : document.getElementById('grid3'),
+				data : [ {
+					odDate : '2022-11-01',
+					odCd : 'ORD-20221101-001',
+					prdCd : 'MD-00100',
+					prdNm : '얇은피 고기만두',
+					odAmt : 200,
+					actCd : 'VDR-1004',
+					actNm : 'YD 마트',
+					deDate : '2022-11-04',
+					sts : '완료'
+				} ],
+				rowHeaders : [ 'checkbox' ],
+				scrollX : false,
+				scrollY : false,
+				columns : [ {
+					header : '주문 일자',
+					name : 'odDate'
+				}, {
+					header : '주문 코드',
+					name : 'odCd'
+				}, {
+					header : '제품 코드',
+					name : 'prdCd'
+				}, {
+					header : '제품명',
+					name : 'prdNm'
+				}, {
+					header : '주문량',
+					name : 'odAmt'
+				}, {
+					header : '거래처 코드',
+					name : 'actCd'
+				}, {
+					header : '거래처명',
+					name : 'actNm'
+				}, {
+					header : '납기 일자',
+					name : 'deDate'
+				}, {
+					header : '진행 상황',
+					name : 'sts'
+				}, ]
+			});
+		</script>
+			<script>
+			const grid4 = new tui.Grid({
+				el : document.getElementById('grid4'),
+				data : [ {
+					odDate : '2022-11-01',
+					odCd : 'ORD-20221101-001',
+					prdCd : 'MD-00100',
+					prdNm : '얇은피 고기만두',
+					odAmt : 200,
+					actCd : 'VDR-1004',
+					actNm : 'YD 마트',
+					deDate : '2022-11-04',
+					sts : '완료'
+				} ],
+				rowHeaders : [ 'checkbox' ],
+				scrollX : false,
+				scrollY : false,
+				columns : [ {
+					header : '주문 일자',
+					name : 'odDate'
+				}, {
+					header : '주문 코드',
+					name : 'odCd'
+				}, {
+					header : '제품 코드',
+					name : 'prdCd'
+				}, {
+					header : '제품명',
+					name : 'prdNm'
+				}, {
+					header : '주문량',
+					name : 'odAmt'
+				}, {
+					header : '거래처 코드',
+					name : 'actCd'
+				}, {
+					header : '거래처명',
+					name : 'actNm'
+				}, {
+					header : '납기 일자',
+					name : 'deDate'
+				}, {
+					header : '진행 상황',
+					name : 'sts'
+				}, ]
+			});
+		</script>
+			<script>
+			var myModal = document.getElementById('myModal')
+			var myInput = document.getElementById('myInput')
+
+			myModal.addEventListener('shown.bs.modal', function() {
+				myInput.focus()
+				})
+			</script>
+	<!-- 	</main> -->
+	</div>
+</body>
+</html>

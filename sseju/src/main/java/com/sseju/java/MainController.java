@@ -25,6 +25,16 @@ public class MainController {
 	@GetMapping("/dashboard")
 	public String dashboard() {
 		return "dashboard";
-	}	
+	}
+	
+	@RequestMapping("/mat")
+	public String mat() {
+		return "mat/mat";
+	}
+	
+	@RequestMapping("/ex")
+	public String ex() {
+		return "mat/example";
+	}
 
 }
