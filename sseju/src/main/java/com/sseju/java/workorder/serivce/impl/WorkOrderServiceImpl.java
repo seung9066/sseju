@@ -13,47 +13,49 @@ import com.sseju.java.workorder.serivce.WorkOrderVO;
 
 @Service
 public class WorkOrderServiceImpl implements WorkOrderService {
-	
 	@Autowired
 	WorkOrderMapper woMapper;
-	@Override
-	public List<WorkOrderVO> getWorkOrderList() {
-		return woMapper.getWorkOrderList();
-	}
-
-	@Override
-	public WorkOrderVO getSearchWorkOrder() {
-		return woMapper.getSearchWorkOrder();
-	}
-
-	@Override
-	public Map<String, Object> insertWorkOrder(WorkOrderVO woVO) {
-		int count = woMapper.insertWorkOrder(woVO);
-		return getResult(count, woVO);
-	}
-	
-
-	@Override
-	public Map<String, Object> updateWorkOrder(WorkOrderVO woVO) {
-		int count = woMapper.updateWorkOrder(woVO);
-		return getResult(count, woVO);
-	}
-
-	@Override
-	public Map<String, Object> deleteWorkOrder(WorkOrderVO woVO) {
-		int count = woMapper.deleteWorkOrder(getWoNo());
-		return getResult(count, woVO);
-	}
-
-	@Override
-	public int getWoNo() {
-		return woMapper.getWoNo().getPreNo();
-	}
-	
-	public Map<String, Object> getResult(int count, WorkOrderVO woVO){
-		Map<String, Object> result = new HashMap<>();
+	//출력용 map 메소드 생성
+	public Map<String, Object> getResult(int count, WorkOrderVO woVO) {
+		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("result", count);
 		result.put("data", woVO);
 		return result;
 	}
+	
+	//전체조회
+	@Override
+	public List<WorkOrderVO> getWorkOrderList() {
+		return woMapper.getWorkOrderList();
+	}
+	
+	//단건조회
+	@Override
+	public WorkOrderVO getSearchWorkOrder() {
+		return woMapper.getSearchWorkOrder();
+	}
+	
+	//등록
+	@Override
+	public int insertWorkOrder(WorkOrderVO woVO) {
+		return woMapper.insertWorkOrder(woVO);
+	}
+
+	//수정
+	@Override
+	public int updateWorkOrder(WorkOrderVO woVO) {
+		return woMapper.updateWorkOrder(woVO);
+	}
+	
+	//삭제(작업지시번호로)
+	@Override
+	public int deleteWorkOrder(int preNo) {
+		return woMapper.deleteWorkOrder(preNo);
+	}
+	//
+	@Override
+	public int getWoNo() {
+		return woMapper.getWoNo();
+	}
+
 }

@@ -12,26 +12,25 @@ import com.sseju.java.order.service.ORService;
 import com.sseju.java.order.service.ORVO;
 
 @Controller
-@RequestMapping("order")
 public class OrderController {
 	@Autowired
 	ORService Service;
 
 	// 등록-품
-	@GetMapping("insert")
+	@GetMapping("orinsert")
 	public String insertForm(Model model) {
 		return "order/insertForm";
 	}
 
 	// 등록-DB
-	@PostMapping("insert")
+	@PostMapping("orinsert")
 	public String insertOrder(ORVO orVO, RedirectAttributes ratt) {
 
 		return "redirect:list";
 	}
 
 	// 전체
-	@GetMapping("list")
+	@GetMapping("orlist")
 	public String selectOrderList(Model model) {
 		return "order/orderList";
 	}
@@ -42,24 +41,12 @@ public class OrderController {
 
 		return "order/orderInfo";
 	}
-
-	// 수정-폼
-	@PostMapping("updateform")
-	public String updateForm(Model model) {
-		return "order/updateForm";
+	
+	@GetMapping("prtlist")
+	public String selectPrtList(Model model) {
+		
+		return "order/prtList";
 	}
-
-	// 수정-DB update
-	@PostMapping("update")
-	public String updateOrder(ORVO orVO, RedirectAttributes ratt) {
-
-		return "redirect:list";
-	}
-
-	// 삭제
-	@GetMapping("delete")
-	public String deleteForm(Model model, ORVO prVO) {
-		return "order/orderList";
-	}
+	
 
 }
