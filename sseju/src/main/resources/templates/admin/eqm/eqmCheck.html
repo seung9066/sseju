@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+
+<head>
+<meta charset="UTF-8">
+<title>eqmList</title>
+
+<!--jquery  -->
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+<!--toast grid  -->
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<!--부트스트랩 아이콘  -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+
+<style>
+.row {
+	margin: 15px;
+}
+
+.button {
+	display: inline-block;
+	cursor: pointer;
+	border: none;
+	border-radius: 4px;
+}
+
+.button {
+	border: none;
+	background-color: green;
+	color: white;
+}
+</style>
+
+
+</head>
+
+<body>
+	<br>
+
+	<article layout:fragment="content">
+		<main id="main" class="main">
+
+
+			<h4>
+				<strong>설비점검관리</strong>
+			</h4>
+			<div style="float: right;">
+				<button class="button" type="submit"  data-bs-toggle="modal" data-bs-target="#chkInsModal">등록</button>
+				<button class="button">수정</button>
+				<button class="button">삭제</button>
+			</div>
+			<br>
+			<hr>
+
+
+
+
+			<div id="eqmGrid"></div>
+
+			<div class="modal" tabindex="-1" id="chkInsModal">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">설비 정기점검 등록</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<p>Modal body text goes here.</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">취소</button>
+							<button type="button" class="btn btn-primary" >등록</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			<script>
+			
+			chkInsModal.addEventListner('shown.bs.modal', () => {
+				eqmGrid.refreshLayout(); // 모달창 새로고침(등록 후 바로 반영)
+			})
+				 
+				 
+				
+			</script>
+
+
+
+
+			<script>
+				var eqmGrid = new tui.Grid({
+					el : document.getElementById('eqmGrid'),
+					// 임시 데이터
+					data : [ {
+						checkNo : '1',
+						eqmCode : 'eqm_1538',
+						eqmName : '주입기',
+						prsCode : 'pro_123456',
+						chkDate : '2022-08-06',
+						chkNdate : '2022-09-06',
+						chkState : '정상',
+						chkSol : '해당조치사항없음',
+						chkEmpNo : 'emp1001(김아무개)'
+
+					}, {
+						checkNo : '2',
+						eqmCode : 'eqm_1538',
+						eqmName : '주입기',
+						prsCode : 'pro_123456',
+						chkDate : 'ist_20054281',
+						chkNdate : 'ist_20054281',
+						chkState : '불량',
+						chkSol : '수리',
+						chkEmpNo : 'emp1002(박땡땡)'
+
+					}
+
+					],
+					// data 가져오는 법
+					// data: {
+					//    api: {
+					//       readData: {
+					//          url: '/api/readData',
+					//          method: 'GET'
+					//       }
+					//    }
+					// },
+					scrollX : false,
+					scrollY : false,
+					columns : [ {
+						header : '정기점검이력번호',
+						name : 'checkNo',
+					}, {
+						header : '설비코드',
+						name : 'eqmCode',
+					}, {
+						header : '설비명',
+						name : 'eqmName', //납기일자명 수정
+					}, {
+						header : '공정코드',
+						name : 'prsCode'
+					}, {
+						header : '점검일',
+						name : 'chkDate'
+					}, {
+						header : '차기점검일',
+						name : 'chkNdate',
+					}, {
+						header : '판정',
+						name : 'chkState',
+					}, {
+						header : '조치사항',
+						name : 'chkSol',
+					}, {
+						header : '점검 담당자',
+						name : 'chkEmpNo',
+					} ]
+				});
+				
+				var myModal = document.getElementById('myModal')
+				var myInput = document.getElementById('myInput')
+
+				myModal.addEventListener('shown.bs.modal', function () {
+				  myInput.focus()
+				})
+			</script>
+	
+
+			<!-- 본문 끝 -->
+
+		</main>
+
+	</article>
+
+</body>
+
+</html>
