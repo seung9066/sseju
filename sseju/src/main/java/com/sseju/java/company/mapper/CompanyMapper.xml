@@ -5,7 +5,7 @@
   
 <mapper namespace="com.sseju.java.company.mapper.CompanyMapper">
 	<insert id="insertLogin" parameterType="CompanyVO">
-		INSERT INTO login values (#{id}, #{password}, #{auth})
+		INSERT INTO login values (#{id}, #{auth}, #{password})
 	</insert>
 	
 	<select id="companyCode" parameterType="CompanyVO" resultType="String">
