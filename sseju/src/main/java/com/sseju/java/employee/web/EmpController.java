@@ -1,8 +1,11 @@
 package com.sseju.java.employee.web;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sseju.java.employee.service.EmployeeService;
 import com.sseju.java.employee.service.EmployeeVO;
@@ -13,10 +16,16 @@ public class EmpController {
 	@Autowired
 	EmployeeService service;
 	
-	@PostMapping
+	@PostMapping("/insertaccount")
 	public String empInsert(EmployeeVO vo) {
 		service.insertEmp(vo);
 		return "login";
 	}
-
+	
+	@ResponseBody
+	@GetMapping("/idCheck")
+	public int idCheck(String id) {
+		return service.idCheck(id);
+	}
+	
 }

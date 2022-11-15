@@ -3,6 +3,10 @@ package com.sseju.java.company.service;
 import java.util.List;
 
 public interface CompanyService {
+
+	// 회원 코드 조회
+	public String companyCode(CompanyVO vo);
+	
 	// 회원 전체 조회
 	public List<CompanyVO> getCompanyList();
 
@@ -11,6 +15,7 @@ public interface CompanyService {
 
 	// 회원 가입
 	public int insertCompany(CompanyVO vo);
+	public int insertLogin(CompanyVO vo);
 
 	// 회원 수정
 	public int updateCompany(CompanyVO vo);

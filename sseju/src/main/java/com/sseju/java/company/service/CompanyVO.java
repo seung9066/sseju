@@ -13,7 +13,7 @@ public class CompanyVO {
 	private String cpTel;
 	private String cpNo;
 	private String cpAddr;
-	private String empId;
+	private String id;
 	private String password;
-	
+	private String auth;
 }

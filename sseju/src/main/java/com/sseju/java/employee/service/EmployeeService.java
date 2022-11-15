@@ -8,6 +8,9 @@ public interface EmployeeService {
 
 	// 회원 단건 조회
 	public EmployeeVO getEmpInfo(EmployeeVO vo);
+	
+	// id ckeck
+	public int idCheck(String id);
 
 	// 회원 가입
 	public int insertEmp(EmployeeVO vo);
