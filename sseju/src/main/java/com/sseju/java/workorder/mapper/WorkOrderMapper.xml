@@ -24,7 +24,7 @@
 		</where>
 	</select>
 	<!-- 등록 -->
-	<insert id="insertWorkOrder" parameterType="com.sseju.java.workorder.serivce.WorkOrderVO">
+	<insert id="insertWorkOrder" parameterType="woVO">
 		INSERT INTO produce( preNo
 						    ,preDate
 						    ,preManager
@@ -43,7 +43,7 @@
 						   ,#{prePrg})
 	</insert>
 	<!-- 수정 -->
-	<update id="updateWorkOrder" parameterType="com.sseju.java.workorder.serivce.WorkOrderVO">
+	<update id="updateWorkOrder" parameterType="woVO">
 		UPDATE produce
 		<set>
 			preManager = #{preManager},
@@ -61,7 +61,7 @@
 	</delete>
 	
 	<!-- 작업 지시 번호 조회 -->
-	<select id="getWoNo" resultType="com.sseju.java.workorder.serivce.WorkOrderVO">
+	<select id="getWoNo" resultType="woVO">
 		SELECT NVL(MAX(preNo), 0) + 1 AS preNo
 		FROM produce
 	</select>

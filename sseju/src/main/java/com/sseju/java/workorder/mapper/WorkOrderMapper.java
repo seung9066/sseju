@@ -18,5 +18,5 @@ public interface WorkOrderMapper {
 	//삭제
 	public int deleteWorkOrder(@Param("preNo")int preNo);
 	//작업지시 번호 조회
-	public WorkOrderVO getWoNo();
+	public int getWoNo();
 }
