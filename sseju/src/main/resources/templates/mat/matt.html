@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>주문 관리</title>
+
+<style>
+   .tui-datepicker {
+    z-index: 1001;
+   }
+   .tui-select-box {
+   z-index : 1001;
+   }
+  
+ /* ul 스타일 */
+.ul-style {
+   list-style:none;
+   padding: 0px;
+}
+.ul-style li>label{
+   width: 100px;
+   text-align: center;
+}
+.ul-style li{
+   padding: 5px;
+}
+
+#od-title{
+   font-weight: bold;
+}
+#od-btn {
+   display: inline-block; margin: 0 5px; float: right;
+}
+
+
+</style>
+
+<link rel="stylesheet"	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main class="main" id="main">
+   <div id="od-title">
+      <h3>완제품 출고 관리</h3>
+   </div>
+   
+   <div id="od-content">
+      <div id="input-group">
+         <ul class="ul-style">
+          <li><label for="actCd">거래처</label><input type="text">
+         <i class="bi bi-search"   data-bs-toggle="modal" data-bs-target="#exampleModal" id="actCd"></i>
+          <input type="text" readonly><br></li>
+    
+           <li><label>주문일자</label>
+             <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                 <input id="startpicker-input" type="text" aria-label="Date">
+                 <span class="tui-ico-date"></span>
+                 <div id="startpicker-container" style="margin-left: -1px;"></div>
+             </div>
+             <span>-</span>
+             <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                 <input id="endpicker-input" type="text" aria-label="Date">
+                 <span class="tui-ico-date"></span>
+                 <div id="endpicker-container" style="margin-left: -1px;"></div>
+             </div>
+       <!-- 버튼 -->
+      <button class="btn btn-dark btn-sm">조회</button>
+      <button  class="btn btn-dark btn-sm">초기화</button></li>
+          </ul>
+       </div>
+       
+        <!-- Modal 내용 -->
+         <div class="modal fade" id="exampleModal" tabindex="-1"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="exampleModalLabel">거래처 목록</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                     <button type="button" class="btn btn-dark btn-sm"
+                        data-bs-dismiss="modal">조회</button>
+                     <button type="button" class="btn btn-dark btn-sm">초기화</button>
+                  <div id="modalGrid"></div>
+                  </div>
+               </div>
+         </div>
+      </div>
+   </div>   
+
+   <div id="od-content-2">
+      <h4>진행중인 주문서 현황</h4>
+      
+   <div id="grid"></div>
+
+   </div>
+   <br>
+   <div id="od-content-3">
+      <h4>출고 등록 현황 리스트</h4>
+
+   
+   <div id="od-btn">
+   <button class="btn btn-dark btn-sm" id="insertBtn">추가</button>
+   <button class="btn btn-dark btn-sm" id="deleteBtn">선택삭제</button>
+   <button class="btn btn-dark btn-sm">저장</button>
+   </div>
+   <div id="grid2"></div>
+      </div>
+
+<script>
+var today = new Date();
+var picker = tui.DatePicker.createRangePicker({
+    startpicker: {
+        date: today,
+        input: '#startpicker-input',
+        container: '#startpicker-container'
+    },
+    endpicker: {
+        date: today,
+        input: '#endpicker-input',
+        container: '#endpicker-container'
+    },
+    selectableRanges: [
+        [today, new Date(today.getFullYear() + 1, today.getMonth(), today.getDate())]
+    ]
+});
+
+const grid = new tui.Grid({
+    el: document.getElementById('grid'),
+    data: [
+        {
+           odDate : '2022-11-01',
+           odCd : 'ORD-20221101-001',
+           prdCd : 'MD-00100',
+           prdNm : '얇은피 고기만두',
+           actNm : 'YD 마트',
+           odAmt : 200
+        }
+        ],
+    rowHeaders: ['rowNum'],
+    scrollX: false,
+    scrollY: false,
+    columns: [
+      {
+        header: '주문 일자',
+        name: 'odDate'
+      },
+      {
+        header: '주문 코드',
+        name: 'odCd'
+      },
+      {
+        header: '제품 코드',
+        name: 'prdCd'
+      },
+      {
+        header: '제품명',
+        name: 'prdNm'
+      },
+      {
+        header: '거래처명',
+        name: 'actNm'
+      },
+      {
+        header: '주문량',
+        name: 'odAmt'
+      }
+    ]
+  });
+  
+const grid2 = new tui.Grid({
+    el: document.getElementById('grid2'),
+    data: [
+        {
+           odCd : 'ORD-20221101-002',
+           prdCd : 'MD-00200',
+           lot : 'LOT-PRO-221104-621',
+           outAmt : 200,
+           outDate : '2022-11-04',
+           podDate : '2022-11-03',
+           eDate : '2023-10-04'
+        }
+        ],
+    rowHeaders: ['checkbox'],
+    scrollX: false,
+    scrollY: false,
+    columns: [
+      {
+        header: '주문 코드',
+        name: 'odCd'
+      },
+      {
+        header: '제품 코드',
+        name: 'prdCd'
+      },
+      {
+        header: '완제품LOT',
+        name: 'lot'
+      },
+      {
+        header: '출고량',
+        name: 'outAmt'
+      },
+      {
+        header: '출고 일자',
+        name: 'outDate'
+      },
+      {
+        header: '제조 일자',
+        name: 'podDate'
+      },
+      {
+        header: '유통기한',
+        name: 'eDate'
+      }
+    ]
+  });
+
+const modalGrid = new tui.Grid({
+    el: document.getElementById('modalGrid'),
+    data: [
+        {
+           actCd : 'VDR-1001',
+           actNm : 'AA 마트',
+           actNum : '791-10-000',
+           tel : '053-514-4512'
+        }
+        ],
+    rowHeaders: ['rowNum'],
+    scrollX: false,
+    scrollY: false,
+    columns: [
+      {
+        header: '거래처 코드',
+        name: 'actCd'
+      },
+      {
+        header: '거래처명',
+        name: 'actNm'
+      },
+      {
+        header: '사업자 등록번호',
+        name: 'actNum'
+      },
+      {
+        header: '전화번호',
+        name: 'tel'
+      }
+    ]
+  })
+   modalGrid.addEventListener('click',function(){
+   Grid.refreshLayout();
+   })
+</script>
+</main>
+</article>
+</body>
+</html>

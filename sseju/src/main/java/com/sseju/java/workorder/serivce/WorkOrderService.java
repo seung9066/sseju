@@ -9,11 +9,11 @@ public interface WorkOrderService {
 	//작업 지시 단건 조회
 	public WorkOrderVO getSearchWorkOrder();
 	//작업 지시 등록
-	public Map<String, Object> insertWorkOrder(WorkOrderVO woVO);
+	public int insertWorkOrder(WorkOrderVO woVO);
 	//수정
-	public Map<String, Object> updateWorkOrder(WorkOrderVO woVO);
+	public int updateWorkOrder(WorkOrderVO woVO);
 	//삭제
-	public Map<String, Object> deleteWorkOrder(WorkOrderVO woVO);
+	public int deleteWorkOrder(int preNo);
 	//작업지시 번호 조회
 	public int getWoNo();
 }
