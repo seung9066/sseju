@@ -19,4 +19,6 @@ public interface EmployeeMapper {
 
 	// 회원 삭제
 	public int deleteEmp(EmployeeVO vo);
+	
+	public int idCheck(String id);
 }
