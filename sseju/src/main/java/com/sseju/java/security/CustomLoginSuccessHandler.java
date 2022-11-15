@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import com.sseju.java.company.service.CompanyService;
+import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.employee.service.EmployeeService;
 import com.sseju.java.employee.service.EmployeeVO;
 
@@ -20,17 +22,23 @@ import com.sseju.java.employee.service.EmployeeVO;
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
 	@Autowired
-	EmployeeService service;
+	EmployeeService serviceE;
+	
+	@Autowired
+	CompanyService serviceC;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
 		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_COMPANY"))) {
+			CompanyVO vo = new CompanyVO();
+			vo.setId(authentication.getName());
+			request.getSession().setAttribute("user", serviceC.getCompanyInfo(vo));
 			response.sendRedirect(request.getContextPath() + "/orlist");
 		} else {
 			EmployeeVO vo = new EmployeeVO();
 			vo.setEmpId(authentication.getName());
-			request.getSession().setAttribute("user", service.getEmpInfo(vo));
+			request.getSession().setAttribute("user", serviceE.getEmpInfo(vo));
 			// 사용자
 
 			response.sendRedirect(request.getContextPath() + "/dashboard");

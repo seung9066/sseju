@@ -19,7 +19,7 @@ public class OrderController {
 	// 등록-품
 	@GetMapping("orinsert")
 	public String insertForm(Model model) {
-		return "order/insertForm";
+		return "/admin/order/insertForm";
 	}
 
 	// 등록-DB
@@ -30,23 +30,35 @@ public class OrderController {
 	}
 
 	// 전체
-	@GetMapping("orlist")
+	@GetMapping("/orlist")
 	public String selectOrderList(Model model) {
-		return "order/orderList";
+		return "/admin/order/orderList";
 	}
 
 	// 단건
-	@GetMapping("info")
+	@GetMapping("orinfo")
 	public String selectOrderInfo(ORVO orVO, Model model) {
 
-		return "order/orderInfo";
+		return "/adminorder/orderInfo";
 	}
-	
-	@GetMapping("prtlist")
-	public String selectPrtList(Model model) {
-		
-		return "order/prtList";
+
+	// 수정-폼
+	@PostMapping("orupdateform")
+	public String updateForm(Model model) {
+		return "/admin/order/updateForm";
 	}
-	
+
+	// 수정-DB update
+	@PostMapping("orupdate")
+	public String updateOrder(ORVO orVO, RedirectAttributes ratt) {
+
+		return "redirect:list";
+	}
+
+	// 삭제
+	@GetMapping("ordelete")
+	public String deleteForm(Model model, ORVO prVO) {
+		return "/admin/order/orderList";
+	}
 
 }

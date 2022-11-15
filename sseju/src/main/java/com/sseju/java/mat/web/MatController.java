@@ -11,16 +11,16 @@ public class MatController {
 	
 	@RequestMapping("/mat")
 	public String mat() {
-		return "mat/mat";
+		return "/admin/mat/mat";
 	}
 	
 	@RequestMapping("/ex")
 	public String ex() {
-		return "mat/example";
+		return "/admin/mat/example";
 	}
 	
 	@RequestMapping("/matt")
 	public String matt() {
-		return "mat/matt";
+		return "/admin/mat/matt";
 	}
 }

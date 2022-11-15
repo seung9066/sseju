@@ -23,13 +23,13 @@ public class WorkOrderController {
 	@GetMapping("/list")
 	public String WorkOrderList(Model model) {
 		//model.addAttribute("workOrderList", woService.getWorkOrderList());
-		return "workOrder/workOrderList";
+		return "/admin/workOrder/workOrderList";
 	}
 	
 	//작업 지시 등록 폼
 	@GetMapping("/insertForm")
 	public String insertForm() {
-		return "workOrder/insertForm";
+		return "/admin/workOrder/insertForm";
 	}
 	//작업 지시 DB 등록
 	@PostMapping("/insert")
@@ -40,23 +40,23 @@ public class WorkOrderController {
 				return "workOrder/workOrderList";
 			}else {
 				model.addAttribute("msg", "작업 지시 등록에 실패했습니다.");
-				return "workOrder/insertForm";
+				return "/admin/workOrder/insertForm";
 			}
 		}catch(Exception e) {
 			model.addAttribute("msg", "작업 지시 등록 실패");
-			return "workOrder/insertForm";
+			return "/admin/workOrder/insertForm";
 		}
 	}
 	
 	@PostMapping("/update")
 	public String updateWorkOrder(WorkOrderVO woVO, Model model) {
 		model.addAttribute("workOrderList", woService.getWorkOrderList());
-		return "workOrder/list";
+		return "/admin/workOrder/list";
 	}
 	
 	@PostMapping("/delete")
 	public String deleteWorkOrder(@RequestParam int preNo, Model model) {
 		model.addAttribute("workOrderList", woService.deleteWorkOrder(preNo));
-		return "workOrder/list";
+		return "/admin/workOrder/list";
 	}
 }

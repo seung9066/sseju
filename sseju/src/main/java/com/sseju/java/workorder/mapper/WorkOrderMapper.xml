@@ -62,7 +62,6 @@
 	
 	<!-- 작업 지시 번호 조회 -->
 	<select id="getWoNo" resultType="woVO">
-		SELECT NVL(MAX(preNo), 0) + 1 AS preNo
-		FROM produce
+		SELECT TO_CHAR(SYSDATE,'YYYYMMDD')||'-'||LPAD(NVL(MAX(SUBSTR(pre_no, -3)),0)+1,3,0) FROM produce
 	</select>
 </mapper>

@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Alias("ORVO")
 public class ORVO {
-	private int orderNo; //주문번호
+	private String orderNo; //주문번호
 	private Date dDay; // 납기일자
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private String orderPrg;//진행상태
