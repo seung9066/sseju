@@ -2,11 +2,13 @@ package com.sseju.java.order.service;
 
 import java.util.Date;
 
+import org.apache.ibatis.type.Alias;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
 @Data
+@Alias("ORVO")
 public class ORVO {
 	private int orderNo; //주문번호
 	private Date dDay; // 납기일자

@@ -2,7 +2,16 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="com.sseju.java.order.mapper.ORMapper">
-
-
-  </mapper>
+<mapper namespace="com.sseju.java.order.mapper.ORMapper">
+	<select id="">
+		select a.order_no,a.cp_code,d.prt_code
+		from orders a
+		join order_Inf b
+		on (b.order_no = a.order_no)
+		join company c
+		on (c.cp_code = a.cp_code)
+		JOIN product d
+		on (b.prt_code = d.prt_code)
+		;
+	</select>
+</mapper>

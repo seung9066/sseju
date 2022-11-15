@@ -2,7 +2,9 @@ package com.sseju.java.order.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
 
+@Service
 public interface ORService {
 	
 	// 전체
