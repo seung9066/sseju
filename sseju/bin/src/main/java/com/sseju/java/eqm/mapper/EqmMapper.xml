@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.sseju.java.eqm.mapper.EqmMapper">
+
+<!-- 전체조회  -->
+  	<!-- resulutType 은 list형태 무시하고 클래스 이름만 써준다  -->
+  	<select id="getEqmList" resultType="EqmVO">  
+  	 	SELECT * FROM EQM
+  	</select>
+  	
+  	<!-- 등록  -->
+  	<insert id="insertEqm" parameterType="EqmVO">
+  		INSERT INTO EQM(
+  				eqmCode,
+  				eqmName,
+  				eqmModel,
+  				eqmSize,
+  				eqmLoc,
+  				eqmMaxTemp,
+  				eqmMinTemp,
+  				eqmCheck,
+  				eqmPurcDate,
+  				eqmDiv,
+  				eqmImg,
+  				eqmPurcName,
+  				eqmPurcTel,
+  				eqmYn,
+  				lineNo,
+  				eqmNo
+  		)
+  		VALUES(
+  				#{eqmCode},
+  				#{eqmName},
+  				#{eqmModel},
+  				#{eqmSize},
+  				#{eqmLoc},
+  				#{eqmMaxTemp},
+  				#{eqmMinTemp},
+  				#{eqmCheck},
+  				#{eqmPurcDate},
+  				#{eqmDiv},		
+  				#{eqmImg},
+  				#{eqmPurcName},
+  				#{eqmPurcTel},
+  				#{eqmYn},
+  				#{lineNo},
+  				#{eqmNo}
+ 
+  				
+  		)
+  	</insert>
+ </mapper>

@@ -4,18 +4,40 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sseju.java.order.mapper.ORMapper">
 	<select id="">
-		select a.order_no,a.cp_code,d.prt_code
-		from orders a
-		join order_Inf b
-		on (b.order_no = a.order_no)
-		join company c
-		on (c.cp_code = a.cp_code)
+		SELECT a.order_no,a.cp_code,d.prt_code
+		FROM orders a
+		JOIN order_Inf b
+		ON (b.order_no = a.order_no)
+		JOIN company c
+		ON
+		(c.cp_code = a.cp_code)
 		JOIN product d
-		on (b.prt_code = d.prt_code)
+		ON (b.prt_code = d.prt_code)
 		;
 	</select>
-	
+
 	<select id="orNo" resultType="ORVO">
-		SELECT TO_CHAR(SYSDATE,'YYYYMMDD')||'-'||LPAD(NVL(MAX(SUBSTR(order_no, -3)),0)+1,3,0) FROM orders
+		SELECT
+		TO_CHAR(SYSDATE,'YYYYMMDD')||'-'||LPAD(NVL(MAX(SUBSTR(order_no,
+		-3)),0)+1,3,0) FROM orders
 	</select>
+	<insert id="insertOrderInfo" parameterType="ORVO">
+		insert into orders
+		values (#{orderDate},#{prtName},#{dDay},#{orderQty})
+	</insert>
+
+	<!-- 수정 -->
+	<update id="updateOrderInfo" parameterType="ORVO">
+		UPDATE orders
+		<set>
+			
+		</set>
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="deleteOrderInfo" parameterType="Integer">
+		delete from orders
+		where orderNo= #{orderNo};
+	</delete>
+
 </mapper>

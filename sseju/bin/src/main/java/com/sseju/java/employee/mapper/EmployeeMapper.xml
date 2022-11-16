@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.sseju.java.employee.mapper.EmployeeMapper">
+	<select id="idCheck" resultType="Integer">
+		SELECT COUNT(*) FROM login WHERE ID = #{id}
+	</select>
+	
+	<select id="getEmpInfo" parameterType="EmployeeVO" resultType="EmployeeVO">
+		SELECT * FROM employee WHERE emp_id = #{empId}
+	</select>
+	
+	<insert id="insertEmp" parameterType="EmployeeVO">
+		INSERT INTO employee values (#{empId}, #{empName}, #{empDept}, #{empRank}, #{empAuth}, #{password})
+	</insert>
+</mapper>

@@ -60,5 +60,14 @@ public class OrderController {
 	public String deleteForm(Model model, ORVO prVO) {
 		return "/admin/order/orderList";
 	}
+	
+	@GetMapping("prtlist")
+	public String selecetprtList(Model model) {
+		return "/admin/order/prtlist";
+	}
 
+	@GetMapping("inout")
+	public String selectrinout(Model model) {
+		return "/admin/order/inout";
+	}
 }

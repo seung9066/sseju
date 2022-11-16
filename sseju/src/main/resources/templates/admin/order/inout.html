@@ -1,146 +1,114 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>prtout</title>
+
+<style>
+body {
+	margin-top: 60px;
+	padding: 20px 30px;
+	transition: all 0.3s;
+}
+</style>
 </head>
 <body>
+
 	<article class="container" layout:fragment="content">
 		<div id="mat-od-title">
-			<h2>제품출고 관리</h2>
+			<h2>제품출고관리</h2>
 		</div>
 		<hr>
-		<!-- 탭 목록(버튼) 설정 -->
-		<ul class="nav nav-tabs nav-pills" id="myTab" role="tablist">
-			
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="matOut-tab" data-bs-toggle="tab"
-					data-bs-target="#matOut" type="button" role="tab"
-					aria-controls="matOut" aria-selected="false">출고 조회</button>
-			</li>
+
+		<ul class="ul-style">
+
+			<li><label for="actCd">품목검색</label><input type="text">  
+			<li><label for="chkDate">주문일자</label><input type="date"
+				id="chkDate"><span> - </span><input type="date" id="chkDate">
+				<button class="btn btn-dark btn-sm">조회</button>
+				<button class="btn btn-dark btn-sm">초기화</button></li>
 		</ul>
-		<!-- 탭 본문 시작 -->
-		<div class="tab-content" id="myTabContent">
-			<div class="tab-pane fade show active" id="matIn" role="tabpanel"
-				aria-labelledby="matIn-tab">
-				<ul class="ul-style">
-					<li><label for="matNm">자재명</label><input id="matNm" readonly><img
-						class="Magnifying-Glass-img" alt="image" data-bs-toggle="modal"
-						data-bs-target="#matModal" src="../images/Magnifying_Glass.png">
-						<input type="text" readonly></li>
-					<li><label for="empNm">담당자</label><input id="empNm" readonly><img
-						class="Magnifying-Glass-img" alt="image" data-bs-toggle="modal"
-						data-bs-target="#empModal" src="../images/Magnifying_Glass.png">
-						<input type="text" readonly></li>
-					<li><label for="chkDate">검사일자</label><input type="date"
-						id="chkDate"><span> - </span><input type="date"
-						id="chkDate">
-						<button class="btn btn-dark btn-sm">조회</button>
-						<button class="btn btn-dark btn-sm">초기화</button></li>
-				</ul>
 
-				<div style="text-align: right;">
-					<button class="btn btn-dark btn-sm" data-bs-toggle="modal"
-						data-bs-target="#addModal">추가</button>
-					<button class="btn btn-dark btn-sm">선택삭제</button>
-					<button class="btn btn-dark btn-sm">저장</button>
-				</div>
+		<div style="text-align: right;">
 
-				<div id="grid"></div>
-			</div>
-
-			<!-- 출고 관리 탭 -->
-			<div class="tab-pane fade" id="matOut" role="tabpanel"
-				aria-labelledby="matOut-tab">
-				<ul class="ul-style">
-					<li><label for="matNm">자재명</label><input id="matNm" readonly><img
-						class="Magnifying-Glass-img" alt="image" data-bs-toggle="modal"
-						data-bs-target="#matModal" src="../images/Magnifying_Glass.png">
-						<input type="text" readonly></li>
-					<li><label for="actNm">업체명</label><input id="actNm" readonly><img
-						class="Magnifying-Glass-img" alt="image" data-bs-toggle="modal"
-						data-bs-target="#actModal" src="../images/Magnifying_Glass.png">
-						<input type="text" readonly></li>
-					<li><label for="outDate">출고일자</label><input type="date"
-						id="outDate"><span> - </span><input type="date"
-						id="outDate">
-						<button class="btn btn-dark btn-sm">조회</button>
-						<button class="btn btn-dark btn-sm">초기화</button></li>
-				</ul>
-
-				<div style="text-align: right;">
-					<button class="btn btn-dark btn-sm">추가</button>
-					<button class="btn btn-dark btn-sm">선택삭제</button>
-					<button class="btn btn-dark btn-sm">저장</button>
-				</div>
-
-				<div id="grid2"></div>
-			</div>
+			<button class="btn btn-dark btn-sm" id="delete">삭제</button>
+			<button class="btn btn-dark btn-sm">저장</button>
 		</div>
+
+		<div id="grid"></div>
+
 
 		<script>
 const grid = new tui.Grid({
       el: document.getElementById('grid'),
       data: [
     {
-        maCode: 'OAF-20221104-011',
-        mtCode: 'RML-10101',
-        maNm: '얇은 만두피',
-        actNm: 'YD 만두피',
-        count: 999,
-        inDate: '2022-11-12',
-        maLot: 'OAF-20221104-011',
-        eDate: '2023-11-30'
+    	preNo: '00001',
+    	orderNo: '00001',
+    	orderDate: '2022-11-11',
+    	prtName: '참이슬',
+    	orderOutQty : '1000',
+    	orderQty: 999,
+    	dDay: '2022-11-15',
+    	orderPrg: '대기',
+       
     },
     {
-        maCode: 'OAF-20221105-011',
-        mtCode: 'RML-10101',
-        maNm: '두꺼운 만두피',
-        actNm: 'SJ 만두피',
-        count: 1000,
-        inDate: '2022-11-12',
-        maLot: 'OAF-20221104-012',
-        eDate: '2023-11-30'
+    	preNo: '00002',
+    	orderNo: '00002',
+    	orderDate: '2022-11-15',
+    	prtName: '참소주',
+    	orderOutQty : '1000',
+    	orderQty: 999,
+    	dDay: '2022-11-19',
+    	orderPrg: '진행중',
     }
   ],
       rowHeaders: ['checkbox'],
       scrollX: false,
       scrollY: false,
       columns: [
-        {
-          header: '발주코드',
-          name: 'maCode'
-        },
-        {
-          header: '자재코드',
-          name: 'mtCode'
-        },
-        {
-          header: '자재명',
-          name: 'maNm'
-        },
-        {
-          header: '업체명',
-          name: 'actNm'
-        },
-        {
-          header: '입고량',
-          name: 'count'
-        },
-        {
-          header: '입고일',
-          name: 'inDate'
-        },
-        {
-          header: '자재LOT번호',
-          name: 'maLot'
-        },
-        {
-          header: '유통기한',
-          name: 'eDate'
-        }
-      ]
+          {
+        	  
+              header: 'No.',
+              name: 'preNo'
+            }, {
+          	  
+                header: '생산번호',
+                name: 'orderNo'
+              },
+          
+            {
+                header: '제품명',
+                name: 'prtName'
+              },
+            {
+              header: '진행상태',
+              name: 'orderPrg'
+            },
+            {
+              header: '총출고량',
+              name: 'orderOutQty'
+            },
+            {
+              header: '주문량',
+              name: 'orderQty'
+            },
+            {
+              header: '주문일자',
+              name: 'orderDate'
+            },
+            {
+                header: '납기일자',
+                name: 'dDay'
+              }
+           
+          ]
     });
+
 
     grid.on('check', ev => {
       console.log('check!', ev);
@@ -156,81 +124,72 @@ const grid = new tui.Grid({
     </script>
 
 		<script>
-const grid2 = new tui.Grid({
-      el: document.getElementById('grid2'),
-      data: [
-    {
-    	maLot: 'RML-10000-20221112001',
-    	mtCode: 'RML-10101',
-        maNm: '얇은 만두피',
-        actNm: 'YD 만두피',
-        outCount: 999,
-        outDate: '2022-11-12',
-        eDate: '2023-11-30',
-        outD: '출고'
-    },
-    {
-    	maLot: 'RML-10000-20221112002',
-    	mtCode: 'RML-10101',
-        maNm: '두꺼운 만두피',
-        actNm: 'YD 만두피',
-        outCount: 1200,
-        outDate: '2022-11-12',
-        eDate: '2023-11-30',
-        outD: '출고'
-    }
-  ],
-      rowHeaders: ['checkbox'],
-      scrollX: false,
-      scrollY: false,
-      columns: [
-        {
-          header: '자재LOT번호',
-          name: 'maLot'
-        },
-        {
-          header: '자재코드',
-          name: 'mtCode'
-        },
-        {
-          header: '자재명',
-          name: 'maNm'
-        },
-        {
-          header: '업체명',
-          name: 'actNm'
-        },
-        {
-          header: '출고량',
-          name: 'outCount'
-        },
-        {
-          header: '출고일',
-          name: 'outDate'
-        },
-        {
-          header: '유통기한',
-          name: 'eDate'
-        },
-        {
-            header: '출고구분',
-            name: 'outD'
-          }
-      ]
-    });
-
-    grid2.on('check', ev => {
-      console.log('check!', ev);
-    });
-
-    grid2.on('uncheck', ev => {
-      console.log('uncheck!', ev);
-    });
-
-    grid2.on('focusChange', ev => {
-      console.log('change focused cell!', ev);
-    });
-    </script>
+	document.addEventListener('shown.bs.modal', function (){
+		modalGrid = '';
+		var modalGrid = new tui.Grid({
+			el: document.getElementById('modalGrid'),
+			data: [{
+				preNo: '00001',
+				orderNo: '00003',
+		    	orderDate: '2022-12-20',
+		    	prtName: '자몽이슬',
+		    	orderQty: 500,
+		    	dDay: '2022-12-13',
+		    	unitPrice: '1450',
+		    	orderPrice : '725,000'
+			},
+			{
+				orderNo: '00004',
+		    	orderDate: '2022-12-21',
+		    	prtName: '참이슬',
+		    	orderQty: 10000,
+		    	dDay: '2022-11-25',
+		    	unitPrice: '1350',
+		    	orderPrice : '13,500,000'
+			}],
+			rowHeaders: ['checkbox'],
+			scrollX: false,
+			scrollY: false,
+			columns:  [
+		          {
+		        	  
+		              header: 'No.',
+		              name: 'preNo'
+		            }, {
+		          	  
+		                header: '생산번호',
+		                name: 'orderNo'
+		              },
+		          
+		            {
+		                header: '제품명',
+		                name: 'prtName'
+		              },
+		            {
+		              header: '진행상태',
+		              name: 'orderPrg'
+		            },
+		            {
+		              header: '총출고량',
+		              name: 'orderOutQty'
+		            },
+		            {
+		              header: '주문량',
+		              name: 'orderQty'
+		            },
+		            {
+		              header: '주문일자',
+		              name: 'orderDate'
+		            },
+		            {
+		                header: '납기일자',
+		                name: 'dDay'
+		              }
+		           
+		          ]
+		    });
+	}, '.modal');
+	</script>
 	</article>
 </body>
 </html>
