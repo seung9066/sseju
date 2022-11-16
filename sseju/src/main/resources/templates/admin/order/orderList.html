@@ -23,11 +23,9 @@ body {
 		</div>
 		<hr>
 		<ul class="ul-style">
-
-			<li><label for="empNm"> 품목 </label><input id="empNm" readonly>
-			</li>
-			<li><label for="chkDate">주문일자</label><input type="date"
-				id="chkDate"><span> - </span><input type="date" id="chkDate">
+			<li><label for="prtName">품목검색</label><input type="text">
+			<li><label for="orderDatee">주문일자</label><input type="date"
+				id="orderDate"><span> - </span><input type="date" id="orderDate">
 				<button class="btn btn-dark btn-sm">조회</button>
 				<button class="btn btn-dark btn-sm">초기화</button></li>
 		</ul>
@@ -51,11 +49,12 @@ body {
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
+
 					<div class="modal-body">
 						<div>
 							<div id="modalGrid" style="width: 100%;"></div>
 						</div>
-						<div align="center">
+						<div align="right">
 							<button class="btn btn-dark btn-sm">추가</button>
 							<button class="btn btn-dark btn-sm">취소</button>
 						</div>
@@ -64,6 +63,26 @@ body {
 				</div>
 			</div>
 		</div>
+		<!-- Modal 내용 -->
+		<div class="modal fade" id="exampleModal" tabindex="-1"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">거래처 목록</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<button type="button" class="btn btn-dark btn-sm"
+							data-bs-dismiss="modal">조회</button>
+						<button type="button" class="btn btn-dark btn-sm">초기화</button>
+						<div id="modalGrid"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<script>
 const grid = new tui.Grid({
       el: document.getElementById('grid'),
@@ -83,7 +102,7 @@ const grid = new tui.Grid({
     	prtName: '참소주',
     	orderQty: 1004,
     	dDay: '2022-12-15',
-    	orderPrg: '진행중',
+    	orderPrg: '준비중',
     }
   ],
       rowHeaders: ['checkbox'],
@@ -96,7 +115,7 @@ const grid = new tui.Grid({
             },
             {
               header: '주문일자',
-              name: 'orderDay'
+              name: 'orderDate'
             },
             {
               header: '품목',
@@ -117,6 +136,7 @@ const grid = new tui.Grid({
            
           ]
     });
+
 
     grid.on('check', ev => {
       console.log('check!', ev);
@@ -142,7 +162,8 @@ const grid = new tui.Grid({
 		    	prtName: '자몽이슬',
 		    	orderQty: 500,
 		    	dDay: '2022-12-13',
-		    	orderPrg: '준비중',
+		    	unitPrice: '1450',
+		    	orderPrice : '725,000'
 			},
 			{
 				orderNo: '00004',
@@ -150,7 +171,8 @@ const grid = new tui.Grid({
 		    	prtName: '참이슬',
 		    	orderQty: 10000,
 		    	dDay: '2022-11-25',
-		    	orderPrg: '진행중'
+		    	unitPrice: '1350',
+		    	orderPrice : '13,500,000'
 			}],
 			rowHeaders: ['checkbox'],
 			scrollX: false,
@@ -162,7 +184,7 @@ const grid = new tui.Grid({
 		          },
 		          {
 		            header: '주문일자',
-		            name: 'orderDay'
+		            name: 'orderDate'
 		          },
 		          {
 		            header: '품목',
@@ -186,6 +208,7 @@ const grid = new tui.Grid({
 		          }
 		        ]
 		      });
+		
 	}, '.modal');
 	</script>
 	</article>
