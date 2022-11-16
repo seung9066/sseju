@@ -5,6 +5,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.sseju.java.code.service.CodeService;
+import com.sseju.java.code.service.CodeVO;
 import com.sseju.java.company.service.CompanyService;
 import com.sseju.java.company.service.CompanyVO;
 
@@ -14,6 +16,9 @@ public class CompanyController {
 	@Autowired
 	CompanyService service;
 	
+	@Autowired
+	CodeService serviceC;
+	
 	@PostMapping("/newCpAccount")
 	public String cpAccount(CompanyVO vo) {
 		BCryptPasswordEncoder enco = new BCryptPasswordEncoder();
@@ -22,6 +27,16 @@ public class CompanyController {
 		
 		service.insertCompany(vo);
 		service.insertLogin(vo);
+		
+		CompanyVO voCP = new CompanyVO();
+		voCP = service.getCompanyInfo(vo);
+		
+		CodeVO voc = new CodeVO();
+		voc.setCode(voCP.getCpCode());
+		voc.setDivName("거래처");
+		voc.setCodeName(voCP.getCpName());
+		voc.setDivCode("CP");
+		serviceC.insertCode(voc);
 		return "login";
 	}
 
