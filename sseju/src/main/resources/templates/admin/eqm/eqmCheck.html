@@ -19,6 +19,29 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 
 <style>
+.tui-datepicker {
+	z-index: 1001;
+}
+
+.tui-select-box {
+	z-index: 1001;
+}
+
+/* ul 스타일 */
+.ul-style {
+	list-style: none;
+	padding: 0px;
+}
+
+.ul-style li>label {
+	width: 100px;
+	text-align: center;
+}
+
+.ul-style li {
+	padding: 5px;
+}
+
 .row {
 	margin: 15px;
 }
@@ -35,6 +58,14 @@
 	background-color: green;
 	color: white;
 }
+#border {
+	border : 1px solid white;
+	background-color : white;
+	border-width: 40px;
+    border-radius: 2em;
+
+ }
+
 </style>
 
 
@@ -45,22 +76,37 @@
 
 	<article layout:fragment="content">
 		<main id="main" class="main">
-
-
 			<h4>
 				<strong>설비점검관리</strong>
 			</h4>
+			
+			<hr>
+
+			<div id="border">
+				<span>해당일자&nbsp;</span> <input type="date"><span> - </span><input
+					type="date"> &nbsp;&nbsp;&nbsp;<span>설비구분</span>
+				
+					<select>
+						<option selected>--선택--</option>
+						<option value="1">bottle</option>
+						<option value="2">inject</option>
+						<option value="3">package</option>
+					</select>
+					
+					<button class="button" type="button">조회</button>
+					
+				</div>
+	<br>
 			<div style="float: right;">
-				<button class="button" type="submit"  data-bs-toggle="modal" data-bs-target="#chkInsModal">등록</button>
+				<button class="button" data-bs-toggle="modal"
+					data-bs-target="#chkInsModal">등록</button>
 				<button class="button">수정</button>
 				<button class="button">삭제</button>
 			</div>
-			<br>
-			<hr>
-
-
-
-
+			
+			<br> <br>
+			<div class="row"></div>
+			<div id="chkInsGrid"></div>
 			<div id="eqmGrid"></div>
 
 			<div class="modal" tabindex="-1" id="chkInsModal">
@@ -77,13 +123,13 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">취소</button>
-							<button type="button" class="btn btn-primary" >등록</button>
+							<button type="button" class="btn btn-primary">등록</button>
 						</div>
 					</div>
 				</div>
 			</div>
-			
-			
+
+
 			<script>
 			
 			chkInsModal.addEventListner('shown.bs.modal', () => {
@@ -174,7 +220,7 @@
 				  myInput.focus()
 				})
 			</script>
-	
+
 
 			<!-- 본문 끝 -->
 
