@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+
+<head>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main id="main" class="main">
+
+			<h4>
+				<strong>공통코드 관리</strong>
+			</h4>
+			<div style="float: right;">
+				<button class="button">등록</button>
+				<button class="button">수정</button>
+				<button class="button" onclick="selectDelete()">삭제</button>
+			</div>
+
+			<div id="codeGrid"></div>
+
+			<div class="modal" tabindex="-1" id="chkInsModal">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">설비 정기점검 등록</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<p>Modal body text goes here.</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">취소</button>
+							<button type="button" class="btn btn-primary">등록</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<script>
+			chkInsModal.addEventListner('shown.bs.modal', () => {
+				codeGrid.refreshLayout(); // 모달창 새로고침(등록 후 바로 반영)
+			})
+			</script>
+
+			<script>
+			url="codeList"
+			       fetch(url) // 설비 단건조회 불러오는 아작스
+			       .then(res=>res.json())
+			       .then(obj=>{
+			           console.log(obj);
+			           codeGrid.resetData(obj);
+			       })
+			       
+				var codeGrid = new tui.Grid({
+					el : document.getElementById('codeGrid'),
+					pagination:true,
+					pageOption: {
+						useClient:true,
+						perPage:4
+					},
+					scrollX : false,
+					scrollY : false,
+					rowHeaders: ['checkbox'],
+					columns : [ {
+						header : '코드',
+						name : 'code',
+					}, {
+						header : '코드명',
+						name : 'codeName',
+					}, {
+						header : '공통코드',
+						name : 'divCode', //납기일자명 수정
+					}, {
+						header : '구분',
+						name : 'divName'
+					} ]
+				});
+			
+			var deleteCode = [];
+			
+			codeGrid.on('check', ev => {
+				console.log(codeGrid.getValue(ev.rowKey, 'code'));
+				deleteCode.push((codeGrid.getValue(ev.rowKey, 'code')));
+				console.log(deleteCode);
+				console.log($('input[name=_checked]').val());
+				
+				/* $('input[name=_checked]').each(function (idx, item){
+					codeGrid.getValue(i, 'code');
+					console.log(codeGrid.getValue(ev.rowKey, 'code'));
+				}) */
+			});
+			
+			codeGrid.on('uncheck', ev => {
+				console.log(codeGrid.getValue(ev.rowKey, 'code'));
+				for(let i = 0; i < deleteCode.length; i++) {
+					if(deleteCode[i] == codeGrid.getValue(ev.rowKey, 'code')) {
+						deleteCode.splice(i, 1);
+					}
+				}
+				console.log(deleteCode);
+			});
+			
+			function selectDelete() {
+				console.log(codeGrid.getCheckedRows());
+				let code = [];
+				for(co of codeGrid.getCheckedRows()){
+					console.log(co)
+					code.push(co.code)
+					console.log(code);
+				}
+				
+				$.ajax({
+					url:'selectDelete',
+					type:'GET',
+					data:code,
+					async:false,
+					success:function(data){
+						if(data > 0) {
+							alert("삭제완료");
+						} else {
+							alert("삭제실패");
+						}
+					},
+					error:function(reject){
+						alert("에러");
+						console.log(reject);
+					}
+				})
+			}
+				
+			var myModal = document.getElementById('myModal')
+			var myInput = document.getElementById('myInput')
+
+			myModal.addEventListener('shown.bs.modal', function () {
+				myInput.focus()
+			})
+			</script>
+		</main>
+	</article>
+
+	<!-- Vendor JS Files -->
+	<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+	<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="assets/vendor/chart.js/chart.min.js"></script>
+	<script src="assets/vendor/echarts/echarts.min.js"></script>
+	<script src="assets/vendor/quill/quill.min.js"></script>
+	<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+	<script src="assets/vendor/tinymce/tinymce.min.js"></script>
+	<script src="assets/vendor/php-email-form/validate.js"></script>
+
+	<!-- Template Main JS File -->
+	<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

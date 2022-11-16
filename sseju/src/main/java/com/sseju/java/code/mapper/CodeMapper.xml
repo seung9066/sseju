@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.sseju.java.code.mapper.CodeMapper">
+  	<select id="getCodeList" resultType="CodeVO">
+  		SELECT * FROM code
+  	</select>
+  	
+  	<select id="getCodeInfo" parameterType="CodeVO" resultType="CodeVO">
+  		SELECT * FROM code WHERE code = #{code}
+  	</select>
+  	
+  	<insert id="insertCode" parameterType="CodeVO">
+  		INSERT INTO code values(#{code}, #{divName}, #{codeName}, #{divCode})
+  	</insert>
+  	
+	<delete id="deleteCode" parameterType="CodeVO">
+		DELETE FROM code WHERE code = #{code}
+	</delete>
+	
+	<delete id="selectDelete" parameterType="list">
+		DELETE FROM code WHERE code in(
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</delete>
+  </mapper>
