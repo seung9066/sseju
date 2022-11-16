@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>LotTrack</title>
+<!-- 제이쿼리 -->
+<script	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!-- 토스트UI -->
+<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main id="main" class="main">
+		<h4>제품 로트 관리</h4>
+		<!-- <label><span> 검색 : </span><input type="text" placeholder="로트번호, 제품코드, 담당자명, 등록일자 등"></label> -->
+			<!-- 그리드 -->
+			<div id="ltGrid"></div>
+
+
+			<script type="text/javascript">
+				var ltGrid = new tui.Grid({
+					el : document.getElementById('ltGrid'),
+					data : [ {
+						preNo : 'PRD20221116-001',
+						dDay : 'PRD-SJ001',
+						prtName : '30,000EA',
+						inQty : '김준형',
+						prePrg : '2022-11-12'
+					}, {
+						preNo : 'PRD20221116-002',
+						dDay : 'PRD-SJ002',
+						prtName : '300,000EA',
+						inQty : '김형준',
+						prePrg : '2022-11-12'
+					}
+					// data 가져오는 법
+					// data: {
+					//    api: {
+					//       readData: {
+					//          url: '/api/readData',
+					//          method: 'GET'
+					//       }
+					//    }
+					// },
+					],
+					scrollX : false,
+					scrollY : false,
+					minBodyHeight : 30,
+					pageOptions : {
+						perPage : 5
+					},
+					columns : [ {
+						header : '시리얼번호(로트번호)',
+						name : 'preNo'
+					}, {
+						header : '제품코드',
+						name : 'dDay',
+						filter : {
+							type : 'text',
+							showApplyBtn : true,
+							showClearBtn : true
+						}
+					}, {
+						header : '생산수량',
+						name : 'prtName'
+					},  {
+						header : '담당자',
+						name : 'inQty'
+					}, {
+						header : '로트 등록 일자',
+						name : 'prePrg',
+						filter : {
+							type : 'text',
+							showApplyBtn : true,
+							showClearBtn : true
+						}
+					} ]
+				});
+			</script>
+		</main>
+	</article>
+</body>
+</html>

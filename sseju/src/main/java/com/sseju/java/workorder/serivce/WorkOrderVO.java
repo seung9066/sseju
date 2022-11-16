@@ -10,11 +10,11 @@ import lombok.Data;
 @Data
 @Alias("woVO")
 public class WorkOrderVO {
-	private String preNo; 			//작업 지시 번호 PK
+	private String preNo; 		//작업 지시 번호 PK
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date preDate; 		//납기일자
 	private String preManager; 	//작업 담당자
-	private int instructionQty;	//지시 수량
+	private int insQty;			//지시 수량
 	private String preQty;		//생산수량
 	private String prtCode;		//제품코드 FK, 제품명 끌어오기도 필요함
 	private String orderNo;		//주문번호 FK, 서브쿼리나 조인문으로 업체명 가져와야함
