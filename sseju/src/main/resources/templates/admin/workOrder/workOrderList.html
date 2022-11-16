@@ -20,18 +20,15 @@
 	margin: 15px;
 }
 
-.button {
-	display: inline-block;
-	cursor: pointer;
-	border: none;
-	border-radius: 4px;
-	background-color: green;
-	color: white;
-}
 h4 {
 	display: inline-block;
 }
-
+td{
+	padding : 0;
+}
+input {
+	padding : 0;
+}
 </style>
 </head>
 <body>
@@ -49,40 +46,42 @@ h4 {
 			<div id="workorderGrid"></div>
 			<!-- 작업 지시 등록 칸 -->
 			<br>
-			<h6>작업 지시 등록</h6>
+			<h6 style="display: inline-block;">작업 지시 등록</h6>
+			<div style="float:right;">
+			<button class="button">등록</button>
+			</div>
 			<form action="insert" method="post">
 				<div>
 				<!-- 품목코드가 등록되면 품목명이 자동으로 입력되게 -->
 					<table id="insertwo">
 						<tr>
+							<th>품목코드 / 품목명</th>
+								<td>
+									<select>
+										<option>선택</option>
+										<option>PRD_001 / 오리지널</option>
+										<option>PRD_002 / 청포도</option>
+										<option>PRD_003 / 자몽</option>
+										<option>PRD_004 / 유자</option>
+										<option>PRD_005 / 석류</option>
+										<option>PRD_006 / 블루베리</option>
+									</select>
+								</td>
 							<th>담당자</th>
 							<td><input type="text"></td>
 							<th>지시수량</th>
-							<td><input type="number"></td>
-							<th>생산 지시 날짜</th><!-- 당일로 고정되게 자동으로, 터치X -->
+							<td><input type="number" min="1"></td>
+							<th>납기 일자</th>
+							<!-- 지시 일자일 경우 당일로 고정되게 자동으로, 터치X -->
+							<!-- 납기 일자로 할 경우에는 날짜 선택 가능해야함 -->
 							<td><input type="date"></td>							
-						</tr>
-						<tr>
-							<th>품목코드</th>
-							<td><select>
-									<option>선택</option>
-									<option>PRD_001</option>
-									<option>PRD_002</option>
-									<option>PRD_003</option>
-									<option>PRD_004</option>
-									<option>PRD_005</option>
-									<option>PRD_006</option>
-								</select>
-							</td>
-							<th>품목명</th>
-							<td><input type="text"></td>
 						</tr>
 					</table>
 				</div>
 			</form>
 
 			<script type="text/javascript">
-			 var eqmGrid = new tui.Grid({
+			 var workorderGrid = new tui.Grid({
 				 el: document.getElementById('workorderGrid'),
 				 data : [ {
 			    	  preNo : '1',
@@ -115,6 +114,22 @@ h4 {
 			    	  preQty : '1000',
 			    	  inQty : '10000',
 			    	  prePrg : '진행중'
+			         },
+			         {
+			    	  preNo : '5',
+			    	  dDay : '2022-11-16',
+			    	  prtName : '프로틴맛소주',
+			    	  preQty : '1000',
+			    	  inQty : '10000',
+			    	  prePrg : '완료'
+			         },
+			         {
+			    	  preNo : '6',
+			    	  dDay : '2022-11-16',
+			    	  prtName : '프로틴맛소주',
+			    	  preQty : '10000',
+			    	  inQty : '10000',
+			    	  prePrg : '완료'
 			         }
 			         // data 가져오는 법
 			         // data: {
@@ -130,6 +145,10 @@ h4 {
 			      
 		         scrollX : false,
 		         scrollY : false,
+		         minBodyHeight: 30,
+		         pageOptions: {
+		           perPage: 5
+		         },
 		         columns: [
 				        {
 				          header: '작업 지시 번호',
@@ -153,7 +172,8 @@ h4 {
 				        },
 				        {
 				          header : '진행상태',
-				          name:'prePrg'
+				          name:'prePrg',
+				          filter: { type: 'text', showApplyBtn: true, showClearBtn: true }
 				        }]
 		      });
 			   grid.on('check', ev => {

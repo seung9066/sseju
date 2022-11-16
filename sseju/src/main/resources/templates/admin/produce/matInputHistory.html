@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>MatInputHistory</title>
+<!-- 제이쿼리 -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!-- 토스트UI -->
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main id="main" class="main">
+			<h4>자재 투입 내역 조회 / 관리</h4>
+			<!-- Button trigger modal -->
+			<button type="button" class="button" data-bs-toggle="modal"
+				data-bs-target="#exampleModal">자재 발주 신청</button>
+
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModal" tabindex="-1"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">자재 발주 신청</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">인풋태그, 셀렉트박스로 </div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary">확인</button>
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">닫기</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 그리드 -->
+			<div id="mihGrid"></div>
+
+
+			<script type="text/javascript">
+				var mihGrid = new tui.Grid({
+					el : document.getElementById('mihGrid'),
+					data : [ {
+						preNo : '2022-11-16',
+						dDay : 'EQM-BT / 공병분리기',
+						prtName : '30000',
+						preQty : '30000',
+						inQty : '3',
+						prePrg : '김준형'
+					}, {
+						preNo : '20221102001',
+						dDay : '자몽맛소주',
+						prtName : '10000',
+						preQty : '10000',
+						inQty : '0',
+						prePrg : '김두영'
+					}
+					// data 가져오는 법
+					// data: {
+					//    api: {
+					//       readData: {
+					//          url: '/api/readData',
+					//          method: 'GET'
+					//       }
+					//    }
+					// },
+					],
+					scrollX : false,
+					scrollY : false,
+					minBodyHeight : 30,
+					pageOptions : {
+						perPage : 5
+					},
+					columns : [ {
+						header : '투입일자',
+						name : 'preNo'
+					}, {
+						header : '공정코드', //각 자재별로 어느 공정에 투입되었는지
+						name : 'dDay',
+						filter : {
+							type : 'text',
+							showApplyBtn : true,
+							showClearBtn : true
+						}
+					}, {
+						header : '투입', //각 공정에 몇개씩 투입되었는지=이거는 필요한가? 다똑같이 투입될건데
+						name : 'prtName'
+					}, {
+						header : '재고',
+						name : 'preQty'
+					}, {
+						header : '자재 출고 담당자',
+						name : 'prePrg'
+					} ]
+				});
+			</script>
+
+		</main>
+	</article>
+</body>
+</html>

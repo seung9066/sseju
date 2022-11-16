@@ -9,14 +9,14 @@
 	</select>
 	<!-- 단건조회 -->
 	<select id="getSearchWorkOrder" parameterType="woVO" resultType="woVO">
-		SELECT preNo,
-			   preDate,
-			   preManager,
-			   instructionQty,
-			   preQty,
-			   prtCode,
-			   oderNo,
-			   prePrg
+		SELECT pre_no,
+			   pre_date,
+			   pre_manager,
+			   ins_qty,
+			   pre_qty,
+			   prt_code,
+			   oder_no,
+			   pre_prg
 		FROM produce
 		<where>
 			<if test="preNo > 0"></if>
@@ -25,18 +25,18 @@
 	</select>
 	<!-- 등록 -->
 	<insert id="insertWorkOrder" parameterType="woVO">
-		INSERT INTO produce( preNo
-						    ,preDate
-						    ,preManager
-						    ,instructionQty
-						    ,preQty
-						    ,prtCode
-						    ,oderNo
-						    ,prePrg)
+		INSERT INTO produce( pre_no
+						    ,pre_date
+						    ,pre_manager
+						    ,ins_qty
+						    ,pre_qty
+						    ,prt_code
+						    ,oder_no
+						    ,pre_prg)
 				   VALUES( #{preNo}
 						   ,#{preDate}
 						   ,#{preManager}
-						   ,#{instructionQty}
+						   ,#{insQty}
 						   ,#{preQty}
 						   ,#{prtCode}
 						   ,#{oderNo}
@@ -46,18 +46,18 @@
 	<update id="updateWorkOrder" parameterType="woVO">
 		UPDATE produce
 		<set>
-			preManager = #{preManager},
-			instructionQty = #{instructionQty},
-			preQty = #{preQty},
-			prePrg = #{prePrg}
+			pre_manager = #{preManager},
+			ins_qty = #{insQty},
+			pre_qty = #{preQty},
+			pre_prg = #{prePrg}
 		</set>
-		WHERE preNo = #{preNo}
+		WHERE pre_no = #{preNo}
 	</update>
 	
 	<!-- 삭제 -->
 	<delete id="deleteWorkOrder" parameterType="Integer">
 		DELETE FROM produce
-		WHERE preNo = #{preNo}
+		WHERE pre_no = #{preNo}
 	</delete>
 	
 	<!-- 작업 지시 번호 조회 -->
