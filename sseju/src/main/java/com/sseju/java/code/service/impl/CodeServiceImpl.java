@@ -63,4 +63,34 @@ public class CodeServiceImpl implements CodeService {
 		return mapper.getBomMenu();
 	}
 
+	@Override
+	public List<CodeVO> getBOMMatList() {
+		// TODO Auto-generated method stub
+		return mapper.getBOMMatList();
+	}
+
+	@Override
+	public CodeVO getPrtCode(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.getPrtCode(vo);
+	}
+
+	@Override
+	public CodeVO getMatCode(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.getMatCode(vo);
+	}
+
+	@Override
+	public int insertBOM(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.insertBOM(vo);
+	}
+
+	@Override
+	public List<CodeVO> getBOMPrtList() {
+		// TODO Auto-generated method stub
+		return mapper.getBOMPrtList();
+	}
+
 }

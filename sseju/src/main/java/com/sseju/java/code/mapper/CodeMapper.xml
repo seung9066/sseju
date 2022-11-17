@@ -35,4 +35,27 @@
 	<select id="getBomMenu" resultType="CodeVO">
 		SELECT prt_code, prt_name FROM product
 	</select>
+	
+	<select id="getBOMMatList" resultType="CodeVO">
+		SELECT * FROM material
+	</select>
+	
+	<select id="getMatCode" parameterType="CodeVO" resultType="CodeVO">
+		SELECT mat_code FROM material WHERE mat_name = #{matName}
+	</select>
+
+	<select id="getPrtCode" parameterType="CodeVO" resultType="CodeVO">
+		SELECT prt_code FROM product WHERE prt_name = #{prtName}
+	</select>
+	
+	<insert id="insertBOM" parameterType="CodeVO">
+		<selectKey keyProperty="no" resultType="Integer" order="BEFORE">
+			SELECT NVL(MAX(no),0) + 1 FROM bom
+		</selectKey>
+		INSERT INTO bom VALUES (#{no}, #{prtCode}, #{capacity}, #{matCode})
+	</insert>
+	
+	<select id="getBOMPrtList" resultType="CodeVO">
+		SELECT * FROM product
+	</select>
   </mapper>

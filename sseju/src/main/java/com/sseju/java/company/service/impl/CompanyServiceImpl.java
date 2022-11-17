@@ -63,4 +63,10 @@ public class CompanyServiceImpl implements CompanyService {
 		return mapper.getCompanyInfoId(vo);
 	}
 
+	@Override
+	public int deleteLogin(CompanyVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.deleteLogin(vo);
+	}
+
 }
