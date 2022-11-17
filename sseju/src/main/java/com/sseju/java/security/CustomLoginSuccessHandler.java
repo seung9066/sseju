@@ -33,7 +33,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_COMPANY"))) {
 			CompanyVO vo = new CompanyVO();
 			vo.setId(authentication.getName());
-			request.getSession().setAttribute("user", serviceC.getCompanyInfo(vo));
+			request.getSession().setAttribute("user", serviceC.getCompanyInfoId(vo));
 			response.sendRedirect(request.getContextPath() + "/orlist");
 		} else {
 			EmployeeVO vo = new EmployeeVO();

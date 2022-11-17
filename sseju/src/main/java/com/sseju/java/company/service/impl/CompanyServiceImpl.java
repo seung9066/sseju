@@ -57,4 +57,10 @@ public class CompanyServiceImpl implements CompanyService {
 		return mapper.insertLogin(vo);
 	}
 
+	@Override
+	public CompanyVO getCompanyInfoId(CompanyVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.getCompanyInfoId(vo);
+	}
+
 }

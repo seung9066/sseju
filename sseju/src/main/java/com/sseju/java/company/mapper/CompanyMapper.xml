@@ -16,6 +16,10 @@
 		SELECT cp_code FROM company
 	</select>
 	
+	<select id="getCompanyInfoId" parameterType="CompanyVO" resultType="CompanyVO">
+		SELECT * FROM company WHERE id = #{id}
+	</select>
+	
 	<select id="getCompanyInfo" parameterType="CompanyVO" resultType="CompanyVO">
 		SELECT * FROM company WHERE cp_code = #{cpCode}
 	</select>

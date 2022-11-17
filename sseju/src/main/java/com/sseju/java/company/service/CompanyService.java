@@ -12,6 +12,7 @@ public interface CompanyService {
 
 	// 회원 단건 조회
 	public CompanyVO getCompanyInfo(CompanyVO vo);
+	public CompanyVO getCompanyInfoId(CompanyVO vo);
 
 	// 회원 가입
 	public int insertCompany(CompanyVO vo);
