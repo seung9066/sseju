@@ -1,4 +1,4 @@
-package com.sseju.java.prtprog;
+package com.sseju.java.prtprog.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
