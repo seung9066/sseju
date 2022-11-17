@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>production process</title>
+<!-- 제이쿼리 -->
+<script	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!-- 토스트UI -->
+<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main id="main" class="main">
+		<h4>생산 공정 조회</h4>
+			<div style="float:right;">
+				<button class="button">수정</button>
+				<button class="button">삭제</button>
+			</div>
+			<!-- 작업 지시 DB에서 불러와가지고 grid로 띄워줌
+			grid에 띄워진 list를 클릭하면 상세정보가 나오게 할 수 있는지 알아봐야함 -->
+			<div id="workorderGrid"></div>
+			<!-- 작업 지시 등록 칸 -->
+			<br>
+			<h4 style="display: inline-block;">생산 공정 등록</h4>
+			<div style="float:right;">
+			<button class="button">등록</button>
+			</div>
+			<form action="insert" method="post">
+				<div>
+				<!-- 품목코드가 등록되면 품목명이 자동으로 입력되게 -->
+					<table id="insertwo">
+						<tr>
+							<th>자재코드</th>
+								<td>
+									<select>
+										<option>선택</option>
+										<option>MAT-CA / 병뚜껑</option>
+										<option>MAT-LQ / 원액</option>
+										<option>MAT-BT / 공병</option>
+										<option>MAT-LB / 병라벨</option>
+										<option>MAT-PA / 포장용 박스</option>
+									</select>
+								</td>
+							<th>반환 사유</th>
+							<td><input type="text"></td>
+							<th>반환수량</th>
+							<td><input type="number" min="1"></td>
+							<th>신청 일자</th>
+							<!-- 지시 일자일 경우 당일로 고정되게 자동으로, 터치X -->
+							<!-- 납기 일자로 할 경우에는 날짜 선택 가능해야함 -->
+							<td><input type="date"></td>							
+						</tr>
+					</table>
+				</div>
+			</form>
+
+			<script type="text/javascript">
+			 var workorderGrid = new tui.Grid({
+				 el: document.getElementById('workorderGrid'),
+				 data : [ {
+			    	  preNo : 'MAT-BT001 / 공병',
+			    	  dDay : '병 미세금 다량 검출',
+			    	  prtName : '5,000EA',
+			    	  preQty : '공병 판매처',
+			    	  inQty : '완료',
+			    	  prePrg : '2022-11-01'
+			         },
+			         {
+			    	  preNo : '2',
+			    	  dDay : '2022-11-16',
+			    	  prtName : '자몽맛소주',
+			    	  preQty : '1000',
+			    	  inQty : '10000',
+			    	  prePrg : '진행중'
+			         },
+			         {
+			    	  preNo : '3',
+			    	  dDay : '2022-11-16',
+			    	  prtName : '프로틴맛소주',
+			    	  preQty : '1000',
+			    	  inQty : '10000',
+			    	  prePrg : '진행중'
+			         },
+			         {
+			    	  preNo : '4',
+			    	  dDay : '2022-11-16',
+			    	  prtName : '무슨맛소주',
+			    	  preQty : '1000',
+			    	  inQty : '10000',
+			    	  prePrg : '진행중'
+			         },
+			         {
+			    	  preNo : '5',
+			    	  dDay : '2022-11-16',
+			    	  prtName : '프로틴맛소주',
+			    	  preQty : '1000',
+			    	  inQty : '10000',
+			    	  prePrg : '완료'
+			         },
+			         {
+			    	  preNo : '6',
+			    	  dDay : '2022-11-16',
+			    	  prtName : '프로틴맛소주',
+			    	  preQty : '10000',
+			    	  inQty : '10000',
+			    	  prePrg : '완료'
+			         }
+			         // data 가져오는 법
+			         // data: {
+			         //    api: {
+			         //       readData: {
+			         //          url: '/api/readData',
+			         //          method: 'GET'
+			         //       }
+			         //    }
+			         // },
+			      ],
+			      rowHeaders: ['checkbox'],
+			      
+		         scrollX : false,
+		         scrollY : false,
+		         minBodyHeight: 30,
+		         pageOptions: {
+		           perPage: 5
+		         },
+		         columns: [
+				        {
+				          header: '반환 자재명',
+				          name: 'preNo'
+				        },
+				        {
+				          header: '반환사유',
+				          name: 'dDay'
+				        },
+				        {
+				          header: '반환 수량',
+				          name: 'prtName'
+				        },
+				        {
+				          header: '반품 비용 부담처',
+				          name: 'preQty'
+				        },
+				        {
+				          header: '진행 상황',
+				          name: 'inQty',
+				          filter: { type: 'text', showApplyBtn: true, showClearBtn: true }
+				        },
+				        {
+				          header : '반환 신청 일자',
+				          name:'prePrg'
+				        }]
+		      });
+			   grid.on('check', ev => {
+				      console.log('check!', ev);
+				    });
+
+				    grid.on('uncheck', ev => {
+				      console.log('uncheck!', ev);
+				    });
+
+				    grid.on('focusChange', ev => {
+				      console.log('change focused cell!', ev);
+				    });
+		</script>		
+		
+		</main>
+	</article>
+</body>
+</html>

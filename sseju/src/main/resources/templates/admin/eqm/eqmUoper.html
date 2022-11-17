@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>설비 비가동관리</title>
+<style>
+#endBtn, #strBtn {
+	width: 180px;
+	height: 180px;
+	border: none;
+	border-radius: 20px;
+	font-size: 20px;
+	font-weight: bold;
+	color: white;
+}
+
+#endBtn {
+	background-color: red;
+}
+
+#strBtn {
+	background-color: blue;
+}
+
+img {
+	width: 30px;
+}
+
+.time>input {
+	width: 30px;
+	margin: 0 auto;
+}
+</style>
+<!-- 제이쿼리 -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!-- 토스트UI -->
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main id="main" class="main">
+			<h4>설비 비가동관리</h4>
+			<div class="row">
+				<div class="col-6">
+					<h5>설비조회</h5>
+					<hr>
+					<div>
+						<label>설비현황</label> <input type="radio" name="eqmState" value="">설비
+						<input type="radio" name="eqmState" value="">비가동 <input
+							type="radio" name="eqmState" value="">비가동 내역
+					</div>
+					<div>
+						<label>설비구분</label> <select name="">
+							<option selected>전체</option>
+							<option value="">설.구1</option>
+							<option value="">2</option>
+							<option value="">3</option>
+						</select>
+					</div>
+					<br>
+					<div id="eqmList"></div>
+					<div id="uoperGrid"></div>
+				</div>
+				<div class="col-6">
+
+					<h5 style="width: 180px;">비가동 등록</h5>
+					<div style="float: right">
+						<button class="button" type="submit">등록</button>
+						<button class="button" type="button">삭제</button>
+						<button class="button" type="reset">초기화</button>
+					</div>
+					<hr>
+					<table class="table">
+						<tr>
+							<th>설비코드</th>
+							<td><input type="text" name="eqmCode" readonly></td>
+							<th>설비명</th>
+							<td><input type="text" name="eqmName" readonly></td>
+						</tr>
+						<tr>
+							<th>비가동코드</th>
+							<td><input type="text" name="uoperCode"></td>
+							<th>비가동명</th>
+							<td><input type="text" name="uoperName"></td>
+						</tr>
+						<tr>
+							<th>일자</th>
+							<td><input type="date" name="uoperStartTime"></td>
+							<th>작업자</th>
+							<td><input type="text" name="empNo"></td>
+						</tr>
+						<tr>
+							<th>작업내용</th>
+							<td><textarea placeholder="종료 누른 후에 입력가능.."></textarea></td>
+						</tr>
+						<tr>
+							<th><button type="button" id="endBtn">
+									<img src="assets/img/stop.png" alt="">
+									<p>비가동</p>
+								</button></th>
+							<td class="time"><input type="number">시<input
+								type="number">분</td>
+							<th><button type="button" id="strBtn">
+									<img src="assets/img/play-button.png" alt="">
+									<p>재가동</p>
+								</button></th>
+							<td class="time"><input type="number">시<input
+								type="number">분</td>
+						</tr>
+						<tr>
+					</table>
+
+
+				</div>
+
+			</div>
+
+			<script>
+			/* 설비리스트 그리드 */
+			var eqmList = new tui.Grid({
+					el : document.getElementById('eqmList'),
+					// 임시 데이터
+					data : [ {
+						eqmCode : 'eqm_25522',
+						eqmName : '주입기',
+						eqmDiv : '설비구분',
+						prsCode : 'IJ',
+						prsName : '공정명',
+						eqmState : '가동중'		
+					}, {
+						eqmCode : 'eqm_78942',
+						eqmName : '검사(F.B.I)',
+						eqmDiv : '설비구분',
+						prsCode : 'IS',
+						prsName : 'IS',
+						eqmState : '비가동'							}
+
+					],
+					
+					scrollX : false,
+					scrollY : true,
+					columns : [ {
+						header : '설비코드',
+						name : 'eqmCode',
+					}, {
+						header : '설비명',
+						name : 'eqmName',
+					}, {
+						header : '설비구분',
+						name : 'eqmDiv', 
+					},{
+						header : '공정',
+						name : 'prsCode', 
+					}, {
+						header : '공정이름',
+						name : 'prsName'
+					}, {
+						header : '설비상태',
+						name : 'eqmState'
+					}]
+				});
+			
+			/* 비가동 리스트 */
+			var uoperGrid = new tui.Grid({
+				el : document.getElementById('uoperGrid'),
+				// 임시 데이터
+				data : [ {
+					uoperNo : 'uoper_20220507',
+					eqmCode : 'eqm_2002',
+					eqmName : ' 주입기',
+					uoperName : '이물질끼임',
+					uoperStartTime : '2022-09-22 00 :16 :02',
+					uoperEndTime : '2022-09-22 01 :25 :18'		
+				}, {
+					uoperNo : 'uoper_20220507',
+					eqmCode : 'eqm_2002',
+					eqmName : ' 주입기',
+					uoperName : '이물질끼임',
+					uoperStartTime : '2022-09-22 00 :16 :02',
+					uoperEndTime : '2022-09-22 01 :25 :18'	},
+
+				{uoperNo : 'uoper_20220507',
+				eqmCode : 'eqm_2002',
+				eqmName : ' 주입기',
+				uoperName : '이물질끼임',
+				uoperStartTime : '2022-09-22 00 :16 :02',
+				uoperEndTime : '2022-09-22 01 :25 :18'},
+				
+				{uoperNo : 'uoper_20220507',
+				eqmCode : 'eqm_2002',
+				eqmName : ' 주입기',
+				uoperName : '이물질끼임',
+				uoperStartTime : '2022-09-22 00 :16 :02',
+				uoperEndTime : '2022-09-22 01 :25 :18'	}
+				],
+				
+				scrollX : false,
+				scrollY : true,
+				columns : [ {
+					header : 'no',
+					name : 'uoperNo',
+				}, {
+					header : '설비코드',
+					name : ' eqmCode',
+				}, {
+					header : '설비명',
+					name : 'eqmName', 
+					
+				},{
+					header : '비가동명',
+					name : 'uoperName', 
+				},{
+					header : '시작시간',
+					name : 'uoperStartTime', 
+				}, {
+					header : '종료시간',
+					name : 'uoperEndTime'
+				}]
+			});
+		
+			
+			
+			
+			</script>
+
+		</main>
+	</article>
+</body>
+</html>

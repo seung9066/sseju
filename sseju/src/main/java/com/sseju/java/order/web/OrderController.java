@@ -60,7 +60,7 @@ public class OrderController {
 	public String deleteForm(Model model, ORVO prVO) {
 		return "/admin/order/orderList";
 	}
-	
+
 	@GetMapping("prtlist")
 	public String selecetprtList(Model model) {
 		return "/admin/order/prtlist";
@@ -69,5 +69,10 @@ public class OrderController {
 	@GetMapping("inout")
 	public String selectrinout(Model model) {
 		return "/admin/order/inout";
+	}
+
+	@GetMapping("import")
+	public String selectImport(Model model) {
+		return "/admin/quality/import";
 	}
 }

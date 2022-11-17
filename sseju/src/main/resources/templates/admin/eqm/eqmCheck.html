@@ -58,14 +58,13 @@
 	background-color: green;
 	color: white;
 }
+
 #border {
-	border : 1px solid white;
-	background-color : white;
+	border: 1px solid white;
+	background-color: white;
 	border-width: 40px;
-    border-radius: 2em;
-
- }
-
+	border-radius: 2em;
+}
 </style>
 
 
@@ -79,37 +78,69 @@
 			<h4>
 				<strong>설비점검관리</strong>
 			</h4>
-			
+
 			<hr>
 
 			<div id="border">
 				<span>해당일자&nbsp;</span> <input type="date"><span> - </span><input
-					type="date"> &nbsp;&nbsp;&nbsp;<span>설비구분</span>
-				
-					<select>
-						<option selected>--선택--</option>
-						<option value="1">bottle</option>
-						<option value="2">inject</option>
-						<option value="3">package</option>
-					</select>
-					
-					<button class="button" type="button">조회</button>
-					
-				</div>
-	<br>
+					type="date"> &nbsp;&nbsp;&nbsp;<span>설비구분</span> <select>
+					<option selected>--선택--</option>
+					<option value="1">bottle</option>
+					<option value="2">inject</option>
+					<option value="3">package</option>
+				</select>
+
+				<button class="button" type="button">조회</button>
+
+			</div>
+			<br>
 			<div style="float: right;">
-				<button class="button" data-bs-toggle="modal"
-					data-bs-target="#chkInsModal">등록</button>
+				<button class="button" id="show" onclick="dis()">등록</button>
 				<button class="button">수정</button>
 				<button class="button">삭제</button>
 			</div>
-			
+			<br>
+			<br>
+			<!-- 등록 폼 : hidden/show  -->
+			<div id='dis'>
+				<table>
+					<tr>
+						<th>정기점검이력번호</th>
+						<th>설비코드</th>
+						<th>설비명</th>
+						<th>공정명</th>
+					</tr>
+					<tr>
+						<td><input type="text" name="" readonly></td>
+						<td><input type="text" name="">
+						<i class="bi bi-search" data-bs-toggle="modal" data-bs-target="#eqmModal"></i></td>
+						<td><input type="text" name=""></td>
+						<td><input type="text" name=""></td>
+					</tr>
+					<tr>
+						<th>점검일</th>
+						<th>차기점검일</th>
+						<th>판정</th>
+						<th>담당자</th>
+						<th>조치사항</th>
+					</tr>
+					<tr>
+						<td><input type="date" name=""></td>
+						<td><input type="date" name=""></td>
+						<td><input type="radio" name="chk" value="nor">정상<input
+							type="radio" name="chk" value="abnor">불량</td>
+						<td><input type="text" name=""><i class="bi bi-search" data-bs-toggle="modal" data-bs-target="#empModal"></i></td>
+						<td><textarea placeholder="입력하시오."></textarea></td>
+					</tr>
+
+				</table>
+			</div>
+
 			<br> <br>
 			<div class="row"></div>
-			<div id="chkInsGrid"></div>
-			<div id="eqmGrid"></div>
+			<div id="chkGrid"></div>
 
-			<div class="modal" tabindex="-1" id="chkInsModal">
+			<!-- 		<div class="modal" tabindex="-1" id="chkInsModal">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -127,6 +158,52 @@
 						</div>
 					</div>
 				</div>
+			</div> -->
+
+			<!-- 설비 모달  -->
+			<div class="modal" tabindex="-1" role="dialog" id="eqmModal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title"><b>설비코드</b></h5>
+							<button type="button" class="close" data-bs-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div id="eqmGrid"></div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary">선택</button>
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">취소</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- 사원 모달  -->
+			<div class="modal" tabindex="-1" role="dialog" id="empModal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title"><b>사원코드</b></h5>
+							<button type="button" class="close" data-bs-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div id="empGrid"></div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary">선택</button>
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">취소</button>
+						</div>
+					</div>
+				</div>
 			</div>
 
 
@@ -135,8 +212,29 @@
 			chkInsModal.addEventListner('shown.bs.modal', () => {
 				eqmGrid.refreshLayout(); // 모달창 새로고침(등록 후 바로 반영)
 			})
-				 
-				 
+			</script>
+			<script type="text/javascript">
+			/* 등록폼 보이기 */
+		/* 	$(function(){
+				$('#onDisplay').click(function(){
+					if($('#hidden').css("display") == "none"){
+						$('#hidden').show();
+					}
+				}); */
+			
+			function dis(){
+				if($('#dis').css('display') == 'none'){
+					$('#dis').show();
+					}else{
+						$('#dis').hide();
+					}
+				};
+				
+			document.addEventListener('shown.bs.modal', function (){
+					 eqmGrid.refreshLayout();
+					 }, '.modal');
+				
+			
 				
 			</script>
 
@@ -144,8 +242,8 @@
 
 
 			<script>
-				var eqmGrid = new tui.Grid({
-					el : document.getElementById('eqmGrid'),
+				var chkGrid = new tui.Grid({
+					el : document.getElementById('chkGrid'),
 					// 임시 데이터
 					data : [ {
 						checkNo : '1',
@@ -219,6 +317,103 @@
 				myModal.addEventListener('shown.bs.modal', function () {
 				  myInput.focus()
 				})
+			</script>
+			<script>
+			var eqmGrid = new tui.Grid({
+				el : document.getElementById('eqmGrid'),
+				// 임시 데이터
+				data : [ {
+					eqmCode : 'eqm_2008456',
+					eqmName : '주입기',
+					prsCode : '주입'
+
+				}, {
+					eqmCode : 'eqm_2008456',
+					eqmName : '주입기',
+					prsCode : '주입'
+				}
+
+				],
+				// data 가져오는 법
+				// data: {
+				//    api: {
+				//       readData: {
+				//          url: '/api/readData',
+				//          method: 'GET'
+				//       }
+				//    }
+				// },
+				rowHeaders: ['checkbox'],
+				scrollX : false,
+				scrollY : false,
+				columns : [ {
+					header : '설비코드',
+					name : 'eqmCode',
+				}, {
+					header : '설비명',
+					name : 'eqmName',
+				}, {
+					header : '공정코드',
+					name : 'prsCode', //납기일자명 수정
+				}]
+			});
+			
+			eqmGrid.on('check', ev => {
+			      console.log('check!', ev);
+			    });
+
+			eqmGrid.on('uncheck', ev => {
+			      console.log('uncheck!', ev);
+			    });
+
+			eqmGrid.on('focusChange', ev => {
+			      console.log('change focused cell!', ev);
+			    });
+			
+			/* 사원 그리드  */
+			var empGrid = new tui.Grid({
+				el : document.getElementById('empGrid'),
+				// 임시 데이터
+				data : [ {
+					eqmCode : 'eqm_2008456',
+					eqmName : '주입기',
+					prsCode : '주입'
+
+				}, {
+					eqmCode : 'eqm_2008456',
+					eqmName : '주입기',
+					prsCode : '주입'
+				}
+
+				],
+				
+				rowHeaders: ['checkbox'],
+				scrollX : false,
+				scrollY : false,
+				columns : [ {
+					header : '사원코드',
+					name : 'eqmCode',
+				}, {
+					header : '사원명',
+					name : 'eqmName',
+				}, {
+					header : '',
+					name : 'prsCode', //납기일자명 수정
+				}]
+			});
+			
+			empGrid.on('check', ev => {
+			      console.log('check!', ev);
+			    });
+
+			empGrid.on('uncheck', ev => {
+			      console.log('uncheck!', ev);
+			    });
+
+			empGrid.on('focusChange', ev => {
+			      console.log('change focused cell!', ev);
+			    });
+			
 			</script>
 
 

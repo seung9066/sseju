@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script
+	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<style>
+.tui-datepicker {
+	z-index: 1001;
+}
+
+.tui-select-box {
+	z-index: 1001;
+}
+
+/* ul 스타일 */
+.ul-style {
+	list-style: none;
+	padding: 0px;
+}
+
+.ul-style li>label {
+	width: 100px;
+	text-align: center;
+}
+
+.ul-style li {
+	padding: 5px;
+}
+</style>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main class="main" id="main">
+			<div>
+				<div id="mat-od-title">
+					<h3>재고관리</h3>
+				</div>
+				<hr>
+				<div>
+					<ul class="ul-style">
+						<li><label for="storage">창고</label><input type="text" id="storage"  data-bs-toggle="modal"
+							data-bs-target="#storageModal" readonly> <i
+							class="bi bi-search" data-bs-toggle="modal"
+							data-bs-target="#storageModal"></i> <input type="text" style="background-color: #E9E9E9" readonly></li>
+							
+						<li><label for="pct">품목</label><input type="text" id="pct" data-bs-toggle="modal"
+							data-bs-target="#pctModal"> <i
+							class="bi bi-search" data-bs-toggle="modal"
+							data-bs-target="#pctModal"></i> <input type="text" style="background-color: #E9E9E9" readonly></li>
+						<li><label>입고 일자</label>
+							<div
+								class="tui-datepicker-input tui-datetime-input tui-has-focus">
+								<input type="text" id="datepicker-input" aria-label="Date-Time">
+								<span class="tui-ico-date"></span>
+								<div id="wrapper" style="margin-top: -1px;"></div>
+							</div>
+					<button class="button">조회</button>
+					<button class="button">수정</button></li>
+					</ul>
+				</div>
+				<div style="float: right;">
+				</div>
+				<div id="grid"></div>
+			</div>
+
+			<!-- 창고 목록 모달 -->
+			<div class="modal" id="storageModal" tabindex="-1"
+				aria-labelledby="matModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-xl">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="matModalLabel">창고 목록</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div>
+								<div id="modalGrid"></div>
+							</div>
+							<div align="center">
+								<button class="button">등록</button>
+								<button class="button">취소</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<!-- 품목 목록 모달 -->
+			<div class="modal" id="pctModal" tabindex="-1"
+				aria-labelledby="actModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-xl">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="actModalLabel">업체 목록</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div>
+								<div id="modalGrid2"></div>
+							</div>
+							<div align="center">
+								<button class="button">등록</button>
+								<button class="button">취소</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<script>
+const grid = new tui.Grid({
+      el: document.getElementById('grid'),
+      bodyHeight: 500,
+      data: [
+    {
+        maCode: 'OAF-20221104-011',
+        mtCode: 'RML-10101',
+        maNm: '얇은 만두피',
+        price: 1000,
+        count: 200,
+        sumPrice: 2000000,
+        acNm: 'YD 만두피',
+        fDate: '2022-11-04',
+        eDate: '2022-11-09'
+    },
+    {
+        maCode: 'OAF-20221104-022',
+        mtCode: 'RML-10102',
+        maNm: '두꺼운 만두피',
+        price: 1500,
+        count: 200,
+        sumPrice: 3000000,
+        acNm: 'YD 만두피',
+        fDate: '2022-11-04',
+        eDate: '2022-11-09'
+    }
+  ],
+      rowHeaders: ['checkbox', 'rowNum'],
+      scrollX: false,
+      scrollY: true,
+      columns: [
+        {
+          header: '발주코드',
+          name: 'maCode'
+        },
+        {
+          header: '자재코드',
+          name: 'mtCode'
+        },
+        {
+          header: '자재명',
+          name: 'maNm'
+        },
+        {
+          header: '단가(원)',
+          name: 'price'
+        },
+        {
+          header: '발주량',
+          name: 'count'
+        },
+        {
+          header: '총액',
+          name: 'sumPrice'
+        },
+        {
+          header: '업체명',
+          name: 'acNm'
+        },
+        {
+          header: '발주신청일',
+          name: 'fDate'
+        },
+        {
+          header: '납기요청일',
+          name: 'eDate'
+        }
+      ]
+    });
+	
+    grid.on('check', ev => {
+      console.log('check!', ev);
+    });
+
+    grid.on('uncheck', ev => {
+      console.log('uncheck!', ev);
+    });
+
+    grid.on('focusChange', ev => {
+      console.log('change focused cell!', ev);
+    });
+
+	const grid2 = new tui.Grid({
+	      el: document.getElementById('grid2'),
+	      bodyHeight: 200,
+	      data: [
+	    {
+	    	mNo: 'PPD-20221101-001',
+	    	mCode: 'MD-00100',
+	    	name: '얇은피 고기만두',
+	    	count: 200,
+	        eDate: '2022-11-18'
+	    },
+	    {
+	    	mNo: 'PPD-20221101-002',
+	    	mCode: 'MD-00300',
+	    	name: '얇은피 새우만두',
+	    	count: 100,
+	        eDate: '2022-11-18'
+	    }
+	  ],
+	      rowHeaders: ['checkbox'],
+	      scrollX: false,
+	      scrollY: true,
+	      columns: [
+	        {
+	          header: '상세계획번호',
+	          name: 'mNo'
+	        },
+	        {
+	          header: '제품코드',
+	          name: 'mCode'
+	        },
+	        {
+	          header: '제품명',
+	          name: 'name'
+	        },
+	        {
+	          header: '계획량',
+	          name: 'count'
+	        },
+	        {
+	          header: '주문납기일',
+	          name: 'eDate'
+	        }
+	      ]
+	    });
+	
+	    grid2.on('check', ev => {
+	      console.log('check!', ev);
+	    });
+
+	    grid2.on('uncheck', ev => {
+	      console.log('uncheck!', ev);
+	    });
+
+	    grid2.on('focusChange', ev => {
+	      console.log('change focused cell!', ev);
+	    });
+
+	const grid3 = new tui.Grid({
+	      el: document.getElementById('grid3'),
+	      bodyHeight: 200,
+	      data: [
+	    {
+	    	code: 'RML-10101',
+	    	name: '얇은 만두피',
+	    	count: 3000
+	    }
+	  ],
+	      rowHeaders: ['checkbox'],
+	      scrollX: false,
+	      scrollY: true,
+	      columns: [
+	    	  {
+		          header: '자재코드',
+		          name: 'code'
+		        },
+		        {
+		          header: '자재명',
+		          name: 'name'
+		        },
+		        {
+		          header: '소모량',
+		          name: 'count'
+		        }
+	      ]
+	    });
+
+	    grid3.on('check', ev => {
+	      console.log('check!', ev);
+	    });
+
+	    grid3.on('uncheck', ev => {
+	      console.log('uncheck!', ev);
+	    });
+
+	    grid3.on('focusChange', ev => {
+	      console.log('change focused cell!', ev);
+	    });
+
+	const grid4 = new tui.Grid({
+	      el: document.getElementById('grid4'),
+	      bodyHeight: 200,
+	      data: [
+	    {
+	    	code: 'RML-10101',
+	    	name: '얇은 만두피',
+	    	sCount: 4000,
+	    	price: 1000,
+	    	count: 4000,
+	    	sumPrice: 4000000,
+	    	actNm: 'YD 만두피',
+	    	sDate: '2022-11-04',
+	    	eDate: '2022-11-10'
+	    }
+	  ],
+	      rowHeaders: ['rowNum'],
+	      scrollX: false,
+	      scrollY: true,
+	      columns: [
+	    	  {
+		          header: '자재코드',
+		          name: 'code'
+		        },
+		        {
+		          header: '자재명',
+		          name: 'name'
+		        },
+		        {
+		          header: '안전발주량',
+		          name: 'sCount'
+		        },
+		        {
+			      header: '단가(원)',
+			      name: 'price'
+			    },
+			    {
+				  header: '발주량',
+				  name: 'count'
+				},
+				{
+				  header: '총액',
+				  name: 'sumPrice'
+				},
+				{
+				  header: '업체명',
+				  name: 'actNm'
+				},
+				{
+				  header: '발주신청일',
+				  name: 'sDate'
+				},
+				{
+				  header: '납기요청일',
+				  name: 'eDate'
+				}
+					        
+	      ]
+	    });
+	
+    grid4.on('focusChange', ev => {
+        console.log('change focused cell!', ev);
+      });
+
+	document.addEventListener('shown.bs.modal', function (){
+		modalGrid.refreshLayout();
+		modalGrid2.refreshLayout();
+		modalGrid3.refreshLayout();
+		}, '.modal');
+	
+	
+	var modalGrid = new tui.Grid({
+		el: document.getElementById('modalGrid'),
+		bodyHeight: 200,
+		data: [{
+			matCode: 'RML-10101',
+			matNm: '얇은 만두피',
+			size: 100,
+			count: 200
+		},
+		{
+			matCode: 'RML-10102',
+			matNm: '굵은 만두피',
+			size: 100,
+			count: 200
+		}],
+		rowHeaders: ['checkbox'],
+		scrollX: false,
+		scrollY: true,
+		columns: [
+			{
+				header: '자재코드',
+				name: 'matCode',
+			},
+			{
+				header: '자재명',
+				name: 'matNm',
+			},
+			{
+				header: '규격',
+				name: 'size'
+			},
+			{
+				header: '수량',
+				name: 'count'
+			}
+		]
+	});
+	
+	var modalGrid2 = new tui.Grid({
+		el: document.getElementById('modalGrid2'),
+		bodyHeight: 200,
+		data: [{
+			actCode: 'VDR-1101',
+			actName: 'YD 만두피'
+		}],
+		rowHeaders: ['checkbox'],
+		scrollX: false,
+		scrollY: true,
+		columns: [
+			{
+				header: '업체 코드',
+				name: 'actCode',
+			},
+			{
+				header: '업체명',
+				name: 'actName',
+			}
+		]
+	});
+	
+	var modalGrid3 = new tui.Grid({
+		el: document.getElementById('modalGrid3'),
+		bodyHeight: 400,
+		data: [{
+			code: 'VDR-1101',
+			name: 'YD 만두피',
+			pDate: '2022-11-12',
+			eDate: '2023-11-18'
+		}],
+		rowHeaders: ['rowNum'],
+		scrollX: false,
+		scrollY: true,
+		columns: [
+			{
+				header: '생산 계획 코드',
+				name: 'code',
+			},
+			{
+				header: '계획명',
+				name: 'name',
+			},
+			{
+				header: '계획일자',
+				name: 'pDate',
+			},
+			{
+				header: '납기일자',
+				name: 'eDate',
+			}
+		]
+	});
+	
+	</script>
+	<script>
+	const datepicker = new tui.DatePicker('#wrapper', {
+		date : new Date(),
+		input : {
+			element : '#datepicker-input',
+			format : 'yyyy-MM-dd'
+		}
+	});
+	</script>
+		</main>
+	</article>
+</body>
+</html>

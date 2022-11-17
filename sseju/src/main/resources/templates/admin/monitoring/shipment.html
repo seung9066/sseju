@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>shipment</title>
+
+<style>
+body {
+	margin-top: 60px;
+	padding: 20px 30px;
+	transition: all 0.3s;
+}
+</style>
+</head>
+<body>
+
+	<article class="container" layout:fragment="content">
+		
+			<div id="mat-od-title">
+				<h2>출하현황</h2>
+			</div>
+			<hr>
+			<ul class="ul-style">
+				<li><label for="prtName">규격 검색</label><input type="text">
+				<li><label for="orderDate">주문일자</label><input type="date"
+					id="orderDate"><span> - </span><input type="date"
+					id="orderDate">
+					<button class="button">조회</button>
+					<button class="button">초기화</button></li>
+			</ul>
+
+			<div style="text-align: right;">
+				<button class="button" data-bs-toggle="modal"
+					data-bs-target="#addModal">등록</button>
+				<button class="button">저장</button>
+			</div>
+
+			<div id="grid"></div>
+
+			<!-- 추가 버튼 모달-->
+			<div class="modal fade" id="addModal" tabindex="-1"
+				aria-labelledby="addModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-xl">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="addModalLabel">주문 목록</h5>
+							<button type="button" class="button" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+
+						<div class="modal-body">
+							<div>
+								<div id="modalGrid" style="width: 100%;"></div>
+							</div>
+							<div align="right">
+								<button class="button">추가</button>
+								<button class="button">취소</button>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<!-- Modal 내용 -->
+			<div class="modal fade" id="exampleModal" tabindex="-1"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">거래처 목록</h5>
+							<button type="button" class="button" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<button type="button" class="button" data-bs-dismiss="modal">조회</button>
+							<button type="button" class="button">초기화</button>
+							<div id="modalGrid"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<script>
+const grid = new tui.Grid({
+      el: document.getElementById('grid'),
+      data: [
+    {
+    	preDate: '2022-11-17',
+    	prtName: '참이슬',
+    	prtUnit: 'EA',
+    	prtStandard: '360ml',
+    	orderOutQty: '915',
+    	orderPrice: '60,850,500',
+       
+    },
+    {
+    	preDate: '2022-11-19',
+    	prtName: '참소주',
+    	prtUnit: '박스',
+    	prtStandard: '360ml',
+    	orderOutQty: '1000',
+    	orderPrice: '80,900,540',
+    	
+    }
+  ],
+      rowHeaders: ['checkbox'],
+      scrollX: false,
+      scrollY: false,
+      columns: [
+	        {
+	            header: '일자',
+	            name: 'preDate'
+	          },
+	          {
+	            header: '제품명',
+	            name: 'prtName'
+	          },
+	          {
+	            header: '단위',
+	            name: 'prtUnit'
+	          },
+	          {
+	            header: '규격',
+	            name: 'prtStandard'
+	          },
+	          {
+	            header: '수량',
+	            name: 'orderOutQty'
+	          },
+	          {
+	            header: '금액',
+	            name: 'orderPrice'
+	          }
+	        ]
+    });
+
+
+    grid.on('check', ev => {
+      console.log('check!', ev);
+    });
+
+    grid.on('uncheck', ev => {
+      console.log('uncheck!', ev);
+    });
+
+    grid.on('focusChange', ev => {
+      console.log('change focused cell!', ev);
+    });
+    </script>
+
+			<script>
+	document.addEventListener('shown.bs.modal', function (){
+		modalGrid = '';
+		var modalGrid = new tui.Grid({
+			el: document.getElementById('modalGrid'),
+			data: [{
+				orderNo: '00003',
+		    	orderDate: '2022-12-20',
+		    	prtName: '자몽이슬',
+		    	orderQty: 500,
+		    	dDay: '2022-12-13',
+		    	unitPrice: '1450',
+		    	orderPrice : '725,000'
+			},
+			{
+				orderNo: '00004',
+		    	orderDate: '2022-12-21',
+		    	prtName: '참이슬',
+		    	orderQty: 10000,
+		    	dDay: '2022-11-25',
+		    	unitPrice: '1350',
+		    	orderPrice : '13,500,000'
+			}],
+			rowHeaders: ['checkbox'],
+			scrollX: false,
+			scrollY: false,
+			columns: [
+		        {
+		            header: '일자',
+		            name: 'orderNo'
+		          },
+		          {
+		            header: '제품명',
+		            name: 'orderDate'
+		          },
+		          {
+		            header: '생산처',
+		            name: 'prtName'
+		          },
+		          {
+		            header: '발주처',
+		            name: 'dDay'
+		          },
+		          {
+		            header: '출고일',
+		            name: 'orderQty'
+		          },
+		          {
+		            header: '발주수량',
+		            name: 'unitPrice'
+		          },
+		          {
+		            header: '발주잔량',
+		            name: 'orderPrice'
+		          }
+		        ]
+		      });
+		
+	}, '.modal');
+	</script>
+	
+	</article>
+</body>
+</html>
