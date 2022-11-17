@@ -6,51 +6,92 @@
 <mapper namespace="com.sseju.java.eqm.mapper.EqmMapper">
 
 <!-- 전체조회  -->
-  	<!-- resulutType 은 list형태 무시하고 클래스 이름만 써준다  -->
-  	<select id="getEqmList" resultType="EqmVO">  
-  	 	SELECT * FROM EQM
-  	</select>
-  	
-  	<!-- 등록  
-  	<insert id="insertEqm" parameterType="EqmVO">
-  		INSERT INTO EQM(
-  				eqm_code,
-  				eqm_name,
-  				eqm_model,
-  				eqm_size,
-  				eqm_loc,
-  				eqm_max_temp,
-  				eqm_min_temp,
-  				eqm_check,
-  				eqm_purc_date,
-  				eqm_div,
-  				eqm_img,
-  				eqm_purc_name,
-  				eqm_purcTel,
-  				eqm_pn,
-  				line_no,
-  				eqm_no
-  		)
-  		VALUES(
-  				#{eqmCode},
-  				#{eqmName},
-  				#{eqmModel},
-  				#{eqmSize},
-  				#{eqmLoc},
-  				#{eqmMaxTemp},
-  				#{eqmMinTemp},
-  				#{eqmCheck},
-  				#{eqmPurcDate},
-  				#{eqmDiv},		
-  				#{eqmImg},
-  				#{eqmPurcName},
-  				#{eqmPurcTel},
-  				#{eqmYn},
-  				#{lineNo},
-  				#{eqmNo}
+     <!-- resulutType 은 list형태 무시하고 클래스 이름만 써준다  -->
+     <select id="getEqmList" resultType="EqmVO">  
+         SELECT * FROM EQM
+     </select>
+     
+     
+     <insert id="insertEqm" parameterType="EqmVO">
+        INSERT INTO EQM(
+              eqm_code,
+              eqm_name,
+              eqm_model,
+              eqm_size,
+              eqm_loc,
+              eqm_max_temp,
+              eqm_min_temp,
+              eqm_check,
+              eqm_purc_date,
+              eqm_div,
+              eqm_img,
+              eqm_purc_name,
+              eqm_purcTel,
+              eqm_pn,
+              line_no,
+              eqm_no
+        )
+        VALUES(
+              #{eqmCode},
+              #{eqmName},
+              #{eqmModel},
+              #{eqmSize},
+              #{eqmLoc},
+              #{eqmMaxTemp},
+              #{eqmMinTemp},
+              #{eqmCheck},
+              #{eqmPurcDate},
+              #{eqmDiv},      
+              #{eqmImg},
+              #{eqmPurcName},
+              #{eqmPurcTel},
+              #{eqmYn},
+              #{lineNo},
+              #{eqmNo}
  
-  				
-  		)
-  	</insert>
-  	-->
+              
+        )
+     </insert>
+     
+     <!-- 라인정보 전체조회  -->
+<select id="getEqmLineList" resultType="EqmVO">
+   SELECT * FROM eqm_line
+</select>
+
+<!-- 라인정보 등록  -->
+<insert id="insertEqmLine" parameterType = "EqmVO">
+   INSERT INTO eqm_line
+      VALUES (
+         #{lineNo},
+         #{totPrc},
+         #{uph},
+         #{empNo},
+         #{lineYn}
+      )
+   
+
+</insert>
+
+<!-- 라인정보 수정 -->
+<update id="updateEqmLine" parameterType="EqmVO">
+   UPDATE eqm_line
+   <set>
+      line_no = #{lineNo},
+      tot_prc = #{totPrc},
+      uph = #{uph},
+      emp_no = #{empNo},
+      line_yn = #{lineYn}
+   
+   </set>
+   WHERE line_no = #{lineNo}
+
+</update>
+
+<!-- 라인정보 삭제 -->
+<delete id="deleteEqmLine" parameterType="String">
+   DELETE FROM eqm_line
+   WHERE line_no = #{lineNo}
+
+</delete>
+     
  </mapper>
