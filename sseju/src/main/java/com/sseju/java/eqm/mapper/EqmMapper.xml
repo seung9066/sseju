@@ -14,22 +14,22 @@
   	<!-- 등록  -->
   	<insert id="insertEqm" parameterType="EqmVO">
   		INSERT INTO EQM(
-  				eqmCode,
-  				eqmName,
-  				eqmModel,
-  				eqmSize,
-  				eqmLoc,
-  				eqmMaxTemp,
-  				eqmMinTemp,
-  				eqmCheck,
-  				eqmPurcDate,
-  				eqmDiv,
-  				eqmImg,
-  				eqmPurcName,
-  				eqmPurcTel,
-  				eqmYn,
-  				lineNo,
-  				eqmNo
+  				eqm_code,
+  				eqm_name,
+  				eqm_model,
+  				eqm_size,
+  				eqm_loc,
+  				eqm_max_temp,
+  				eqm_min_temp,
+  				eqm_check,
+  				eqm_purc_date,
+  				eqm_div,
+  				eqm_img,
+  				eqm_purc_name,
+  				eqm_purcTel,
+  				eqm_pn,
+  				line_no,
+  				eqm_no
   		)
   		VALUES(
   				#{eqmCode},

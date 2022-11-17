@@ -16,6 +16,66 @@
 	<article layout:fragment="content">
 		<main id="main" class="main">
 		<h4>작업 이력 조회</h4>
+		<label><input type="text" placeholder="코드, 제품명, 담당자 등"></label>
+		<button class="button">조회</button>
+			<!-- 그리드 -->
+			<div id="whGrid"></div>
+
+			<script type="text/javascript">
+				var whGrid = new tui.Grid({
+					el : document.getElementById('whGrid'),
+					data : [ {
+						preNo : '20221116-001',
+						dDay : 'MAT-LQ001',
+						prtName : '오리지널',
+						preQty : '김준형',
+						prePrg : '2022-11-15'
+					}, {
+						preNo : '20221116-002',
+						dDay : 'MAT-LQ001',
+						prtName : '10000',
+						preQty : '10000',
+						prePrg : '김두영'
+					}
+					// data 가져오는 법
+					// data: {
+					//    api: {
+					//       readData: {
+					//          url: '/api/readData',
+					//          method: 'GET'
+					//       }
+					//    }
+					// },
+					],
+					scrollX : false,
+					scrollY : false,
+					minBodyHeight : 30,
+					pageOptions : {
+						perPage : 5
+					},
+					columns : [ {
+						header : '작업 지시 번호',
+						name : 'preNo'
+					}, {
+						header : '제품코드', //각 자재별로 어느 공정에 투입되었는지
+						name : 'dDay',
+						filter : {
+							type : 'text',
+							showApplyBtn : true,
+							showClearBtn : true
+						}
+					}, {
+						header : '제품명', //각 공정에 몇개씩 투입되었는지=이거는 필요한가? 다똑같이 투입될건데
+						name : 'prtName'
+					}, {
+						header : '생산량',
+						name : 'preQty'
+					}, {
+						header : '담당자',
+						name : 'prePrg'
+					} ]
+				});
+			</script>
 		</main>
 	</article>
 </body>

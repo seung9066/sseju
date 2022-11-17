@@ -1,3 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sseju.java.prtper.mapper.PrtPerMapper"></mapper>
+<mapper namespace="com.sseju.java.prtper.mapper.PrtPerMapper">
+	<!-- 등록 -->
+	<insert id="insertPrtPer" parameterType="ppVO">
+		INSERT ALL
+			INSERT INTO produce(pre_qty, ins_qty, prd_err, pre_manager)
+			INSERT INTO orders(order_no ,prt_name)
+	</insert>
+	<!-- 실적 전체 조회 -->
+	<select id="getPrtPerList" resultType="ppVO">
+		SELECT pe.order_no, od.prt_name, pe.pre_qty, pe.ins_qty, pe.prd_err, pe.pre_manager
+		FROM produce pe JOIN orders od
+		ON od.order_no = pe.order_no
+		WHERE od.order_no = #{or.order_no}
+	</select>
+	<!-- 수정 ㅡ 실적칸 수정 필요없을것 같아서 추가X -->
+	<!-- 삭제 -->
+	<delete id="deletePrtPer">
+		DELETE FROM orders
+		WHERE order_no = #{order_no}
+	</delete>
+
+</mapper>
