@@ -21,4 +21,6 @@ public interface EmployeeMapper {
 	public int deleteEmp(EmployeeVO vo);
 	
 	public int idCheck(String id);
+	
+	public int deleteLogin(EmployeeVO vo);
 }

@@ -20,4 +20,6 @@ public interface EmployeeService {
 
 	// 회원 삭제
 	public int deleteEmp(EmployeeVO vo);
+	
+	public int deleteLogin(EmployeeVO vo);
 }

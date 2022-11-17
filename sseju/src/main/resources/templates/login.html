@@ -107,7 +107,7 @@ input {
 							th:value="${_csrf.token}" />
 						<dl>
 							<dt>
-								<input type="text" name="userId" placeholder="아이디">
+								<input type="text" name="userId" id="id" placeholder="아이디">
 							</dt>
 
 							<dt>
@@ -136,7 +136,11 @@ input {
 
 
 
-
+	<script type="text/javascript">
+		window.onload = function() {
+			document.getElementById('id').focus();
+		}
+	</script>
 
 
 

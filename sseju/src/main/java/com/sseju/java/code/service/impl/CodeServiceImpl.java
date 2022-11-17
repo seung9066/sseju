@@ -51,4 +51,16 @@ public class CodeServiceImpl implements CodeService {
 		return mapper.selectDelete(list);
 	}
 
+	@Override
+	public List<CodeVO> getBomList(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.getBomList(vo);
+	}
+
+	@Override
+	public List<CodeVO> getBomMenu() {
+		// TODO Auto-generated method stub
+		return mapper.getBomMenu();
+	}
+
 }

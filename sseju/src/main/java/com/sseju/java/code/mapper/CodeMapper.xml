@@ -27,4 +27,12 @@
 		</foreach>
 		)
 	</delete>
+	
+	<select id="getBomList" parameterType="CodeVO" resultType="CodeVO">
+		SELECT p.prt_name, b.prt_code, b.capacity, b.mat_code, m.mat_name FROM bom b, product p, material m WHERE p.prt_name = #{prtName} AND p.prt_code = b.prt_code AND b.mat_code = m.mat_code
+	</select>
+	
+	<select id="getBomMenu" resultType="CodeVO">
+		SELECT prt_code, prt_name FROM product
+	</select>
   </mapper>

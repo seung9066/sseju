@@ -9,89 +9,96 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<style>
+th {
+	cursor: pointer;
+	border: 0.1px solid gray;
+}
+
+.menuTable {
+	width: 90%;
+	margin-left: 5%;
+	height: 100px;
+	text-align: center;
+	border: 0.1px solid gray;
+	background-color: white;
+}
+</style>
 </head>
 <body>
 	<article layout:fragment="content">
 		<main id="main" class="main">
 
-			<h4>
+			<h4 style="margin-bottom:3%;">
 				<strong>공통코드 관리</strong>
 			</h4>
-			<div style="float: right;">
-				<button class="button">등록</button>
-				<button class="button">수정</button>
-				<button class="button" onclick="selectDelete()">삭제</button>
+			
+			<div>
+				<table class="menuTable"  style="margin-bottom:3%;">
+					<tr>
+						<th onclick="showAll()">전체</th>
+						<th onclick="showCompany()">거래처</th>
+						<th>설비</th>
+						<th>공정</th>
+						<th>제품</th>
+						<th>자재</th>
+					</tr>
+					<tr>
+						<th>창고</th>
+						<th>설비상태</th>
+						<th>비가동</th>
+						<th>진행</th>
+						<th>제품불량</th>
+						<th>자재불량</th>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<h3 id="title"></h3>
+			</div>
+			<div style="float: right; margin-bottom:3%;">
+				<button class="button" style="width: 100px; height: 30px;"
+					onclick="selectDelete()">삭제</button>
 			</div>
 
 			<div id="codeGrid"></div>
 
-			<div class="modal" tabindex="-1" id="chkInsModal">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title">설비 정기점검 등록</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<p>Modal body text goes here.</p>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">취소</button>
-							<button type="button" class="btn btn-primary">등록</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-
 			<script>
-			chkInsModal.addEventListner('shown.bs.modal', () => {
-				codeGrid.refreshLayout(); // 모달창 새로고침(등록 후 바로 반영)
-			})
-			</script>
-
-			<script>
-			url="codeList"
-			       fetch(url) // 설비 단건조회 불러오는 아작스
-			       .then(res=>res.json())
-			       .then(obj=>{
-			           console.log(obj);
-			           codeGrid.resetData(obj);
-			       })
+			
+			showAll();
 			       
-				var codeGrid = new tui.Grid({
-					el : document.getElementById('codeGrid'),
-					pagination:true,
-					pageOption: {
-						useClient:true,
-						perPage:4
-					},
-					scrollX : false,
-					scrollY : false,
-					rowHeaders: ['checkbox'],
-					columns : [ {
-						header : '코드',
-						name : 'code',
-					}, {
-						header : '코드명',
-						name : 'codeName',
-					}, {
-						header : '공통코드',
-						name : 'divCode', //납기일자명 수정
-					}, {
-						header : '구분',
-						name : 'divName'
-					} ]
-				});
+			const codeGrid = new tui.Grid({
+				el : document.getElementById('codeGrid'),
+				pagination:true,
+				pageOption: {
+					useClient:true,
+					perPage:10
+				},
+				scrollX : false,
+				scrollY : false,
+				rowHeaders: ['checkbox'],
+				columns : [ {
+					header : '코드',
+					name : 'code',
+				}, {
+					header : '코드명',
+					name : 'codeName',
+				}, {
+					header : '공통코드',
+					name : 'divCode', //납기일자명 수정
+				}, {
+					header : '구분',
+					name : 'divName'
+				} ]
+			});
 			
 			var deleteCode = [];
 			
 			codeGrid.on('check', ev => {
 				console.log(codeGrid.getValue(ev.rowKey, 'code'));
 				deleteCode.push((codeGrid.getValue(ev.rowKey, 'code')));
-				console.log(deleteCode);
+				
 				console.log($('input[name=_checked]').val());
 				
 				/* $('input[name=_checked]').each(function (idx, item){
@@ -120,30 +127,51 @@
 				}
 				
 				$.ajax({
-					url:'selectDelete',
+					url:'selectDeleteCP',
 					type:'GET',
-					data:code,
+					data:{code:code},
+					dataType:"json",
 					async:false,
 					success:function(data){
 						if(data > 0) {
 							alert("삭제완료");
+							showAll();					
 						} else {
 							alert("삭제실패");
 						}
 					},
-					error:function(reject){
-						alert("에러");
+					error:function(request,status,error){
+						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+						console.log(code);
 						console.log(reject);
 					}
 				})
 			}
+			
+			function showAll() {
+				$('#title').text("전체");
 				
-			var myModal = document.getElementById('myModal')
-			var myInput = document.getElementById('myInput')
+				url="codeList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           codeGrid.resetData(obj);
+				       })
+			}
+			
+			function showCompany() {
+				$("#title").text("거래처");
 
-			myModal.addEventListener('shown.bs.modal', function () {
-				myInput.focus()
-			})
+				url="codeCpList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           codeGrid.resetData(obj);
+				       });
+			}
+
 			</script>
 		</main>
 	</article>
