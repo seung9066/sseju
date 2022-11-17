@@ -23,4 +23,5 @@ public interface CompanyService {
 
 	// 회원 삭제
 	public int deleteCompany(CompanyVO vo);
+	public int deleteLogin(CompanyVO vo);
 }

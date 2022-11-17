@@ -13,10 +13,18 @@
 	</select>
 	
 	<insert id="insertEmp" parameterType="EmployeeVO">
-		INSERT INTO employee values (#{empId}, #{empName}, #{empDept}, #{empRank}, #{empAuth}, #{password})
+		INSERT INTO employee values (#{empId}, #{empName}, #{empDept}, #{empRank})
 	</insert>
 	
 	<delete id="deleteLogin" parameterType="EmployeeVO">
 		DELETE FROM login WHERE id = #{id}
+	</delete>
+	
+	<select id="getEmpList" resultType="EmployeeVO">
+		SELECT * FROM employee
+	</select>
+	
+	<delete id="deleteEmp" parameterType="EmployeeVO">
+		DELETE FROM employee WHERE emp_id = #{empId}
 	</delete>
 </mapper>

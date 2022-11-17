@@ -39,18 +39,18 @@ th {
 					<tr>
 						<th onclick="showAll()">전체</th>
 						<th onclick="showCompany()">거래처</th>
-						<th>설비</th>
-						<th>공정</th>
-						<th>제품</th>
-						<th>자재</th>
+						<th onclick="showMst()">설비</th>
+						<th onclick="showPrs()">공정</th>
+						<th onclick="showPrt()">제품</th>
+						<th onclick="showMat()">자재</th>
 					</tr>
 					<tr>
-						<th>창고</th>
-						<th>설비상태</th>
-						<th>비가동</th>
-						<th>진행</th>
-						<th>제품불량</th>
-						<th>자재불량</th>
+						<th onclick="showWh()">창고</th>
+						<th onclick="showMstt()">설비상태</th>
+						<th onclick="showMsts()">비가동</th>
+						<th onclick="showA()">진행</th>
+						<th onclick="showErrPrt()">제품불량</th>
+						<th onclick="showErrMat">자재불량</th>
 					</tr>
 				</table>
 			</div>
@@ -62,7 +62,7 @@ th {
 					onclick="selectDelete()">삭제</button>
 			</div>
 
-			<div id="codeGrid"></div>
+			<div id="codeGrid" style="text-align:center;"></div>
 
 			<script>
 			
@@ -81,15 +81,19 @@ th {
 				columns : [ {
 					header : '코드',
 					name : 'code',
+					align : 'center'
 				}, {
 					header : '코드명',
 					name : 'codeName',
+					align : 'center'
 				}, {
 					header : '공통코드',
 					name : 'divCode', //납기일자명 수정
+					align : 'center'
 				}, {
 					header : '구분',
-					name : 'divName'
+					name : 'divName',
+					align : 'center'
 				} ]
 			});
 			
@@ -162,6 +166,116 @@ th {
 			
 			function showCompany() {
 				$("#title").text("거래처");
+
+				url="codeCpList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           codeGrid.resetData(obj);
+				       });
+			}
+			function showMst() {
+				$("#title").text("설비");
+
+				url="codeCpList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           codeGrid.resetData(obj);
+				       });
+			}
+			function showPrs() {
+				$("#title").text("공정");
+
+				url="codeCpList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           codeGrid.resetData(obj);
+				       });
+			}
+			function showPrt() {
+				$("#title").text("제품");
+
+				url="codeCpList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           codeGrid.resetData(obj);
+				       });
+			}
+			function showMat() {
+				$("#title").text("자재");
+
+				url="codeCpList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           codeGrid.resetData(obj);
+				       });
+			}
+			function showWh() {
+				$("#title").text("창고");
+
+				url="codeCpList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           codeGrid.resetData(obj);
+				       });
+			}
+			function showMstt() {
+				$("#title").text("설비상태");
+
+				url="codeCpList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           codeGrid.resetData(obj);
+				       });
+			}
+			function showMsts() {
+				$("#title").text("비가동");
+
+				url="codeCpList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           codeGrid.resetData(obj);
+				       });
+			}
+			function showA() {
+				$("#title").text("진행");
+
+				url="codeCpList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           codeGrid.resetData(obj);
+				       });
+			}
+			function showErrPrt() {
+				$("#title").text("제품불량");
+
+				url="codeCpList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           codeGrid.resetData(obj);
+				       });
+			}
+			function showErrMat() {
+				$("#title").text("자재불량");
 
 				url="codeCpList"
 				       fetch(url) // 설비 단건조회 불러오는 아작스

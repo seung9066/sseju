@@ -14,5 +14,9 @@ public interface CodeService {
 	// bom
 	public List<CodeVO> getBomList(CodeVO vo);
 	public List<CodeVO> getBomMenu();
-	
+	public List<CodeVO> getBOMMatList();
+	public CodeVO getPrtCode(CodeVO vo);
+	public CodeVO getMatCode(CodeVO vo);
+	public int insertBOM(CodeVO vo);
+	public List<CodeVO> getBOMPrtList();
 }

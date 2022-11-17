@@ -11,11 +11,6 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
 <style>
-th {
-	cursor: pointer;
-	border: 0.1px solid gray;
-}
-
 .menuTable {
 	width: 90%;
 	margin-left: 5%;
@@ -25,8 +20,8 @@ th {
 	background-color: white;
 }
 
-th {
-	width: 50%;
+input {
+	text-align: center;
 }
 </style>
 </head>
@@ -37,18 +32,41 @@ th {
 			<h4 style="margin-bottom: 3%;">
 				<strong>BOM 관리</strong>
 			</h4>
+			<div></div>
+			<form action="insertBOM" method="POST">
+				<div style="float: right; margin-bottom: 3%;">
+					<button type="button" class="button"
+						style="width: 100px; height: 30px;" onclick="put()">재료추가</button>
+					<button type="button" class="button"
+						style="width: 100px; height: 30px;" onclick="input()">등록</button>
+				</div>
+				<table>
+					<tr>
+						<th>제품명</th>
+						<td><select style="width:150px;" id="mat">
+								<option>---선택---</option>
+								<th:block th:each="p : ${prt}">
+								<option th:value="${p.prtName}" th:text="${p.prtName}"></option>
+								</th:block>
+						</select></td>
+						<th>재료</th>
+						<td><select style="width:150px;" id="mat">
+								<option>선택</option>
+								<th:block th:each="m : ${mat}">
+								<option th:value="${m.matName}" th:text="${m.matName}"></option>
+								</th:block>
+						</select></td>
+						<th>용량</th>
+						<td><input type="text" id="prc"></td>
+					</tr>
+				</table>
+				<div id="input"></div>
+			</form>
+			<br>
+			<h3 id="title">전체</h3>
 			<div>
-			</div>
-			<div style="float: right; margin-bottom: 3%;">
-				<button class="button" style="width: 100px; height: 30px;"
-					onclick="selectDelete()">삭제</button>
-			</div>
-				<h3 id="title">전체</h3>
-			<div id="grid" style="width: 30%; float:left; margin-right:3%;">
 				<div id="menuGrid"></div>
-			</div>
-
-			<div id="grid" style="width: 60%; float:right;">
+				<br>
 				<div id="bomGrid"></div>
 			</div>
 			<script>
@@ -68,6 +86,7 @@ th {
 				columns : [ {
 					header : '제품명',
 					name : 'prtName',
+					align : 'center'
 				}]
 			});
 			
@@ -83,18 +102,23 @@ th {
 				columns : [ {
 					header : '재료명',
 					name : 'matName',
+					align : 'center'
 				}, {
 					header : '용량',
-					name : 'capacity', //납기일자명 수정
+					name : 'capacity',
+					align : 'center'
 				}]
 			});
 			
 			var deleteCode = [];
 			
 			menuGrid.on('click', (ev) => {
+				
 				let prtName = ev.nativeEvent.target.innerText;
 				console.log(prtName);
 				
+				$("#title").text(prtName);
+
 				$.ajax({
 					url:'bomList',
 					data:{prtName:prtName},
@@ -111,7 +135,7 @@ th {
 				
 			});
 			
-			function selectDelete() {
+			function insertBOM() {
 				console.log(BOMGrid.getCheckedRows());
 				let code = [];
 				for(co of BOMGrid.getCheckedRows()){
@@ -164,12 +188,57 @@ th {
 				       })
 			}
 			
-			function showBOM() {
-				$("#title").text("거래처");
+			function put() {
+				let name = $('#name').val();
+				let prc = $('#prc').val();
+				let mat = $('#mat').val();
 				
-				
+				$('#input').append('<span>제품명</span><input type="text" name="prtName" value="'+ name +'" readonly style="border:0px;"><span>재료</span><input type="text" name="matName" value="'+ mat +'" readonly style="border:0px;"><span>용량</span><input type="text" name="capacity" value="'+ prc +'" readonly style="border:0px;"><br>');
 			}
+			
+			function input() {
+				let nameList = [];
+				let matList = [];
+				let capList = [];
+				
+				let name = $('#input').find('input[name="prtName"]');
+				for (let i = 0; i < name.length; i++) {
+					nameList.push(name[i].value);
+				}
 
+				let cap = $('#input').find('input[name="capacity"]');
+				for (let i = 0; i < cap.length; i++) {
+					capList.push(cap[i].value);
+				}
+				
+				let mat = $('#input').find('input[name="matName"]');
+				for (let i = 0; i < mat.length; i++) {
+					matList.push(mat[i].value);
+				}
+				
+				$.ajax({
+					url:'insertBOM',
+					type:'GET',
+					data:{nameList:nameList, capList:capList, matList:matList},
+					dataType:"json",
+					async:false,
+					success:function(data){
+						if(data > 0) {
+							alert("등록완료");
+							showAll();					
+						} else {
+							alert("등록실패");
+						}
+					},
+					error:function(request,status,error){
+						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+						console.log(code);
+						console.log(reject);
+					}
+				})
+				
+				menuAll();
+			}
 			</script>
 		</main>
 	</article>

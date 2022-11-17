@@ -16,6 +16,8 @@ import com.sseju.java.company.service.CompanyService;
 import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.employee.service.EmployeeService;
 import com.sseju.java.employee.service.EmployeeVO;
+import com.sseju.java.eqm.service.EqmVO;
+import com.sseju.java.mat.service.MatVO;
 
 @Controller
 public class CodeController {
@@ -40,7 +42,9 @@ public class CodeController {
 	}
 	
 	@GetMapping("/basicBOM")
-	public String basicBOM() {
+	public String basicBOM(Model model) {
+		model.addAttribute("mat", service.getBOMMatList());
+		model.addAttribute("prt", service.getBOMPrtList());
 		return "/admin/basicTab/BOM";
 	}
 	
@@ -83,8 +87,7 @@ public class CodeController {
 	@GetMapping("/selectDeleteCP")
 	@ResponseBody
 	public int selectDelete(@RequestParam(value="code[]", required=false) List<String> code) {
-		System.out.println(code);
-		System.out.println("aaaaaaaaaaaaaa");
+		int a = 0;
 		for (int i = 0; i < code.size(); i++) {
 			String code1 = code.get(i).substring(0,3);
 			System.out.println(code1);
@@ -99,35 +102,77 @@ public class CodeController {
 				EmployeeVO voEM = new EmployeeVO();
 				voEM.setId(vocp.getId());
 				
-				service.deleteCode(vo);
-				serviceCP.deleteCompany(vocp);
-				serviceEM.deleteLogin(voEM);		
+				a += service.deleteCode(vo);
+				a += serviceCP.deleteCompany(vocp);
+				a += serviceEM.deleteLogin(voEM);		
 			} else if (code1.equals("EQM")) {
+				CodeVO vo = new CodeVO();
+				vo.setCode(code.get(i));
 				
+				EqmVO voeqm = new EqmVO();
+				
+				a += service.deleteCode(vo);
 			} else if (code1.equals("PRS")) {
+				CodeVO vo = new CodeVO();
+				vo.setCode(code.get(i));
 				
-			} else if (code1.equals("EQM")) {
-				
+				a += service.deleteCode(vo);
 			} else if (code1.equals("ERP")) {
+				CodeVO vo = new CodeVO();
+				vo.setCode(code.get(i));
 				
+				
+				a += service.deleteCode(vo);
 			} else if (code1.equals("ERM")) {
+				CodeVO vo = new CodeVO();
+				vo.setCode(code.get(i));
+
+
 				
+				a += service.deleteCode(vo);
 			} else if (code1.equals("PRD")) {
+				CodeVO vo = new CodeVO();
+				vo.setCode(code.get(i));
+
+
 				
+				a += service.deleteCode(vo);
 			} else if (code1.equals("MAT")) {
+				CodeVO vo = new CodeVO();
+				vo.setCode(code.get(i));
 				
+				MatVO vomat = new MatVO();
+				
+				a += service.deleteCode(vo);
 			} else if (code1.equals("EQS")) {
+				CodeVO vo = new CodeVO();
+				vo.setCode(code.get(i));
 				
+				a += service.deleteCode(vo);
 			} else if (code1.equals("UOR")) {
+				CodeVO vo = new CodeVO();
+				vo.setCode(code.get(i));
 				
+
+				
+				a += service.deleteCode(vo);
 			} else if (code1.equals("PRG")) {
+				CodeVO vo = new CodeVO();
+				vo.setCode(code.get(i));
 				
+
+				
+				a += service.deleteCode(vo);
 			} else if (code1.equals("STO")) {
+				CodeVO vo = new CodeVO();
+				vo.setCode(code.get(i));
 				
+
+				
+				a += service.deleteCode(vo);
 			}
-			
 		}
-		return 1;
+		return a;
 	}
 	
 	@GetMapping("/codeCpList")
@@ -160,4 +205,27 @@ public class CodeController {
 		return service.getBomMenu();
 	}
 	
+	@GetMapping("/insertBOM")
+	@ResponseBody
+	public int insertBOM(@RequestParam(value="nameList[]", required=false) List<String> nameList, @RequestParam(value="capList[]", required=false) List<String> capList, @RequestParam(value="matList[]", required=false) List<String> matList) {
+		int a = 0;
+		for (int i = 0; i < nameList.size(); i++) {
+				CodeVO vo = new CodeVO();
+				vo.setPrtName(nameList.get(i));
+				vo.setMatName(matList.get(i));
+				vo.setCapacity(capList.get(i));
+				
+				CodeVO vomat = new CodeVO();
+				vomat = service.getMatCode(vo);
+				
+				CodeVO voprt = new CodeVO();
+				voprt = service.getPrtCode(vo);
+				
+				vo.setPrtCode(voprt.getPrtCode());
+				vo.setMatCode(vomat.getMatCode());
+				
+				a += service.insertBOM(vo);
+			}
+		return a;
+	}
 }

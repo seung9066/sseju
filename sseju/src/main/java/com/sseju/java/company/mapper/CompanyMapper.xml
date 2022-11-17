@@ -12,6 +12,10 @@
 		INSERT INTO login values (#{id}, #{auth}, #{password})
 	</insert>
 	
+	<delete id="deleteLogin" parameterType="CompanyVO">
+		DELETE FROM login WHERE id = #{id}
+	</delete>
+	
 	<select id="companyCode" parameterType="CompanyVO" resultType="String">
 		SELECT cp_code FROM company
 	</select>

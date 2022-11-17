@@ -15,9 +15,16 @@ public class CodeVO {
 	private String divCode;
 	
 	// bom
+	private int no;
 	private String prtCode;
 	private String capacity;
 	private String matCode;
 	private String prtName;
 	private String matName;
+	
+	// material
+	private String matSize;
+	private String matUnitPrc;
+	private String cpCode;
+	private String prsCode;
 }
