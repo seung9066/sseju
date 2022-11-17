@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>InOut</title>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script
+	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+
+
+<style type="text/css">
+.tui-datepicker {
+	z-index: 1001;
+}
+
+.tui-select-box {
+	z-index: 1001;
+}
+
+/* ul 스타일 */
+.ul-style {
+	list-style: none;
+	padding: 0px;
+}
+
+.ul-style li>label {
+	width: 100px;
+	text-align: center;
+}
+
+.ul-style li {
+	padding: 5px;
+}
+</style>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main class="main" id="main">
+			<h3>입출고내역</h3>
+
+			<div>
+				<!-- 탭 목록(버튼) 설정 -->
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+					<li class="nav-item" role="presentation">
+						<button class="nav-link active" id="in-tab" data-bs-toggle="tab"
+							data-bs-target="#home" type="button" role="tab"
+							aria-controls="home" aria-selected="true">입고</button>
+					</li>
+					<li class="nav-item" role="presentation">
+						<button class="nav-link" id="out-tab" data-bs-toggle="tab"
+							data-bs-target="#profile" type="button" role="tab"
+							aria-controls="profile" aria-selected="false">출고</button>
+					</li>
+
+				</ul>
+
+				<div class="tab-content pt-2" id="myTabContent">
+					<div class="tab-pane fade show active" id="home" role="tabpanel"
+						aria-labelledby="home-tab">
+						<ul class="ul-style">
+							<li><label>품목</label><input type="text"> <i
+								class="bi bi-search" data-bs-toggle="modal"
+								data-bs-target="#exampleModal"></i> <input type="text" readonly>
+							</li>
+							<li><label>입고일</label>
+								<div
+									class="tui-datepicker-input tui-datetime-input tui-has-focus">
+									<input type="text" id="datepicker-input" aria-label="Date-Time">
+									<span class="tui-ico-date"></span>
+									<div id="wrapper" style="margin-top: -1px;"></div>
+								</div>
+								<button class="button">등록</button>
+								<button class="button">삭제</button></li>
+						</ul>
+						<div id="grid"></div>
+					</div>
+					<div class="tab-pane fade" id="profile" role="tabpanel"
+						aria-labelledby="profile-tab">
+						<div>
+							<ul class="ul-style">
+								<li><label>품목</label><input type="text"> <i
+									class="bi bi-search" data-bs-toggle="modal"
+									data-bs-target="#exampleModal"></i> <input type="text" readonly>
+								</li>
+								<li><label>출고일</label>
+									<div
+										class="tui-datepicker-input tui-datetime-input tui-has-focus">
+										<input type="text" id="datepicker2-input"
+											aria-label="Date-Time"> <span class="tui-ico-date"></span>
+										<div id="wrapper2" style="margin-top: -1px;"></div>
+									</div>
+									<button class="button">등록</button>
+									<button class="button">삭제</button></li>
+
+							</ul>
+						</div>
+						<div id="grid2"></div>
+					</div>
+				</div>
+			</div>
+
+			<script>
+				const inTab = document.getElementById('in-tab');
+				inTab.addEventListener('click', function() {
+					grid.refreshLayout();
+				})
+
+				const outTab = document.getElementById('out-tab');
+				outTab.addEventListener('click', function() {
+					grid2.refreshLayout();
+				})
+				const grid = new tui.Grid({
+					el : document.getElementById('grid'),
+					data : [ {
+						odDate : '2022-11-01',
+						odCd : 'ORD-20221101-001',
+						prdCd : 'MD-00100',
+						prdNm : '얇은피 고기만두',
+						odAmt : 200,
+						actCd : 'VDR-1004',
+						actNm : 'YD 마트',
+						deDate : '2022-11-04',
+						sts : '완료'
+					} ],
+					rowHeaders : [ 'checkbox' ],
+					scrollX : false,
+					scrollY : false,
+					columns : [ {
+						header : '주문 일자',
+						name : 'odDate'
+					}, {
+						header : '주문 코드',
+						name : 'odCd'
+					}, {
+						header : '제품 코드',
+						name : 'prdCd'
+					}, {
+						header : '제품명',
+						name : 'prdNm'
+					}, {
+						header : '주문량',
+						name : 'odAmt'
+					}, {
+						header : '거래처 코드',
+						name : 'actCd'
+					}, {
+						header : '거래처명',
+						name : 'actNm'
+					}, {
+						header : '납기 일자',
+						name : 'deDate'
+					}, {
+						header : '진행 상황',
+						name : 'sts'
+					}, ]
+				});
+
+				var datepicker = new tui.DatePicker('#wrapper', {
+					date : new Date(),
+					input : {
+						element : '#datepicker-input',
+						format : 'yyyy-MM-dd'
+					}
+				});
+			</script>
+			<script>
+				var grid2 = new tui.Grid({
+					el : document.getElementById('grid2'),
+					data : [ {
+						odDate : '2022-11-01',
+						odCd : 'ORD-20221101-001',
+						prdCd : 'MD-00100',
+						prdNm : '얇은피 고기만두',
+						odAmt : 200,
+						actCd : 'VDR-1004',
+						actNm : 'YD 마트',
+						deDate : '2022-11-04',
+						sts : '완료'
+					} ],
+					rowHeaders : [ 'checkbox' ],
+					scrollX : false,
+					scrollY : false,
+					columns : [ {
+						header : '주문 일자',
+						name : 'odDate'
+					}, {
+						header : '주문 코드',
+						name : 'odCd'
+					}, {
+						header : '제품 코드',
+						name : 'prdCd'
+					}, {
+						header : '제품명',
+						name : 'prdNm'
+					}, {
+						header : '주문량',
+						name : 'odAmt'
+					}, {
+						header : '거래처 코드',
+						name : 'actCd'
+					}, {
+						header : '거래처명',
+						name : 'actNm'
+					}, {
+						header : '납기 일자',
+						name : 'deDate'
+					}, {
+						header : '진행 상황',
+						name : 'sts'
+					}, ]
+				});
+
+				var datepicker2 = new tui.DatePicker('#wrapper2', {
+					date : new Date(),
+					input : {
+						element : '#datepicker2-input',
+						format : 'yyyy-MM-dd'
+					}
+				});
+			</script>
+		</main>
+	</article>
+</body>
+</html>

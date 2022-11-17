@@ -1,0 +1,97 @@
+package com.sseju.java.mat.service;
+
+import java.util.Date;
+
+import org.apache.ibatis.type.Alias;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import lombok.Data;
+
+@Data
+@Alias("MatVO")
+public class MatVO {
+
+//	MarerialVO
+//	MAT_CODE	VARCHAR2(100 BYTE)
+//	MAT_NAME	VARCHAR2(20 BYTE)
+//	MAT_SIZE	VARCHAR2(10 BYTE)
+//	MAT_UNIT_PRC	VARCHAR2(10 BYTE)
+//	CP_CODE	VARCHAR2(50 BYTE)
+//	PRS_CODE	VARCHAR2(50 BYTE)
+	
+	private String matCode;
+	private String matName;
+	private String matSize;
+	private String matUnitPrc;
+	private String cpCode;
+	private String prsCode;
+
+//	mat_outVO
+//	MAT_OUT_NO	NUMBER
+//	WH_CODE	VARCHAR2(50 BYTE)
+//	MAT_CODE	VARCHAR2(100 BYTE)
+//	MAT_OUT_DATE	DATE
+//	MAT_OUT_QTY	NUMBER
+//	MAT_LOT_NO	VARCHAR2(50 BYTE)
+	
+	private int matOutNo;
+	private String WhCode;
+	@DateTimeFormat (pattern = "yyyy-MM-dd")
+	private Date matOutDate;
+	private int matOutQty;
+	private String matLotNo;
+	
+//	MatErrVO
+//	MAT_NO	NUMBER
+//	MAT_CHK_CODE	VARCHAR2(50 BYTE)
+//	MAT_ERR_RS	VARCHAR2(50 BYTE)
+//	MAT_ERR_DOC	VARCHAR2(50 BYTE)
+//	ERR_CODE	VARCHAR2(50 BYTE)
+	
+	private int matNo;
+	private String matErrRs;
+	private String matErrDoc;
+	private String errCode;
+	
+// MatchkVO
+//	MAT_CHK_CODE	VARCHAR2(50 BYTE)
+//	MAT_CHK_NAME	VARCHAR2(50 BYTE)
+//	MAT_IN_QTY	NUMBER
+//	MAT_ERR_QTY	NUMBER
+//	MAT_ORD_NO	VARCHAR2(50 BYTE)
+//	MAT_CHK_DATE	DATE
+//	MAT_PASS_QTY	NUMBER
+	
+	private String matChkCode;
+	private String matChkName;
+	private int matInQty;
+	private int matErrQty;
+	private String matOrdNo;
+	@DateTimeFormat (pattern = "yyyy-MM-dd")
+	private Date matChkDate;
+	private int matPassQty;
+
+//	MAR_BUY VO
+//	MAT_ORD_NAME	VARCHAR2(100 BYTE)
+//	MAT_ORD_QTY	NUMBER
+//	NOW_CODE	VARCHAR2(100 BYTE)
+//	MAT_CODE	VARCHAR2(100 BYTE)
+//	MAT_ORD_DATE	DATE
+//	CP_CODE	VARCHAR2(50 BYTE)
+//	MAT_ORD_YN	VARCHAR2(20 BYTE)
+//	MAT_PRICE	VARCHAR2(20 BYTE)
+//	MAT_ORD_EMP	VARCHAR2(20 BYTE)
+	
+	private String matOrdName;
+	private int matOrdQty;
+	private String nowCode;
+	@DateTimeFormat (pattern = "yyyy-MM-dd")
+	private Date matOrdDate;
+	private String matOrdYn;
+	private String matPrice;
+	private String matOrdEmp;
+	
+
+	
+	
+}

@@ -9,18 +9,28 @@ public class MatController {
 	//@Autowired
 	
 	
-	@RequestMapping("/mat")
+	@RequestMapping("/matOrd")
 	public String mat() {
-		return "/admin/mat/mat";
+		return "/admin/mat/matOrd";
 	}
 	
-	@RequestMapping("/ex")
+	@RequestMapping("/matInout")
 	public String ex() {
-		return "/admin/mat/example";
+		return "/admin/mat/matInout";
 	}
 	
-	@RequestMapping("/matt")
+	@RequestMapping("/matStock")
 	public String matt() {
-		return "/admin/mat/matt";
+		return "/admin/mat/matStock";
+	}
+	
+	@RequestMapping("/matCheck")
+	public String hh() {
+		return "/admin/mat/matCheck";
+	}
+	
+	@RequestMapping("/exex")
+	public String exex() {
+		return "/admin/mat/exex";
 	}
 }
