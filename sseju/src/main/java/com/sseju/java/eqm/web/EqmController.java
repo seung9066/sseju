@@ -25,6 +25,13 @@ public class EqmController {
 		public String eqmCheck() {
 			return "/admin/eqm/eqmCheck";
 		}
+	  @GetMapping("/eqmUoper")
+		public String eqmUoper() {
+			return "/admin/eqm/eqmUoper";
+		} 
+	  
+
+	
 
 
 }

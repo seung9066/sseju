@@ -11,7 +11,7 @@
   	 	SELECT * FROM EQM
   	</select>
   	
-  	<!-- 등록  -->
+  	<!-- 등록  
   	<insert id="insertEqm" parameterType="EqmVO">
   		INSERT INTO EQM(
   				eqm_code,
@@ -52,4 +52,5 @@
   				
   		)
   	</insert>
+  	-->
  </mapper>

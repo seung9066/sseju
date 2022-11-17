@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  
+<mapper namespace="com.sseju.java.eqmLine.mapper.EqmLineMapper">
+
+<!-- 라인정보 전체조회  -->
+<select id="getEqmLineList" resultType="EqmLineVO">
+	SELECT * FROM eqm_line
+</select>
+
+<!-- 라인정보 등록  -->
+<insert id="" parameterType = "EqmLineVO">
+	INSERT INTO eqm_line
+		VALUES (
+			#{lineNo},
+			#{totPrc},
+			#{uph},
+			#{empNo},
+			#{lineYn}
+		)
+	
+
+</insert>
+
+<!-- 라인정보 수정 -->
+<update id="updateEqmLine" parameterType="EqmLineVO">
+	UPDATE eqm_line
+	<set>
+		line_no = #{lineNo},
+		tot_prc = #{totPrc},
+		uph = #{uph},
+		emp_no = #{empNo},
+		line_yn = #{lineYn}
+	
+	</set>
+	WHERE line_no = #{lineNo}
+
+</update>
+
+<!-- 라인정보 삭제 -->
+<delete id="deleteEqmLine" parameterType="String">
+	DELETE FROM eqm_line
+	WHERE line_no = #{lineNo}
+
+</delete>
+  
+  </mapper>
