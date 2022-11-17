@@ -5,16 +5,16 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface PrtService {
+public interface PRService {
 
 	// 전체
-	public List<PrtVO> selectPrtList();
+	public List<PRVO> selectPrtList();
 
 	// 단건
-	public PrtVO selectPrtInfo(PrtVO Ovo);
+	public PRVO selectPrtInfo(PRVO Pvo);
 
 	// 등록
-	public int insertPrtInfo(PrtVO Ovo);
+	public int insertPrtInfo(PRVO Pvo);
 
 	
 }

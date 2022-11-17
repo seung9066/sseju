@@ -5,7 +5,7 @@
 	layout:decorate="~{/layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>제폼 출고 관리</title>
+<title>주문납품 대비출고 조회</title>
 
 <style>
 .tui-datepicker {
@@ -51,18 +51,20 @@
 	<article layout:fragment="content">
 		<main class="main" id="main">
 			<div id="od-title">
-				<h3>완제품 출고 관리</h3>
+				<h3>주문납품 대비출고 조회</h3>
 			</div>
 
 			<div id="od-content">
 				<div id="input-group">
 					<ul class="ul-style">
-						<li><label for="actCd">거래처</label><input type="text">
+						<li><label for="prtName">거래처별</label><input type="text">
 							<i class="bi bi-search" data-bs-toggle="modal"
-							data-bs-target="#exampleModal" id="actCd"></i> <input type="text"
-							readonly><br></li>
+							data-bs-target="#exampleModal" id="prtName"></i> <input
+							type="text" readonly><br></li>
 
-						<li><label>주문일자</label>
+						<li><label for="">출고창고</label><input type="text"></li>
+
+						<li><label>출고일자</label>
 							<div
 								class="tui-datepicker-input tui-datetime-input tui-has-focus">
 								<input id="startpicker-input" type="text" aria-label="Date">
@@ -94,7 +96,7 @@
 								<button type="button" class="btn btn-dark btn-sm"
 									data-bs-dismiss="modal">조회</button>
 								<button type="button" class="btn btn-dark btn-sm">초기화</button>
-								<div id="modalGrid"></div>
+								<div id="modalGrid1"></div>
 							</div>
 						</div>
 					</div>
@@ -110,8 +112,6 @@
 			<br>
 			<div id="od-content-3">
 				<h4>출고 등록 현황 리스트</h4>
-
-
 				<div id="od-btn">
 					<button class="btn btn-dark btn-sm" id="insertBtn">추가</button>
 					<button class="btn btn-dark btn-sm" id="deleteBtn">선택삭제</button>
@@ -120,7 +120,10 @@
 				<div id="grid2"></div>
 			</div>
 
+
+
 			<script>
+			
 				var today = new Date();
 				var picker = tui.DatePicker.createRangePicker({
 					startpicker : {
@@ -139,80 +142,93 @@
 									today.getDate()) ] ]
 				});
 
-				const grid = new tui.Grid({
+				const grid11 = new tui.Grid({
 					el : document.getElementById('grid'),
 					data : [ {
-						odDate : '2022-11-01',
-						odCd : 'ORD-20221101-001',
-						prdCd : 'MD-00100',
-						prdNm : '얇은피 고기만두',
-						actNm : 'YD 마트',
-						odAmt : 200
-					} ],
+				    	orderNo: '00001',
+				    	orderDate: '2022-11-11',
+				    	cpName : '삼겹살맛집',
+				    	prtName: '참이슬',
+				    	prtUnit:'Ex',
+				    	orderOutQty : 100,
+				       
+				    }, ],
 					rowHeaders : [ 'rowNum' ],
 					scrollX : false,
 					scrollY : false,
-					columns : [ {
-						header : '주문 일자',
-						name : 'odDate'
-					}, {
-						header : '주문 코드',
-						name : 'odCd'
-					}, {
-						header : '제품 코드',
-						name : 'prdCd'
-					}, {
-						header : '제품명',
-						name : 'prdNm'
-					}, {
-						header : '거래처명',
-						name : 'actNm'
-					}, {
-						header : '주문량',
-						name : 'odAmt'
-					} ]
+					columns : [
+				            {
+				              header: '주문일자',
+				              name: 'orderDate'
+				            },
+   				            {
+				            	header: '주문번호',
+				              name: 'orderNo'
+				            },
+				            {
+				              header: '거래처명',
+				              name: 'cpName'
+				            },
+				            {
+				              header: '제품명',
+				              name: 'prtName'
+				            },
+				            {
+				              header: '단위',
+				              name: 'prtUnit'
+				            },
+				            {
+				              header: '출고량',
+				              name: 'orderOutQty'
+				            }
+				           
+				          ]
 				});
 
-				const grid2 = new tui.Grid({
+				const grid22 = new tui.Grid({
 					el : document.getElementById('grid2'),
 					data : [ {
-						odCd : 'ORD-20221101-002',
-						prdCd : 'MD-00200',
-						lot : 'LOT-PRO-221104-621',
-						outAmt : 200,
-						outDate : '2022-11-04',
-						podDate : '2022-11-03',
-						eDate : '2023-10-04'
-					} ],
-					rowHeaders : [ 'checkbox' ],
-					scrollX : false,
-					scrollY : false,
-					columns : [ {
-						header : '주문 코드',
-						name : 'odCd'
-					}, {
-						header : '제품 코드',
-						name : 'prdCd'
-					}, {
-						header : '완제품LOT',
-						name : 'lot'
-					}, {
-						header : '출고량',
-						name : 'outAmt'
-					}, {
-						header : '출고 일자',
-						name : 'outDate'
-					}, {
-						header : '제조 일자',
-						name : 'podDate'
-					}, {
-						header : '유통기한',
-						name : 'eDate'
-					} ]
-				});
-
+				    	orderNo: '00001',
+				    	orderDate: '2022-11-11',
+				    	prtName: '참이슬',
+				    	orderQty: 999,
+				    	dDay: '2022-11-15',
+				    	orderPrg: '대기중',
+				       
+				    } ],
+					 rowHeaders: ['checkbox'],
+				      scrollX: false,
+				      scrollY: false,
+				      columns: [
+				          {
+				              header: '주문번호',
+				              name: 'orderNo'
+				            },
+				            {
+				              header: '주문일자',
+				              name: 'orderDate'
+				            },
+				            {
+				              header: '품목',
+				              name: 'prtName'
+				            },
+				            {
+				              header: '납기일자',
+				              name: 'dDay'
+				            },
+				            {
+				              header: '주문량',
+				              name: 'orderQty'
+				            },
+				            {
+				              header: '진행상태',
+				              name: 'orderPrg'
+				            }
+				           
+				          ]
+				    });
 				const modalGrid = new tui.Grid({
-					el : document.getElementById('modalGrid'),
+					el : document.getElementById('modalGrid1'),
 					data : [ {
 						actCd : 'VDR-1001',
 						actNm : 'AA 마트',
@@ -236,10 +252,21 @@
 						name : 'tel'
 					} ]
 				})
-				modalGrid.addEventListener('click', function() {
+/* 				modalGrid.addEventListener('click', function() {
 					Grid.refreshLayout();
-				})
+				}) */
+				/* 
+				homeTab.addEventListener('click', () => {
+       				setInterval(()=>{grid11.refreshLayout()},1);
+       				setInterval(()=>{grid22.refreshLayout()},1);
+   				 });
+				 */
+				exampleModal.addEventListener('shown.bs.modal', () => {
+					modalGrid.refreshLayout();
+				   });
+			
 			</script>
+
 		</main>
 	</article>
 </body>

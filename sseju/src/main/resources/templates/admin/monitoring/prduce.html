@@ -5,7 +5,7 @@
 	layout:decorate="~{/layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>OrderList</title>
+<title>prduce</title>
 
 <style>
 body {
@@ -18,13 +18,13 @@ body {
 <body>
 
 	<article class="container" layout:fragment="content">
-		<main id="main" class="main">
+		
 			<div id="mat-od-title">
-				<h2>주문 내역 관리</h2>
+				<h2>생산현황</h2>
 			</div>
 			<hr>
 			<ul class="ul-style">
-				<li><label for="prtName">품목검색</label><input type="text">
+				<li><label for="prtName">발주처 검색</label><input type="text">
 				<li><label for="orderDate">주문일자</label><input type="date"
 					id="orderDate"><span> - </span><input type="date"
 					id="orderDate">
@@ -35,7 +35,6 @@ body {
 			<div style="text-align: right;">
 				<button class="button" data-bs-toggle="modal"
 					data-bs-target="#addModal">등록</button>
-				<button class="button" id="delete">삭제</button>
 				<button class="button">저장</button>
 			</div>
 
@@ -89,53 +88,58 @@ const grid = new tui.Grid({
       el: document.getElementById('grid'),
       data: [
     {
-    	orderNo: '00001',
-    	orderDate: '2022-11-11',
+    	preDate: '2022-11-17',
     	prtName: '참이슬',
-    	orderQty: 999,
-    	dDay: '2022-11-15',
-    	orderPrg: '진행중',
+    	fcCode: 'sseju',
+    	cpName: '돼지 맛도리',
+    	orderOutQty: '2022-11-18',
+    	insQty: '500',
+    	prtCode:'1700',
        
     },
     {
-    	orderNo: '00002',
-    	orderDate: '2022-12-11',
+    	preDate: '2022-11-19',
     	prtName: '참소주',
-    	orderQty: 1004,
-    	dDay: '2022-12-15',
-    	orderPrg: '준비중',
+    	fcCode: 'sseju',
+    	cpName: '승현짱짱맨',
+    	orderOutQty: '2022-11-19',
+    	insQty: '700',
+    	prtCode:'500',
     }
   ],
       rowHeaders: ['checkbox'],
       scrollX: false,
       scrollY: false,
       columns: [
-          {
-              header: '주문번호',
-              name: 'orderNo'
-            },
-            {
-              header: '주문일자',
-              name: 'orderDate'
-            },
-            {
-              header: '품목',
-              name: 'prtName'
-            },
-            {
-              header: '납기일자',
-              name: 'dDay'
-            },
-            {
-              header: '주문량',
-              name: 'orderQty'
-            },
-            {
-              header: '진행상태',
-              name: 'orderPrg'
-            }
-           
-          ]
+	        {
+	            header: '일자',
+	            name: 'preDate'
+	          },
+	          {
+	            header: '제품명',
+	            name: 'prtName'
+	          },
+	          {
+	            header: '생산처',
+	            name: 'fcCode'
+	          },
+	          {
+	            header: '발주처',
+	            name: 'cpName'
+	          },
+	          {
+	            header: '출고일',
+	            name: 'orderOutQty'
+	          },
+	          {
+	            header: '발주수량',
+	            name: 'insQty'
+	          },
+	          {
+	            header: '발주잔량',
+	            name: 'prtCode'
+	          }
+	        ]
     });
 
 
@@ -180,31 +184,31 @@ const grid = new tui.Grid({
 			scrollY: false,
 			columns: [
 		        {
-		            header: '주문번호',
+		            header: '일자',
 		            name: 'orderNo'
 		          },
 		          {
-		            header: '주문일자',
+		            header: '제품명',
 		            name: 'orderDate'
 		          },
 		          {
-		            header: '품목',
+		            header: '생산처',
 		            name: 'prtName'
 		          },
 		          {
-		            header: '납기일자',
+		            header: '발주처',
 		            name: 'dDay'
 		          },
 		          {
-		            header: '주문량',
+		            header: '출고일',
 		            name: 'orderQty'
 		          },
 		          {
-		            header: '주문단가',
+		            header: '발주수량',
 		            name: 'unitPrice'
 		          },
 		          {
-		            header: '금액',
+		            header: '발주잔량',
 		            name: 'orderPrice'
 		          }
 		        ]
@@ -212,7 +216,7 @@ const grid = new tui.Grid({
 		
 	}, '.modal');
 	</script>
-		</main>
+	
 	</article>
 </body>
 </html>
