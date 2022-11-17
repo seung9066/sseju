@@ -4,10 +4,13 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.sseju.java.mat.mapper.MatMapper">
-	<select id="matBuyList" resultType="MatVO">
-		SELECT * FROM mat_buy
+	<select id="matBuyList" resultType="map">
+		SELECT b.mat_ord_name, b.mat_ord_qty, m.mat_code, m.mat_name, TO_CHAR(b.mat_ord_date,'yyyy-MM-dd') as "MAT_ORD_DATE", c.cp_code, c.cp_name, b.mat_price, b.mat_ord_emp, b.mat_ord_yn
+		FROM mat_buy b
+		JOIN material m ON m.mat_code = b.mat_code
+		JOIN company c ON c.cp_code = m.cp_code
 	</select>
-	<select id="selectMatbuyInfo" resultType="MatVO">
+	<select id="selectMatbuyInfo" resultType="map">
 		SELECT * FROM mat_buy WHERE mat_ord_name = #{matOrdName}
 	</select>
 	<insert id="insertMatbuy" parameterType="MatVO">

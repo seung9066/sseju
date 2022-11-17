@@ -1,11 +1,12 @@
 package com.sseju.java.mat.service;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MatService {
 
 	//발주 전체 조회
-	public List<MatVO> matBuyList();
+	public List<Map<String, Object>> matBuyList();
 	//발주 단건 조회
 	public MatVO selectMatbuyInfo(MatVO MatVO);
 	//발주 등록

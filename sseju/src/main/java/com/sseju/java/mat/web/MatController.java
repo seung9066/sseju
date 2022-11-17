@@ -1,16 +1,22 @@
 package com.sseju.java.mat.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.sseju.java.mat.service.MatService;
 
 @Controller
 public class MatController {
 	
-	//@Autowired
+	@Autowired
+	MatService service;
 	
 	
 	@RequestMapping("/matOrd")
-	public String mat() {
+	public String matOrd(Model model) {
+		model.addAttribute("matordList", service.matBuyList());
 		return "/admin/mat/matOrd";
 	}
 	
