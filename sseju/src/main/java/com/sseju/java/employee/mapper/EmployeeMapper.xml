@@ -15,4 +15,8 @@
 	<insert id="insertEmp" parameterType="EmployeeVO">
 		INSERT INTO employee values (#{empId}, #{empName}, #{empDept}, #{empRank}, #{empAuth}, #{password})
 	</insert>
+	
+	<delete id="deleteLogin" parameterType="EmployeeVO">
+		DELETE FROM login WHERE id = #{id}
+	</delete>
 </mapper>

@@ -49,6 +49,12 @@ public class EmployeeServiceImpl implements EmployeeService{
 		// TODO Auto-generated method stub
 		return mapper.idCheck(id);
 	}
+
+	@Override
+	public int deleteLogin(EmployeeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.deleteLogin(vo);
+	}
 	
 	
 }

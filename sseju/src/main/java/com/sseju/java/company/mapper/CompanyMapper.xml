@@ -4,6 +4,10 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.sseju.java.company.mapper.CompanyMapper">
+
+	<select id="getCompanyList">
+		SELECT * FROM company
+	</select>
 	<insert id="insertLogin" parameterType="CompanyVO">
 		INSERT INTO login values (#{id}, #{auth}, #{password})
 	</insert>
@@ -13,7 +17,7 @@
 	</select>
 	
 	<select id="getCompanyInfo" parameterType="CompanyVO" resultType="CompanyVO">
-		SELECT * FROM company WHERE id = #{id}
+		SELECT * FROM company WHERE cp_code = #{cpCode}
 	</select>
 	
 	<insert id="insertCompany" parameterType="CompanyVO">
@@ -22,4 +26,8 @@
 		</selectKey>
 		INSERT INTO company values (#{cpCode}, #{cpName}, #{cpCeo}, #{cpTel}, #{cpNo}, #{cpAddr}, #{id})
 	</insert>
+	
+	<delete id="deleteCompany" parameterType="CompanyVO">
+		DELETE FROM company WHERE cp_code = #{cpCode}
+	</delete>
 </mapper>

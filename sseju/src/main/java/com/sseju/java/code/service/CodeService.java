@@ -10,4 +10,9 @@ public interface CodeService {
 	public int updateCode(CodeVO vo);
 	public int deleteCode(CodeVO vo);
 	public int selectDelete(List<String> list);
+	
+	// bom
+	public List<CodeVO> getBomList(CodeVO vo);
+	public List<CodeVO> getBomMenu();
+	
 }
