@@ -41,4 +41,10 @@ public class OrderServiceImpl implements ORService {
 		return OMapper.deleteOrderInfo(Ovo);
 	}
 
+	@Override
+	public int getOrderNo() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

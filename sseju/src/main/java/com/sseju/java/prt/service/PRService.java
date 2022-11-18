@@ -15,6 +15,7 @@ public interface PRService {
 
 	// 등록
 	public int insertPrtInfo(PRVO Pvo);
-
 	
+	//수정
+	public int updatePrtinfo(PRVO Pvo);
 }

@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.sseju.java.order.service.ORService;
@@ -14,24 +15,27 @@ import com.sseju.java.order.service.ORVO;
 @Controller
 public class OrderController {
 	@Autowired
-	ORService Service;
+	ORService oService;
 
 	// 등록-품
 	@GetMapping("orinsert")
 	public String insertForm(Model model) {
+		model.addAttribute("orderNo", oService.getOrderNo());
 		return "/admin/order/insertForm";
 	}
 
 	// 등록-DB
 	@PostMapping("orinsert")
-	public String insertOrder(ORVO orVO, RedirectAttributes ratt) {
-
+	@ResponseBody
+	public String insertOrder(Model model, ORVO ORVO) {
+	model.addAttribute("orinsert", oService.insertOrderInfo(ORVO));
 		return "redirect:list";
 	}
 
 	// 전체
 	@GetMapping("/orlist")
 	public String selectOrderList(Model model) {
+		model.addAttribute("orList",oService.selectOrderList());
 		return "/admin/order/orderList";
 	}
 

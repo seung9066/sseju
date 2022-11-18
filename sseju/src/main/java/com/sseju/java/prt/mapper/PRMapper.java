@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.sseju.java.prt.service.PRVO;
+
 @Mapper
 public interface PRMapper {
 
@@ -17,5 +18,6 @@ public interface PRMapper {
 	// 등록
 	public int insertPrtInfo(PRVO Ovo);
 
-	
+	//삭제
+	public int deletePrinfo(PRVO Ovo);
 }

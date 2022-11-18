@@ -15,10 +15,16 @@
 		WHERE od.order_no = #{or.order_no}
 	</select>
 	<!-- 수정 ㅡ 실적칸 수정 필요없을것 같아서 추가X -->
+	
+	
 	<!-- 삭제 -->
 	<delete id="deletePrtPer">
 		DELETE FROM orders
 		WHERE order_no = #{order_no}
 	</delete>
+
+
+
+
 
 </mapper>

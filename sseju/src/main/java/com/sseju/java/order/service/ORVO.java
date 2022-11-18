@@ -24,4 +24,7 @@ public class ORVO {
 	private String preCode; //제품코드
 	private int unitPrice; //주문단가
 	private int orderPrice; //금액
+	
+	
+	
 }
