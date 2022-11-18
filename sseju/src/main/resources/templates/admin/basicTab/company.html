@@ -6,16 +6,231 @@
 
 <head>
 <meta charset="utf-8">
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<style>
+.button {
+	width: 100px;
+	height: 30px;
+	margin-right:1%;
+	margin-bottom:1%;
+}
+</style>
 </head>
 <body>
-<article layout:fragment="content">
-	<main id="main" class="main">
+	<article layout:fragment="content">
+		<main id="main" class="main">
+			<h4 style="margin-bottom: 3%;">
+				<strong>거래처 관리</strong>
+			</h4>
+			<form action="insertcployee" method="POST">
+				<input type="hidden" th:name="${_csrf.parameterName}"
+					th:value="${_csrf.token}" />
+				<table>
+					<tr>
+						<th>업체코드</th>
+						<td><input type="text" id="cpCode" name="cpCode"></td>
+						<th>아이디</th>
+						<td><input type="text" id="id" name="id"></td>
+						<th>업체명</th>
+						<td><input type="text" id="cpName" name="cpName"></td>
+						<th>대표자명</th>
+						<td><input type="text" id="cpCeo" name="cpCeo"></td>
+					</tr>
+					<tr>
+						<th>연락처</th>
+						<td><input type="text" id="cpTel" name="cpTel"></td>
+						<th>사업자번호</th>
+						<td><input type="text" id="cpNo" name="cpNo"></td>
+						<th>주소</th>
+						<td><input type="text" id="cpAddr" name="cpAddr"></td>
+					</tr>
+				</table>
+				<input type="hidden" name="auth" value="ROLE_ADMIN">
+				<button class="button" type="button" style="float: right;"
+					onclick="updatecp()">수정</button>
+				<button class="button" type="button" style="float: right;"
+					onclick="selectDeletecp()">삭제</button>
+			</form>
+			<div id="cpGrid"></div>
 
-		
+			<script type="text/javascript">
+	
+				showAll();
 
-	</main>
+				const cpGrid = new tui.Grid({
+					el : document.getElementById('cpGrid'),
+					pagination : true,
+					pageOption : {
+						useClient : true,
+						perPage : 10
+					},
+					scrollX : false,
+					scrollY : false,
+					rowHeaders : [ 'checkbox' ],
+					columns : [ {
+						header : '업체코드',
+						name : 'cpCode',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '아이디',
+						name : 'id',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '업체명',
+						name : 'cpName',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '대표자명',
+						name : 'cpCeo',
+						align : 'center',
+						filter : 'select'
+					}, {
+						header : '연락처',
+						name : 'cpTel',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '사업자번호',
+						name : 'cpNo',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '주소',
+						name : 'cpAddr',
+						align : 'center',
+						filter: 'select'
+					}]
+				});
+				
+				var token = $("meta[name='_csrf']").attr("content");
+				var header = $("meta[name='_csrf_header']").attr("content");
+				
+				var deleteCode = [];
+				
+				cpGrid.on('check', ev => {
+					console.log(cpGrid.getValue(ev.rowKey, 'id'));
+					deleteCode.push((cpGrid.getValue(ev.rowKey, 'id')));
+					
+					console.log($('input[name=_checked]').val());
+					
+					$('#cpCode').val(cpGrid.getValue(ev.rowKey, 'cpCode'));
+					$('#cpCode').attr('readonly', true);
+					$('#id').val(cpGrid.getValue(ev.rowKey, 'id'));
+					$('#id').attr('readonly', true);
+					$('#cpName').val(cpGrid.getValue(ev.rowKey, 'cpName'));
+					$('#cpCeo').val(cpGrid.getValue(ev.rowKey, 'cpCeo'));
+					$('#cpTel').val(cpGrid.getValue(ev.rowKey, 'cpTel'));
+					$('#cpNo').val(cpGrid.getValue(ev.rowKey, 'cpNo'));
+					$('#cpAddr').val(cpGrid.getValue(ev.rowKey, 'cpAddr'));
+				});
+				
+				cpGrid.on('uncheck', ev => {
+					console.log(cpGrid.getValue(ev.rowKey, 'id'));
+					for(let i = 0; i < deleteCode.length; i++) {
+						if(deleteCode[i] == cpGrid.getValue(ev.rowKey, 'id')) {
+							deleteCode.splice(i, 1);
+						}
+					}
+					$('#cpCode').val('');
+					$('#cpCode').attr('readonly', false);
+					$('#id').val('');
+					$('#id').attr('readonly', false);
+					$('#cpName').val('');
+					$('#cpCeo').val('');
+					$('#cpTel').val('');
+					$('#cpNo').val('');
+					$('#cpAddr').val('');
+					console.log(deleteCode);
+				});
+				
+				function selectDeletecp() {
+					console.log(cpGrid.getCheckedRows());
+					let code = [];
+					for(co of cpGrid.getCheckedRows()){
+						console.log(co.cpCode)
+						code.push(co.cpCode)
+					}
+					
+					$.ajax({
+						url:'selectDeleteCP',
+						type:'POST',
+						data:{code:code},
+						dataType:"json",
+						async:false,
+						beforeSend : function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success:function(data){
+							if(data > 0) {
+								alert("삭제완료");
+								showAll();					
+							} else {
+								alert("삭제실패");
+							}
+						},
+						error:function(request,status,error){
+							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+							console.log(code);
+							console.log(reject);
+						}
+					})
+				}
+				
+				function updatecp() {
+					let cpCode = $('#cpCode').val();
+					let id = $('#id').val();
+					let cpName = $('#cpName').val();
+					let cpCeo = $('#cpCeo').val();
+					let cpTel = $('#cpTel').val();
+					let cpNo = $('#cpNo').val();
+					let cpAddr = $('#cpAddr').val();
+					
+					let upData = {'cpCode':cpCode, 'id':id, 'cpName':cpName, 'cpCeo':cpCeo, 'cpTel':cpTel, 'cpNo':cpNo, 'cpAddr':cpAddr};
+					
+					$.ajax({
+						url:'updateCp',
+						type:'POST',
+						data:JSON.stringify(upData),
+						dataType:"json",
+						contentType:'application/json',
+						async:false,
+						beforeSend : function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success:function(data){
+							if(data > 0) {
+								alert("수정완료");
+								showAll();					
+							} else {
+								alert("수정실패");
+							}
+						},
+						error:function(request,status,error){
+							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+							console.log(reject);
+						}
+					})
+				}
+				
+				function showAll() {
+					$('#title').text("전체");
+					
+					url="CompanyList"
+					       fetch(url) // 설비 단건조회 불러오는 아작스
+					       .then(res=>res.json())
+					       .then(obj=>{
+					           console.log(obj);
+					           cpGrid.resetData(obj);
+					       })
+				}
+			</script>
+		</main>
 	</article>
 
 	<!-- Vendor JS Files -->

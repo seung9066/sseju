@@ -24,18 +24,23 @@ th {
 	border: 0.1px solid gray;
 	background-color: white;
 }
+
+.button {
+	width: 100px;
+	height: 30px;
+}
 </style>
 </head>
 <body>
 	<article layout:fragment="content">
 		<main id="main" class="main">
 
-			<h4 style="margin-bottom:3%;">
+			<h4 style="margin-bottom: 3%;">
 				<strong>공통코드 관리</strong>
 			</h4>
-			
+
 			<div>
-				<table class="menuTable"  style="margin-bottom:3%;">
+				<table class="menuTable" style="margin-bottom: 3%;">
 					<tr>
 						<th onclick="showAll()">전체</th>
 						<th onclick="showCompany()">거래처</th>
@@ -57,12 +62,11 @@ th {
 			<div>
 				<h3 id="title"></h3>
 			</div>
-			<div style="float: right; margin-bottom:3%;">
-				<button class="button" style="width: 100px; height: 30px;"
-					onclick="selectDelete()">삭제</button>
+			<div style="float: right; margin-bottom: 3%;">
+				<button class="button" onclick="selectDelete()">삭제</button>
 			</div>
 
-			<div id="codeGrid" style="text-align:center;"></div>
+			<div id="codeGrid"></div>
 
 			<script>
 			
@@ -81,19 +85,23 @@ th {
 				columns : [ {
 					header : '코드',
 					name : 'code',
-					align : 'center'
+					align : 'center',
+					filter: 'select'
 				}, {
 					header : '코드명',
 					name : 'codeName',
-					align : 'center'
+					align : 'center',
+					filter: 'select'
 				}, {
 					header : '공통코드',
 					name : 'divCode', //납기일자명 수정
-					align : 'center'
+					align : 'center',
+					filter: 'select'
 				}, {
 					header : '구분',
 					name : 'divName',
-					align : 'center'
+					align : 'center',
+					filter: 'select'
 				} ]
 			});
 			
@@ -122,6 +130,9 @@ th {
 			});
 			
 			function selectDelete() {
+				var token = $("meta[name='_csrf']").attr("content");
+				var header = $("meta[name='_csrf_header']").attr("content");
+				
 				console.log(codeGrid.getCheckedRows());
 				let code = [];
 				for(co of codeGrid.getCheckedRows()){
@@ -132,10 +143,13 @@ th {
 				
 				$.ajax({
 					url:'selectDeleteCP',
-					type:'GET',
+					type:'POST',
 					data:{code:code},
 					dataType:"json",
 					async:false,
+					beforeSend : function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
 					success:function(data){
 						if(data > 0) {
 							alert("삭제완료");

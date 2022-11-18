@@ -27,4 +27,8 @@
 	<delete id="deleteEmp" parameterType="EmployeeVO">
 		DELETE FROM employee WHERE emp_id = #{empId}
 	</delete>
+	
+	<update id="updateEmp" parameterType="EmployeeVO">
+		UPDATE employee SET emp_name = #{empName}, emp_dept = #{empDept}, emp_rank = #{empRank} WHERE emp_id = #{empId}
+	</update>
 </mapper>
