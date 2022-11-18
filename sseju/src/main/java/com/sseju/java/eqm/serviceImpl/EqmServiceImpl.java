@@ -14,10 +14,17 @@ public class EqmServiceImpl implements EqmService {
 
 	@Autowired
 	EqmMapper eqmMapper;
+	
+//	설비 eqm
 
 	@Override
 	public List<EqmVO> selectEqmList() {
 		return eqmMapper.selectEqmList();
+	}
+	
+	@Override
+	public EqmVO getEqmInfo(EqmVO eqmVO) {
+		return eqmMapper.getEqmInfo(eqmVO);
 	}
 
 	@Override
@@ -35,11 +42,18 @@ public class EqmServiceImpl implements EqmService {
 		return eqmMapper.deleteEqmInfo(eqmVO);
 	}
 
+// eqmLine
 	@Override
 	public List<EqmVO> getEqmLineList() {
 		return eqmMapper.getEqmLineList();
 	}
 
+	@Override
+	public EqmVO getEqmLineInfo(EqmVO eqmVO) {
+		return eqmMapper.getEqmLineInfo(eqmVO);
+	}
+
+	
 	@Override
 	public int insertEqmLine(EqmVO eqmVO) {
 		return eqmMapper.insertEqmLine(eqmVO);
@@ -55,10 +69,17 @@ public class EqmServiceImpl implements EqmService {
 		return eqmMapper.deleteEqmLine(lineNo);
 	}
 
+// 정기점검 eqmChk
 	@Override
 	public List<EqmVO> getEqmChkList() {
 		// TODO Auto-generated method stub
 		return eqmMapper.getEqmChkList();
+	}
+	
+	@Override
+	public EqmVO getEqmChkInfo(EqmVO eqmVO) {
+		// TODO Auto-generated method stub
+		return eqmMapper.getEqmChkInfo(eqmVO);
 	}
 
 	@Override
@@ -78,5 +99,10 @@ public class EqmServiceImpl implements EqmService {
 		// TODO Auto-generated method stub
 		return eqmMapper.deleteEqmChk(eqmVO);
 	}
+
+	
+
+
+	
 
 }
