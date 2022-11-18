@@ -66,13 +66,12 @@ public class MatVO {
 	private String matChkName;
 	private int matInQty;
 	private int matErrQty;
-	private String matOrdNo;
 	@DateTimeFormat (pattern = "yyyy-MM-dd")
 	private Date matChkDate;
 	private int matPassQty;
 
 //	MAR_BUY VO
-//	MAT_ORD_NAME	VARCHAR2(100 BYTE)
+//	MAT_ORD_NO	VARCHAR2(100 BYTE)
 //	MAT_ORD_QTY	NUMBER
 //	NOW_CODE	VARCHAR2(100 BYTE)
 //	MAT_CODE	VARCHAR2(100 BYTE)
@@ -82,7 +81,7 @@ public class MatVO {
 //	MAT_PRICE	VARCHAR2(20 BYTE)
 //	MAT_ORD_EMP	VARCHAR2(20 BYTE)
 	
-	private String matOrdName;
+	private String matOrdNo;
 	private int matOrdQty;
 	private String nowCode;
 	@DateTimeFormat (pattern = "yyyy-MM-dd")
@@ -92,6 +91,30 @@ public class MatVO {
 	private String matOrdEmp;
 	
 
+//	LOT VO
+//	LOT_NO	VARCHAR2(50 BYTE)
+//	LOT_DATE	DATE X
+//	MP_CODE	VARCHAR2(50 BYTE)
+//	OUT_FROM	VARCHAR2(50 BYTE) X
+//	LOT_OPTION	VARCHAR2(50 BYTE) X
+//	LOT_QTY	NUMBER
+//	WH_CODE	VARCHAR2(50 BYTE)
+//	MAT_CHK_CODE	VARCHAR2(50 BYTE)
+	
+	private String lotNo;
+	private String mpCode;
+	private int lotQty;
+
+//	warehouse VO
+//	WH_CODE	VARCHAR2(50 BYTE)
+//	WH_NAME	VARCHAR2(50 BYTE)
+//	WH_LOCATION	VARCHAR2(100 BYTE)
+//	WH_MANAGER	VARCHAR2(50 BYTE)
+	
+	private String whCode;
+	private String whName;
+	private String whLocation;
+	private String whManager;
 	
 	
 }
