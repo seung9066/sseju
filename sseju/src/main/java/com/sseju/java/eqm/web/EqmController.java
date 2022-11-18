@@ -21,8 +21,7 @@ public class EqmController {
 
    
      @GetMapping("/eqmList")
-      public String eqmList(Model model) {
-        
+       public String eqmList() {
          return "/admin/eqm/eqmList";
       }
      
@@ -37,7 +36,7 @@ public class EqmController {
      
      @GetMapping("/lineList")
      @ResponseBody
-     public List<EqmVO> getEqmLineList(Model model){
+     public List<EqmVO> getEqmLineList(){
         return eqmService.getEqmLineList();
      }
      
