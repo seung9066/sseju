@@ -2,6 +2,8 @@ package com.sseju.java.code.service;
 
 import java.util.List;
 
+import com.sseju.java.employee.service.EmployeeVO;
+
 public interface CodeService {
 
 	public List<CodeVO> getCodeList();
@@ -19,4 +21,8 @@ public interface CodeService {
 	public CodeVO getMatCode(CodeVO vo);
 	public int insertBOM(CodeVO vo);
 	public List<CodeVO> getBOMPrtList();
+	public int deleteBOM(CodeVO vo);
+	
+	// employee
+	public List<EmployeeVO> getDept();
 }

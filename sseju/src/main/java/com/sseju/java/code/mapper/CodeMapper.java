@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.sseju.java.code.service.CodeVO;
+import com.sseju.java.employee.service.EmployeeVO;
 
 @Mapper
 public interface CodeMapper {
@@ -24,4 +25,8 @@ public interface CodeMapper {
 	public CodeVO getMatCode(CodeVO vo);
 	public int insertBOM(CodeVO vo);
 	public List<CodeVO> getBOMPrtList();
+	public int deleteBOM(CodeVO vo);
+	
+	// employee
+	public List<EmployeeVO> getDept();
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.sseju.java.code.mapper.CodeMapper;
 import com.sseju.java.code.service.CodeService;
 import com.sseju.java.code.service.CodeVO;
+import com.sseju.java.employee.service.EmployeeVO;
 
 @Service
 public class CodeServiceImpl implements CodeService {
@@ -91,6 +92,18 @@ public class CodeServiceImpl implements CodeService {
 	public List<CodeVO> getBOMPrtList() {
 		// TODO Auto-generated method stub
 		return mapper.getBOMPrtList();
+	}
+
+	@Override
+	public List<EmployeeVO> getDept() {
+		// TODO Auto-generated method stub
+		return mapper.getDept();
+	}
+
+	@Override
+	public int deleteBOM(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.deleteBOM(vo);
 	}
 
 }

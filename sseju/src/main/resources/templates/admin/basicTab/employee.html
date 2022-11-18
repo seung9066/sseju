@@ -9,6 +9,15 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<style>
+.button {
+	width: 100px;
+	height: 30px;
+	margin-right:1%;
+	margin-bottom:1%;
+}
+</style>
 </head>
 <body>
 	<article layout:fragment="content">
@@ -22,26 +31,30 @@
 				<table>
 					<tr>
 						<th>아이디</th>
-						<td><input type="text" name="empId"></td>
+						<td><input type="text" id="empId" name="empId"></td>
 						<th>이름</th>
-						<td><input type="text" name="empName"></td>
+						<td><input type="text" id="empName" name="empName"></td>
 						<th>부서</th>
-						<td><select style="width: 150px;" name="empDept">
+						<td><select style="width: 150px;" id="empDept" name="empDept">
 								<option>---선택---</option>
-
+								<th:block th:each="d : ${dept}">
+									<option th:value="${d.empDept}" th:text="${d.empDept}"></option>
+								</th:block>
 						</select></td>
 					</tr>
 					<tr>
 						<th>직급</th>
-						<td><input type="text" name="empRank"></td>
+						<td><input type="text" id="empRank" name="empRank"></td>
 						<th>비밀번호</th>
 						<td><input type="password" id="password" name="password"></td>
 					</tr>
 				</table>
 				<input type="hidden" name="auth" value="ROLE_ADMIN">
-				<button type="submit" class="button" style="float:right;">등록</button>
-				<button class="button" type="button" style="float:right;"
+				<button class="button" type="button" style="float: right;"
+					onclick="updateEmp()">수정</button>
+				<button class="button" type="button" style="float: right;"
 					onclick="selectDeleteEmp()">삭제</button>
+				<button type="submit" class="button" style="float: right;">등록</button>
 			</form>
 			<div id="empGrid"></div>
 
@@ -62,21 +75,28 @@
 					columns : [ {
 						header : '아이디',
 						name : 'empId',
-						align : 'center'
+						align : 'center',
+						filter: 'select'
 					}, {
 						header : '이름',
 						name : 'empName',
-						align : 'center'
+						align : 'center',
+						filter: 'select'
 					}, {
 						header : '부서',
 						name : 'empDept', //납기일자명 수정
-						align : 'center'
+						align : 'center',
+						filter : 'select'
 					}, {
 						header : '직급',
 						name : 'empRank',
-						align : 'center'
+						align : 'center',
+						filter: 'select'
 					} ]
 				});
+				
+				var token = $("meta[name='_csrf']").attr("content");
+				var header = $("meta[name='_csrf_header']").attr("content");
 				
 				var deleteCode = [];
 				
@@ -86,10 +106,11 @@
 					
 					console.log($('input[name=_checked]').val());
 					
-					/* $('input[name=_checked]').each(function (idx, item){
-						empGrid.getValue(i, 'code');
-						console.log(empGrid.getValue(ev.rowKey, 'code'));
-					}) */
+					$('#empId').val(empGrid.getValue(ev.rowKey, 'empId'));
+					$('#empId').attr('readonly', true);
+					$('#empName').val(empGrid.getValue(ev.rowKey, 'empName'));
+					$('#empDept').val(empGrid.getValue(ev.rowKey, 'empDept'));
+					$('#empRank').val(empGrid.getValue(ev.rowKey, 'empRank'));
 				});
 				
 				empGrid.on('uncheck', ev => {
@@ -99,6 +120,11 @@
 							deleteCode.splice(i, 1);
 						}
 					}
+					$('#empId').val('');
+					$('#empId').attr('readonly', false);
+					$('#empName').val('');
+					$('#empDept').val('');
+					$('#empRank').val('');
 					console.log(deleteCode);
 				});
 				
@@ -113,10 +139,13 @@
 					
 					$.ajax({
 						url:'selectDeleteEmp',
-						type:'GET',
+						type:'POST',
 						data:{code:code},
 						dataType:"json",
 						async:false,
+						beforeSend : function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
 						success:function(data){
 							if(data > 0) {
 								alert("삭제완료");
@@ -128,6 +157,39 @@
 						error:function(request,status,error){
 							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 							console.log(code);
+							console.log(reject);
+						}
+					})
+				}
+				
+				function updateEmp() {
+					let empId = $('#empId').val();
+					let empName = $('#empName').val();
+					let empDept = $('#empDept').val();
+					let empRank = $('#empRank').val();
+					
+					let upData = {'empId':empId, 'empName':empName, 'empDept':empDept, 'empRank':empRank};
+					
+					$.ajax({
+						url:'updateEmp',
+						type:'POST',
+						data:JSON.stringify(upData),
+						dataType:"json",
+						contentType:'application/json',
+						async:false,
+						beforeSend : function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success:function(data){
+							if(data > 0) {
+								alert("수정완료");
+								showAll();					
+							} else {
+								alert("수정실패");
+							}
+						},
+						error:function(request,status,error){
+							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 							console.log(reject);
 						}
 					})

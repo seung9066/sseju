@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -54,7 +55,8 @@ public class CodeController {
 	}
 	
 	@GetMapping("/basicEmployee")
-	public String basicEmployee() {
+	public String basicEmployee(Model model) {
+		model.addAttribute("dept", service.getDept());
 		return "/admin/basicTab/Employee";
 	}
 	
@@ -84,7 +86,7 @@ public class CodeController {
 		return service.getCodeList();
 	}
 	
-	@GetMapping("/selectDeleteCP")
+	@PostMapping("/selectDeleteCP")
 	@ResponseBody
 	public int selectDelete(@RequestParam(value="code[]", required=false) List<String> code) {
 		int a = 0;
@@ -205,7 +207,7 @@ public class CodeController {
 		return service.getBomMenu();
 	}
 	
-	@GetMapping("/insertBOM")
+	@PostMapping("/insertBOM")
 	@ResponseBody
 	public int insertBOM(@RequestParam(value="nameList[]", required=false) List<String> nameList, @RequestParam(value="capList[]", required=false) List<String> capList, @RequestParam(value="matList[]", required=false) List<String> matList) {
 		int a = 0;
@@ -228,4 +230,30 @@ public class CodeController {
 			}
 		return a;
 	}
+	
+	@PostMapping("/updateBOM")
+	@ResponseBody
+	public int updateBOM(@RequestParam(value = "mat[]", required = false) List<String> mat, @RequestParam(value = "cap[]", required = false) List<String> cap, @RequestParam(value = "prtName[]", required = false) List<String> prtName) {
+		int a = 0;
+		
+		CodeVO vo = new CodeVO();
+		vo.setPrtName(prtName.get(0));
+		vo = service.getPrtCode(vo);
+		System.out.println("aaaaaaaaaaaaaa");
+		System.out.println(vo.getPrtCode());
+		service.deleteBOM(vo);
+		for (int i = 0; i < mat.size(); i++) {
+			CodeVO vo1 = new CodeVO();
+			vo1.setMatName(mat.get(i));
+			
+			CodeVO voa = new CodeVO();
+			voa.setMatCode(service.getMatCode(vo1).getMatCode());
+			voa.setCapacity(cap.get(i));
+			voa.setPrtCode(vo.getPrtCode());
+			
+			a += service.insertBOM(voa);
+		}
+		return a;
+	}
+
 }

@@ -38,22 +38,24 @@ input {
 					<button type="button" class="button"
 						style="width: 100px; height: 30px;" onclick="put()">재료추가</button>
 					<button type="button" class="button"
+						style="width: 100px; height: 30px;" onclick="updateBOM()">수정</button>
+					<button type="button" class="button"
 						style="width: 100px; height: 30px;" onclick="input()">등록</button>
 				</div>
 				<table>
 					<tr>
 						<th>제품명</th>
-						<td><select style="width:150px;" id="mat">
+						<td><select style="width: 150px;" id="name">
 								<option>---선택---</option>
 								<th:block th:each="p : ${prt}">
-								<option th:value="${p.prtName}" th:text="${p.prtName}"></option>
+									<option th:value="${p.prtName}" th:text="${p.prtName}"></option>
 								</th:block>
 						</select></td>
 						<th>재료</th>
-						<td><select style="width:150px;" id="mat">
+						<td><select style="width: 150px;" id="mat">
 								<option>선택</option>
 								<th:block th:each="m : ${mat}">
-								<option th:value="${m.matName}" th:text="${m.matName}"></option>
+									<option th:value="${m.matName}" th:text="${m.matName}"></option>
 								</th:block>
 						</select></td>
 						<th>용량</th>
@@ -71,6 +73,9 @@ input {
 			</div>
 			<script>
 			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
 			menuAll();
 			showAll();
 			
@@ -86,7 +91,8 @@ input {
 				columns : [ {
 					header : '제품명',
 					name : 'prtName',
-					align : 'center'
+					align : 'center',
+					filter: 'select'
 				}]
 			});
 			
@@ -97,16 +103,21 @@ input {
 					useClient:true,
 					perPage:10
 				},
+				rowHeaders: ['checkbox'],
 				scrollX : false,
 				scrollY : false,
 				columns : [ {
 					header : '재료명',
 					name : 'matName',
-					align : 'center'
+					align : 'center',
+					filter: 'select',
+					editor: 'text'
 				}, {
 					header : '용량',
 					name : 'capacity',
-					align : 'center'
+					align : 'center',
+					filter: 'select',
+					editor:'text'
 				}]
 			});
 			
@@ -132,30 +143,38 @@ input {
 						console.log(reject);
 					}
 				})
-				
 			});
 			
-			function insertBOM() {
+			function updateBOM() {
 				console.log(BOMGrid.getCheckedRows());
-				let code = [];
+				let mat = [];
+				let cap = [];
 				for(co of BOMGrid.getCheckedRows()){
-					console.log(co)
-					code.push(co.code)
-					console.log(code);
+					console.log(co.matName);
+					mat.push(co.matName);
+					cap.push(co.capacity);
 				}
 				
+				let prtName1 = $('#title').html();
+				let prtName = [];
+				
+				prtName.push(prtName1);
+				console.log(prtName);
 				$.ajax({
-					url:'selectDeleteCP',
-					type:'GET',
-					data:{code:code},
+					url:'updateBOM',
+					type:'POST',
+					data:{prtName:prtName, mat:mat, cap:cap},
 					dataType:"json",
 					async:false,
+					beforeSend : function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
 					success:function(data){
 						if(data > 0) {
-							alert("삭제완료");
+							alert("업데이트완료");
 							showAll();					
 						} else {
-							alert("삭제실패");
+							alert("업데이트실패");
 						}
 					},
 					error:function(request,status,error){
@@ -216,12 +235,18 @@ input {
 					matList.push(mat[i].value);
 				}
 				
+				var token = $("meta[name='_csrf']").attr("content");
+				var header = $("meta[name='_csrf_header']").attr("content");
+				
 				$.ajax({
 					url:'insertBOM',
-					type:'GET',
+					type:'POST',
 					data:{nameList:nameList, capList:capList, matList:matList},
 					dataType:"json",
 					async:false,
+					beforeSend : function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
 					success:function(data){
 						if(data > 0) {
 							alert("등록완료");
@@ -238,6 +263,7 @@ input {
 				})
 				
 				menuAll();
+				$('#input').html('');
 			}
 			</script>
 		</main>
