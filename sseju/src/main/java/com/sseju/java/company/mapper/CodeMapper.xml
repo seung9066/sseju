@@ -5,7 +5,7 @@
   
 <mapper namespace="com.sseju.java.company.mapper.CompanyMapper">
 
-	<select id="getCompanyList">
+	<select id="getCompanyList" resultType="CompanyVO">
 		SELECT * FROM company
 	</select>
 	<insert id="insertLogin" parameterType="CompanyVO">
@@ -38,4 +38,9 @@
 	<delete id="deleteCompany" parameterType="CompanyVO">
 		DELETE FROM company WHERE cp_code = #{cpCode}
 	</delete>
+	
+	<update id="updateCompany" parameterType="CompanyVO">
+		UPDATE company SET cp_name = #{cpName}, cp_ceo = #{cpCeo}, cp_tel = #{cpTel}, cp_no = #{cpNo}, id = #{id}, cp_addr = #{cpAddr}
+		WHERE cp_code = #{cpCode}
+	</update>
 </mapper>
