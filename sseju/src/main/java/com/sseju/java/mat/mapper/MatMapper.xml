@@ -4,24 +4,24 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.sseju.java.mat.mapper.MatMapper">
-	<select id="matBuyList" resultType="map">
-		SELECT b.mat_ord_name, b.mat_ord_qty, m.mat_code, m.mat_name, TO_CHAR(b.mat_ord_date,'yyyy-MM-dd') as "MAT_ORD_DATE", c.cp_code, c.cp_name, b.mat_price, b.mat_ord_emp, b.mat_ord_yn
+	<select id="matBuyList" resultType="MatVO">
+		SELECT b.mat_ord_no, b.mat_ord_qty, m.mat_code, m.mat_name, TO_CHAR(b.mat_ord_date,'yyyy-MM-dd') as "MAT_ORD_DATE", c.cp_code, c.cp_name, b.mat_price, b.mat_ord_emp, b.mat_ord_yn
 		FROM mat_buy b
 		JOIN material m ON m.mat_code = b.mat_code
 		JOIN company c ON c.cp_code = m.cp_code
 	</select>
-	<select id="selectMatbuyInfo" resultType="map">
-		SELECT * FROM mat_buy WHERE mat_ord_name = #{matOrdName}
+	<select id="selectMatbuyInfo" resultType="MatVO">
+		SELECT * FROM mat_buy WHERE mat_ord_no = #{matOrdNo}
 	</select>
 	<insert id="insertMatbuy" parameterType="MatVO">
-		<selectKey keyProperty="matOrdName" resultType="String"
+		<selectKey keyProperty="matOrdNo" resultType="String"
 			order="BEFORE">
-			SELECT 'MAT_ORD_'||LPAD(NVL(MAX(SUBSTR(mat_ord_name, -3)),0)+1,3,0) FROM
+			SELECT 'MAT_ORD_'||LPAD(NVL(MAX(SUBSTR(mat_ord_no, -3)),0)+1,3,0) FROM
 			may_buy
 		</selectKey>
 		INSERT INTO mat_buy
 		VALUES (
-			#{matOrdName}
+			#{matOrdNo}
 			,#{matOrdQty}
 			,#{nowCode}
 			,#{matCode}
@@ -30,7 +30,7 @@
 			,#{matOrdYn}
 			,#{matPrice}
 			,#{matOrdEmp}
-		)
+		)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 	</insert>
 	<update id="updateMatbuy" parameterType="MatVO">
 		UPDATE mat_buy
@@ -57,17 +57,108 @@
 			MAT_ORD_EMP = #{matOrdEmp}
 			</if>
 		</set>
-		WHERE MAT_ORD_NAME = #{matOrdName}
+		WHERE MAT_ORD_NO = #{matOrdNo}
 	</update>
 	<delete id="deleteMatbuy" parameterType="MatVO">
-		DELETE FROM mat_buy WHERE MAT_ORD_NAME = #{matOrdName}
+		DELETE FROM mat_buy WHERE MAT_ORD_NO = #{matOrdNo}
 	</delete>
 	
-	<delete id="selectDelete" parameterType="list">
-		DELETE FROM mat_buy WHERE MAT_ORD_NAME in(
+	<delete id="selectDeleteMatbuy" parameterType="list">
+		DELETE FROM mat_buy WHERE MAT_ORD_NO in(
 		<foreach collection="list" item="item" separator=",">
 			#{item}
 		</foreach>
 		)
+	</delete>
+	
+	<!-- 입고 Mapper -->
+	<select id="matInList" resultType="MatVO">
+		SELECT c.mat_ord_no, c.mat_code, m.mat_name, 
+        c.mat_in_qty, TO_CHAR(c.mat_chk_date, 'yyyy-MM-dd') as "MAT_CHK_DATE",l.lot_no, w.wh_code, w.wh_name
+		FROM mat_chk c
+		JOIN mat_buy b ON c.mat_ord_no = b.mat_ord_no
+		JOIN lot l ON l.mat_chk_code = c.mat_chk_code
+		JOIN material m ON m.mat_code = c.mat_code
+		JOIN warehouse w ON w.wh_code = l.wh_code
+	</select>
+	<select id="selectMatIn" resultType="MatVO">
+	</select>
+	<insert id="insertMat" parameterType="MatVO">
+	</insert>
+	<update id="updateMat" parameterType="MatVO">
+	</update>
+	<delete id="deleteMat" parameterType="MatVO">
+	</delete>
+	<delete id="selectDeleteMatIn" parameterType="list">
+			DELETE FROM mat_chk WHERE MAT_ORD_NO in(
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</delete>
+	
+	<!--출고 Mapper -->
+	<select id="matOutList" resultType="MatVO">
+		SELECT o.mat_out_no, o.mat_code, m.mat_name, o.mat_out_qty, TO_CHAR(o.mat_out_date, 'yyyy-MM-dd')
+        ,o.wh_code , w.wh_name, o.mat_lot_no
+		FROM mat_out o
+		JOIN material m ON m.mat_code = o.mat_code
+		JOIN warehouse w ON w.wh_code = o.wh_code
+	</select>
+	<select id="selectMatOut" resultType="MatVO">
+	</select>
+	<insert id="insertMatOut" parameterType="MatVO">
+	</insert>
+	<update id="updateMatOut" parameterType="MatVO">
+	</update>
+	<delete id="deleteMatOut" parameterType="MatVO">
+	</delete>
+	<delete id="selectDeleteMatOut" parameterType="list">
+			DELETE FROM mat_chk WHERE MAT_ORD_NO in(
+		<foreach collection="list" item="item" separator=",">
+			#{item}
+		</foreach>
+		)
+	</delete>
+	
+	<!--재고 Mapper  -->
+	<select id="matStockList" resultType="MatVO">
+	SELECT l.lot_no, l.lot_qty, l.wh_code, w.wh_name, l.mp_code , 
+        (SELECT m.mat_name
+		FROM material m
+        WHERE l.mp_code=m.mat_code) AS mat_name
+	FROM lot l
+	JOIN warehouse w ON w.wh_code = l.wh_code
+	</select>
+	<select id="selectMatStock" resultType="MatVO">
+	</select>
+	<insert id="insertMatStock" parameterType="MatVO">
+	</insert>
+	<update id="updateMatStock" parameterType="MatVO">
+	</update>
+	<delete id="deleteMatStock" parameterType="MatVO">
+	</delete>
+	<delete id="selectDeleteMatStock" parameterType="list">
+		DELETE FROM mat_stock WHERE 
+		<!-- LOT삭제? -->
+	</delete>
+	
+	
+	<!-- 검수내역 Mapper -->
+	<select id="matCheckList" resultType="MatVO">
+	SELECT c.mat_chk_name, c.mat_chk_date
+			,c.mat_in_qty, c.mat_err_qty, c.mat_pass_qty,m.mat_code,m.mat_name
+      FROM mat_chk c,(select * FROM material) m
+	</select>
+	<select id="selectMatCheck" resultType="MatVO">
+	</select>
+	<insert id="insertMatCheck" parameterType="MatVO">
+	</insert>
+	<update id="updateMatCheck" parameterType="MatVO">
+	</update>
+	<delete id="deleteMatCheck" parameterType="MatVO">
+	</delete>
+	<delete id="selectDeleteMatCheck" parameterType="list">
+	<!-- 검수 삭제 -->
 	</delete>
 </mapper>
