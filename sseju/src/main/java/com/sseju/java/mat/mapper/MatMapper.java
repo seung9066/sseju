@@ -1,6 +1,7 @@
 package com.sseju.java.mat.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -9,7 +10,7 @@ import com.sseju.java.mat.service.MatVO;
 @Mapper
 public interface MatMapper {
 	//발주 전체 조회
-	public List<MatVO> matBuyList();
+	public List<Map<String, Object>> matBuyList();
 	//발주 단건 조회
 	public MatVO selectMatbuyInfo(MatVO MatVO);
 	//발주 등록
