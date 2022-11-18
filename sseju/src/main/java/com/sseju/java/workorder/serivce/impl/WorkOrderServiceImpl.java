@@ -47,15 +47,18 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 		return woMapper.updateWorkOrder(woVO);
 	}
 	
-	//삭제(작업지시번호로)
+	//삭제()
 	@Override
-	public int deleteWorkOrder(int preNo) {
-		return woMapper.deleteWorkOrder(preNo);
+	public int deleteWorkOrder(WorkOrderVO woVO) {
+		// TODO Auto-generated method stub
+		return woMapper.deleteWorkOrder(woVO);
 	}
+	
 	//
 	@Override
 	public int getWoNo() {
 		return woMapper.getWoNo();
 	}
+
 
 }

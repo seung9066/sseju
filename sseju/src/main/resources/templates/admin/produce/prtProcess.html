@@ -68,46 +68,6 @@
 			    	  preQty : '공병 판매처',
 			    	  inQty : '완료',
 			    	  prePrg : '2022-11-01'
-			         },
-			         {
-			    	  preNo : '2',
-			    	  dDay : '2022-11-16',
-			    	  prtName : '자몽맛소주',
-			    	  preQty : '1000',
-			    	  inQty : '10000',
-			    	  prePrg : '진행중'
-			         },
-			         {
-			    	  preNo : '3',
-			    	  dDay : '2022-11-16',
-			    	  prtName : '프로틴맛소주',
-			    	  preQty : '1000',
-			    	  inQty : '10000',
-			    	  prePrg : '진행중'
-			         },
-			         {
-			    	  preNo : '4',
-			    	  dDay : '2022-11-16',
-			    	  prtName : '무슨맛소주',
-			    	  preQty : '1000',
-			    	  inQty : '10000',
-			    	  prePrg : '진행중'
-			         },
-			         {
-			    	  preNo : '5',
-			    	  dDay : '2022-11-16',
-			    	  prtName : '프로틴맛소주',
-			    	  preQty : '1000',
-			    	  inQty : '10000',
-			    	  prePrg : '완료'
-			         },
-			         {
-			    	  preNo : '6',
-			    	  dDay : '2022-11-16',
-			    	  prtName : '프로틴맛소주',
-			    	  preQty : '10000',
-			    	  inQty : '10000',
-			    	  prePrg : '완료'
 			         }
 			         // data 가져오는 법
 			         // data: {
@@ -129,30 +89,32 @@
 		         },
 		         columns: [
 				        {
-				          header: '반환 자재명',
-				          name: 'preNo'
-				        },
-				        {
-				          header: '반환사유',
+				          header: '공정 작업 번호',
 				          name: 'dDay'
 				        },
 				        {
-				          header: '반환 수량',
+				          header: '공정 코드',
 				          name: 'prtName'
 				        },
 				        {
-				          header: '반품 비용 부담처',
+				          header: '공정명',
 				          name: 'preQty'
 				        },
 				        {
-				          header: '진행 상황',
+				          header: '작업시작시간',
 				          name: 'inQty',
 				          filter: { type: 'text', showApplyBtn: true, showClearBtn: true }
 				        },
 				        {
-				          header : '반환 신청 일자',
+				          header : '작업 종료 시간',
 				          name:'prePrg'
-				        }]
+				        },
+				        {
+				          header : '불량 발생 수',
+				          name:'prePrg'
+				        },
+				        
+				        ]
 		      });
 			   grid.on('check', ev => {
 				      console.log('check!', ev);

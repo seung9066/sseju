@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sseju.java.matroder.mapper.MatOrderMapper">
+	<select id="getMatOrderList" resultType="moVO">
+	</select>
+	
+	<select id="getSearchMatOrder" resultType="moVO">
+	
+	</select>
+	<insert id="insertMatOrder" parameterType="moVO">
+	</insert>
+	<update id="updateMatOrder" parameterType="moVO">
+	</update>
+	<delete id="deleteMatOrder" parameterType="moVO">
+	
+	</delete>
+</mapper>

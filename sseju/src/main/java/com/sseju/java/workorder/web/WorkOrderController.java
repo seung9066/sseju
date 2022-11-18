@@ -20,7 +20,7 @@ public class WorkOrderController {
 	WorkOrderService woService;
 	
 	//작업 지시 전체 조회 -페이지 연결만 해둠 기능X
-	@GetMapping("/list")
+	@GetMapping("/workOrder")
 	public String WorkOrderList(Model model) {
 		//model.addAttribute("workOrderList", woService.getWorkOrderList());
 		return "/admin/produce/workOrderList";
@@ -55,8 +55,8 @@ public class WorkOrderController {
 	}
 	
 	@PostMapping("/delete")
-	public String deleteWorkOrder(@RequestParam int preNo, Model model) {
-		model.addAttribute("workOrderList", woService.deleteWorkOrder(preNo));
+	public String deleteWorkOrder(WorkOrderVO woVO, Model model) {
+		model.addAttribute("workOrderList", woService.deleteWorkOrder(woVO));
 		return "/admin/produce/workOrderList";
 	}
 }
