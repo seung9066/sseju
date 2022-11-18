@@ -3,41 +3,70 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sseju.java.order.mapper.ORMapper">
-	<select id="">
-		SELECT a.order_no,a.cp_code,d.prt_code
+	<!-- 전체조회(일반 탭) -->
+	<select id="selectOrderList" resultType="ORVO">
+		SELECT
+		a.order_no,a.cp_code,d.prt_code
 		FROM orders a
 		JOIN order_Inf b
-		ON (b.order_no = a.order_no)
+		ON
+		(b.order_no = a.order_no)
 		JOIN company c
 		ON
 		(c.cp_code = a.cp_code)
-		JOIN product d
+		JOIN
+		product d
 		ON (b.prt_code = d.prt_code)
-		;
+
 	</select>
 
-	<select id="orNo" resultType="ORVO">
-		SELECT
-		TO_CHAR(SYSDATE,'YYYYMMDD')||'-'||LPAD(NVL(MAX(SUBSTR(order_no,
-		-3)),0)+1,3,0) FROM orders
-	</select>
+	<!--주문상세 -->
 	<insert id="insertOrderInfo" parameterType="ORVO">
-		insert into orders
-		values (#{orderDate},#{prtName},#{dDay},#{orderQty})
+		INSERT INTO
+					order_inf
+					(pre_no,
+					order_qty,
+					order_out_qty,
+					order_no,
+					prt_code,
+					unit_price,
+					order_price )
+		VALUES (#{preNo},
+				#{orderQty},
+				#{orderOutQty},
+				#{orderNo},
+				#{prtCode},
+				#{unitPrice},
+				#{orderPrice})
 	</insert>
+	<!-- 단거조회 -->
+	<select id="selectOrderInfo" parameterType="ORVO">
+		select ORDER_NO,
+				D_DAY,
+				ORDER_PRG,
+				ORDER_DATE,
+				CP_CODE,
+				ORDER_YN
+		from orders
+		where order_no=#{orderNo}
+	</select>
 
 	<!-- 수정 -->
 	<update id="updateOrderInfo" parameterType="ORVO">
 		UPDATE orders
 		<set>
-			
+			d_day =#{dDay},
+			order_date = #{orderDate}
 		</set>
+		where order_no = #{orderNo}
 	</update>
 
 	<!-- 삭제 -->
 	<delete id="deleteOrderInfo" parameterType="Integer">
 		delete from orders
-		where orderNo= #{orderNo};
+		where order_no = #{orderNo}
 	</delete>
+
+
 
 </mapper>

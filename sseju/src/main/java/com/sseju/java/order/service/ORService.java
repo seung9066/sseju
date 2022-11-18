@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ORService {
-	
+	//orders테이블
+	public int getOrderNo();
 	// 전체
 	public List<ORVO> selectOrderList();
 
@@ -21,4 +22,6 @@ public interface ORService {
 
 	// 삭제
 	public int deleteOrderInfo(ORVO Ovo);
+
+	
 }
