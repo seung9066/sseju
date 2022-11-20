@@ -27,10 +27,14 @@ public class EqmVO {
    private String eqmPurcTel;
    private String eqmYn;
    
+   /*
+    * //거래처 private String cpCode; private String cpName;
+    */
+   
    // 라인
    private String lineNo; // 라인 번호
    private int totPrc; // 총생산량
-   private int uph; //UPH
+   private int UPH; //UPH
    private String empNo; //담당자
    private String lineYn; // 사용여부
    
