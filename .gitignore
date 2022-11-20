@@ -38,3 +38,6 @@ build/
 .mvn/
 sseju/target/
 
+
+### zip ###
+*.zip
