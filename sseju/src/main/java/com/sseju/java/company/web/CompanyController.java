@@ -55,6 +55,11 @@ public class CompanyController {
 	@PostMapping("/updateCp")
 	@ResponseBody
 	public int updateEmp(@RequestBody CompanyVO vo) {
+		CodeVO vo1 = new CodeVO();
+		vo1.setCode(vo.getCpCode());
+		vo1.setCodeName(vo.getCpName());
+		serviceC.updateCode(vo1);
+		
 		return service.updateCompany(vo);
 	}
 }

@@ -25,4 +25,35 @@ public interface CodeService {
 	
 	// employee
 	public List<EmployeeVO> getDept();
+	
+	// warehouse
+	public int deleteWh(CodeVO vo);
+	
+	public int insertMat(CodeVO vo);
+	public int insertPrd(CodeVO vo);
+	
+	public List<CodeVO> getPrtList();
+	public List<CodeVO> getMatList();
+	public List<CodeVO> getMatList1();
+	public int selectDeleteP(CodeVO vo);
+	public int selectDeleteM(CodeVO vo);
+	
+	public List<CodeVO> prList();
+	public int insertPrs(CodeVO vo);
+	public int deletePrs(CodeVO vo);
+	
+	public List<CodeVO> eqmList();
+	public List<CodeVO> whList();
+	public int insertWh(CodeVO vo);
+	public int updatePrs(CodeVO vo);
+	public int updateWh(CodeVO vo);
+	
+	public List<CodeVO> errList();
+	public List<CodeVO> matprsList();
+	public int insertErr(CodeVO vo);
+	public int deleteErr(CodeVO vo);
+	public int updateErr(CodeVO vo);
+	
+	// worker
+	public List<CodeVO> workerList();
 }
