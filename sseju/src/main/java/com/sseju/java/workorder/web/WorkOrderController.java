@@ -48,13 +48,13 @@ public class WorkOrderController {
 		}
 	}
 	
-	@PostMapping("/update")
+	@PostMapping("/updateWorkOrder")
 	public String updateWorkOrder(WorkOrderVO woVO, Model model) {
 		model.addAttribute("workOrderList", woService.getWorkOrderList());
 		return "/admin/produce/workOrderList";
 	}
 	
-	@PostMapping("/delete")
+	@PostMapping("/selectDeleteWO")
 	public String deleteWorkOrder(WorkOrderVO woVO, Model model) {
 		model.addAttribute("workOrderList", woService.deleteWorkOrder(woVO));
 		return "/admin/produce/workOrderList";
