@@ -3,12 +3,14 @@ package com.sseju.java.prtper.service;
 import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
 @Data
 @Alias("ppVO")
 public class PrtPerVO {
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date prsDate;		//작업일자(기간별 조회할때 사용하고싶음) 
 	private String prtCode;		//제품코드
 	private String prtName;		//제품명 

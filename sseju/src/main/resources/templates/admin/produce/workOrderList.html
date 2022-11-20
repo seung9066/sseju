@@ -36,14 +36,15 @@ input {
 		<main id="main" class="main">
 			<h4>작업 지시 관리</h4>
 			<br>
-			<span>전체 / 진행전 / 진행중 / 완료,</span> <span>검색창,</span> <span>검색 옵션 설정</span>
 			<div style="float:right;">
 				<button class="button">수정</button>
-				<button class="button">삭제</button>
+				<button class="button" onclick="selectDelete()">삭제</button>
 			</div>
+			
 			<!-- 작업 지시 DB에서 불러와가지고 grid로 띄워줌
 			grid에 띄워진 list를 클릭하면 상세정보가 나오게 할 수 있는지 알아봐야함 -->
 			<div id="workorderGrid"></div>
+			
 			<!-- 작업 지시 등록 칸 -->
 			<br>
 			<h6 style="display: inline-block;">작업 지시 등록</h6>
@@ -81,112 +82,125 @@ input {
 			</form>
 
 			<script type="text/javascript">
-			 var workorderGrid = new tui.Grid({
+			/* 값 주고받기 위한 시큐리티 설정 */
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
+			showAll();
+			
+			var workOrderGrid = new tui.Grid({
 				 el: document.getElementById('workorderGrid'),
-				 data : [ {
-			    	  preNo : '1',
-			    	  dDay : '2022-11-17',
-			    	  prtName : '포도맛소주',
-			    	  preQty : '0',
-			    	  inQty : '20000',
-			    	  prePrg : '진행전'
-			         },
-			         {
-			    	  preNo : '2',
-			    	  dDay : '2022-11-16',
-			    	  prtName : '자몽맛소주',
-			    	  preQty : '1000',
-			    	  inQty : '10000',
-			    	  prePrg : '진행중'
-			         },
-			         {
-			    	  preNo : '3',
-			    	  dDay : '2022-11-16',
-			    	  prtName : '프로틴맛소주',
-			    	  preQty : '1000',
-			    	  inQty : '10000',
-			    	  prePrg : '진행중'
-			         },
-			         {
-			    	  preNo : '4',
-			    	  dDay : '2022-11-16',
-			    	  prtName : '무슨맛소주',
-			    	  preQty : '1000',
-			    	  inQty : '10000',
-			    	  prePrg : '진행중'
-			         },
-			         {
-			    	  preNo : '5',
-			    	  dDay : '2022-11-16',
-			    	  prtName : '프로틴맛소주',
-			    	  preQty : '1000',
-			    	  inQty : '10000',
-			    	  prePrg : '완료'
-			         },
-			         {
-			    	  preNo : '6',
-			    	  dDay : '2022-11-16',
-			    	  prtName : '프로틴맛소주',
-			    	  preQty : '10000',
-			    	  inQty : '10000',
-			    	  prePrg : '완료'
-			         }
-			         // data 가져오는 법
-			         // data: {
-			         //    api: {
-			         //       readData: {
-			         //          url: '/api/readData',
-			         //          method: 'GET'
-			         //       }
-			         //    }
-			         // },
-			      ],
-			      rowHeaders: ['checkbox'],
-			      
-		         scrollX : false,
-		         scrollY : false,
-		         minBodyHeight: 30,
-		         pageOptions: {
-		           perPage: 5
-		         },
-		         columns: [
-				        {
-				          header: '작업 지시 번호',
-				          name: 'preNo'
-				        },
-				        {
-				          header: '납기일자',
-				          name: 'dDay'
-				        },
-				        {
-				          header: '품목',
-				          name: 'prtName'
-				        },
-				        {
-				          header: '생산수량',
-				          name: 'preQty'
-				        },
-				        {
-				          header: '지시수량',
-				          name: 'inQty'
-				        },
-				        {
-				          header : '진행상태',
-				          name:'prePrg',
-				          filter: { type: 'text', showApplyBtn: true, showClearBtn: true }
-				        }]
-		      });
-			   grid.on('check', ev => {
-				      console.log('check!', ev);
+					pagination:true,
+					pageOption: {
+						useClient:true,
+						perPage:10
+					},
+			        scrollX : false,
+			        scrollY : false,
+				    rowHeaders: ['checkbox'],
+				    columns: [
+						{
+							header: '작업 지시 번호',
+						    name: 'preNo'
+						},
+						{
+							header: '납기일자',
+					    	name: 'dDay',
+					    	filter : 'select'
+						},
+						{
+							header: '품목',
+						    name: 'prtName',
+						    filter : 'select'
+						},
+						{
+						 	header: '생산수량',
+						    name: 'preQty'
+						},
+						{
+						 	header: '지시수량',
+						    name: 'inQty'
+						},
+						{
+						    header : '진행상태',
+						    name:'prePrg',
+						    filter : 'select'
+						}]
+				      });
+
+				var deleteWorkOrder = [];
+				
+			   	workOrderGrid.on('check', ev => {
+				      console.log(workOrderGetid.getValue(ev.rowKey, 'workOrder'));
+				      deleteWorkOrder.push((workOrderGrid.getValue(ev.rowKey, 'workOrder')));
+				      
+				      console.log($('input[name=_checked]').val());
 				    });
 
-				    grid.on('uncheck', ev => {
-				      console.log('uncheck!', ev);
+			   	workOrderGrid.on('uncheck', ev => {
+				      console.log(workOrderGrid.getValue(ev.rowKey, 'workOrder'));
+				      for(let i=0; i<deleteWorkOrder.length; i++){
+				    	  if(deleteWorkOrder[i] == workOrderGrid.getValue(ev.rowKey, 'workOrder')){
+				    		  deleteWorkOrder.splice(i, 1);
+				    	  }
+				      }
+				      console.log(deleteWorkOrder);
 				    });
-
-				    grid.on('focusChange', ev => {
+			    /* grid.on('focusChange', ev => {
 				      console.log('change focused cell!', ev);
-				    });
+				    }); */
+			   	
+			   	function selectDelete(){
+			   		var token = $("meta[name='_csrf']").attr("content");
+					var header = $("meta[name='_csrf_header']").attr("content");
+					
+					console.log(workOrderGrid.getCheckedRows());
+					
+					let workOrder = [];
+					for(wo of workOrderGrid.getCheckedRows()){
+						console.log(wo)
+						workOrder.push(wo.workorder)
+						console.log(workOrder);
+					}
+			   	$.ajax({
+			   		url : 'selectDeleteWO',
+			   		type : 'POST',
+			   		data : {workOrderList:workOrder},
+			   		dataType : "json",
+			   		async:false,
+			   		beforeSend : function(xhr){
+			   			xhr.setRequestHeader(header, token);
+			   		},
+			   		success : function(data){
+			   			if(data > 0){
+			   				alert("삭제완료")
+			   				showAll();
+			   			}else{
+			   				alert("삭제 실패")
+			   			}
+			   		},
+			   		error:function(request,status,error){
+			   			alert("code : " + request.status+
+			   					"\n"+"message : " + request.responseText + 
+			   						"\n"+"error : " + error);
+			   			console.log(code);
+			   			console.log(reject);
+					   		}
+					   	})
+					}
+
+					function showAll() {
+						$('#title').text("전체");
+						
+						url="workOrder"
+						       fetch(url) // 작업 지시 단건 조회를 불러오는 아작스
+						       .then(res=>res.json())
+						       .then(obj=>{
+						           console.log(obj);
+						           workorderGrid.resetData(obj);
+						       })
+					}
+
 		</script>
 		</main>
 	</article>
