@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- 제이쿼리 -->
+<script   src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!-- 토스트UI -->
+<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+</head>
+<body>
+   <article layout:fragment="content">
+      <main id="main" class="main">
+         <h4>
+            <strong>설비정보 관리</strong>
+         </h4>
+
+         <br>
+         <hr>
+
+         <div class="row">
+            <div class="col-6">
+               <div>
+                  <h5 style="width: 200px">
+                     <b>라인정보 관리</b>
+                  </h5>
+                  <div style="float:right;">
+                  
+                     <button class="button" style="width: 30px"
+                        onclick="dis()">+</button>
+                     <button type="button" class="button"
+                              onclick="deleteLine()">삭제</button>
+                  </div>
+                  
+                  <div id="lineGrid"></div>
+               </div>
+               <!-- 라인 등록 폼 : show/hidden  -->
+               <div id='dis' style="display:none">
+                  <br>
+                  <form action="insertLine" method="POST">
+                     <input type="hidden" th:name="${_csrf.parameterName}"
+                        th:value="${_csrf.token}" />
+                     
+                        <input type="hidden" name="auth" value="ROLE_ADMIN">
+                        <div style="float:right;">
+                        <button type="submit" class="button">등록</button>
+                        <button type="button" class="button" onclick="updateLine()">수정</button>   
+                        </div>
+                     <table class="table">
+                        <tr>
+                           <th>라인명</th>
+                           <td><input type="text" name="lineNo" id="lineNo"></td>
+                           <th>담당자</th>
+                           <td><input type="text" name="empNo" id="empNo"></td>
+                        </tr>
+                        <tr>
+                           <th>총생산량</th>
+                           <td><input type="number" name="totPrc" id="totPrc"></td>
+                           <th>UPH</th>
+                           <td><input type="number" name="UPH" id="UPH"></td>
+                        </tr>
+                        <tr>
+                           <th>사용여부</th>
+                           <td><input type="radio" name="lineYn" id="lineYn"
+                              value="Y" style="vertical-align: 0px;">Y <input
+                              type="radio" id="lineYn" name="lineYn" value="N"
+                              style="vertical-align: 1px;">N</td>
+                        </tr>
+                     </table>
+                  </form>
+               </div>
+               <!-- 등록 폼 end  -->
+               <!-- 라인정보관리 등록 폼 : show/hide -->
+         <script type="text/javascript">
+            function dis() {
+               if ($('#dis').css('display') == 'none') {
+                  $('#dis').show();
+               } else {
+                  $('#dis').hide();
+               }
+            };
+            
+               
+         </script>
+
+         <script type="text/javascript">
+         
+            showAll();
+
+            var lineGrid = new tui.Grid({
+               el : document.getElementById('lineGrid'),
+               scrollX : false,
+               scrollY : true,
+               rowHeaders : [ 'checkbox' ],
+               columns : [ {
+                  header : '라인명',
+                  name : 'lineNo',
+                  align : 'center'
+               },
+               {
+                  header : '총생산량',
+                  name : 'totPrc',
+                  align : 'right'
+               },{
+                  header : 'UPH',
+                  name : 'UPH',
+                  align : 'right'
+               }, {
+                  header : '사용여부',
+                  name : 'lineYn',
+                  align : 'center'
+               }, {
+                  header : '담당자',
+                  name : 'empNo',
+                  align : 'center'
+               } ]
+            });
+            
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            
+            var chkLine = [];
+            
+            lineGrid.on('check', ev => {
+               chkLine.push((lineGrid.getValue(ev.rowKey,'lineNo')));
+               
+               $('#lineNo').val(lineGrid.getValue(ev.rowKey,'lineNo'));
+               $('#lineNo').attr('readonly',true);
+               $('#totPrc').val(lineGrid.getValue(ev.rowKey,'totPrc'));
+               $('#UPH').val(lineGrid.getValue(ev.rowKey,'UPH'));
+               $('#lineYn').val(lineGrid.getValue(ev.rowKey,'lineYn'.value()));
+               $('#empNo').val(lineGrid.getValue(ev.rowKey,'empNo'));
+               
+            });
+            
+            lineGrid.on('uncheck', ev => {
+               for(let i=0; i<chkLine.length; i++){
+                  if(chkLine[i] == lineGrid.getValue(ev.rowKey,'lineNo')){
+                     chkLine.splice(i,1);
+                  }
+               }
+               $('#lineNo').val('');
+               $('#lineNo').attr('readonly',false);
+               $('#totPrc').val('');
+               $('#UPH').val('');
+               $('#lineYn').val('');
+               $('#empNo').val('');   
+            });
+            
+            function deleteLine(){
+               let line = [];
+               for(li of lineGrid.getCheckedRows()){
+                  line.push(li.lineNo);
+               }
+            
+               $.ajax({
+                  url : 'deleteLine',
+                  type : 'POST',
+                  data : {line:line},
+                  dataType:"json",
+                  async:false,
+                  beforeSend : function(xhr){
+                     xhr.setRequestHeader(header, token);
+                  },
+                  success:function(data){
+                     if(data > 0) {
+                        alert("삭제완료");
+                        showAll();               
+                     } else {
+                        alert("삭제실패");
+                     }
+                  },
+                  error : function(reject){
+                     console.log(reject);
+                  }
+               })
+            }
+            
+            function updateLine(){
+               let lineNo = $('#lineNo').val();
+               let totPrc = $('#totPrc').val();
+               let UPH = $('#UPH').val();
+               let lineYn = $('#lineYn').val();
+               let empNo = $('#empNo').val();
+               
+               let updLine={'lineNo':lineNo, 'totPrc':totPrc, 'UPH':UPH, 'lineYn':lineYn, 'empNo':empNo}
+               
+               $.ajax({
+                  url : 'updateLine',
+                  type : 'POST',
+                  data : JSON.stringify(updLine),
+                  dataType : "json",
+                  contentType: 'application/json',
+                  async : false,
+                  beforeSend : function(xhr){
+                     xhr.setRequestHeader(header, token);
+                  },
+                  success:function(data){
+                     if(data > 0) {
+                        alert("수정완료");
+                        showAll();               
+                     } else {
+                        alert("수정실패");
+                     }
+                  },
+                  error:function(reject){
+                     console.log(reject);
+                  }
+               })
+            }
+                  
+               
+            
+            function showAll(){
+               
+               fetch("lineList")
+               .then(res=>res.json())
+               .then(obj=>{
+                  lineGrid.resetData(obj);
+               })
+            }
+
+         </script>
+      </main>
+   </article>
+</body>
+</html>

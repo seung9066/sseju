@@ -14,6 +14,7 @@
 <link rel="stylesheet"
    href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
 <!--부트스트랩 아이콘  -->
 <link rel="stylesheet"
    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
@@ -41,6 +42,19 @@ table {
 table  input {
    margin: 8px;
 }
+.col1 {
+background-color:#e8e8e8;
+padding: 10px;
+text-align: center;
+font-weight: bold;
+font-size: 0.9em;
+}
+
+#regEqm td{
+   padding-left:10px;
+}
+
+
 </style>
 
 
@@ -57,175 +71,135 @@ table  input {
       <main id="main" class="main">
 
 
-         <h4>
-            <strong>설비정보 관리</strong>
-         </h4>
 
-         <br>
-         <hr>
+         <div>
 
-         <div class="row">
-            <div class="col-6">
-               <div>
-                  <h5 style="width: 200px">
-                     <b>라인정보 관리</b>
-                  </h5>
-                  <button data-bs-toggle="modal" data-bs-target="#lineModal"
-                     class="button" style="width: 60px; float: right">등록</button>
-                  <div id="lineGrid"></div>
-               </div>
-               <div>
-                  <br> <br>
-                  <h5 style="width: 200px">
-                     <b>설비 전체조회</b>
-                  </h5>
-                  <div style="float: right">
-                     <button class="button">삭제</button>
-                  </div>
-                  <br> <br>
-                  <div id="eqmGrid"></div>
-
-               </div>
+            <h5 style="width: 200px">
+               <b>설비 전체조회</b>
+            </h5>
+            <div style="float: right">
+               <input type="hidden" name="auth" value="ROLE_ADMIN">
+               <button class="button" type="button" onclick="dis()">등록</button>
+               <button class="button" onclick="deleteEqm()">삭제</button>
+               <button type="button" class="button download" id="excelDownload">Excel</button>
             </div>
+            <br> <br>
+            <div id="eqmGrid"></div>
 
-            <div class="col-6">
-               <br>
-               <h5 style="width: 200px">
-                  <b>설비정보 상세보기</b>
-               </h5>
-               <div style="float: right">
-                  <button class="button" type="submit">등록</button>
-                  <button class="button">수정</button>
-               </div>
-               <br>
-            
-               <table class="table">
-         
-                  <tr>
-                     <td>설비코드</td>
-                     <td><input type="text" name="eqmCode"><i
-                        class="bi bi-search" data-bs-toggle="modal" data-bs-target="#eqmModal"></i></td>
-                     <td>설비명</td>
-                     <td><input type="text" name="eqmName"></td>
-                  </tr>
-                  <tr>
-                     <td>모델명</td>
-                     <td><input type="text" name="eqmModel"></td>
-                     <td>라인</td>
-                     <td><input type="text" name=""><i
-                        class="bi bi-search"></i></td>
-                  </tr>
-                  <tr>
-                     <td>설치장소</td>
-                     <td><input type="text" name=""></td>
-                     <td>공정코드</td>
-                     <td><input type="text" name=""><i
-                        class="bi bi-search"></i></td>
-                  </tr>
-                  <tr>
-                     <td>최고온도</td>
-                     <td><input type="number" name=""></td>
-                     <td>최저온도</td>
-                     <td><input type="number" name=""></td>
-                  </tr>
-                  <tr>
-                     <td>구입업체</td>
-                     <td><input type="text" name=""></td>
-                     <td>입고일</td>
-                     <td><input type="date" name=""></td>
-                  </tr>
-                  <tr>
-                     <td>비상연락망</td>
-                     <td><input type="text" name=""></td>
-                     <td>공정코드</td>
-                     <td><input type="text" name=""><i
-                        class="bi bi-search"></i></td>
-                  </tr>
-                  <tr>
-                     <td>점검주기</td>
-
-                     <td id="check"><input type="text" name=""> <select
-                        name="">
-                           <option value='' selected>--선택--</option>
-                           <option value="week">주</option>
-                           <option value="month">달</option>
-                           <option value="year">년</option>
-                     </select></td>
-                  </tr>
-               </table>
-               <div style="text-align:center;">
-                  <img src="assets/img/설비1.jpg" alt="설비1이미지" width="500px" height="300px;">
-               </div>
-               </div>
-               </div>
-            
+         </div>
          
 
+         <div id="dis" style="display: none">
+            <br>
+            <h5 style="width: 200px">
+               <b>설비정보 등록/수정</b>
+            </h5>
+            <div style="float: right">
+               <button class="button" type="submit">추가</button>
+               <button class="button" onclick="updateEqm()">수정</button>
+            </div>
+            <br>
+            
+         <form action="insertEqm" method="POST">
+            <input type="hidden" th:name="${_csrf.parameterName}"
+               th:value="${_csrf.token}" />
+            <table id="regEqm" style="width:100%" >
 
-         <!-- <div >
-                  <input type="file" accept="image/*" multiple>
-               </div> -->
+               <tr>
+                  <th class="col1">설비코드</th>
+                  <td><input type="text" name="eqmCode" id="eqmCode"></td>
+                  <th class="col1">설비명</th>
+                  <td><input type="text" name="eqmName"></td>
+                  <th class="col1">모델명</th>
+                  <td><input type="text" name="eqmModel" id="eqmModel"></td>
+                  <th class="col1">라인</th>
+                  <td ><input type="text" name="lineNo" id="lineNo"><i
+                     class="bi bi-search"></i></td>
+               </tr>
+
+               <tr>
+                  <th class="col1">설치장소</th>
+                  <td><input type="text" name="eqmLoc" id="eqmLoc"></td>
+                  <th class="col1">설비구분</th>
+                  <td><input type="text" name="eqmDiv" id="eqmDiv"><i
+                     class="bi bi-search"></i></td>
+                  <th class="col1">최고온도</th>
+                  <td><input type="number" name="eqmMaxTemp" id="eqmMaxTemp"></td>
+                  <th class="col1">최저온도</th>
+                  <td><input type="number" name="eqmMinTemp" id="eqmMinTemp"></td>
+               </tr>
+               
+               <tr>
+                  <th class="col1">구입업체</th>
+                  <td><input type="text" name="eqmPurcName"><i
+                     class="bi bi-search" data-bs-toggle="modal"
+                     data-bs-target="#eqmPurcModal"></i></td>
+                  <th class="col1">입고일</th>
+                  <td><input type="date" name="eqmPurcDate"></td>
+                  <th class="col1">비상연락망</th>
+                  <td><input type="tel" name="eqmPurcTel"></td>
+                  <th class="col1">사용여부</th>
+                  <td><input type="radio" class="form-check-input" name="eqmYn" value="Y">Y
+                  <input type="radio" class="form-check-input" name="eqmYn" value="N">N</td>
+               </tr>
+               
+               <tr>
+                  <th class="col1">점검주기</th>
+
+                  <td id="check"><input type="text" name="eqmChk"> <select
+                     name="">
+                        <option value='' selected>--선택--</option>
+                        <option value="week">주</option>
+                        <option value="month">달</option>
+                        <option value="year">년</option>
+                  </select></td>
+                  <th class="col1">이미지</th>
+                  <td><input type="file"></td>
+               </tr>
+            </table>
+            </form>
+            <!-- <div style="text-align: center;">
+               <img src="assets/img/설비1.jpg" alt="설비1이미지" width="500px"
+                  height="300px;">
+            </div> -->
+         <!-- </div> -->
+         </div>
+
+
 
          <br> <br>
 
-         <div class="modal" tabindex="-1" id="lineModal">
-            <div class="modal-dialog">
-               <div class="modal-content">
-                  <div class="modal-header">
-                     <h5 class="modal-title"><b>라인정보 등록/수정</b></h5>
-                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body" style="text-align:center;">
-                     <form method="post" action="lineList">
 
-                        <div>
-                           <label for="lineNo">라인</label> <input type="text" name="lineNo"
-                              id="lineNo">
-                        </div>
-                        <div>
-                           <label for="totPrc">총생산량</label> <input type="number"
-                              name="totPrc" id="totPrc">
-                        </div>
-                        <div>
-                           <label for="uph">UPH</label> <input type="number" name="uph"
-                              id="uph">
-                        </div>
-                        <div>
-                           <label for="empNo">담당자</label> <input type="text" name="empNo"
-                              id="empNo">
-                        </div>
-                        <div>
-                           <label for="lineYn">사용여부</label> <input type="radio"
-                              name="lineYn" id="lineYn" value="Y"
-                              style="vertical-align: 0px;">Y <input type="radio"
-                              id="lineYn" name="lineYn" value="N"
-                              style="vertical-align: 1px;">N
-                        </div>
 
-                        <div class="modal-footer">
-                           <input type="submit" class="btn btn-primary"
-                              data-bs-dismiss="modal" value="등록/수정"> <input
-                              type="reset" class="btn btn-secondary" value="초기화">
-                        </div>
-                     </form>
-                  </div>
-               </div>
-            </div>
-
-            <!--설비코드 모달 : 그리드  -->
-            <div class="modal" tabindex="-1" role="dialog" id="eqmModal">
+         <!--설비코드 모달 : 그리드  -->
+         <div class="modal" tabindex="-1" role="dialog" id="eqmPurcModal">
             <div class="modal-dialog" role="document">
                <div class="modal-content">
                   <div class="modal-header">
-                     <h5 class="modal-title"><b>설비코드</b></h5>
+                     <h5 class="modal-title">
+                        <b>거래처 리스트</b>
+                     </h5>
                      <button type="button" class="close" data-bs-dismiss="modal"
                         aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                      </button>
                   </div>
                   <div class="modal-body">
-                     <div id=""></div>
+                     <!-- 거래처 리스트  -->
+                     <table>
+                        <thead>
+                           <tr>
+                              <th>업체코드</th>
+                              <th>업체명</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <th:block th:each="c : ${cp}">
+                              <td th:text="${c.cpCode}" th:value="${c.cpCode}"></td>
+                              <td th:text="${c.cpName}" th:value="${c.cpName}"></td>
+                           </th:block>
+                        </tbody>
+                     </table>
                   </div>
                   <div class="modal-footer">
                      <button type="button" class="btn btn-primary">선택</button>
@@ -236,99 +210,223 @@ table  input {
             </div>
          </div>
 
+         <script type="text/javascript">
+         function dis(){
+         if ($('#dis').css('display') == 'none') {
+            $('#dis').show();
+         } else {
+            $('#dis').hide();
+         }
+      };
+
+         
+         </script>
 
 
 
-            <script>
-               var eqmGrid = new tui.Grid({
-                  el : document.getElementById('eqmGrid'),
-                  // 임시 데이터
-                  data : [ {
-                     eqmNo : '1',
-                     eqmCode : 'eqm_1538',
-                     eqmName : '주입기',
-                     prsCode : 'pro_123456',
-                     eqmModel : 'ist_20054281'
-                  }, {
-                     eqmNo : '2',
-                     eqmCode : 'eqm_2746',
-                     eqmName : '검사기',
-                     prsCode : 'pro_123456',
-                     eqmModel : 'isp_2016458'
-                  }
 
-                  ],
-                  // data 가져오는 법
-                  // data: {
-                  //    api: {
-                  //       readData: {
-                  //          url: '/api/readData',
-                  //          method: 'GET'
-                  //       }
-                  //    }
-                  // },
-                  rowHeaders : [ 'checkbox' ],
-                  scrollX : false,
-                  scrollY : false,
-                  columns : [ {
-                     header : 'No',
-                     name : 'eqmNo',
-                  }, {
-                     header : '설비코드',
-                     name : 'eqmCode',
-                  }, {
-                     header : '설비명',
-                     name : 'eqmName', //납기일자명 수정
-                  }, {
-                     header : '공정',
-                     name : 'prsCode'
-                  }, {
-                     header : '모델명',
-                     name : 'eqmModel'
-                  } ]
-               });
-            </script>
-            <script>
-               //실행시 전체조회
-               document.addEventListener("DOMContentLoaded", lineList);
-
-               function lineList() {
-                  $.ajax({
-                     url : '/lineList',
-                     success : function(result) {
-                        console.log(result);
-                        lineGrid.resetData(result);
-                     },
-                     error : function(reject) {
-                        console.log(reject);
+         <script>
+   
+            showAll();
+            
+            
+            
+            const eqmGrid = new tui.Grid({
+               el : document.getElementById('eqmGrid'),
+            
+               scrollX : false,
+               scrollY : false,
+               rowHeaders : [ 'checkbox' ],
+               columns : [ {
+                  header : '설비코드',
+                  name : 'eqmCode',
+                  align : 'center',
+                  filter: 'select'
+               }, {
+                  header : '설비명',
+                  name : 'eqmName',
+                  align : 'center',
+                  filter: 'select'
+               }, {
+                  header : '모델명',
+                  name : 'eqmModel', 
+                  align : 'center',
+                  filter : 'select'
+               }, {
+                  header : '라인',
+                  name : 'lineNo', 
+                  align : 'center',
+                  filter : 'select'
+               }, {
+                  header : '설치장소',
+                  name : 'eqmLoc', 
+                  align : 'center',
+                  filter : 'select'
+               }, {
+                  header : '설비구분',
+                  name : 'eqmDiv', 
+                  align : 'center',
+                  filter : 'select'
+               }, {
+                  header : '최고온도',
+                  name : 'eqmMaxTemp', 
+                  align : 'center',
+                  filter : 'select'
+               }, {
+                  header : '최저온도',
+                  name : 'eqmMinTemp',
+                  align : 'center',
+                  filter: 'select'
+               }, {
+                  header : '구입업체',
+                  name : 'eqmPurcName',
+                  align : 'center',
+                  filter: 'select'
+               }  ]
+               
+            });
+            
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            
+             var chkEqm = []; 
+            
+            eqmGrid.on('check', ev => {
+               chkEqm.push((eqmGrid.getValue(ev.rowKey,'eqmCode')));
+               
+               $('#eqmCode').val(eqmGrid.getValue(ev.rowKey,'eqmCode'));
+               $('#eqmCode').attr('readonly',true);
+               $('#eqmName').val(eqmGrid.getValue(ev.rowKey,'eqmName'));
+               $('#eqmModel').val(eqmGrid.getValue(ev.rowKey,'eqmModel'));
+               $('#lineNo').val(eqmGrid.getValue(ev.rowKey,'lineNo'));
+               $('#eqmLoc').val(eqmGrid.getValue(ev.rowKey,'eqmLoc')); 
+               $('#eqmMaxTemp').val(eqmGrid.getValue(ev.rowKey,'eqmMaxTemp'));
+               $('#eqmMinTemp').val(eqmGrid.getValue(ev.rowKey,'eqmMinTemp'));
+               /* $('#eqmCheck').val(eqmGrid.getValue(ev.rowKey,'eqmCheck')); 
+               $('#eqmPurcDate').val(eqmGrid.getValue(ev.rowKey,'eqmPurcDate'));*/
+               $('#eqmDiv').val(eqmGrid.getValue(ev.rowKey,'eqmDiv'));
+               /* $('#eqmImg').val(eqmGrid.getValue(ev.rowKey,'eqmImg')); */
+               $('#eqmPurcName').val(eqmGrid.getValue(ev.rowKey,'eqmPurcName')); 
+               /*  $('#eqmPurcTel').val(eqmGrid.getValue(ev.rowKey,'eqmPurcTel'));*/
+               /* $('#eqmYn').val(eqmGrid.getValue(ev.rowKey,'eqmYn')); */
+               /*  $('#eqmSize').val(eqmGrid.getValue(ev.rowKey,'eqmSize'));*/
+               
+            });
+            
+            eqmGrid.on('uncheck', ev => {
+               for(let i=0; i<chkEqm.length; i++){
+                  if(chkEqm[i] == eqmGrid.getValue(ev.rowKey,'eqmCode')){
+                     chkEqm.splice(i,1);
+               }
+            }
+            
+            $('#eqmCode').val('');
+            $('#eqmCode').attr('readonly',false);
+            $('#eqmName').val('');
+            $('#eqmModel').val('');
+            $('#lineNo').val('');
+            $('#eqmLoc').val('');
+            $('#eqmMaxTemp').val('');
+            $('#eqmMinTemp').val('');
+            /*  $('#eqmCheck').val('');
+            $('#eqmPurcDate').val('');*/
+            $('#eqmDiv').val('');
+            /*  $('#eqmImg').val('');*/
+            $('#eqmPurcName').val('');
+            /*  $('#eqmPurcTel').val('');
+            $('#eqmYn').val('');
+            $('#eqmSize').val('');*/
+               
+            });
+            
+            function deleteEqm(){
+               
+               let deleteEqm = [];
+               for(eq of eqmGrid.getCheckedRows()){
+                  deleteEqm.push(eq.eqmCode);
+               }
+               $.ajax({
+                  url:'deleteEqm',
+                  type:'POST',
+                  data : {deleteEqm:deleteEqm},
+                  dataType:"json",
+                  async:false,
+                  beforeSend : function(xhr){
+                     xhr.setRequestHeader(header, token);
+                  },
+                  success:function(data){
+                     if(data > 0) {
+                        alert("삭제완료");
+                        showAll();               
+                     } else {
+                        alert("삭제실패");
                      }
-                  })
-
-               };
-
-               var lineGrid = new tui.Grid({
-                  el : document.getElementById('lineGrid'),
-
-                  scrollX : false,
-                  scrollY : false,
-                  columns : [ {
-                     header : '라인명',
-                     name : 'lineNo',
-                  }, {
-                     header : 'UPH',
-                     name : 'uph',
-                  }, {
-                     header : '사용여부',
-                     name : 'lineYn',
-                  }, {
-                     header : '담당자',
-                     name : 'empNo'
-                  } ]
+                  },
+                  error:function(reject){
+                     console.log(reject);
+                  }
                });
+            }
+            
+            function updateEqm(){
+               let eqmName = $('#eqmName').val();
+               let eqmModel = $('#eqmModel').val();
+               let lineNo = $('#lineNo').val();
+               let eqmLoc = $('#eqmLoc').val();
+               let eqmDiv = $('#eqmDiv').val();
+               let eqmMaxTemp = $('#eqmMaxTemp').val();
+               let eqmMinTemp = $('#eqmMinTemp').val();
+               let eqmPurcName = $('#eqmPurcName').val();
+               let eqmPurcDate = $('#eqmPurcDate').val();
+               let eqmPurcTel = $('#eqmPurcTel').val();
+               let eqmYn = $('#eqmYn').val();
+               let eqmChk = $('#eqmChk').val();
+               let eqmImg = $('#eqmImg').val();
+               
+               let updateEqm = {'eqmName':eqmName,'eqmModel':eqmModel,'lineNo':lineNo,'eqmLoc':eqmLoc,'eqmDiv':eqmDiv,'eqmMaxTemp':eqmMaxTemp,'eqmMinTemp':eqmMinTemp,'eqmPurcName':eqmPurcName,'eqmPurcDate':eqmPurcDate,'eqmPurcTel':eqmPurcTel,'eqmYn':eqmYn,'eqmChk':eqmChk,'eqmImg':eqmImg};
+               
+               $.ajax({
+                  url :'updateEqm',
+                  type:'POST',
+                  data : JSON.stringify(updateEqm),
+                  dataType : "josn",
+                  contentType:'application/json',
+                  async:false,
+                  beforeSend : function(xhr){
+                     xhr.setRequestHeader(header, token);
+                  },
+                  success:function(data){
+                     if(data > 0) {
+                        alert("수정완료");
+                        showAll();               
+                     } else {
+                        alert("수정실패");
+                     }
+                  },
+                  error:function(reject){
+                     console.log(reject);
+                  }
+      
+               });
+               
+            }
+            
+            function showAll() {
+               
+                   fetch("getEqmList") 
+                   .then(res=>res.json())
+                   .then(obj=>{
+                       eqmGrid.resetData(obj);
+                   })
+            }
+            
             </script>
             
             
-         </div>
+            
+
+
+
 
 
 
