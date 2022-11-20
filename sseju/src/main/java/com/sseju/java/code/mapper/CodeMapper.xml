@@ -2,69 +2,201 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
-  <mapper namespace="com.sseju.java.code.mapper.CodeMapper">
-  	<select id="getCodeList" resultType="CodeVO">
-  		SELECT * FROM code
-  	</select>
-  	
-  	<select id="getCodeInfo" parameterType="CodeVO" resultType="CodeVO">
-  		SELECT * FROM code WHERE code = #{code}
-  	</select>
-  	
-  	<insert id="insertCode" parameterType="CodeVO">
-  		INSERT INTO code values(#{code}, #{divName}, #{codeName}, #{divCode})
-  	</insert>
-  	
+
+<mapper namespace="com.sseju.java.code.mapper.CodeMapper">
+	<select id="getCodeList" resultType="CodeVO">
+		SELECT * FROM code ORDER BY
+		code
+	</select>
+
+	<select id="getCodeInfo" parameterType="CodeVO"
+		resultType="CodeVO">
+		SELECT * FROM code WHERE code = #{code}
+	</select>
+
+	<update id="updateCode" parameterType="CodeVO">
+		UPDATE code SET code_name
+		= #{codeName} WHERE code = #{code}
+	</update>
+
+	<insert id="insertCode" parameterType="CodeVO">
+		INSERT INTO code
+		values(#{code}, #{divName}, #{codeName}, #{divCode})
+	</insert>
+
 	<delete id="deleteCode" parameterType="CodeVO">
-		DELETE FROM code WHERE code = #{code}
+		DELETE FROM code WHERE
+		code = #{code}
 	</delete>
-	
-	<delete id="selectDelete" parameterType="list">
-		DELETE FROM code WHERE code in(
-		<foreach collection="list" item="item" separator=",">
-			#{item}
-		</foreach>
-		)
+
+	<delete id="selectDeleteP" parameterType="CodeVO">
+		DELETE FROM product
+		WHERE prt_code = #{prtCode}
 	</delete>
-	
+
+	<delete id="selectDeleteM" parameterType="CodeVO">
+		DELETE FROM material
+		WHERE mat_code = #{matCode}
+	</delete>
+
 	<delete id="deleteBOM" parameterType="CodeVO">
-		DELETE FROM bom WHERE prt_code = #{prtCode}
+		DELETE FROM bom WHERE
+		prt_code = #{prtCode}
 	</delete>
-	
-	<select id="getBomList" parameterType="CodeVO" resultType="CodeVO">
-		SELECT p.prt_name, b.prt_code, b.capacity, b.mat_code, m.mat_name FROM bom b, product p, material m WHERE p.prt_name = #{prtName} AND p.prt_code = b.prt_code AND b.mat_code = m.mat_code
+
+	<select id="getBomList" parameterType="CodeVO"
+		resultType="CodeVO">
+		SELECT p.prt_name, b.prt_code, b.capacity, b.mat_code,
+		m.mat_name FROM bom b, product p, material m WHERE p.prt_name =
+		#{prtName} AND p.prt_code = b.prt_code AND b.mat_code = m.mat_code
+		ORDER BY no
 	</select>
-	
+
 	<select id="getBomMenu" resultType="CodeVO">
-		SELECT prt_code, prt_name FROM product
+		SELECT prt_code, prt_name
+		FROM product
 	</select>
-	
+
 	<select id="getBOMMatList" resultType="CodeVO">
 		SELECT * FROM material
+		ORDER BY mat_code
 	</select>
-	
-	<select id="getMatCode" parameterType="CodeVO" resultType="CodeVO">
+
+	<select id="getMatCode" parameterType="CodeVO"
+		resultType="CodeVO">
 		SELECT mat_code FROM material WHERE mat_name = #{matName}
 	</select>
 
-	<select id="getPrtCode" parameterType="CodeVO" resultType="CodeVO">
+	<select id="getPrtCode" parameterType="CodeVO"
+		resultType="CodeVO">
 		SELECT prt_code FROM product WHERE prt_name = #{prtName}
 	</select>
-	
+
 	<insert id="insertBOM" parameterType="CodeVO">
-		<selectKey keyProperty="no" resultType="Integer" order="BEFORE">
+		<selectKey keyProperty="no" resultType="Integer"
+			order="BEFORE">
 			SELECT NVL(MAX(no),0) + 1 FROM bom
 		</selectKey>
 		INSERT INTO bom VALUES (#{no}, #{prtCode}, #{capacity}, #{matCode})
 	</insert>
-	
+
 	<select id="getBOMPrtList" resultType="CodeVO">
 		SELECT * FROM product
+		ORDER BY prt_code
 	</select>
-	
+
 	<select id="getDept" resultType="EmployeeVO">
-		SELECT DISTINCT emp_dept FROM employee
+		SELECT DISTINCT emp_dept FROM
+		employee
+	</select>
+
+	<delete id="deleteWh" parameterType="CodeVO">
+		DELETE FROM warehouse WHERE
+		wh_code = #{whCode}
+	</delete>
+
+	<insert id="insertMat" parameterType="CodeVO">
+		<selectKey keyProperty="code" resultType="String"
+			order="BEFORE">
+			SELECT LPAD(NVL(MAX(SUBSTR(mat_code, -3)),0)+1,3,0) FROM material WHERE mat_code LIKE #{matoption}||'%'
+		</selectKey>
+		INSERT INTO material VALUES((#{matoption}||#{code}), #{name}, #{size}, #{price}, #{cpCode}, #{prsCode})
+	</insert>
+
+	<insert id="insertPrd" parameterType="CodeVO">
+		<selectKey keyProperty="code" resultType="String"
+			order="BEFORE">
+			SELECT 'PRD_'||LPAD(NVL(MAX(SUBSTR(prt_code, -3)),0)+1,3,0)
+			FROM
+			product
+		</selectKey>
+		INSERT INTO product VALUES(#{code}, #{name}, #{size}, #{prtUnit},
+		#{price}, 'a')
+	</insert>
+
+	<select id="getPrtList" resultType="CodeVO">
+		SELECT * FROM product ORDER
+		BY prt_code
+	</select>
+
+	<select id="getMatList" resultType="CodeVO">
+		SELECT * FROM material ORDER
+		BY mat_code
+	</select>
+
+	<select id="getMatList1" resultType="CodeVO">
+		select m.mat_code,
+		m.mat_name, m.mat_size, m.mat_unit_prc, c.cp_name, p.prs_name from
+		material m, company c, process p where m.prs_code = p.prs_code and
+		m.cp_code = c.cp_code ORDER BY m.mat_code
+	</select>
+
+	<select id="prList" resultType="CodeVO">
+		SELECT p.prs_code, p.prs_name,
+		p.prs_detail, p.eqm_code, e.eqm_name FROM process p, eqm e WHERE
+		p.eqm_code = e.eqm_code
+	</select>
+
+	<insert id="insertPrs" parameterType="CodeVO">
+		INSERT INTO process VALUES
+		(#{prsCode}, #{prsName}, #{prsDetail}, #{eqmCode})
+	</insert>
+
+	<delete id="deletePrs" parameterType="CodeVO">
+		DELETE FROM process WHERE
+		prs_code = #{prsCode}
+	</delete>
+
+	<select id="eqmList" resultType="CodeVO">
+		SELECT * FROM eqm
+	</select>
+
+	<select id="whList" resultType="CodeVO">
+		SELECT w.wh_code, w.wh_name,
+		w.wh_location, w.wh_manager, e.emp_id, e.emp_name FROM warehouse w,
+		employee e WHERE w.wh_manager = e.emp_id ORDER BY w.wh_code
+	</select>
+
+	<insert id="insertWh" parameterType="CodeVO">
+		INSERT INTO warehouse
+		VALUES(#{whCode}, #{whName}, #{whLocation}, #{whManager})
+	</insert>
+
+	<update id="updatePrs" parameterType="CodeVO">
+		UPDATE process SET prs_name
+		= #{prsName}, prs_detail = #{prsDetail}, eqm_code = #{eqmCode} WHERE
+		prs_code = #{prsCode}
+	</update>
+
+	<update id="updateWh" parameterType="CodeVO">
+		UPDATE warehouse SET wh_name
+		= #{whName}, wh_location = #{whLocation}, wh_manager = #{whManager}
+		WHERE wh_code = #{whCode}
+	</update>
+
+	<select id="errList" resultType="CodeVO">
+		SELECT e.err_code, e.err_name,
+		e.err_option, e.code as errs_code, e.err_pct, c.code, c.code_name,
+		c.div_name, c.div_code FROM error e, code c WHERE e.code = c.code
 	</select>
 	
-  </mapper>
+	<select id="matprsList" resultType="CodeVO">
+		SELECT m.mat_code, m.mat_name, p.prs_code, p.prs_name FROM material m, process p
+	</select>
+	
+	<insert id="insertErr" parameterType="CodeVO">
+		INSERT INTO error VALUES(#{errCode}, #{errName}, #{errOption}, #{code}, '')
+	</insert>
+	
+	<delete id="deleteErr" parameterType="CodeVO">
+		DELETE FROM error WHERE err_code = #{errCode}
+	</delete>
+	
+	<update id="updateErr" parameterType="CodeVO">
+		UPDATE error SET err_name = #{errName}, err_option = #{errOption}, code = #{code} WHERE err_code = #{errCode}
+	</update>
+	
+	<select id="workerList" parameterType="CodeVO">
+		SELECT p.prs_no, pp.prs_name, p.prs_code, p.pre_no, p.prs_manager, p.prs_date, p.mat_out_no, p.prt_qty, e.emp_id, ee.emp_name FROM process_run p, emp_mng e, employee ee, process pp WHERE e.prs_no = p.prs_no AND ee.emp_id = e.emp_id AND p.prs_code = pp.prs_code
+	</select>
+</mapper>

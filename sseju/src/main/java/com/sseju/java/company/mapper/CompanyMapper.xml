@@ -6,7 +6,7 @@
 <mapper namespace="com.sseju.java.company.mapper.CompanyMapper">
 
 	<select id="getCompanyList" resultType="CompanyVO">
-		SELECT * FROM company
+		SELECT * FROM company ORDER BY cp_code
 	</select>
 	<insert id="insertLogin" parameterType="CompanyVO">
 		INSERT INTO login values (#{id}, #{auth}, #{password})
@@ -17,7 +17,7 @@
 	</delete>
 	
 	<select id="companyCode" parameterType="CompanyVO" resultType="String">
-		SELECT cp_code FROM company
+		SELECT cp_code FROM company ORDER BY cp_code
 	</select>
 	
 	<select id="getCompanyInfoId" parameterType="CompanyVO" resultType="CompanyVO">

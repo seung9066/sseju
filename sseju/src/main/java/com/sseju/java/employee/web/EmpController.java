@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sseju.java.code.service.CodeService;
 import com.sseju.java.company.service.CompanyService;
 import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.employee.service.EmployeeService;
@@ -24,6 +26,9 @@ public class EmpController {
 
 	@Autowired
 	CompanyService serviceCP;
+	
+	@Autowired
+	CodeService serviceCD;
 
 	@PostMapping("/insertaccount")
 	public String empInsert(EmployeeVO vo) {
@@ -50,12 +55,13 @@ public class EmpController {
 
 		CompanyVO vocp = new CompanyVO();
 		vocp.setId(vo.getEmpId());
-		vocp.setAuth(vo.getAuth());
+		vocp.setAuth("ROLE_ADMIN");
 		vocp.setPassword(enco.encode(pw));
 
 		serviceCP.insertLogin(vocp);
 		service.insertEmp(vo);
-		return "/admin/basicTab/Employee";
+		
+		return "redirect:basicEmployee";
 	}
 
 	@PostMapping("/selectDeleteEmp")
