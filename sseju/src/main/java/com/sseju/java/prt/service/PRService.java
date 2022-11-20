@@ -4,18 +4,31 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-@Service
+import com.sseju.java.order.service.ORVO;
+
 public interface PRService {
 
-	// 전체
+	// 제품목록 조회
 	public List<PRVO> selectPrtList();
 
-	// 단건
-	public PRVO selectPrtInfo(PRVO Pvo);
+	// 주문상세 목록 조회
+	public List<ORVO> selectPrtInfoList();
+	
 
 	// 등록
 	public int insertPrtInfo(PRVO Pvo);
 	
 	//수정
+
+
 	public int updatePrtinfo(PRVO Pvo);
+
+
+	
+
+
+
 }
+
+
+

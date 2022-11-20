@@ -39,159 +39,73 @@ body {
 			<button class="button">저장</button>
 		</div>
 
-		<div id="grid"></div>
+		<div id="aGrid"></div>
 
 
 		<script>
-const grid = new tui.Grid({
-      el: document.getElementById('grid'),
-      data: [
-    {
-    	preNo: '00001',
-    	orderNo: '00001',
-    	orderDate: '2022-11-11',
-    	prtName: '참이슬',
-    	orderOutQty : '1000',
-    	orderQty: 999,
-    	dDay: '2022-11-15',
-    	orderPrg: '대기',
-       
-    },
-    {
-    	preNo: '00002',
-    	orderNo: '00002',
-    	orderDate: '2022-11-15',
-    	prtName: '참소주',
-    	orderOutQty : '1000',
-    	orderQty: 999,
-    	dDay: '2022-11-19',
-    	orderPrg: '진행중',
-    }
-  ],
-      rowHeaders: ['checkbox'],
-      scrollX: false,
-      scrollY: false,
-      columns: [
-          {
-        	  
-              header: 'No.',
-              name: 'preNo'
-            }, {
-          	  
-                header: '생산번호',
-                name: 'orderNo'
-              },
-          
-            {
-                header: '제품명',
-                name: 'prtName'
-              },
-            {
-              header: '진행상태',
-              name: 'orderPrg'
-            },
-            {
-              header: '총출고량',
-              name: 'orderOutQty'
-            },
-            {
-              header: '주문량',
-              name: 'orderQty'
-            },
-            {
-              header: '주문일자',
-              name: 'orderDate'
-            },
-            {
-                header: '납기일자',
-                name: 'dDay'
-              }
-           
-          ]
-    });
-
-
-    grid.on('check', ev => {
-      console.log('check!', ev);
-    });
-
-    grid.on('uncheck', ev => {
-      console.log('uncheck!', ev);
-    });
-
-    grid.on('focusChange', ev => {
-      console.log('change focused cell!', ev);
-    });
-    </script>
-
-		<script>
-	document.addEventListener('shown.bs.modal', function (){
-		modalGrid = '';
-		var modalGrid = new tui.Grid({
-			el: document.getElementById('modalGrid'),
-			data: [{
-				preNo: '00001',
-				orderNo: '00003',
-		    	orderDate: '2022-12-20',
-		    	prtName: '자몽이슬',
-		    	orderQty: 500,
-		    	dDay: '2022-12-13',
-		    	unitPrice: '1450',
-		    	orderPrice : '725,000'
+		all();
+		const aGrid = new tui.Grid({
+			el : document.getElementById('aGrid'),
+			pagination:true,
+			pageOption: {
+				useClient:true,
+				perPage:10
 			},
-			{
-				orderNo: '00004',
-		    	orderDate: '2022-12-21',
-		    	prtName: '참이슬',
-		    	orderQty: 10000,
-		    	dDay: '2022-11-25',
-		    	unitPrice: '1350',
-		    	orderPrice : '13,500,000'
-			}],
+			scrollX : false,
+			scrollY : false,
 			rowHeaders: ['checkbox'],
-			scrollX: false,
-			scrollY: false,
-			columns:  [
-		          {
-		        	  
-		              header: 'No.',
-		              name: 'preNo'
-		            }, {
-		          	  
-		                header: '생산번호',
-		                name: 'orderNo'
-		              },
-		          
-		            {
-		                header: '제품명',
-		                name: 'prtName'
-		              },
-		            {
-		              header: '진행상태',
-		              name: 'orderPrg'
-		            },
-		            {
-		              header: '총출고량',
-		              name: 'orderOutQty'
-		            },
-		            {
-		              header: '주문량',
-		              name: 'orderQty'
-		            },
-		            {
-		              header: '주문일자',
-		              name: 'orderDate'
-		            },
-		            {
-		                header: '납기일자',
-		                name: 'dDay'
-		              }
+			columns : [
+				{
+					header : '품목',
+					name : 'prtName',
+					align : 'center',
+					filter: 'select'
+				}, 
+				/* {
+					header : '진행상태',
+					name : 'orderPrg',
+					align : 'center',
+					filter: 'select'
+				}, */
+				{
+					header : '총출고량',
+					name : 'orderOutQty',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '주문량',
+					name : 'orderQty',
+					align : 'center',
+					filter: 'select'
+				},
+				/* {
+					header : '주문일자',
+					name : 'orderDate',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '납기일자',
+					name : 'dday',
+					align : 'center',
+					filter: 'select'
+				}, */
+		           
 		           
 		          ]
-		    });
-	}, '.modal');
-	
-	</script>
+		});
+		function all() {
+			url="selectPrtManager"
+	        fetch(url) 
+	        .then(res=>res.json())
+	        .then(obj=>{
+	           console.log(obj);
+	           aGrid.resetData(obj);
+	        })
+		}
+    </script>
+
 	</main>
 	</article>
 </body>

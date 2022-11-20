@@ -4,12 +4,14 @@ package com.sseju.java.matinputhistory.service;
 import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
 @Data
 @Alias("mihVO")
 public class MatInputHistoryVO {
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date matOutDate;	//자재 출고 일자(자재를 공정에 투입한 투입일자) mat_out테이블
 	private String prsCode;		//공정코드(어떤 자재가 어느 공정으로 투입되었는지 체크)
 	private int matOutQty;		//출고수량(자재가 공정에 투입된 수량)

@@ -3,7 +3,7 @@ package com.sseju.java.eqm.service;
 import java.util.List;
 
 public interface EqmService {
-	// 설비 전체조회
+   // 설비 전체조회
     public List<EqmVO> selectEqmList();
     
     // 설비 단건조회
@@ -17,6 +17,10 @@ public interface EqmService {
     
     // 설비 삭제
     public int deleteEqmInfo(EqmVO eqmVO);
+    
+   /*
+    * // 거래처 company public List<CompanyVO> getCompanyList();
+    */
 
 
     // 라인 정보 전체조회
@@ -32,7 +36,7 @@ public interface EqmService {
     public int updateEqmLine(EqmVO eqmVO);
 
     // 라인정보 삭제
-    public int deleteEqmLine(String lineNo);
+    public int deleteEqmLine(EqmVO eqmVO);
     
     
     // 정기점검 전체조회

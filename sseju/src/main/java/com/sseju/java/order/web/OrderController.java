@@ -1,67 +1,73 @@
 package com.sseju.java.order.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.sseju.java.code.service.CodeService;
+import com.sseju.java.company.service.CompanyService;
+import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.order.service.ORService;
 import com.sseju.java.order.service.ORVO;
+import com.sseju.java.prt.service.PRService;
+import com.sseju.java.prt.service.PRVO;
 
 @Controller
 public class OrderController {
 	@Autowired
 	ORService oService;
 
-	// 등록-품
-	@GetMapping("orinsert")
-	public String insertForm(Model model) {
-		model.addAttribute("orderNo", oService.getOrderNo());
-		return "/admin/order/insertForm";
+	@Autowired
+	PRService prService;
+
+	@Autowired
+	CodeService serviceC;
+
+	@Autowired
+	CompanyService service;
+
+
+
+	@GetMapping("/selectOrderList")
+	@ResponseBody
+	public List<ORVO> selectOrderList(Model model) {
+		return oService.selectOrderList();
 	}
 
-	// 등록-DB
-	@PostMapping("orinsert")
+	@GetMapping("/prtList")
 	@ResponseBody
-	public String insertOrder(Model model, ORVO ORVO) {
-	model.addAttribute("orinsert", oService.insertOrderInfo(ORVO));
-		return "redirect:list";
+	public List<CompanyVO> cpList() {
+		return service.getCompanyList();
 	}
+	@GetMapping("/selectOrdeIng")
+	@ResponseBody
+	public List<ORVO> selectOrdeIng() {
+		return oService.selectOrdeIng();
+	}
+	@GetMapping("/selectPrtManager")
+	@ResponseBody
+	public List<ORVO> selectPrtManager() {
+		return oService.selectPrtManager();
+	}
+
+//	// 제품목록 조회 서비스
+//	@GetMapping("/insertPrtInfo")
+//	@ResponseBody
+//	public int insertPrtInfo(Model model) {
+//		model.addAttribute("", )
+//		return prService.insertPrtInfo(prvo);
+//	}
+//	
 
 	// 전체
 	@GetMapping("/orlist")
-	public String selectOrderList(Model model) {
-		model.addAttribute("orList",oService.selectOrderList());
-		return "/admin/order/orderList";
-	}
+	public String OrderList(Model model) {
 
-	// 단건
-	@GetMapping("orinfo")
-	public String selectOrderInfo(ORVO orVO, Model model) {
-
-		return "/adminorder/orderInfo";
-	}
-
-	// 수정-폼
-	@PostMapping("orupdateform")
-	public String updateForm(Model model) {
-		return "/admin/order/updateForm";
-	}
-
-	// 수정-DB update
-	@PostMapping("orupdate")
-	public String updateOrder(ORVO orVO, RedirectAttributes ratt) {
-
-		return "redirect:list";
-	}
-
-	// 삭제
-	@GetMapping("ordelete")
-	public String deleteForm(Model model, ORVO prVO) {
 		return "/admin/order/orderList";
 	}
 
@@ -76,7 +82,35 @@ public class OrderController {
 	}
 
 	@GetMapping("import")
-	public String selectImport(Model model) {
+	public String selectprt(Model model) {
 		return "/admin/quality/import";
 	}
+
+	/* 수량 수정 */
+//	@PostMapping("/orlist")
+//	public String  selectOrderInfo(ORVO oVO) {
+//		int result = 0;
+//		result = oService.selectOrderInfo(oVO);
+//		// 주문테이블 등록 성공
+//		if(result == 1){
+//			// 주문상세테이블 등록
+//			result = oService.updateOrderInfo2(oVO);
+//			// 주문상세테이블 등록 성공
+//			if(result == 1) {
+//				// TODO 사용자에게 등록 성공 알림주기
+//			}
+//			// 주문상세테이블 등록 실패
+//			else {
+//				// TODO 사용자에게 실패했다고 알림주기
+//				// TODO 주문테이블 삭제 필요
+//			}
+//		}
+//		// 주문테이블 등록 실페
+//		else {
+//			// TODO 사용자에게 실패했다고 알림주기
+//		}
+//
+//		return "";
+//
+//	}
 }

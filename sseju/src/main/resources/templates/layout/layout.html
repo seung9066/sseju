@@ -7,8 +7,9 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
-<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+<meta id="_csrf" name="_csrf" th:content="${_csrf.token}" />
+<meta id="_csrf_header" name="_csrf_header"
+	th:content="${_csrf.headerName}" />
 
 
 <title>SSEJU</title>
@@ -292,29 +293,23 @@
 				</a>
 					<ul id="components-nav" class="nav-content collapse "
 						data-bs-parent="#sidebar-nav">
-						<li><a href="basicCode"> <i
-								class="bi bi-circle"></i><span>공통코드</span>
+						<li><a href="basicCode"> <i class="bi bi-circle"></i><span>공통코드</span>
 						</a></li>
-						<li><a href="basicProduct"> <i
-								class="bi bi-circle"></i><span>품목정보</span>
+						<li><a href="basicProduct"> <i class="bi bi-circle"></i><span>품목정보</span>
 						</a></li>
+
 						<li><a href="basicWorker"> <i
 								class="bi bi-circle"></i><span>작업자관리</span>
 						</a></li>
-						<li><a href="basicError"> <i
-								class="bi bi-circle"></i><span>불량유형</span>
+						<li><a href="basicError"> <i class="bi bi-circle"></i><span>불량유형</span>
 						</a></li>
-						<li><a href="basicBOM"> <i
-								class="bi bi-circle"></i><span>BOM</span>
+						<li><a href="basicBOM"> <i class="bi bi-circle"></i><span>BOM</span>
 						</a></li>
-						<li><a href="basicProcess"> <i
-								class="bi bi-circle"></i><span>공정/창고</span>
+						<li><a href="basicProcess"> <i class="bi bi-circle"></i><span>공정/창고</span>
 						</a></li>
-						<li><a href="basicCompany"> <i
-								class="bi bi-circle"></i><span>거래처정보</span>
+						<li><a href="basicCompany"> <i class="bi bi-circle"></i><span>거래처정보</span>
 						</a></li>
-						<li><a href="basicEmployee"> <i
-								class="bi bi-circle"></i><span>사원정보</span>
+						<li><a href="basicEmployee"> <i class="bi bi-circle"></i><span>사원정보</span>
 						</a></li>
 
 					</ul></li>
@@ -327,25 +322,26 @@
 				</a>
 					<ul id="forms-nav" class="nav-content collapse "
 						data-bs-parent="#sidebar-nav">
-						<li><a href="/workOrder"> <i class="bi bi-circle"></i><span>작업 지시</span>
+						<li><a href="/workOrder"> <i class="bi bi-circle"></i><span>작업
+									지시</span>
 						</a></li>
-						<li><a href="/prtPer"> <i
-								class="bi bi-circle"></i><span>생산 실적</span>
+						<li><a href="/prtPer"> <i class="bi bi-circle"></i><span>생산
+									실적</span>
 						</a></li>
-						<li><a href="/prtProg"> <i
-								class="bi bi-circle"></i><span>생산 진행 현황</span>
+						<li><a href="/prtProg"> <i class="bi bi-circle"></i><span>생산
+									진행 현황</span>
 						</a></li>
-						<li><a href="/lotTrack"> <i
-								class="bi bi-circle"></i><span>제품 로트</span>
+						<li><a href="/lotTrack"> <i class="bi bi-circle"></i><span>제품
+									로트</span>
 						</a></li>
-						<li><a href="/matInputHistory"> <i
-								class="bi bi-circle"></i><span>자재 투입 내역</span>
+						<li><a href="/matInputHistory"> <i class="bi bi-circle"></i><span>자재
+									투입 내역</span>
 						</a></li>
-						<li><a href="/workHistory"> <i
-								class="bi bi-circle"></i><span>작업 이력</span>
+						<li><a href="/workHistory"> <i class="bi bi-circle"></i><span>작업
+									이력</span>
 						</a></li>
-						<li><a href="prtProcessList"> <i
-								class="bi bi-circle"></i><span>생산 공정</span>
+						<li><a href="prtProcessList"> <i class="bi bi-circle"></i><span>생산
+									공정</span>
 						</a></li>
 					</ul></li>
 				<!-- End Forms Nav -->
@@ -363,8 +359,7 @@
 						</a></li>
 						<li><a href="/matStock"> <i class="bi bi-circle"></i><span>재고조회</span>
 						</a></li>
-						<li><a href="/matCheck"> <i
-								class="bi bi-circle"></i><span>검수내역</span>
+						<li><a href="/matCheck"> <i class="bi bi-circle"></i><span>검수내역</span>
 						</a></li>
 						<li><a href="forms-elements.html"> <i
 								class="bi bi-circle"></i><span>재고조회</span>
@@ -382,17 +377,14 @@
 				</a>
 					<ul id="charts-nav" class="nav-content collapse "
 						data-bs-parent="#sidebar-nav">
-						<li><a href="forms-elements.html"> <i
+						<li><a href="matRecChk"> <i
 								class="bi bi-circle"></i><span>수입검사</span>
 						</a></li>
-						<li><a href="forms-elements.html"> <i
+						<li><a href="processCheckList"> <i
 								class="bi bi-circle"></i><span>공정검사</span>
 						</a></li>
-						<li><a href="forms-elements.html"> <i
+						<li><a href="shipmentCheckList"> <i
 								class="bi bi-circle"></i><span>출하검사</span>
-						</a></li>
-						<li><a href="forms-elements.html"> <i
-								class="bi bi-circle"></i><span>진행중</span>
 						</a></li>
 					</ul></li>
 			</th:block>
@@ -405,6 +397,8 @@
 			</a>
 				<ul id="product-nav" class="nav-content collapse "
 					data-bs-parent="#sidebar-nav">
+					<li><a href="prtOrder"> <i class="bi bi-circle"></i><span>제품주문</span>
+					</a></li>
 					<li><a href="orlist"> <i class="bi bi-circle"></i><span>주문상세</span>
 					</a></li>
 					<th:block sec:authorize="hasRole('ROLE_ADMIN')">
@@ -424,14 +418,13 @@
 				</a>
 					<ul id="abc-nav" class="nav-content collapse "
 						data-bs-parent="#sidebar-nav">
-						<li><a href=""> <i class="bi bi-circle"></i><span>설비기본코드</span>
+						<li><a href="/eqmBasic"> <i class="bi bi-circle"></i><span>설비기본정보</span>
 						</a></li>
 						<li><a href="/eqmList"> <i class="bi bi-circle"></i><span>설비정보관리</span>
 						</a></li>
 						<li><a href="/eqmCheck"> <i class="bi bi-circle"></i><span>설비점검관리</span>
 						</a></li>
-						<li><a href="/eqmUoper"> <i
-								class="bi bi-circle"></i><span>비가동관리</span>
+						<li><a href="/eqmUoper"> <i class="bi bi-circle"></i><span>비가동관리</span>
 						</a></li>
 						<li><a href="forms-elements.html"> <i
 								class="bi bi-circle"></i><span>설비가동현황</span>
@@ -446,20 +439,14 @@
 				</a>
 					<ul id="tabl-nav" class="nav-content collapse "
 						data-bs-parent="#sidebar-nav">
-						<li><a href="forms-elements.html"> <i
-								class="bi bi-circle"></i><span>생산현황</span>
+						<li><a href="prduce"> <i class="bi bi-circle"></i><span>생산현황</span>
 						</a></li>
-						<li><a href="forms-elements.html"> <i
-								class="bi bi-circle"></i><span>출하현황</span>
+						<li><a href="shipment"> <i class="bi bi-circle"></i><span>출하현황</span>
 						</a></li>
-						<li><a href="forms-elements.html"> <i
-								class="bi bi-circle"></i><span>창고별재고현황</span>
+						<li><a href="Stock"> <i class="bi bi-circle"></i><span>창고별재고현황</span>
 						</a></li>
-						<li><a href="forms-elements.html"> <i
-								class="bi bi-circle"></i><span>공정진척현황</span>
-						</a></li>
-						<li><a href="forms-elements.html"> <i
-								class="bi bi-circle"></i><span>계획대비실적현황</span>
+
+						<li><a href="plans"> <i class="bi bi-circle"></i><span>계획대비실적현황</span>
 						</a></li>
 					</ul></li>
 			</th:block>

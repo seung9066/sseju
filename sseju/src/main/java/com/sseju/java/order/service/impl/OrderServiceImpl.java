@@ -15,7 +15,6 @@ public class OrderServiceImpl implements ORService {
 	@Autowired
 	ORMapper OMapper;
 
-
 	@Override
 	public List<ORVO> selectOrderList() {
 		return OMapper.selectOrderList();
@@ -32,17 +31,30 @@ public class OrderServiceImpl implements ORService {
 	}
 
 	@Override
-	public int updateOrderInfo(ORVO Ovo) {
-		return OMapper.updateOrderInfo(Ovo);
-	}
-
-	@Override
-	public int deleteOrderInfo(ORVO Ovo) {
-		return OMapper.deleteOrderInfo(Ovo);
-	}
-
-	@Override
 	public int getOrderNo() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<ORVO> selectOrdeIng() {
+		// TODO Auto-generated method stub
+		return OMapper.selectOrdeIng();
+	}
+
+	@Override
+	public List<ORVO> updateOrdeInfo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ORVO> selectPrtManager() {
+		return OMapper.selectPrtManager();
+	}
+
+	@Override
+	public int insertOrderPrtInfo(ORVO Ovo) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
