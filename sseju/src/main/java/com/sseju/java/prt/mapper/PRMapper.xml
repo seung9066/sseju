@@ -3,47 +3,91 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sseju.java.prt.mapper.PRMapper">
-	
-	<!-- 전체조회 -->
+
+	<!-- 제품목록 조회 -->
 	<select id="selectPrtList" resultType="PRVO">
 		SELECT *
 		FROM product
-		ORDER BY prtCode DESC
+		ORDER
+		BY prt_code DESC
+	</select>
+	
+	
+	<!-- 주문상세 목록 조회 -->
+	<select id="selectPrtInfoList" resultType="ORVO">
+		SELECT
+			a.order_date,
+			a.order_no,
+			d.cp_name,
+			a.d_day,
+			c.prt_name,
+			c.prt_unit,
+			b.order_qty,
+			a.order_prg
+		FROM
+			orders a,
+			order_Inf b,
+			product c,
+			company d
+		where a.order_no = b.order_no
+		and b.prt_code = c.prt_code
+		and a.cp_code = d.cp_code
+	</select>
+	
+	<!-- 전체조회 -->
+	<select id="selectPrtList2" resultType="PRVO">
+		SELECT
+		a.order_date,
+		a.order_no,
+		d.cp_name,
+		c.prt_name,
+		c.prt_unit,
+		b.order_out_qty
+		FROM
+		orders a,
+		order_Inf b,
+		product c,
+		company d
+		where a.order_no = b.order_no
+		and b.prt_code = c.prt_code
+		and a.cp_code = d.cp_code
 	</select>
 	<!-- 단거조회 -->
 	<select id="selectPrtInfo" parameterType="PRVO">
 		select PRT_CODE
-				PRT_NAME
-				PRT_STANDARD
-				PRT_UNIT
-				PRT_PRICE
-				PRT_IMAGE
+		PRT_NAME
+		PRT_STANDARD
+		PRT_UNIT
+		PRT_PRICE
+		PRT_IMAGE
 		from product
-		where prt_name = #{prtName}
+		where
+		prt_name = #{prtName}
 	</select>
 
 	<insert id="insertPrtInf" parameterType="PRVO">
 		<selectKey keyProperty="prtCode" resultType="String"
 			order="BEFORE">
-			SELECT 'PRD_'||LPAD(NVL(MAX(SUBSTR(cp_code, -3)),0)+1,3,0) FROM product
+			SELECT 'PRD_'||LPAD(NVL(MAX(SUBSTR(cp_code, -3)),0)+1,3,0) FROM
+			product
 		</selectKey>
 		insert into product
-				(prt_code,
-				prt_name,
-				prt_standard,
-				prt_unit,
-				prt_price,
-				prt_image)
+		(prt_code,
+		prt_name,
+		prt_standard,
+		prt_unit,
+		prt_price,
+		prt_image)
 		values(
-				#{prtCode},
-				#{prtName},
-				#{prtStandard]},
-				#{prtUnit},
-				#{prtPrice},
-				#{prtImage}
+		#{prtCode},
+		#{prtName},
+		#{prtStandard]},
+		#{prtUnit},
+		#{prtPrice},
+		#{prtImage}
 		)
 	</insert>
-	
+
 	<!-- 삭제 -->
 	<delete id="deletePrinfo" parameterType="Integer">
 		delete from product
