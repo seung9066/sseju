@@ -4,14 +4,19 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.sseju.java.order.service.ORVO;
 import com.sseju.java.prt.service.PRVO;
 
 @Mapper
 public interface PRMapper {
 
-	// 전체
+	// 제품목록 조회
 	public List<PRVO> selectPrtList();
 
+	// 주문상세 목록 조회
+	public List<ORVO> selectPrtInfoList();
+
+	
 	// 단건
 	public PRVO selectPrtInfo(PRVO Ovo);
 

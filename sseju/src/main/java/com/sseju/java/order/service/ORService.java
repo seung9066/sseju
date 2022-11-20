@@ -6,10 +6,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ORService {
-	//orders테이블
+	// orders테이블
 	public int getOrderNo();
+
 	// 전체
 	public List<ORVO> selectOrderList();
+
+	public List<ORVO> updateOrdeInfo();
+
+	public List<ORVO> selectPrtManager();
 
 	// 단건
 	public ORVO selectOrderInfo(ORVO Ovo);
@@ -17,11 +22,11 @@ public interface ORService {
 	// 등록
 	public int insertOrderInfo(ORVO Ovo);
 
+	public int insertOrderPrtInfo(ORVO Ovo);
+
 	// 수정
-	public int updateOrderInfo(ORVO Ovo);
 
-	// 삭제
-	public int deleteOrderInfo(ORVO Ovo);
 
-	
+	public List<ORVO> selectOrdeIng();
+
 }
