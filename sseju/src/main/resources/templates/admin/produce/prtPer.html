@@ -68,17 +68,17 @@
 					el : document.getElementById('prtperGrid'),
 					data : [ {
 						preNo : '20221101001',
-						dDay : '포도맛소주',
-						prtName : '30000',
+						prtName : '포도맛소주',
 						preQty : '30000',
-						inQty : '3',
+						insQty : '30000',
+						prsErrQty : '3',
 						prePrg : '김준형'
 					}, {
 						preNo : '20221102001',
-						dDay : '자몽맛소주',
-						prtName : '10000',
+						prtName : '자몽맛소주',
 						preQty : '10000',
-						inQty : '0',
+						insQty : '10000',
+						prsErrQty : '0',
 						prePrg : '김두영'
 					}
 					// data 가져오는 법
@@ -102,29 +102,21 @@
 						name : 'preNo'
 					}, {
 						header : '제품명',
-						name : 'dDay',
-						filter : {
-							type : 'text',
-							showApplyBtn : true,
-							showClearBtn : true
-						}
+						name : 'prtName',
+						filter : 'select',
 					}, {
 						header : '생산량',
-						name : 'prtName'
-					}, {
-						header : '지시량',
 						name : 'preQty'
 					}, {
+						header : '지시량',
+						name : 'insQty'
+					}, {
 						header : '불량 발생 개수',
-						name : 'inQty'
+						name : 'prsErrQty'
 					}, {
 						header : '담당자',
 						name : 'prePrg',
-						filter : {
-							type : 'text',
-							showApplyBtn : true,
-							showClearBtn : true
-						}
+						filter : 'select'
 					} ]
 				});
 			</script>

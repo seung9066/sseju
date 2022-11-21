@@ -89,29 +89,21 @@
 						name : 'preNo'
 					}, {
 						header : '제품명',
-						name : 'dDay',
-						filter : {
-							type : 'text',
-							showApplyBtn : true,
-							showClearBtn : true
-						}
+						name : 'prtName',
+						filter : 'select'
 					}, {
 						header : '생산량',
-						name : 'prtName'
-					}, {
-						header : '지시량',
 						name : 'preQty'
 					}, {
+						header : '지시량',
+						name : 'insQty'
+					}, {
 						header : '지시일자',
-						name : 'inQty'
+						name : 'preDate'
 					}, {
 						header : '담당자',
-						name : 'prePrg',
-						filter : {
-							type : 'text',
-							showApplyBtn : true,
-							showClearBtn : true
-						}
+						name : 'preManager', //id값으로 가져오는것 잊지말기
+						filter : 'select'
 					} ]
 				});
 			
@@ -146,24 +138,20 @@
 					scrollY : false,
 					columns : [ {
 						header : '자재 코드',
-						name : 'preNo'
+						name : 'matCode'
 					}, {
 						header : '자재명',
-						name : 'dDay',
-						filter : {
-							type : 'text',
-							showApplyBtn : true,
-							showClearBtn : true
-						}
+						name : 'matName',
+						filter : 'select'
 					}, {
-						header : '투입량(사용량)',
-						name : 'prtName'
-					}, {
-						header : '재고량(남은량)',
+						header : '투입량(사용량)', //지시수량만큼 빠지게
 						name : 'preQty'
 					}, {
+						header : '재고량(남은량)',
+						name : 'lotQty'
+					/*}, {
 						header : '현 재고 상태',//충분, 주문필요, 과부족(일시 생산 진행 불가,)
-						name : 'inQty'
+						name : 'inQty'*/
 					} ]
 				});
 			</script>

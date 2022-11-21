@@ -111,7 +111,7 @@
 					data : [ {
 				    	orderNo: '00001',
 				    	orderDate: '2022-11-11',
-				    	cpName : '삼겹살맛집',
+				    	cpName : '굿',
 				    	prtName: '참이슬',
 				    	prtUnit:'Ex',
 				    	orderOutQty : 100,
@@ -148,87 +148,6 @@
 				           
 				          ]
 				});
-
-				const grid22 = new tui.Grid({
-					el : document.getElementById('grid2'),
-					data : [ {
-				    	orderNo: '00001',
-				    	orderDate: '2022-11-11',
-				    	prtName: '참이슬',
-				    	orderQty: 999,
-				    	dDay: '2022-11-15',
-				    	orderPrg: '대기중',
-				       
-				    } ],
-					 rowHeaders: ['checkbox'],
-				      scrollX: false,
-				      scrollY: false,
-				      columns: [
-				          {
-				              header: '주문번호',
-				              name: 'orderNo'
-				            },
-				            {
-				              header: '주문일자',
-				              name: 'orderDate'
-				            },
-				            {
-				              header: '품목',
-				              name: 'prtName'
-				            },
-				            {
-				              header: '납기일자',
-				              name: 'dDay'
-				            },
-				            {
-				              header: '주문량',
-				              name: 'orderQty'
-				            },
-				            {
-				              header: '진행상태',
-				              name: 'orderPrg'
-				            }
-				           
-				          ]
-				    });
-				const modalGrid = new tui.Grid({
-					el : document.getElementById('modalGrid1'),
-					data : [ {
-						actCd : 'VDR-1001',
-						actNm : 'AA 마트',
-						actNum : '791-10-000',
-						tel : '053-514-4512'
-					} ],
-					rowHeaders : [ 'rowNum' ],
-					scrollX : false,
-					scrollY : false,
-					columns : [ {
-						header : '거래처 코드',
-						name : 'actCd'
-					}, {
-						header : '거래처명',
-						name : 'actNm'
-					}, {
-						header : '사업자 등록번호',
-						name : 'actNum'
-					}, {
-						header : '전화번호',
-						name : 'tel'
-					} ]
-				})
-/* 				modalGrid.addEventListener('click', function() {
-					Grid.refreshLayout();
-				}) */
-				/* 
-				homeTab.addEventListener('click', () => {
-       				setInterval(()=>{grid11.refreshLayout()},1);
-       				setInterval(()=>{grid22.refreshLayout()},1);
-   				 });
-				 */
-				exampleModal.addEventListener('shown.bs.modal', () => {
-					modalGrid.refreshLayout();
-				   });
-			
 			</script>
 
 		</main>
