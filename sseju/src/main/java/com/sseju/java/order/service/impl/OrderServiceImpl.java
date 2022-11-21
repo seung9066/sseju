@@ -59,6 +59,18 @@ public class OrderServiceImpl implements ORService {
 		return 0;
 	}
 
+	@Override
+	public int updateOrderPrt(ORVO Ovo) {
+		// TODO Auto-generated method stub
+		return OMapper.updateOrderPrt(Ovo);
+	}
+
+	@Override
+	public int delectOrderPrt(ORVO Ovo) {
+		// TODO Auto-generated method stub
+		return OMapper.delectOrderPrt(Ovo);
+	}
+
 
 
 

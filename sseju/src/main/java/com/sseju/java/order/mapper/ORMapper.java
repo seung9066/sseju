@@ -22,9 +22,10 @@ public interface ORMapper {
 	public int insertOrderPrtInfo(ORVO Ovo);
 
 	
+
 	// 수정
-	public int updateOrderInfo(ORVO Ovo);
-
-
+	public int updateOrderPrt(ORVO Ovo);
+	//삭제
+	public int delectOrderPrt(ORVO Ovo);
 	// 삭제
 }
