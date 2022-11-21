@@ -111,10 +111,15 @@ img {
 							</tr>
 							<tr>
 								<th class="col1">비가동코드</th>
-								<td><input type="text" name="uoperCode" id="uoperCode">
+								<td><input type="text" name="uoperCode" id="uoperCode" value="${uoperCode}" readonly>
 								</td>
-								<th class="col1">비가동명</th>
-								<td><input type="text" name="uoperName" id="uoperName"></td>
+								<th class="col1">비가동사유</th>
+								<td><select name="uoperName">
+									<option value='' selected>--선택--</option>
+									<option value='chk'>점검</option>
+									<option value='fixed'>수리</option>
+									<option value=''>재고부족?</option>
+								</select></td>
 							</tr>
 							<tr>
 								<th class="col1">일자</th>
@@ -176,8 +181,10 @@ img {
 			
 			</script>
 
-			<script>
+			<script type="text/javascript">
+			
 			showAll();
+			showAll1();
 			
 				/* radio버튼 누를때 */
 				$('input[type=radio][name=eqmState]').on(
@@ -240,9 +247,22 @@ img {
 	               // 설비상태가 '비가동(N)'중인 것만 모달창에 보여주기
 	            });
 	            
-	            document.addEventListener('shown.bs.modal', function (){
-					eqmGrid.refreshLayout();
-					}, '.modal');
+	            eqmGrid.on("click", event => {
+	               
+	                // getRow : 그리드 row(tr) 전체 가져오기.
+	                //console.log(event.nativeEvent.target.innerText);  td값. 셀값
+	                  //rowKey : 인덱스 번호  
+	                // input 태그에 값 넣어주기.
+	                
+	                if(eqmGrid.getRow(event.rowKey).eqmYn == 'Y'){
+	                	$('#eqmCode').val(eqmGrid.getRow(event.rowKey).eqmCode);
+	 	                $('#eqmName').val(eqmGrid.getRow(event.rowKey)['eqmName']);
+	                }
+	                
+	               
+	                
+	             })
+	          
 	            
 	            function showAll() {
 	                
@@ -250,20 +270,21 @@ img {
 	                   .then(res=>res.json())
 	                   .then(obj=>{
 	                       eqmGrid.resetData(obj);
+		                   console.log(Object.values(obj) == 'Y');
+		                   for(i of Object.values(obj)){
+		                	   console.log(i);
+		                	   if (i == 'Y'){
+		                		   i = '가동중';
+		                	   }
+		                	   
+		                
+		                   }
 	                   })
 	            }
 	            
 	            /* 설비 모달에서 한 행 클릭하면 input에 값 들어감 */
 	                  
-	            eqmGrid.on("click", event => {
-	                // getRow : 그리드 row(tr) 전체 가져오기.
-	                //console.log(event.nativeEvent.target.innerText);  td값. 셀값
-	                 //rowKey : 인덱스 번호  
-	                $('#eqmCode').val(eqmGrid.getRow(event.rowKey).eqmCode);
-	                $('#eqmName').val(eqmGrid.getRow(event.rowKey)['eqmName']);
-	              
-	               
-	             });
+	           
 	            
 	            var token = $("meta[name='_csrf']").attr("content");
 	            var header = $("meta[name='_csrf_header']").attr("content");
@@ -296,12 +317,16 @@ img {
 					} ]
 				});
 				
-			     function showAll() {
+				
+				
+			     function showAll1() {
 		                
 	                   fetch("uoperList") 
 	                   .then(res=>res.json())
 	                   .then(obj=>{
+	                	   console.log(obj);
 	                       uoperGrid.resetData(obj);
+	                       
 	
 	                   })
 	            }

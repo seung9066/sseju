@@ -41,6 +41,7 @@ public class EqmController {
      @GetMapping("/getEqmList")
      @ResponseBody
      public List<EqmVO> getEqmList(){
+    	
         return eqmService.selectEqmList();
      }
      
