@@ -545,10 +545,111 @@ public class CodeController {
 		CodeVO vo = new CodeVO();
 		vo = service.updatePrtCount();
 		String a = "";
+		String b = "";
+		double c = -1;
+		double d = -1;
 		if (vo != null) {
-			a = String.valueOf(vo.getPrtQty());			
+			a = String.valueOf(vo.getPrtQty());
+			c = Integer.parseInt(a);
+		}
+		vo = service.ydPrtCount();
+		if (vo != null) {
+			b = String.valueOf(vo.getPrtQty());
+			d = Integer.parseInt(b);
+		}
+		if (c != -1 && d != -1) {
+			
+			b = String.valueOf(Math.round((c-d)/d*100) + "%");
+			if ((c-d) < 0) {
+				b = "-" + b;
+			}
+		}
+		if (d == 0) {
+			b = "전일실적없음";
 		}
 		map.put("count", a);
+		map.put("percent", b);
 		return map;
+	}
+	
+	@GetMapping("/updatePrtOutCount")
+	@ResponseBody
+	public Map<String, String> updatePrtOutCount() {
+		Map<String, String> map = new HashMap<>();
+		CodeVO vo = new CodeVO();
+		vo = service.updatePrtOutCount();
+		String a = "";
+		String b = "";
+		double c = -1;
+		double d = -1;
+		if (vo != null) {
+			a = String.valueOf(vo.getPrtQty());
+			c = Integer.parseInt(a);
+		}
+		vo = service.ydPrtOutCount();
+		if (vo != null) {
+			b = String.valueOf(vo.getPrtQty());
+			d = Integer.parseInt(b);
+		}
+		if (c != -1 && d != -1) {
+			
+			b = String.valueOf(Math.round((c-d)/d*100) + "%");
+			if ((c-d) < 0) {
+				b = "-" + b;
+			}
+		}
+		if (d == 0) {
+			b = "전일실적없음";
+		}
+		map.put("count", a);
+		map.put("percent", b);
+		return map;
+	}
+	
+	@GetMapping("/updateErrCount")
+	@ResponseBody
+	public Map<String, String> updateErrCount() {
+		Map<String, String> map = new HashMap<>();
+		CodeVO vo = new CodeVO();
+		vo = service.updateErrCount();
+		String a = "";
+		String b = "";
+		double c = -1;
+		double d = -1;
+		if (vo != null) {
+			a = String.valueOf(vo.getPrtQty());
+			c = Integer.parseInt(a);
+		}
+		vo = service.ydErrCount();
+		if (vo != null) {
+			b = String.valueOf(vo.getPrtQty());
+			d = Integer.parseInt(b);
+		}
+		if (c != -1 && d != -1) {
+			b = String.valueOf(Math.round((c-d)/d*100) + "%");
+			if ((c-d) < 0) {
+				b = "-" + b;
+			}
+		}
+		if (d == 0) {
+			b = "전일실적없음";
+		}
+		map.put("count", a);
+		map.put("percent", b);
+		return map;
+	}
+	
+	@PostMapping("/WhPrd")
+	@ResponseBody
+	public List<CodeVO> WhPrd(@RequestBody String type) {
+		CodeVO vo = new CodeVO();
+		vo.setWhCode(type);
+		return service.WhPrd(vo);
+	}
+	
+	@GetMapping("/updatePrttCount")
+	@ResponseBody
+	public List<CodeVO> updatePrttCount() {
+		return service.updatePrttCount();
 	}
 }

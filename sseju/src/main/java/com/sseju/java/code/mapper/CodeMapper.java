@@ -70,4 +70,11 @@ public interface CodeMapper {
 	public int deleteWM(CodeVO vo);
 	
 	public CodeVO updatePrtCount();
+	public CodeVO updatePrtOutCount();
+	public CodeVO updateErrCount();
+	public List<CodeVO> WhPrd(CodeVO vo);
+	public List<CodeVO> updatePrttCount();
+	public CodeVO ydPrtCount();
+	public CodeVO ydPrtOutCount();
+	public CodeVO ydErrCount();
 }

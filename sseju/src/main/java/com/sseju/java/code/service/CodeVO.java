@@ -72,6 +72,7 @@ public class CodeVO {
 	private String errOption;
 	private String errPct;
 	private String errsCode;
+	private int prsErrQty;
 	
 	// process run
 	private String prsNo;

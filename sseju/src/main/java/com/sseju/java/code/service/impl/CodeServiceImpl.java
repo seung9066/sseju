@@ -280,4 +280,46 @@ public class CodeServiceImpl implements CodeService {
 		return mapper.updatePrtCount();
 	}
 
+	@Override
+	public CodeVO updatePrtOutCount() {
+		// TODO Auto-generated method stub
+		return mapper.updatePrtOutCount();
+	}
+
+	@Override
+	public CodeVO updateErrCount() {
+		// TODO Auto-generated method stub
+		return mapper.updateErrCount();
+	}
+
+	@Override
+	public List<CodeVO> WhPrd(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.WhPrd(vo);
+	}
+
+	@Override
+	public List<CodeVO> updatePrttCount() {
+		// TODO Auto-generated method stub
+		return mapper.updatePrttCount();
+	}
+
+	@Override
+	public CodeVO ydPrtCount() {
+		// TODO Auto-generated method stub
+		return mapper.ydPrtCount();
+	}
+
+	@Override
+	public CodeVO ydPrtOutCount() {
+		// TODO Auto-generated method stub
+		return mapper.ydPrtOutCount();
+	}
+
+	@Override
+	public CodeVO ydErrCount() {
+		// TODO Auto-generated method stub
+		return mapper.ydErrCount();
+	}
+
 }
