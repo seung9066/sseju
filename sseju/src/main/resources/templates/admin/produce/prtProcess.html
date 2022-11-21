@@ -15,14 +15,14 @@
 <body>
 	<article layout:fragment="content">
 		<main id="main" class="main">
-		<h4>생산 공정 조회</h4>
+		<h4>생산 공정 관리</h4>
 			<div style="float:right;">
 				<button class="button">수정</button>
 				<button class="button">삭제</button>
 			</div>
 			<!-- 작업 지시 DB에서 불러와가지고 grid로 띄워줌
 			grid에 띄워진 list를 클릭하면 상세정보가 나오게 할 수 있는지 알아봐야함 -->
-			<div id="workorderGrid"></div>
+			<div id="prtProcessGrid"></div>
 			<!-- 작업 지시 등록 칸 -->
 			<br>
 			<h4 style="display: inline-block;">생산 공정 등록</h4>
@@ -34,15 +34,15 @@
 				<!-- 품목코드가 등록되면 품목명이 자동으로 입력되게 -->
 					<table id="insertwo">
 						<tr>
-							<th>자재코드</th>
+							<th>공정코드</th>
 								<td>
 									<select>
 										<option>선택</option>
-										<option>MAT-CA / 병뚜껑</option>
-										<option>MAT-LQ / 원액</option>
-										<option>MAT-BT / 공병</option>
-										<option>MAT-LB / 병라벨</option>
-										<option>MAT-PA / 포장용 박스</option>
+										<option></option>
+										<option></option>
+										<option></option>
+										<option></option>
+										<option></option>
 									</select>
 								</td>
 							<th>반환 사유</th>
@@ -59,16 +59,16 @@
 			</form>
 
 			<script type="text/javascript">
-			 var workorderGrid = new tui.Grid({
-				 el: document.getElementById('workorderGrid'),
+			 var prtProcessGrid = new tui.Grid({
+				 el: document.getElementById('prtProcessGrid'),
 				 data : [ {
-			    	  preNo : 'MAT-BT001 / 공병',
-			    	  dDay : '병 미세금 다량 검출',
-			    	  prtName : '5,000EA',
-			    	  preQty : '공병 판매처',
-			    	  inQty : '완료',
-			    	  prePrg : '2022-11-01'
-			         }
+						  prsCode : 'MAT_001',
+				    	  prsName : '병 잠금',
+				    	  lineNo : 'line_number_1',
+				    	  eqmCheck : '매년 3, 5 7, 9월',
+				    	  eqmYn : '가동중',
+				    	  eqmCode : 'SBCODE_123456'
+			      		}
 			         // data 가져오는 법
 			         // data: {
 			         //    api: {
@@ -89,31 +89,29 @@
 		         },
 		         columns: [
 				        {
-				          header: '공정 작업 번호',
-				          name: 'dDay'
-				        },
-				        {
-				          header: '공정 코드',
-				          name: 'prtName'
+				          header: '공정 코드', //process tbl
+				          name: 'prsCode'
 				        },
 				        {
 				          header: '공정명',
-				          name: 'preQty'
+				          name: 'prsName'
 				        },
 				        {
-				          header: '작업시작시간',
-				          name: 'inQty',
-				          filter: { type: 'text', showApplyBtn: true, showClearBtn: true }
+				          header : '라인번호',
+				          name:'lineNo'
 				        },
 				        {
-				          header : '작업 종료 시간',
-				          name:'prePrg'
+				          header: '점검주기', //eqm
+				          name: 'eqmCheck'
 				        },
 				        {
-				          header : '불량 발생 수',
-				          name:'prePrg'
+				          header: '가동여부',
+				          name: 'eqmYn',
 				        },
-				        
+				        {
+				          header : '설비 코드',
+				          name:'eqmCode'
+				        }
 				        ]
 		      });
 			   grid.on('check', ev => {

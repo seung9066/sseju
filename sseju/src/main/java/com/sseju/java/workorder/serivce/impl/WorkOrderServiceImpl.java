@@ -1,8 +1,6 @@
 package com.sseju.java.workorder.serivce.impl;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,15 +11,9 @@ import com.sseju.java.workorder.serivce.WorkOrderVO;
 
 @Service
 public class WorkOrderServiceImpl implements WorkOrderService {
+	
 	@Autowired
 	WorkOrderMapper woMapper;
-	//출력용 map 메소드 생성
-	public Map<String, Object> getResult(int count, WorkOrderVO woVO) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("result", count);
-		result.put("data", woVO);
-		return result;
-	}
 	
 	//전체조회
 	@Override
