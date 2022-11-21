@@ -68,4 +68,6 @@ public interface CodeMapper {
 	public int insertEmpMng(CodeVO vo);
 	public int insertWM(CodeVO vo);
 	public int deleteWM(CodeVO vo);
+	
+	public CodeVO updatePrtCount();
 }

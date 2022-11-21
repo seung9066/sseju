@@ -63,4 +63,7 @@ public interface CodeService {
 	public int insertEmpMng(CodeVO vo);
 	public int insertWM(CodeVO vo);
 	public int deleteWM(CodeVO vo);
+	
+	// main
+	public CodeVO updatePrtCount();
 }

@@ -14,13 +14,7 @@
 	<main id="main" class="main">
 
 		<div class="pagetitle">
-			<h1>Dashboard</h1>
-			<nav>
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a href="index.html">Home</a></li>
-					<li class="breadcrumb-item active">Dashboard</li>
-				</ol>
-			</nav>
+			<h1>현황모니터링  &nbsp;|&nbsp;  <span id="todayDate"></span></h1>
 		</div>
 		<!-- End Page Title -->
 
@@ -58,7 +52,8 @@
 	year = date.getFullYear();
 	month = date.getMonth() + 1;
 	day = date.getDate();
-	document.getElementById("todaydate").innerHTML = year + " / " + month + " / " + day;
+
+	$('#todayDate').text(year + " / " + month + " / " + day);
 </script>
 									<div id="sojucard">
 									<div class="d-flex align-items-center">
@@ -90,7 +85,21 @@
 		},
 		methods : {
 			updateNow() {
-				this.soju = Math.round(Date.now() / 1000)
+				const vueObject = this;
+				$.ajax({
+						url:'updatePrtCount',
+						type:'GET',
+						async:false,
+						success:function(data){
+							console.log(data.count);
+							vueObject.soju = data.count;
+						},
+						error:function(request,status,error){
+							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+							console.log(code);
+							console.log(reject);
+						}
+					})
 			}
 		}
 	})
@@ -287,7 +296,7 @@
 
 								<div class="card-body">
 									<h5 class="card-title">
-										Recent Sales <span>| Today</span>
+										창고별재고현황 <span>| Today</span>
 									</h5>
 
 									<table class="table table-borderless datatable">

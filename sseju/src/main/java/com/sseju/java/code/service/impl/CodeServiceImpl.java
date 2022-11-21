@@ -274,4 +274,10 @@ public class CodeServiceImpl implements CodeService {
 		return mapper.deleteWM(vo);
 	}
 
+	@Override
+	public CodeVO updatePrtCount() {
+		// TODO Auto-generated method stub
+		return mapper.updatePrtCount();
+	}
+
 }
