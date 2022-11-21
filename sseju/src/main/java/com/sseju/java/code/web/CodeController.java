@@ -537,4 +537,18 @@ public class CodeController {
 			return map;
 		}
 	}
+	
+	@GetMapping("/updatePrtCount")
+	@ResponseBody
+	public Map<String, String> updatePrtCount() {
+		Map<String, String> map = new HashMap<>();
+		CodeVO vo = new CodeVO();
+		vo = service.updatePrtCount();
+		String a = "";
+		if (vo != null) {
+			a = String.valueOf(vo.getPrtQty());			
+		}
+		map.put("count", a);
+		return map;
+	}
 }

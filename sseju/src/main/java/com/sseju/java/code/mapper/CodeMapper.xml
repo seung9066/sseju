@@ -249,4 +249,8 @@
 		UPDATE emp_mng SET prs_no =
 		'0' WHERE emp_id = #{empId}
 	</update>
+	
+	<select id="updatePrtCount" resultType="CodeVO">
+		SELECT SUM(prt_qty) AS prt_qty FROM process_run
+	</select>
 </mapper>
