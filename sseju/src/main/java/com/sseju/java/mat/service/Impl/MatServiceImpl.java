@@ -16,8 +16,8 @@ public class MatServiceImpl implements MatService {
 	MatMapper matMapper;
 
 	@Override
-	public List<MatVO> matBuyList() {
-		return matMapper.matBuyList();
+	public List<MatVO> matordList() {
+		return matMapper.matordList();
 	}
 
 	@Override
@@ -187,6 +187,12 @@ public class MatServiceImpl implements MatService {
 	public int selectDeleteMatCheck(List<String> list) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public List<MatVO> material() {
+		// TODO Auto-generated method stub
+		return matMapper.material();
 	}
 
 }
