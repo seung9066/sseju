@@ -29,9 +29,6 @@ public class ORVO {
 	private int unitPrice; //주문단가
 	private int orderPrice; //금액
 	
-	
-	
-	
-	
+	private int lotQty;		//생산수량(로트번호가 부여된 제품 단위의 총 개수)
 	
 }

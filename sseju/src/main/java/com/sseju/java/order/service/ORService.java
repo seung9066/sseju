@@ -15,6 +15,8 @@ public interface ORService {
 	public List<ORVO> updateOrdeInfo();
 
 	public List<ORVO> selectPrtManager();
+	
+
 
 	// 단건
 	public ORVO selectOrderInfo(ORVO Ovo);
@@ -25,7 +27,6 @@ public interface ORService {
 	public int insertOrderPrtInfo(ORVO Ovo);
 
 	// 수정
-
 
 	public List<ORVO> selectOrdeIng();
 
