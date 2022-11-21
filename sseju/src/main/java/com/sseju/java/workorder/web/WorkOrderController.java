@@ -41,13 +41,13 @@ public class WorkOrderController {
 		return "redirect:workOrderList";
 	}
 	
-	@PostMapping("/deleteWorkOrder")
+	@PostMapping("/selectDeleteWO")
 	@ResponseBody
 	public int deleteWorkOrder(@RequestParam(value="deleteWorkOrder[]", required=false) List<String> deleteWorkOrder) {
 		int res = 0;
 		for(int i=0; i<deleteWorkOrder.size(); i++) {
 			String line = deleteWorkOrder.get(i);
-			
+			System.out.println(line);
 			WorkOrderVO woVO = new WorkOrderVO();
 			woVO.setPreNo(line);
 			

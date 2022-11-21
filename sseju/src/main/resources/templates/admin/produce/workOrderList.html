@@ -38,16 +38,15 @@ input {
 			</h4>
 			<br>
 			<div style="float:right;">
-				<!-- <button type="submit" class="button" onclick="addWorkOrder()">추가</button> -->
+			    <input type="hidden" name="auth" value="ROLE_ADMIN">
 				<button class="button" onclick="updateWorkOrder()">수정</button>
-				<button class="button" onclick="selectDelete()">삭제</button>
+				<button class="button" onclick="selectDeleteWO()">삭제</button>
 			</div>
 			
 			<!-- DB에서 불러온 데이터 grid로 띄워줌
 			grid에 띄워진 list를 클릭하면 상세정보가 나오게 할 수 있는지 알아봐야함
 			 -->
 			<div id="workorderGrid"></div>
-			
 			<!-- 작업 지시 등록 칸 -->
 			<br>
 			<h6 style="display: inline-block;">작업 지시 등록</h6>
@@ -65,12 +64,9 @@ input {
 								<td>
 									<select id="woPrt" name="woPrt">
 										<option>---선택---</option>
-										<option value="PRD_001">오리지널</option>
-										<option value="PRD_002">청포도</option>
-										<option value="PRD_003">자몽</option>
-										<option value="PRD_004">유자</option>
-										<option value="PRD_005">석류</option>
-										<option value="PRD_006">블루베리</option>
+										<th:block th:each="p : ${prt}">
+											<option th:value="${p.prtName}" th:text="${p.prtName}"></option>
+										</th:block>
 									</select>
 								</td>
 							<th>담당자</th>
@@ -86,7 +82,7 @@ input {
 			</form>
 
 			<script type="text/javascript">
-			/* 값 주고받기 위한 시큐리티 설정 */
+			
 			showAll();
 			
 			var workOrderGrid = new tui.Grid({
@@ -97,10 +93,10 @@ input {
 						perPage:5
 					},
 			        scrollX : false,
-			        scrollY : true,
+			        scrollY : false,
 				    rowHeaders: ['checkbox'],
-				    columns: [
-						{
+				    columns:
+				    	[{
 							header: '작업 지시 번호',
 						    name: 'preNo'
 						},
@@ -132,12 +128,10 @@ input {
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
 				
-				var deleteWorkOrder = [];
+				var chkWorkOrder = [];
 				
 			   	workOrderGrid.on('check', ev => {
-				      console.log(workOrderGetid.getValue(ev.rowKey, 'preNo'));
-				      deleteWorkOrder.push((workOrderGrid.getValue(ev.rowKey, 'preNo')));
-				      
+			   		chkWorkOrder.push((workOrderGrid.getValue(ev.rowKey, 'preNo')));
 				      console.log($('input[name=_checked]').val());
 				      
 				      $('#preNo').val(workOrderGrid.getValue(ev.RowKey, 'preNo'));
@@ -150,10 +144,9 @@ input {
 				    });
 
 			   	workOrderGrid.on('uncheck', ev => {
-				      console.log(workOrderGrid.getValue(ev.rowKey, 'preNo'));
-				      for(let i=0; i<deleteWorkOrder.length; i++){
-				    	  if(deleteWorkOrder[i] == workOrderGrid.getValue(ev.rowKey, 'preNo')){
-				    		  deleteWorkOrder.splice(i, 1);
+				      for(let i=0; i<chkWorkOrder.length; i++){
+				    	  if(chkWorkOrder[i] == workOrderGrid.getValue(ev.rowKey, 'preNo')){
+				    		  chkWorkOrder.splice(i, 1);
 				    	  }
 				      }
 				      $('#preNo').val('');
@@ -168,40 +161,34 @@ input {
 				      console.log('change focused cell!', ev);
 				    }); */
 			   	
-			   	function selectDelete(){
-				    	
-					let workOrder = [];
+			   	function selectDeleteWO(){
+				    console.log(workOrderGrid.getCheckedRows());
+					let deleteWorkOrder = [];
 					for(wo of workOrderGrid.getCheckedRows()){
-						console.log(wo);
-						workOrder.push(wo.preNo);
-						console.log(workOrder);
+						deleteWorkOrder.push(wo.preNo);
 					}
-			   	$.ajax({
-			   		url : 'selectDeleteWO',
-			   		type : 'POST',
-			   		data : JSON.Stringify({deleteWorkOrder : deleteWorkOrder}),
-			   		dataType : "json",
-			   		async:false,
-			   		beforeSend : function(xhr){
-			   			xhr.setRequestHeader(header, token);
-			   		},
-			   		success : function(data){
-			   			if(data > 0){
-			   				alert("삭제완료")
-			   				showAll();
-			   			}else{
-			   				alert("삭제 실패")
-			   			}
-			   		},
-			   		error:function(request,status,error){
-			   			alert("code : " + request.status+
-			   					"\n"+"message : " + request.responseText + 
-			   						"\n"+"error : " + error);
-			   			console.log(code);
-			   			console.log(reject);
-					   		}
-					   	})
-					}
+				   	$.ajax({
+				   		url : 'selectDeleteWO',
+				   		type : 'POST',
+				   		data : {deleteWorkOrder:deleteWorkOrder},
+				   		dataType : "json",
+				   		async:false,
+				   		beforeSend : function(xhr){
+				   			xhr.setRequestHeader(header, token);
+				   		},
+				   		success : function(data){
+				   			if(data > 0){
+				   				alert("삭제완료")
+				   				showAll();
+				   			}else{
+				   				alert("삭제 실패")
+				   			}
+				   		},
+				   		error:function(reject){
+				   			console.log(reject);
+				   		}
+					});
+				}
 
 					function showAll() {
 						       fetch("getWorkOrderList") 

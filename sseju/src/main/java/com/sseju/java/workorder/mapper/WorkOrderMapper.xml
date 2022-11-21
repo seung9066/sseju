@@ -5,7 +5,7 @@
 	<!-- 작업 지시 등록 -->
 	<insert id="insertWorkOrder" parameterType="woVO">
 		<selectKey keyProperty="preNo" resultType="String" order="BEFORE">
-			SELECT 'PRE_' || TO_CHAR(SYSDATE,'YYYYMMDD')||'-'||LPAD(NVL(MAX(SUBSTR(pre_no, -3)),0)+1,3,0) 
+			SELECT 'PRE' || TO_CHAR(SYSDATE,'YYYYMMDD')||'-'||LPAD(NVL(MAX(SUBSTR(pre_no, -3)),0)+1,3,0) 
 			FROM	produce
 		</selectKey>
 		INSERT INTO produce( pre_no
@@ -65,14 +65,14 @@
 	</update>
 	
 	<!-- 삭제 -->
-	<delete id="deleteWorkOrder" parameterType="Integer">
+	<delete id="deleteWorkOrder" parameterType="woVO">
 		DELETE FROM produce
 		WHERE pre_no = #{preNo}
 	</delete>
 	
 	<!-- 작업 지시 번호 조회 -->
 	<select id="getWoNo" resultType="woVO">
-		SELECT 'PRE_' || TO_CHAR(SYSDATE,'YYYYMMDD')||'-'||LPAD(NVL(MAX(SUBSTR(pre_no, -3)),0)+1,3,0) AS preNo
+		SELECT 'PRE' || TO_CHAR(SYSDATE,'YYYYMMDD')||'-'||LPAD(NVL(MAX(SUBSTR(pre_no, -3)),0)+1,3,0) AS preNo
 		FROM produce
 		WHERE pre_no = #{preNO}
 	</select>
