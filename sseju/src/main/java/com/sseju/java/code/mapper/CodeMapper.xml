@@ -98,9 +98,11 @@
 	<insert id="insertMat" parameterType="CodeVO">
 		<selectKey keyProperty="code" resultType="String"
 			order="BEFORE">
-			SELECT LPAD(NVL(MAX(SUBSTR(mat_code, -3)),0)+1,3,0) FROM material WHERE mat_code LIKE #{matoption}||'%'
+			SELECT LPAD(NVL(MAX(SUBSTR(mat_code, -3)),0)+1,3,0) FROM
+			material WHERE mat_code LIKE #{matoption}||'%'
 		</selectKey>
-		INSERT INTO material VALUES((#{matoption}||#{code}), #{name}, #{size}, #{price}, #{cpCode}, #{prsCode})
+		INSERT INTO material VALUES((#{matoption}||#{code}), #{name}, #{size},
+		#{price}, #{cpCode}, #{prsCode})
 	</insert>
 
 	<insert id="insertPrd" parameterType="CodeVO">
@@ -179,24 +181,72 @@
 		e.err_option, e.code as errs_code, e.err_pct, c.code, c.code_name,
 		c.div_name, c.div_code FROM error e, code c WHERE e.code = c.code
 	</select>
-	
+
 	<select id="matprsList" resultType="CodeVO">
-		SELECT m.mat_code, m.mat_name, p.prs_code, p.prs_name FROM material m, process p
+		SELECT m.mat_code,
+		m.mat_name, p.prs_code, p.prs_name FROM material m, process p
 	</select>
-	
+
 	<insert id="insertErr" parameterType="CodeVO">
-		INSERT INTO error VALUES(#{errCode}, #{errName}, #{errOption}, #{code}, '')
+		INSERT INTO error
+		VALUES(#{errCode}, #{errName}, #{errOption}, #{code}, '')
 	</insert>
-	
+
 	<delete id="deleteErr" parameterType="CodeVO">
-		DELETE FROM error WHERE err_code = #{errCode}
+		DELETE FROM error WHERE
+		err_code = #{errCode}
 	</delete>
-	
+
 	<update id="updateErr" parameterType="CodeVO">
-		UPDATE error SET err_name = #{errName}, err_option = #{errOption}, code = #{code} WHERE err_code = #{errCode}
+		UPDATE error SET err_name =
+		#{errName}, err_option = #{errOption}, code = #{code} WHERE err_code =
+		#{errCode}
 	</update>
-	
-	<select id="workerList" parameterType="CodeVO">
-		SELECT p.prs_no, pp.prs_name, p.prs_code, p.pre_no, p.prs_manager, p.prs_date, p.mat_out_no, p.prt_qty, e.emp_id, ee.emp_name FROM process_run p, emp_mng e, employee ee, process pp WHERE e.prs_no = p.prs_no AND ee.emp_id = e.emp_id AND p.prs_code = pp.prs_code
+
+	<select id="workerList" resultType="CodeVO">
+		SELECT p.prs_no, pp.prs_name,
+		p.prs_code, p.pre_no, p.prs_manager,
+		p.prs_date, p.mat_out_no,
+		p.prt_qty, e.emp_id, e.emp_name FROM
+		process_run p, employee e, process
+		pp WHERE e.emp_id = p.prs_manager
+		AND p.prs_code = pp.prs_code
 	</select>
+
+	<delete id="deleteEqm" parameterType="CodeVO">
+		DELETE FROM eqm WHERE
+		eqm_code = #{eqmCode}
+	</delete>
+
+	<select id="workerAList" parameterType="CodeVO"
+		resultType="CodeVO">
+		SELECT e.emp_id, e.emp_name, e.emp_dept, e.emp_rank FROM
+		employee e, emp_mng ee WHERE emp_rank = '사원' AND emp_dept = '생산부' AND
+		NOT ee.prs_no = #{prsNo} AND e.emp_id = ee.emp_id
+	</select>
+
+	<select id="workerBList" parameterType="CodeVO"
+		resultType="CodeVO">
+		SELECT e.emp_name, e.emp_id, p.prs_no, e.emp_dept,
+		e.emp_rank FROM employee e, emp_mng ee, process_run p WHERE e.emp_id =
+		ee.emp_id AND ee.prs_no = p.prs_no AND ee.prs_no = #{prsNo}
+	</select>
+
+	<insert id="insertEmpMng" parameterType="CodeVO">
+		<selectKey keyProperty="no" resultType="Integer"
+			order="BEFORE">
+			SELECT NVL(MAX(no),0) + 1 FROM emp_mng
+		</selectKey>
+		INSERT INTO emp_mng VALUES(#{no}, #{empId}, '')
+	</insert>
+
+	<update id="insertWM" parameterType="CodeVO">
+		UPDATE emp_mng SET prs_no =
+		#{prsNo} WHERE emp_id = #{empId}
+	</update>
+
+	<update id="deleteWM" parameterType="CodeVO">
+		UPDATE emp_mng SET prs_no =
+		'0' WHERE emp_id = #{empId}
+	</update>
 </mapper>

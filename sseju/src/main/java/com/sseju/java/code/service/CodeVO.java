@@ -1,5 +1,7 @@
 package com.sseju.java.code.service;
 
+import java.sql.Date;
+
 import org.apache.ibatis.type.Alias;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -20,6 +22,8 @@ public class CodeVO {
 	// employee
 	private String empId;
 	private String empName;
+	private String empDept;
+	private String empRank;
 	
 	// bom
 	private int no;
@@ -74,7 +78,7 @@ public class CodeVO {
 	private String preNo;
 	private String prsManager;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private String prsDate;
+	private Date prsDate;
 	private String matOutNo;
 	private int prtQty;
 }

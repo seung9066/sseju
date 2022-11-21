@@ -238,4 +238,40 @@ public class CodeServiceImpl implements CodeService {
 		return mapper.workerList();
 	}
 
+	@Override
+	public int deleteEqm(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.deleteEqm(vo);
+	}
+
+	@Override
+	public List<CodeVO> workerAList(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.workerAList(vo);
+	}
+
+	@Override
+	public List<CodeVO> workerBList(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.workerBList(vo);
+	}
+
+	@Override
+	public int insertEmpMng(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.insertEmpMng(vo);
+	}
+
+	@Override
+	public int insertWM(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.insertWM(vo);
+	}
+
+	@Override
+	public int deleteWM(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.deleteWM(vo);
+	}
+
 }

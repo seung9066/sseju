@@ -20,8 +20,6 @@ import com.sseju.java.company.service.CompanyService;
 import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.employee.service.EmployeeService;
 import com.sseju.java.employee.service.EmployeeVO;
-import com.sseju.java.eqm.service.EqmVO;
-import com.sseju.java.mat.service.MatVO;
 
 @Controller
 public class CodeController {
@@ -117,8 +115,9 @@ public class CodeController {
 			} else if (code1.equals("EQM")) {
 				CodeVO vo = new CodeVO();
 				vo.setCode(code.get(i));
+				vo.setEqmCode(code.get(i));
 				
-				
+				a += service.deleteEqm(vo);
 				a += service.deleteCode(vo);
 			} else if (code1.equals("PRS")) {
 				CodeVO vo = new CodeVO();
@@ -485,5 +484,57 @@ public class CodeController {
 	@ResponseBody
 	public List<CodeVO> workerList(){
 		return service.workerList();
+	}
+	
+	@PostMapping("/workerAList")
+	@ResponseBody
+	public List<CodeVO> workerAList(@RequestBody String data){
+		CodeVO vo = new CodeVO();
+		vo.setPrsNo(data);
+		System.out.println(vo.getPrsNo() + "  aaaaaaaa");
+		System.out.println(service.workerAList(vo));
+		return service.workerAList(vo);
+	}
+	
+	@PostMapping("/workerBList")
+	@ResponseBody
+	public List<CodeVO> workerBList(@RequestBody String data){	
+		CodeVO vo = new CodeVO();
+		vo.setPrsNo(data);
+		System.out.println(vo.getPrsNo());
+		return service.workerBList(vo);
+	}
+	
+	@PostMapping("/updateWorker")
+	@ResponseBody
+	public Map<String, String> updateWorker(@RequestParam(value = "prsNo[]", required = false) List<String> prsNo,
+			@RequestParam(value = "inputId[]", required = false) List<String> inputId,
+			@RequestParam(value = "deleteId[]", required = false) List<String> deleteId) {
+		Map<String, String> map = new HashMap<>();
+		
+		int a = 0;
+		CodeVO vo = new CodeVO();
+		vo.setPrsNo(prsNo.get(0));
+		
+		String b = vo.getPrsNo();
+		if (inputId != null) {
+			for (int i = 0; i < inputId.size(); i++) {
+				vo.setEmpId(inputId.get(i));
+				a += service.insertWM(vo);
+			}
+		}
+		if (deleteId != null) {
+			for (int i = 0; i < deleteId.size(); i++) {
+				vo.setEmpId(deleteId.get(i));
+				a += service.deleteWM(vo);
+			}
+		}
+		if (a > 0) {
+			map.put("msg", b);
+			return map;		
+		} else {
+			map.put("msg", "error");
+			return map;
+		}
 	}
 }

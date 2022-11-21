@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sseju.java.code.service.CodeService;
+import com.sseju.java.code.service.CodeVO;
 import com.sseju.java.company.service.CompanyService;
 import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.employee.service.EmployeeService;
@@ -57,9 +57,12 @@ public class EmpController {
 		vocp.setId(vo.getEmpId());
 		vocp.setAuth("ROLE_ADMIN");
 		vocp.setPassword(enco.encode(pw));
-
+		
+		CodeVO vo1 = new CodeVO();
+		vo1.setEmpId(vo.getEmpId());
 		serviceCP.insertLogin(vocp);
 		service.insertEmp(vo);
+		serviceCD.insertEmpMng(vo1);
 		
 		return "redirect:basicEmployee";
 	}

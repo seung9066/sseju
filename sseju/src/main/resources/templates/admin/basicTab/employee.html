@@ -37,14 +37,21 @@
 						<th>부서</th>
 						<td><select style="width: 150px;" id="empDept" name="empDept">
 								<option>---선택---</option>
-								<th:block th:each="d : ${dept}">
-									<option th:value="${d.empDept}" th:text="${d.empDept}"></option>
-								</th:block>
+								<option value="생산부">생산부</option>
+								<option value="생산기술부">생산기술부</option>
+								<option value="생산관리부">생산관리부</option>
+								<option value="품질관리부">품질관리부</option>
 						</select></td>
 					</tr>
 					<tr>
 						<th>직급</th>
-						<td><input type="text" id="empRank" name="empRank"></td>
+						<td><select style="width: 150px;" id="empRank" name="empRank">
+								<option>---선택---</option>
+								<option value="사원">사원</option>
+								<option value="조장">조장</option>
+								<option value="반장">반장</option>
+								<option value="직장">직장</option>
+						</select></td>
 						<th>비밀번호</th>
 						<td><input type="password" id="password" name="password"></td>
 					</tr>
