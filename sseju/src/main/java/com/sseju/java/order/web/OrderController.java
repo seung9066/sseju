@@ -16,6 +16,7 @@ import com.sseju.java.order.service.ORService;
 import com.sseju.java.order.service.ORVO;
 import com.sseju.java.prt.service.PRService;
 import com.sseju.java.prt.service.PRVO;
+import com.sseju.java.workorder.serivce.WorkOrderVO;
 
 @Controller
 public class OrderController {
@@ -55,6 +56,8 @@ public class OrderController {
 		return oService.selectPrtManager();
 	}
 
+
+
 //	// 제품목록 조회 서비스
 //	@GetMapping("/insertPrtInfo")
 //	@ResponseBody
@@ -85,16 +88,20 @@ public class OrderController {
 	public String selectprt(Model model) {
 		return "/admin/quality/import";
 	}
+	
+
+	
+	
 
 	/* 수량 수정 */
 //	@PostMapping("/orlist")
 //	public String  selectOrderInfo(ORVO oVO) {
 //		int result = 0;
-//		result = oService.selectOrderInfo(oVO);
+//		result = oService.insertOrderInfo(oVO);
 //		// 주문테이블 등록 성공
 //		if(result == 1){
 //			// 주문상세테이블 등록
-//			result = oService.updateOrderInfo2(oVO);
+//			result = oService.insertOrderPrtInfo(oVO);
 //			// 주문상세테이블 등록 성공
 //			if(result == 1) {
 //				// TODO 사용자에게 등록 성공 알림주기

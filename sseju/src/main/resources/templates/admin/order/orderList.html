@@ -25,13 +25,13 @@ body {
 			<div style="text-align: right;">
 
 				<button class="button" id="orUpdate">수정</button>
-				<button class="button" id="delete">삭제</button>
+				<button class="button" id="orDelete">삭제</button>
 				<button class="button">저장</button>
 			</div>
 
 			<div id="ordGrid"></div>
 			<script>
-			
+	
 			ordALl();
 			const ordGrid = new tui.Grid({
 				el : document.getElementById('ordGrid'),
@@ -104,8 +104,16 @@ body {
 			           ordGrid.resetData(obj);
 			        })
 				}
-			    
-			    
+			    function orUpdate() {
+					url="selectOrderList"
+			        fetch(url) 
+			        .then(res=>res.json())
+			        .then(obj=>{
+			           console.log(obj);
+			           ordGrid.resetData(obj);
+			        })
+				}
+			   
     </script>
 
 

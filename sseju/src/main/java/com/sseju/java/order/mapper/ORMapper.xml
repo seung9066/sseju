@@ -30,7 +30,7 @@
 	<select id="selectOrdeIng" resultType="ORVO">
 	<![CDATA[
 		SELECT 
-				 a.order_date,
+				 TO_CHAR(a.order_date, 'YYYY-MM-DD') AS order_date,
 				 a.order_no,
 				 d.cp_name,
 				 c.prt_name,
@@ -50,74 +50,39 @@
 
 
 	<select id="selectPrtManager" resultType="ORVO">
-		select
+	select
 		c.prt_name,
-		sum(b.order_qty) as order_qty,
-		sum(b.order_out_qty) as order_out_qty
-		from orders a,order_inf b,product c
-		where a.order_no =
-		b.order_no
-		and c.prt_code = b.prt_code
+			sum(b.order_qty) as order_qty,
+			sum(b.order_out_qty) as order_out_qty,
+	        sum(lot_qty) as lot_qty
+		from orders a,order_inf b,product c,lot f
+		where a.order_no =b.order_no
+			and c.prt_code = b.prt_code
+	        and c.prt_code = f.mp_code
 		GROUP BY c.PRT_NAME
 
 
 	</select>
 
-
 	<!-- 주문 테이블 등록 쿼리 추가하기 -->
-<!-- 	<insert id="insertOrderInfo" parameterType="ORVO">
-INSERT INTO orders
-		(
-		ORDER_NO,
-		D_DAY,
-		ORDER_PRG,
-		ORDER_DATE,
-		CP_CODE,
-		ORDER_YN,
-		)
-VALUES
-		(
-		#{orderNo},
-		#{dDay},
-		#{orderPrg},
-		#{orderDate},
-		#{cpCode},
-		#{ordetYn}
-		)
-	</insert>
-
-
-
-	주문상세 테이블 등록 쿼리 추가하기
-	<insert id="insertOrderInfo" parameterType="ORVO">
-INSERT INTO
-		order_inf
-		(pre_no,
-		order_qty,
-		order_out_qty,
-		order_no,
-		prt_code,
-		unit_price,
-		order_price )
-VALUES (#{preNo},
-		#{orderQty},
-		#{orderOutQty},
-		#{orderNo},
-		#{prtCode},
-		#{unitPrice},
-		#{orderPrice})
-	</insert> -->
+	<!-- <insert id="insertOrderInfo" parameterType="ORVO"> INSERT INTO orders 
+		( ORDER_NO, D_DAY, ORDER_PRG, ORDER_DATE, CP_CODE, ORDER_YN, ) VALUES ( #{orderNo}, 
+		#{dDay}, #{orderPrg}, #{orderDate}, #{cpCode}, #{ordetYn} ) </insert> 주문상세 
+		테이블 등록 쿼리 추가하기 <insert id="insertOrderInfo" parameterType="ORVO"> INSERT 
+		INTO order_inf (pre_no, order_qty, order_out_qty, order_no, prt_code, unit_price, 
+		order_price ) VALUES (#{preNo}, #{orderQty}, #{orderOutQty}, #{orderNo}, 
+		#{prtCode}, #{unitPrice}, #{orderPrice}) </insert> -->
 	<!-- 단거조회 -->
 	<select id="selectOrderInfo" parameterType="ORVO">
 		select ORDER_NO,
-		D_DAY,
-		ORDER_PRG,
-		ORDER_DATE,
-		CP_CODE,
+			TO_CHAR(a.d_day, 'YYYY-MM-DD') AS d_day,
+			ORDER_PRG,
+			ORDER_DATE,
+			CP_CODE,
 		ORDER_YN
 		from orders
 		where
-		order_no=#{orderNo}
+			order_no=#{orderNo}
 	</select>
 
 	<!-- 수정 -->
@@ -130,11 +95,9 @@ VALUES (#{preNo},
 		where order_no = #{orderNo}
 	</update>
 
-	 <!-- 삭제 -->
-<!--	<delete id="deleteOrderInfo" parameterType="Integer">
-		delete from orders
-		where order_no = #{orderNo}
-	</delete> -->
+	<!-- 삭제 -->
+	<!-- <delete id="deleteOrderInfo" parameterType="Integer"> delete from orders 
+		where order_no = #{orderNo} </delete> -->
 
 
 
