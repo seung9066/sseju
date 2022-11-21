@@ -53,4 +53,13 @@ public interface EqmMapper {
 
       // 정기점검 삭제
       public int deleteEqmChk(EqmVO eqmVO);
+      
+      // 비가동 전체조회
+      public List<EqmVO> getUoperList();
+      	
+      // 비가동 등록
+      public int insertUoper(EqmVO eqmVO);
+      // 비가동 삭제
+      public int deleteUoper(EqmVO eqmVO);
+  
 }

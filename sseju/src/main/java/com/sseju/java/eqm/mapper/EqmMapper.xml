@@ -13,11 +13,7 @@
 
 
    <insert id="insertEqm" parameterType="EqmVO">
-      <selectKey keyProperty="eqmCode" resultType="String"
-         order="BEFORE">
-         SELECT 'EQM_'||LPAD(NVL(MAX(SUBSTR(eqm_code, -3)),0)+1,3,0)
-         FROM EQM
-      </selectKey>
+    
       INSERT INTO EQM
       VALUES(
       #{eqmCode},
@@ -137,6 +133,18 @@
       #{chkEmpNo},
       #{eqmCode})
    </insert>
+   
+   <!-- 비가동 전체조회  -->
+   <select id="getUoperList" resultType="EqmVO">
+      SELECT * FROM EQM_UOPER
+      ORDER BY uoper_code ASC
+   </select>
+   
+    <!--  비가동 삭제 -->
+   <delete id="deleteUoper" parameterType="EqmVO">
+      DELETE FROM EQM_UOPER
+      WHERE uoper_code = #{uoperCode}
+   </delete>
 
 
 
