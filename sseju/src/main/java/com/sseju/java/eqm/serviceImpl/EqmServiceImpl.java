@@ -102,6 +102,24 @@ public class EqmServiceImpl implements EqmService {
       return eqmMapper.deleteEqmChk(eqmVO);
    }
 
+@Override
+public List<EqmVO> getUoperList() {
+	// TODO Auto-generated method stub
+	return eqmMapper.getUoperList();
+}
+
+@Override
+public int insertUoper(EqmVO eqmVO) {
+	// TODO Auto-generated method stub
+	return eqmMapper.insertUoper(eqmVO);
+}
+
+@Override
+public int deleteUoper(EqmVO eqmVO) {
+	// TODO Auto-generated method stub
+	return eqmMapper.deleteUoper(eqmVO);
+}
+
    
 
    

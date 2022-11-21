@@ -1,6 +1,8 @@
 package com.sseju.java.eqm.service;
 
-import java.util.Date;
+
+
+import java.sql.Date;
 
 import org.apache.ibatis.type.Alias;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -46,5 +48,18 @@ public class EqmVO {
    private String chkState; //판정
    private String chkSol; //조치사항
    private String chkEmpNo; //점검담당자
+   
+   //비가동
+   private String uoperCode; // 비가동이력번호
+   private String uoperEmpNo; //담당자
+   private String uoperName; // 비가동사유
+   private String uoperWork; //작업내용
+   @DateTimeFormat(pattern = "yyyy-MM-dd")
+   private Date uoperStartTime; //비가동 시작시간
+   @DateTimeFormat(pattern = "yyyy-MM-dd")
+   private Date uoperEndTime; // 재가동 시간
+   private String eqmState; // 설비 상태 (비가동/가동)
+   
+   
 
 }

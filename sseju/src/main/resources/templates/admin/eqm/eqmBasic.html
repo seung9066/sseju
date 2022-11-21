@@ -59,9 +59,9 @@
                         </tr>
                         <tr>
                            <th>총생산량</th>
-                           <td><input type="number" name="totPrc" id="totPrc"></td>
+                           <td><input type="number" name="totPrc" id="totPrc" min="1"></td>
                            <th>UPH</th>
-                           <td><input type="number" name="UPH" id="UPH"></td>
+                           <td><input type="number" name="UPH" id="UPH" min="1"></td>
                         </tr>
                         <tr>
                            <th>사용여부</th>
@@ -73,6 +73,7 @@
                      </table>
                   </form>
                </div>
+               
                <!-- 등록 폼 end  -->
                <!-- 라인정보관리 등록 폼 : show/hide -->
          <script type="text/javascript">
@@ -132,7 +133,7 @@
                $('#lineNo').attr('readonly',true);
                $('#totPrc').val(lineGrid.getValue(ev.rowKey,'totPrc'));
                $('#UPH').val(lineGrid.getValue(ev.rowKey,'UPH'));
-               $('#lineYn').val(lineGrid.getValue(ev.rowKey,'lineYn'.value()));
+               $('#lineYn').val(lineGrid.getValue(ev.rowKey,'lineYn'));
                $('#empNo').val(lineGrid.getValue(ev.rowKey,'empNo'));
                
             });

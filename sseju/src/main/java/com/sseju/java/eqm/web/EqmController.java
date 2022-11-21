@@ -44,6 +44,18 @@ public class EqmController {
         return eqmService.selectEqmList();
      }
      
+     @GetMapping("/eqmChkList")
+     @ResponseBody
+     public List<EqmVO> eqmChkList(){
+        return eqmService.getEqmChkList();
+     }
+     
+     @GetMapping("/uoperList")
+     @ResponseBody
+     public List<EqmVO> uoperList(){
+        return eqmService.getUoperList();
+     }
+     
      @PostMapping("/deleteEqm")
      @ResponseBody
      public int deleteEqm(@RequestParam(value= "deleteEqm[]", required=false) List<String> deleteEqm) {
@@ -58,6 +70,23 @@ public class EqmController {
         }
         return a;
      }
+     
+     @PostMapping("/deleteChk")
+     @ResponseBody
+     public int deleteChk(@RequestParam(value= "chk[]", required=false) List<String> deleteChk) {
+        int a = 0;
+        for(int i=0; i<deleteChk.size(); i++) {
+           String line1 = deleteChk.get(i);
+           
+           EqmVO vo = new EqmVO();
+           vo.setChkNo(line1);
+           
+           a  += eqmService.deleteEqmChk(vo);
+        }
+        return a;
+     }
+     
+     
      @PostMapping("insertEqm")
      @ResponseBody
      public String insertEqm(EqmVO eqmVO) {
@@ -71,6 +100,12 @@ public class EqmController {
         return eqmService.updateEqmInfo(eqmVO);
      }
      
+     @PostMapping("/updateChk")
+     @ResponseBody
+     public int updateChk(EqmVO eqmVO) {
+        return eqmService.updateEqmChk(eqmVO);
+     }
+     
      @GetMapping("/lineList")
      @ResponseBody
      public List<EqmVO> getEqmLineList(){
@@ -82,6 +117,13 @@ public class EqmController {
      public String insertLine(EqmVO eqmVO) {
         eqmService.insertEqmLine(eqmVO);
         return "redirect:eqmBasic";
+     }
+     
+     @PostMapping("insertUoper")
+     @ResponseBody
+     public String insertUoper(EqmVO eqmVO) {
+        eqmService.insertUoper(eqmVO);
+        return "redirect:eqmUoper";
      }
 
      @PostMapping("/deleteLine")
