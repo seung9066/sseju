@@ -8,9 +8,14 @@ import org.apache.ibatis.annotations.Mapper;
 import com.sseju.java.mat.service.MatVO;
 
 @Mapper
-public interface MatMapper {
+public interface MatMapper {	
+	
+	//material 기본자재리스트
+	public List<MatVO> material();
+	
+	
 	//발주 전체 조회
-	public List<MatVO> matBuyList();
+	public List<MatVO> matordList();
 	//발주 단건 조회
 	public MatVO selectMatbuyInfo(MatVO MatVO);
 	//발주 등록

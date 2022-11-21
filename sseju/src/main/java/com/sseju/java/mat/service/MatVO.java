@@ -116,5 +116,10 @@ public class MatVO {
 	private String whLocation;
 	private String whManager;
 	
+//거래처 VO
 	
+	private String cpName;
+	private String empName;
+	private String empId;
+		
 }

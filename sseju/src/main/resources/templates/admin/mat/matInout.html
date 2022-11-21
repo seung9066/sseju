@@ -40,71 +40,53 @@
 <body>
 	<article layout:fragment="content">
 		<main class="main" id="main">
-			<h3>입출고내역</h3>
-
+			<h3>입고내역</h3>
 			<div>
-				<!-- 탭 목록(버튼) 설정 -->
-				<ul class="nav nav-tabs" id="myTab" role="tablist">
-					<li class="nav-item" role="presentation">
-						<button class="nav-link active" id="in-tab" data-bs-toggle="tab"
-							data-bs-target="#home" type="button" role="tab"
-							aria-controls="home" aria-selected="true">입고</button>
-					</li>
-					<li class="nav-item" role="presentation">
-						<button class="nav-link" id="out-tab" data-bs-toggle="tab"
-							data-bs-target="#profile" type="button" role="tab"
-							aria-controls="profile" aria-selected="false">출고</button>
-					</li>
-
-				</ul>
-
-				<div class="tab-content pt-2" id="myTabContent">
-					<div class="tab-pane fade show active" id="home" role="tabpanel"
-						aria-labelledby="home-tab">
-						<ul class="ul-style">
-							<li><label>품목</label><input type="text" data-bs-toggle="modal"
-								data-bs-target="#prtModal"> <i
-								class="bi bi-search" data-bs-toggle="modal"
-								data-bs-target="#prtModal"></i> <input type="text" readonly>
-							</li>
-							<li><label>입고일</label>
-								<div
-									class="tui-datepicker-input tui-datetime-input tui-has-focus">
-									<input type="text" id="datepicker-input" aria-label="Date-Time">
-									<span class="tui-ico-date"></span>
-									<div id="wrapper" style="margin-top: -1px;"></div>
-								</div>
-								<button class="button">등록</button>
-								<button class="button">삭제</button></li>
-						</ul>
-						<div id="grid"></div>
-					</div>
-					<div class="tab-pane fade" id="profile" role="tabpanel"
-						aria-labelledby="profile-tab">
-						<div>
-							<ul class="ul-style">
-								<li><label>품목</label><input type="text" data-bs-toggle="modal"
-									data-bs-target="#prtModal"> <i
-									class="bi bi-search" data-bs-toggle="modal"
-									data-bs-target="#prtModal"></i> <input type="text" readonly>
-								</li>
-								<li><label>출고일</label>
-									<div
-										class="tui-datepicker-input tui-datetime-input tui-has-focus">
-										<input type="text" id="datepicker2-input"
-											aria-label="Date-Time"> <span class="tui-ico-date"></span>
-										<div id="wrapper2" style="margin-top: -1px;"></div>
-									</div>
-									<button class="button">등록</button>
-									<button class="button">삭제</button></li>
-
-							</ul>
+				<ul class="ul-style">
+					<li><label>품목</label><input type="text" data-bs-toggle="modal"
+						data-bs-target="#prtModal"> <i class="bi bi-search"
+						data-bs-toggle="modal" data-bs-target="#prtModal"></i> <input
+						type="text" readonly></li>
+					<li><label>입고일</label>
+						<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+							<input type="text" id="datepicker-input" aria-label="Date-Time">
+							<span class="tui-ico-date"></span>
+							<div id="wrapper" style="margin-top: -1px;"></div>
 						</div>
-						<div id="grid2"></div>
-					</div>
-					
-					
-					<!-- prtModal -->
+						<button class="button">등록</button>
+						<button class="button">삭제</button></li>
+				</ul>
+				<div id="grid"></div>
+			</div>
+			<hr>
+			<div>
+				<div>
+					<h3>출고내역</h3>
+				</div>
+				<div>
+					<ul class="ul-style">
+						<li><label>품목</label><input type="text"
+							data-bs-toggle="modal" data-bs-target="#prtModal"> <i
+							class="bi bi-search" data-bs-toggle="modal"
+							data-bs-target="#prtModal"></i> <input type="text" readonly>
+						</li>
+						<li><label>출고일</label>
+							<div
+								class="tui-datepicker-input tui-datetime-input tui-has-focus">
+								<input type="text" id="datepicker2-input" aria-label="Date-Time">
+								<span class="tui-ico-date"></span>
+								<div id="wrapper2" style="margin-top: -1px;"></div>
+							</div>
+							<button class="button">등록</button>
+							<button class="button">삭제</button></li>
+
+					</ul>
+				</div>
+				<div id="grid2"></div>
+			</div>
+
+
+			<!-- prtModal -->
 			<div class="modal fade" id="prtModal" tabindex="-1"
 				aria-labelledby="prtModalLabel" aria-hidden="true">
 				<div class="modal-dialog modal-xl">
@@ -115,9 +97,9 @@
 								aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
-						<div>
-							<div id="prtGrid"></div>
-						</div>
+							<div>
+								<div id="prtGrid"></div>
+							</div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
@@ -128,7 +110,7 @@
 					</div>
 				</div>
 			</div>
-				</div>
+			</div>
 			</div>
 
 			<script>
@@ -194,8 +176,6 @@
 						format : 'yyyy-MM-dd'
 					}
 				});
-				
-				
 			</script>
 			<script>
 				var grid2 = new tui.Grid({
@@ -251,46 +231,41 @@
 						format : 'yyyy-MM-dd'
 					}
 				});
-				
+
 				var prtGrid = new tui.Grid({
 					el : document.getElementById('prtGrid'),
-					bodyHeight: 200,
-					data : [{
+					bodyHeight : 200,
+					data : [ {
 						prtCode : 'PCT-001',
 						prtName : '제품',
-						prtStandard: '',
-						prtUnit:'',
-						prtPrice: ''
-					}],
-					rowHeaders: ['checkbox'],
-					scrollX: false,
-					scrollY: true,
-					columns:[
-						{
-							header:'제품코드',
-							name:'prtCode'
-						},
-						{
-							header:'제품명',
-							name:'prtName'
-						},
-						{
-							header:'규격',
-							name:'prtStandard'
-						},
-						{
-							header:'단위',
-							name:'prtUnit'
-						},
-						{
-							header:'금액',
-							name:'prtPrice'
-						}]
-					});
-					
-					document.addEventListener('shown.bs.modal', function (){
+						prtStandard : '',
+						prtUnit : '',
+						prtPrice : ''
+					} ],
+					rowHeaders : [ 'checkbox' ],
+					scrollX : false,
+					scrollY : true,
+					columns : [ {
+						header : '제품코드',
+						name : 'prtCode'
+					}, {
+						header : '제품명',
+						name : 'prtName'
+					}, {
+						header : '규격',
+						name : 'prtStandard'
+					}, {
+						header : '단위',
+						name : 'prtUnit'
+					}, {
+						header : '금액',
+						name : 'prtPrice'
+					} ]
+				});
+
+				document.addEventListener('shown.bs.modal', function() {
 					prtGrid.refreshLayout();
-					}, '.modal');
+				}, '.modal');
 			</script>
 		</main>
 	</article>

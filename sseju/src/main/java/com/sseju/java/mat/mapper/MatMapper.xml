@@ -4,15 +4,29 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.sseju.java.mat.mapper.MatMapper">
-	<select id="matBuyList" resultType="MatVO">
-		SELECT b.mat_ord_no, b.mat_ord_qty, m.mat_code, m.mat_name, TO_CHAR(b.mat_ord_date,'yyyy-MM-dd') as "MAT_ORD_DATE", c.cp_code, c.cp_name, b.mat_price, b.mat_ord_emp, b.mat_ord_yn
-		FROM mat_buy b
+	<select id="material" resultType="MatVO">
+		SELECT * FROM material
+	</select>
+	<select id="matordList" resultType="MatVO">
+		SELECT b.mat_ord_no, b.mat_ord_qty, m.mat_code, m.mat_name, b.mat_ord_date, c.cp_code, c.cp_name, b.mat_price,
+                b.mat_ord_emp, b.mat_ord_yn, e.emp_id
+		FROM mat_buy b 
 		JOIN material m ON m.mat_code = b.mat_code
 		JOIN company c ON c.cp_code = m.cp_code
+        JOIN employee e on e.emp_name = b.mat_ord_emp
 	</select>
 	<select id="selectMatbuyInfo" resultType="MatVO">
-		SELECT * FROM mat_buy WHERE mat_ord_no = #{matOrdNo}
+		SELECT b.mat_ord_no, b.mat_ord_qty, m.mat_code, m.mat_name, b.mat_ord_date, c.cp_code, c.cp_name, b.mat_price,
+                b.mat_ord_emp, b.mat_ord_yn, e.emp_id
+		FROM mat_buy b 
+		JOIN material m ON m.mat_code = b.mat_code
+		JOIN company c ON c.cp_code = m.cp_code
+        JOIN employee e on e.emp_name = b.mat_ord_emp
+        WHERE mat_ord_no = #{matOrdNo}
 	</select>
+<!-- 	<select id="selectMatbuyInfo" resultType="MatVO">
+		SELECT * FROM mat_buy WHERE mat_ord_no = #{matOrdNo}
+	</select> -->
 	<insert id="insertMatbuy" parameterType="MatVO">
 		<selectKey keyProperty="matOrdNo" resultType="String"
 			order="BEFORE">
@@ -23,14 +37,14 @@
 		VALUES (
 			#{matOrdNo}
 			,#{matOrdQty}
-			,#{nowCode}
+			,'PRG_001'
 			,#{matCode}
  			,sysdate
 			,#{cpCode}
-			,#{matOrdYn}
+			,'N'
 			,#{matPrice}
 			,#{matOrdEmp}
-		)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+		)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 	</insert>
 	<update id="updateMatbuy" parameterType="MatVO">
 		UPDATE mat_buy
