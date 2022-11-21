@@ -13,25 +13,98 @@ body {
 	padding: 20px 30px;
 	transition: all 0.3s;
 }
+
 </style>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script
+	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
 </head>
 <body>
 
 	<article class="container" layout:fragment="content">
 		<main id="main" class="main">
 			<div id="mat-od-title">
-				<h2>주문 상세</h2>
+				<h2>제품 주문</h2>
 			</div>
 			<div style="text-align: right;">
 
-				<button class="button" id="orUpdate">수정</button>
-				<button class="button" id="orDelete">삭제</button>
-				<button class="button">저장</button>
+				<button class="button"onclick
+				="insertPrtInf">주문하기</button>
 			</div>
+			<div id="prtGrid"></div>
+
+
+			<hr>
+			<div style="text-align: right;"></div>
 
 			<div id="ordGrid"></div>
 			<script>
+			
+			prtl();
+			const prtGrid = new tui.Grid({
+				el : document.getElementById('prtGrid'),
+				pagination:true,
+				pageOption: {
+					useClient:true,
+					perPage:10
+				},
+				scrollX : false,
+				scrollY : false,
+			
+				columns : [ 
+					{
+					header : '제품',
+					name : 'prtName',
+					align : 'center',
+					filter: 'select'
+				}, {
+					header : '규격',
+					name : 'prtStandard', //납기일자명 수정
+					align : 'center',
+					filter: 'select'
+				}, {
+					header : '단위',
+					name : 'prtUnit',
+					align : 'center',
+					filter: 'select'
+				}, 
+				{
+					header : '가격',
+					name : 'prtPrice',
+					align : 'center',
+					filter: 'select'	
+				},
+		
+				]
+				
+			});
 	
+					    
+			prtGrid.on("click", event => {
+                
+                // getRow : 그리드 row(tr) 전체 가져오기.
+                //console.log(event.nativeEvent.target.innerText);  td값. 셀값
+                  //rowKey : 인덱스 번호  
+                // input 태그에 값 넣어주기.
+                $('#prtCode').val(prtGrid.getRow(event.rowKey).prtCode);
+                $('#prtName').val(prtGrid.getRow(event.rowKey)['prtName']);
+                
+             })
+			    function prtl() {
+					url="selectPrtList"
+			        fetch(url) 
+			        .then(res=>res.json())
+			        .then(obj=>{
+			           console.log(obj);
+			           prtGrid.resetData(obj);
+			        })
+				}
+		
+			    
+			    
+			var token = $("meta[name='_csrf']").attr("content");
+			 var header = $("meta[name='_csrf_header']").attr("content");
 			ordALl();
 			const ordGrid = new tui.Grid({
 				el : document.getElementById('ordGrid'),
@@ -43,18 +116,8 @@ body {
 				scrollX : false,
 				scrollY : false,
 				rowHeaders: ['checkbox'],
-				columns : [{
-					header : '거래처명',
-					name : 'cpName',
-					align : 'center',
-					filter: 'select'
-				},
-				 {
-					header : '주문번호',
-					name : 'orderNo',
-					align : 'center',
-					filter: 'select'
-				}, 
+				columns : [
+				
 				{
 					header : '주문일자',
 					name : 'orderDate', //납기일자명 수정
@@ -69,21 +132,24 @@ body {
 				{
 					header : '납기일자',
 					name : 'dday',
+					editor: 'text',
 					align : 'center',
 					filter: 'select'
 				},
 				{
 					header : '주문량',
 					name : 'orderQty',
+					editor: 'text',
 					align : 'center',
 					filter: 'select'
 				},
 				{
-					header : '진행상태',
-					name : 'orderPrg',
+					header : '총가격',
+					name : 'orderPrice',
 					align : 'center',
 					filter: 'select'
-				}
+				},
+				
 				 ]
 			});
 			    function ordALl() {
@@ -95,28 +161,7 @@ body {
 			           ordGrid.resetData(obj);
 			        })
 				}
-			    function orUpdate() {
-					url="selectOrderList"
-			        fetch(url) 
-			        .then(res=>res.json())
-			        .then(obj=>{
-			           console.log(obj);
-			           ordGrid.resetData(obj);
-			        })
-				}
-			    function orUpdate() {
-					url="selectOrderList"
-			        fetch(url) 
-			        .then(res=>res.json())
-			        .then(obj=>{
-			           console.log(obj);
-			           ordGrid.resetData(obj);
-			        })
-				}
-			   
-    </script>
-
-
+		    </script>
 		</main>
 	</article>
 </body>
