@@ -65,7 +65,7 @@ input {
 									<select id="woPrt" name="woPrt">
 										<option>---선택---</option>
 										<th:block th:each="p : ${prt}">
-											<option th:value="${p.prtName}" th:text="${p.prtName}"></option>
+											<option th:value="${p.prtCode}" th:text="${p.prtName}"></option>
 										</th:block>
 									</select>
 								</td>
@@ -198,7 +198,16 @@ input {
 						           workOrderGrid.resetData(obj);
 						       })
 					}
-
+	$(function(){
+		
+			let data = [
+				{"preNo":"aa", "prtName": "test"}
+				
+			]		
+					
+		workOrderGrid.appendRows(data);
+		
+	})				
 		</script>
 		</main>
 	</article>

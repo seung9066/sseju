@@ -1,10 +1,12 @@
 package com.sseju.java.workorder.web;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +24,13 @@ public class WorkOrderController {
 	
 	//작업 지시 페이지 띄움
 	@GetMapping("/workOrder")
-	public String WorkOrderList() {
+	public String WorkOrderList(Model model) {
+		List<WorkOrderVO>a = new ArrayList<WorkOrderVO>();
+		WorkOrderVO b = new WorkOrderVO();
+		b.setPrtName("아무거나");
+		b.setPrtCode("code1");
+		a.add(b);
+		model.addAttribute("prt", a);
 		return "/admin/produce/workOrderList";
 	}
 	
