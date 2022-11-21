@@ -66,4 +66,11 @@ public interface CodeService {
 	
 	// main
 	public CodeVO updatePrtCount();
+	public CodeVO ydPrtCount();
+	public CodeVO updatePrtOutCount();
+	public CodeVO updateErrCount();
+	public List<CodeVO> WhPrd(CodeVO vo);
+	public List<CodeVO> updatePrttCount();
+	public CodeVO ydPrtOutCount();
+	public CodeVO ydErrCount();
 }

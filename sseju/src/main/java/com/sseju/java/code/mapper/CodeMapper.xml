@@ -249,8 +249,66 @@
 		UPDATE emp_mng SET prs_no =
 		'0' WHERE emp_id = #{empId}
 	</update>
-	
+
 	<select id="updatePrtCount" resultType="CodeVO">
-		SELECT SUM(prt_qty) AS prt_qty FROM process_run
+		SELECT
+		NVL(SUM(pr.prt_qty),0) AS prt_qty FROM process_run pr, produce pd
+		WHERE pd.pre_no = pr.pre_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
+		(SELECT TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
+	</select>
+	
+	<select id="ydPrtCount" resultType="CodeVO">
+		SELECT
+		NVL(SUM(pr.prt_qty),0) AS prt_qty FROM process_run pr, produce pd
+		WHERE pd.pre_no = pr.pre_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
+		(SELECT TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
+	</select>
+
+	<select id="updatePrtOutCount" resultType="CodeVO">
+		SELECT
+		NVL(SUM(prt_out_qty),0) AS prt_qty FROM product_out WHERE
+		TO_DATE(prt_out_date,'rrrr/MM/dd') = (SELECT
+		TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
+	</select>
+
+	<select id="ydPrtOutCount" resultType="CodeVO">
+		SELECT
+		NVL(SUM(prt_out_qty),0) AS prt_qty FROM product_out WHERE
+		TO_DATE(prt_out_date,'rrrr/MM/dd') = (SELECT
+		TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
+	</select>
+
+	<select id="updateErrCount" resultType="CodeVO">
+		SELECT
+		NVL(SUM(pi.prs_err_qty),0) AS prt_qty FROM
+		process_inf pi, process_run pr WHERE pr.prs_no = pi.prs_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
+		(SELECT TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
+	</select>
+	
+	<select id="ydErrCount" resultType="CodeVO">
+		SELECT
+		NVL(SUM(pi.prs_err_qty),0) AS prt_qty FROM
+		process_inf pi, process_run pr WHERE pr.prs_no = pi.prs_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
+		(SELECT TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
+	</select>
+
+	<select id="WhPrd" parameterType="CodeVO" resultType="CodeVO">
+		SELECT
+		p.prt_name, l.lot_qty FROM
+		warehouse w, lot l, product p WHERE
+		w.wh_code =
+		l.wh_code AND l.mp_code
+		= p.prt_code AND l.mp_code LIKE
+		'PRD_%' AND l.wh_code = #{whCode}
+	</select>
+
+	<select id="updatePrttCount" resultType="CodeVO">
+		SELECT pr.prt_qty,
+		pt.prt_name FROM process_run pr, produce pd, product pt
+		WHERE pd.pre_no
+		= pr.pre_no AND pd.prt_code = pt.prt_code
+		AND
+		TO_DATE(pr.prs_date,'rrrr/MM/dd') = (SELECT
+		TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
 	</select>
 </mapper>
