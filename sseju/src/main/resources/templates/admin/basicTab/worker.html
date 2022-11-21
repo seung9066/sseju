@@ -25,55 +25,15 @@
 			<h4 style="margin-bottom: 3%;">
 				<strong>작업자 관리</strong>
 			</h4>
-			<form action="insertErr" method="POST">
-				<input type="hidden" th:name="${_csrf.parameterName}"
-					th:value="${_csrf.token}" />
-				<table>
-					<tr>
-						<th>구분</th>
-						<td><select style="width: 150px;" id="errOption"
-							name="errOption">
-								<option>---선택---</option>
-								<option value="MAT">자재</option>
-								<option value="PRS">공정</option>
-						</select></td>
-						<th>불량코드</th>
-						<td><input type="text" id="errCode" name="errCode"></td>
-						<th>불량명</th>
-						<td><input type="text" id="errName" name="errName"></td>
-						<th id="type">자재/공정</th>
-						<td><select style="width: 150px;" id="code" name="code">
-								<option>---선택---</option>
-								<th:block th:each="e : ${err}">
-									<th:block
-										th:if="${#strings.contains(e.code, 'MAT')} or ${#strings.contains(e.code, 'PRS')}">
-										<option th:value="${e.code}" th:text="${e.codeName}" class="type"></option>
-									</th:block>
-								</th:block>
-								<th:block th:each="e : ${err}">
-									<th:block id="type"
-										th:if="${#strings.contains(e.code, 'MAT')}">
-										<option th:value="${e.code}" th:text="${e.codeName}" class="typeMat"></option>
-									</th:block>
-								</th:block>
-								<th:block th:each="e : ${err}">
-									<th:block id="type"
-										th:if="${#strings.contains(e.code, 'PRS')}">
-										<option th:value="${e.code}" th:text="${e.codeName}" class="typePrs"></option>
-									</th:block>
-								</th:block>
-						</select></td>
-					</tr>
-				</table>
-				<input type="hidden" name="auth" value="ROLE_ADMIN">
-				<button class="button" type="button" style="float: right;"
-					onclick="updateErr()">수정</button>
-				<button class="button" type="button" style="float: right;"
-					onclick="selectDeleteCp()">삭제</button>
-				<button type="submit" class="button" style="float: right;">등록</button>
-			</form>
+			<button class="button" type="button" style="float: right;"
+				onclick="updateWorker()">수정</button>
 			<div id="workGrid"></div>
-
+			<br>
+			<h4>추가할 작업자</h4>
+			<div id="workerAGrid"></div>
+			<br>
+			<h4>등록된 작업자</h4>
+			<div id="workerBGrid"></div>
 			<script type="text/javascript">
 	
 				showAll();
@@ -114,128 +74,180 @@
 					} ]
 				});
 				
+				const workerAGrid = new tui.Grid({
+					el : document.getElementById('workerAGrid'),
+					pagination : true,
+					pageOption : {
+						useClient : true,
+						perPage : 10
+					},
+					scrollX : false,
+					scrollY : false,
+					rowHeaders : [ 'checkbox' ],
+					columns : [ {
+						header : '아이디',
+						name : 'empId',
+						align : 'center',
+						filter: 'select'
+					},{
+						header : '이름',
+						name : 'empName',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '부서',
+						name : 'empDept',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '직급',
+						name : 'empRank', //납기일자명 수정
+						align : 'center',
+						filter : 'select'
+					} ]
+				});
+				
+				const workerBGrid = new tui.Grid({
+					el : document.getElementById('workerBGrid'),
+					pagination : true,
+					pageOption : {
+						useClient : true,
+						perPage : 10
+					},
+					scrollX : false,
+					scrollY : false,
+					rowHeaders : [ 'checkbox' ],
+					columns : [ {
+						header : '아이디',
+						name : 'empId',
+						align : 'center',
+						filter: 'select'
+					},{
+						header : '이름',
+						name : 'empName',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '부서',
+						name : 'empDept',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '직급',
+						name : 'empRank', //납기일자명 수정
+						align : 'center',
+						filter : 'select'
+					} ]
+				});
+				
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
 				
 				var deleteCode = [];
 				
-				$('#errOption').change(function(){
-					if($(this).val() == 'MAT') {
-						$('#errCode').val('ERM_');
-						$('.typeMat').show();
-						$('.typePrs').hide();
-						$('.type').hide();
-						$('#type').text('자재');
-					} else if ($(this).val() == 'PRS') {
-						$('#errCode').val('ERP_');
-						$('.typeMat').hide();
-						$('.typePrs').show();
-						$('.type').hide();
-						$('#type').text('공정');
-					} else {
-						$('#errCode').val('');
-						$('.typeMat').hide();
-						$('.typePrs').hide();
-						$('.type').show();
-						$('#type').text('자재/공정');
-					}
-				})
-				
-				workGrid.on('check', ev => {
-					console.log(workGrid.getValue(ev.rowKey, 'errCode'));
-					deleteCode.push((workGrid.getValue(ev.rowKey, 'errCode')));
-					
-					console.log($('input[name=_checked]').val());
-					
-					$('#errCode').val(workGrid.getValue(ev.rowKey, 'errCode'));
-					$('#errCode').attr('readonly', true);
-					$('#errName').val(workGrid.getValue(ev.rowKey, 'errName'));
-					let type = workGrid.getValue(ev.rowKey, 'divName');
-					if (type == '자재') {
-						$('#errOption').val('MAT');						
-					} else if (type == '공정') {
-						$('#errOption').val('PRS');
-					}
-					$('#code').val(workGrid.getValue(ev.rowKey, 'code'));
-				});
-				
-				workGrid.on('uncheck', ev => {
-					console.log(workGrid.getValue(ev.rowKey, 'errCode'));
-					for(let i = 0; i < deleteCode.length; i++) {
-						if(deleteCode[i] == workGrid.getValue(ev.rowKey, 'errCode')) {
-							deleteCode.splice(i, 1);
-						}
-					}
-					$('#errCode').val('');
-					$('#errCode').attr('readonly', false);
-					$('#errName').val('');
-					$('#errOption').val('');
-					$('#code').val('');
-					console.log(deleteCode);
-				});
-				
-				function selectDeleteCp() {
-					console.log(workGrid.getCheckedRows());
-					let code = [];
-					for(co of workGrid.getCheckedRows()){
-						console.log(co)
-						code.push(co.errCode)
-						console.log(code);
-					}
-					
+				function showA(data) {
 					$.ajax({
-						url:'selectDeleteCP',
+						url:'workerAList',
 						type:'POST',
-						data:{code:code},
-						dataType:"json",
-						async:false,
-						beforeSend : function(xhr){
-							xhr.setRequestHeader(header, token);
-						},
-						success:function(data){
-							if(data > 0) {
-								alert("삭제완료");
-								showAll();					
-							} else {
-								alert("삭제실패");
-							}
-						},
-						error:function(request,status,error){
-							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-							console.log(code);
-							console.log(reject);
-						}
-					})
-				}
-				
-				function updateErr() {
-					let errCode = $('#errCode').val();
-					let errName = $('#errName').val();
-					let errOption = $('#errOption').val();
-					let code = $('#code').val();
-					
-					let upData = {'errCode':errCode, 'errName':errName, 'errOption':errOption, 'code':code};
-					
-					$.ajax({
-						url:'updateErr',
-						type:'POST',
-						data:JSON.stringify(upData),
-						dataType:"json",
+						data:data,
 						contentType:'application/json',
 						async:false,
 						beforeSend : function(xhr){
 							xhr.setRequestHeader(header, token);
 						},
 						success:function(data){
-							if(data > 0) {
-								alert("수정완료");
-								showAll();					
+							if(data != null) {
+								workerAGrid.resetData(data);
+								console.log(data);
 							} else {
-								alert("수정실패");
+								alert("실패");
 							}
 						},
 						error:function(request,status,error){
 							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+							console.log(reject);
+						}						
+					});
+				}
+				
+				function showB(data) {
+					$.ajax({
+						url:'workerBList',
+						type:'POST',
+						data:data,
+						contentType:'application/json',
+						async:false,
+						beforeSend : function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success:function(data){
+							if(data != null) {
+								console.log(data);
+								workerBGrid.resetData(data);
+							} else {
+								alert("실패");
+							}
+						},
+						error:function(request,status,error){
+							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+							console.log(reject);
+						}						
+					});
+				}
+				
+				workGrid.on('check', ev => {
+					let data = workGrid.getValue(ev.rowKey, 'prsNo')
+					console.log(data);
+					
+					showA(data);
+					showB(data);
+					
+				});
+				
+				workGrid.on('uncheck', ev => {
+					workerAGrid.clear();
+					workerBGrid.clear();
+
+				});
+				
+				
+				
+				function updateWorker() {
+					console.log(workGrid.getCheckedRows());
+					let inputId = [];
+					let deleteId = [];
+					let prsNo = [];
+					for(co of workerAGrid.getCheckedRows()){
+						inputId.push(co.empId);
+					}
+					for(co of workerBGrid.getCheckedRows()){
+						deleteId.push(co.empId);
+					}
+					for (co of workGrid.getCheckedRows()) {
+						prsNo.push(co.prsNo);						
+					}
+					
+					$.ajax({
+						url:'updateWorker',
+						type:'POST',
+						data:{prsNo:prsNo, inputId:inputId, deleteId:deleteId},
+						dataType:"json",
+						async:false,
+						beforeSend : function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success:function(data){
+							if(data.msg != 'error') {
+								alert("업데이트완료");
+								showA(data.msg);
+								showB(data.msg);
+							} else {
+								alert("업데이트실패");
+							}
+						},
+						error:function(request,status,error){
+							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+							console.log(code);
 							console.log(reject);
 						}
 					})

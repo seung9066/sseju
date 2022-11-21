@@ -61,4 +61,11 @@ public interface CodeMapper {
 	
 	// worker
 	public List<CodeVO> workerList();
+	
+	public int deleteEqm(CodeVO vo);
+	public List<CodeVO> workerAList(CodeVO vo);
+	public List<CodeVO> workerBList(CodeVO vo);
+	public int insertEmpMng(CodeVO vo);
+	public int insertWM(CodeVO vo);
+	public int deleteWM(CodeVO vo);
 }

@@ -54,7 +54,7 @@ th {
 						<th onclick="showCompany(this.innerText)">설비상태</th>
 						<th onclick="showCompany(this.innerText)">비가동</th>
 						<th onclick="showCompany(this.innerText)">진행</th>
-						<th onclick="showCompany(this.innerText)">제품불량</th>
+						<th onclick="showCompany(this.innerText)">제품(공정)불량</th>
 						<th onclick="showCompany(this.innerText)">자재불량</th>
 					</tr>
 				</table>
@@ -205,7 +205,7 @@ th {
 					type = 'UOR';
 				} else if (a == '진행') {
 					type = 'PRG';
-				} else if (a == '제품불량') {
+				} else if (a == '제품(공정)불량') {
 					type = 'ERP';
 				} else if (a == '자재불량') {
 					type = 'ERM';
