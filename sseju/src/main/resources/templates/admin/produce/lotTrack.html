@@ -25,17 +25,17 @@
 				var ltGrid = new tui.Grid({
 					el : document.getElementById('ltGrid'),
 					data : [ {
-						preNo : 'PRD20221116-001',
-						dDay : 'PRD-SJ001',
+						preNo : 'PRD20221116_001',
+						dDay : 'PRD_SJ001',
 						prtName : '30,000EA',
 						inQty : '김준형',
-						prePrg : '2022-11-12'
+						lotDate : '2022-11-12'
 					}, {
-						preNo : 'PRD20221116-002',
-						dDay : 'PRD-SJ002',
+						preNo : 'PRD20221116_002',
+						dDay : 'PRD_SJ002',
 						prtName : '300,000EA',
 						inQty : '김형준',
-						prePrg : '2022-11-12'
+						lotDate : '2022-11-12'
 					}
 					// data 가져오는 법
 					// data: {
@@ -59,25 +59,18 @@
 					}, {
 						header : '제품코드',
 						name : 'dDay',
-						filter : {
-							type : 'text',
-							showApplyBtn : true,
-							showClearBtn : true
-						}
+						filter : 'select'
 					}, {
 						header : '생산수량',
 						name : 'prtName'
 					},  {
 						header : '담당자',
-						name : 'inQty'
+						name : 'inQty',
+						filter : 'select'
 					}, {
 						header : '로트 등록 일자',
-						name : 'prePrg',
-						filter : {
-							type : 'text',
-							showApplyBtn : true,
-							showClearBtn : true
-						}
+						name : 'lotDate',
+						filter : 'select'
 					} ]
 				});
 			</script>

@@ -59,18 +59,18 @@
 					el : document.getElementById('prtProgGrid'),
 					data : [ {
 						preNo : '1',
-						dDay : '포도맛소주',
-						prtName : '3000',
-						preQty : '30000',
-						inQty : '2022-11-15',
-						prePrg : '김준형'
+						prtName : '포도맛소주',
+						preQty : '3000',
+						insQty : '30000',
+						preDate : '2022-11-15',
+						preManager : '김준형'
 					}, {
 						preNo : '2',
-						dDay : '자몽맛소주',
-						prtName : '1000',
-						preQty : '10000',
-						inQty : '2022-11-16',
-						prePrg : '김두영'
+						prtName : '자몽맛소주',
+						preQty : '1000',
+						insQty : '10000',
+						preDate : '2022-11-16',
+						preManager : '김두영'
 					}
 					// data 가져오는 법
 					// data: {
@@ -112,17 +112,15 @@
 			var ProgGrid = new tui.Grid({
 					el : document.getElementById('matConditionGrid'),
 					data : [ {
-						preNo : 'MAT-CA001',
-						dDay : '클래식 맛 뚜껑',
-						prtName : '3000',
+						matCode : 'MAT-CA001',
+						matName : '클래식 맛 뚜껑',
 						preQty : '27000',
-						inQty : '양호',
+						lotQty : '50000',
 					}, {
-						preNo : 'MAT-BT001',
-						dDay : '공병',
-						prtName : '1000',
+						matCode : 'MAT-BT001',
+						matName : '공병',
 						preQty : '10000',
-						inQty : '좋음',
+						lotQty : '50000',
 					}
 					// data 가져오는 법
 					// data: {

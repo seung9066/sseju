@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{/layout/layout}">
-
+   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   layout:decorate="~{/layout/layout}">
 <head>
 <meta charset="UTF-8">
 <title>workOrderList</title>
@@ -34,48 +33,55 @@ input {
 <body>
 	<article layout:fragment="content">
 		<main id="main" class="main">
-			<h4>작업 지시 관리</h4>
+			<h4>
+				<strong>작업 지시 관리</strong>
+			</h4>
 			<br>
 			<div style="float:right;">
-				<button class="button">수정</button>
+				<button class="button" onclick="updateWorkOrder()">수정</button>
 				<button class="button" onclick="selectDelete()">삭제</button>
 			</div>
 			
-			<!-- 작업 지시 DB에서 불러와가지고 grid로 띄워줌
-			grid에 띄워진 list를 클릭하면 상세정보가 나오게 할 수 있는지 알아봐야함 -->
+			<!-- DB에서 불러온 데이터 grid로 띄워줌
+			grid에 띄워진 list를 클릭하면 상세정보가 나오게 할 수 있는지 알아봐야함
+			 -->
 			<div id="workorderGrid"></div>
 			
 			<!-- 작업 지시 등록 칸 -->
 			<br>
 			<h6 style="display: inline-block;">작업 지시 등록</h6>
 			<div style="float:right;">
-			<button class="button">등록</button>
 			</div>
-			<form action="insert" method="post">
+			<form action="insertWorkOrder" method="post">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				<input type="hidden" name="auth" value="ROLE_ADMIN">
+				
+				<button type="submit" class="button" style="float: right">등록</button>
 				<div>
-				<!-- 품목코드가 등록되면 품목명이 자동으로 입력되게 -->
-					<table id="insertwo">
+					<table class="table">
 						<tr>
 							<th>품목코드 / 품목명</th>
 								<td>
 									<select>
-										<option>선택</option>
-										<option>PRD_001 / 오리지널</option>
-										<option>PRD_002 / 청포도</option>
-										<option>PRD_003 / 자몽</option>
-										<option>PRD_004 / 유자</option>
-										<option>PRD_005 / 석류</option>
-										<option>PRD_006 / 블루베리</option>
+										<option>---선택---</option>
+										<!-- <th:block  th:each="p : ${product}">
+											<option th:value="${p.prtCode}" th:text="${p.prtName}"></option>
+										</th:block> -->
+										<option value="PRD_001">오리지널</option>
+										<option value="PRD_002">청포도</option>
+										<option value="PRD_003">자몽</option>
+										<option value="PRD_004">유자</option>
+										<option value="PRD_005">석류</option>
+										<option value="PRD_006">블루베리</option>
 									</select>
 								</td>
 							<th>담당자</th>
-							<td><input type="text"></td>
+							<td><input type="text" name="preManager" id="preManager"></td>
 							<th>지시수량</th>
-							<td><input type="number" min="1"></td>
+							<td><input type="number" name="preQty" id="preQty" min="1"></td>
 							<th>납기 일자</th>
-							<!-- 지시 일자일 경우 당일로 고정되게 자동으로, 터치X -->
 							<!-- 납기 일자로 할 경우에는 날짜 선택 가능해야함 -->
-							<td><input type="date"></td>							
+							<td><input type="date" name="preDate" id="preDate"></td>							
 						</tr>
 					</table>
 				</div>
@@ -93,10 +99,10 @@ input {
 					pagination:true,
 					pageOption: {
 						useClient:true,
-						perPage:10
+						perPage:5
 					},
 			        scrollX : false,
-			        scrollY : false,
+			        scrollY : true,
 				    rowHeaders: ['checkbox'],
 				    columns: [
 						{
@@ -190,10 +196,7 @@ input {
 					}
 
 					function showAll() {
-						$('#title').text("전체");
-						
-						url="workOrder"
-						       fetch(url) // 작업 지시 단건 조회를 불러오는 아작스
+						       fetch("workOrder") // 작업 지시 단건 조회를 불러오는 아작스
 						       .then(res=>res.json())
 						       .then(obj=>{
 						           console.log(obj);
@@ -204,6 +207,7 @@ input {
 		</script>
 		</main>
 	</article>
+	
 </body>
 
 </html>

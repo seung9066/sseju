@@ -49,19 +49,17 @@
 				var mihGrid = new tui.Grid({
 					el : document.getElementById('mihGrid'),
 					data : [ {
-						preNo : '2022-11-16',
-						dDay : 'EQM-BT / 공병분리기',
-						prtName : '30000',
-						preQty : '30000',
-						inQty : '3',
-						prePrg : '김준형'
+						matOutDate : '2022-11-16',
+						prsCode : 'EQM-BT / 공병분리기',
+						matOutQty : '30000',
+						lotQty : '30000',
+						prsManager : '김준형' //id값으로 끌어와야함
 					}, {
-						preNo : '20221102001',
-						dDay : '자몽맛소주',
-						prtName : '10000',
-						preQty : '10000',
-						inQty : '0',
-						prePrg : '김두영'
+						matOutDate : '2022-11-20',
+						prsCode : '자몽맛소주',
+						matOutQty : '10000',
+						lotQty : '10000',
+						prsManager : '김두영'
 					}
 					// data 가져오는 법
 					// data: {
@@ -81,24 +79,20 @@
 					},
 					columns : [ {
 						header : '투입일자',
-						name : 'preNo'
+						name : 'matOutDate'
 					}, {
 						header : '공정코드', //각 자재별로 어느 공정에 투입되었는지
-						name : 'dDay',
-						filter : {
-							type : 'text',
-							showApplyBtn : true,
-							showClearBtn : true
-						}
+						name : 'prsCode',
+						filter : 'select'
 					}, {
-						header : '투입', //각 공정에 몇개씩 투입되었는지=이거는 필요한가? 다똑같이 투입될건데
-						name : 'prtName'
+						header : '투입수량', //각 공정에 몇개씩 투입되었는지=이거는 필요한가? 다똑같이 투입될건데
+						name : 'matOutQty'
 					}, {
-						header : '재고',
-						name : 'preQty'
+						header : '재고수량',
+						name : 'lotQty'
 					}, {
 						header : '자재 출고 담당자',
-						name : 'prePrg'
+						name : 'prsManager'
 					} ]
 				});
 			</script>

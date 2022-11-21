@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface WorkOrderService {
+	
 	//작업 지시 전체 조회
 	public List<WorkOrderVO> getWorkOrderList();
 	//작업 지시 단건 조회

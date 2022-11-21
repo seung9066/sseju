@@ -17,6 +17,7 @@ public class WorkOrderVO {
 	private int insQty;			//지시 수량
 	private String preQty;		//생산수량
 	private String prtCode;		//제품코드 FK, 제품명 끌어오기도 필요함
+	private String prtName;		//품목명
 	private String orderNo;		//주문번호 FK, 서브쿼리나 조인문으로 업체명 가져와야함
 	private String prePrg;		//작업 진행 상태(진행전, 진행중, 완료)표기용
 }
