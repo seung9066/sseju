@@ -73,17 +73,17 @@ public class MatController {
 	@ResponseBody
 	@GetMapping("/selectMatbuyInfo")
 	public String selectMatbuyInfo(){
-		return "/admin/mat/matOrd"; 
+		return "/admin/mat/matOrd";
 	}
 	
 	//발주 등록
 	@ResponseBody
 	@PostMapping("/insertMatbuy")
-	public int insertMatbuy(@RequestParam(value = "Qty", required = false) List<String> Qty,
-			@RequestParam(value = "mc", required = false) List<String> mc,
-			@RequestParam(value = "cd", required = false) List<String> cd,
-			@RequestParam(value = "mp", required = false) List<String> mp,
-			@RequestParam(value = "moe", required = false) List<String> moe) {
+	public int insertMatbuy(@RequestParam(value = "Qty[]", required = false) List<String> Qty,
+			@RequestParam(value = "mc[]", required = false) List<String> mc,
+			@RequestParam(value = "cd[]", required = false) List<String> cd,
+			@RequestParam(value = "mp[]", required = false) List<String> mp,
+			@RequestParam(value = "moe[]", required = false) List<String> moe) {
 			int result = 0;
 			
 			for(int i = 0; i < mc.size(); i++) {
