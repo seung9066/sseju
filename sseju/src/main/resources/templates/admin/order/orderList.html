@@ -13,12 +13,15 @@ body {
 	padding: 20px 30px;
 	transition: all 0.3s;
 }
-
 </style>
 <link rel="stylesheet"
-	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
 <script
-	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -29,8 +32,10 @@ body {
 			</div>
 			<div style="text-align: right;">
 
-				<button class="button"onclick
-				="insertPrtInf">주문하기</button>
+				<button class="button" type="button" data-toggle="modal"
+					data-target="#myModal">모달 창 열기</button>
+
+				<button class="button" onclick="insertPrtInf">주문하기</button>
 			</div>
 			<div id="prtGrid"></div>
 
@@ -39,6 +44,29 @@ body {
 			<div style="text-align: right;"></div>
 
 			<div id="ordGrid"></div>
+			<!-- Modal -->
+
+			<div class="modal fade" id="myModal" role="dialog">
+				<!-- 사용자 지정 부분① : id명 -->
+
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title">주문한목록</h4>
+							<!-- 사용자 지정 부분② : 타이틀 -->
+						</div>
+						<div class="modal-body" id="">
+							<!-- 사용자 지정 부분③ : 텍스트 메시지 -->
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 			<script>
 			
 			prtl();
@@ -87,7 +115,7 @@ body {
                 //console.log(event.nativeEvent.target.innerText);  td값. 셀값
                   //rowKey : 인덱스 번호  
                 // input 태그에 값 넣어주기.
-                $('#prtCode').val(prtGrid.getRow(event.rowKey).prtCode);
+                $('').val(prtGrid.getRow(event.rowKey).orList);
                 $('#prtName').val(prtGrid.getRow(event.rowKey)['prtName']);
                 
              })
@@ -143,13 +171,6 @@ body {
 					align : 'center',
 					filter: 'select'
 				},
-				{
-					header : '총가격',
-					name : 'orderPrice',
-					align : 'center',
-					filter: 'select'
-				},
-				
 				 ]
 			});
 			    function ordALl() {
@@ -161,6 +182,7 @@ body {
 			           ordGrid.resetData(obj);
 			        })
 				}
+			    
 		    </script>
 		</main>
 	</article>

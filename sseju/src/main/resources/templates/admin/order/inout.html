@@ -13,8 +13,6 @@ body {
 	padding: 20px 30px;
 	transition: all 0.3s;
 }
-
-
 </style>
 <link rel="stylesheet"
 	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
@@ -29,24 +27,10 @@ body {
 				<h2>제품출고관리</h2>
 			</div>
 			<hr>
-
-			<ul class="ul-style">
-
-				<li><label for="prtName">품목검색</label><input type="text">
-				<li><label for="orderDate">주문일자</label><input type="date"
-					id="orderDate"><span> - </span><input type="date"
-					id="orderDate">
-					<button class="button">조회</button>
-			</ul>
-
-
-
 			<div id="aGrid"></div>
-
-
 			<script>
-		all();
-		const aGrid = new tui.Grid({
+			all();
+			const aGrid = new tui.Grid({
 			el : document.getElementById('aGrid'),
 			pagination:true,
 			pageOption: {
@@ -55,15 +39,14 @@ body {
 			},
 			scrollX : false,
 			scrollY : false,
-			rowHeaders: ['checkbox'],
-			columns : [
+/* 			rowHeaders: ['checkbox'],
+ */			columns : [
 				{
 					header : '품목',
 					name : 'prtName',
 					align : 'center',
 					filter: 'select'
 				}, 
-			
 				{
 					header : '총출고량',
 					name : 'orderOutQty',
@@ -82,9 +65,6 @@ body {
 					align : 'center',
 					filter: 'select'
 				}
-				
-		           
-		           
 		          ]
 		});
 		function all() {
@@ -96,10 +76,7 @@ body {
 	           aGrid.resetData(obj);
 	        })
 		}
-		
-    </script>
-
-
+    		</script>
 		</main>
 	</article>
 </body>
