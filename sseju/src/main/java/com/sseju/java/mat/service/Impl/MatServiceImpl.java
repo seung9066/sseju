@@ -36,10 +36,25 @@ public class MatServiceImpl implements MatService {
 	}
 
 	@Override
-	public int deleteMatbuy(MatVO MatVO) {
-		return matMapper.deleteMatbuy(MatVO);
+	public int deleteMatbuy(List<String> matOrdNo) {
+		int result = 0;
+		for (String no : matOrdNo) {
+			result += matMapper.deleteMatbuy(no);
+		}
+		return result;
 	}
 
+	/*
+	 * @Override
+   public int deleteMatrailInfo(List<String> mNo) {
+      // 자재 정보 삭제 - 재고 수량도 삭제됨
+      int result = 0;
+      for (String no : mNo) {
+         result += mMapper.deleteMatrailInfo(no);
+      }
+      return result;
+   }
+	 */
 	@Override
 	public int selectDelete(List<String> list) {
 		return matMapper.selectDeleteMatbuy(list);

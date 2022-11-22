@@ -8,7 +8,7 @@
 		SELECT * FROM material
 	</select>
 	<select id="matordList" resultType="MatVO">
-		SELECT b.mat_ord_no, b.mat_ord_qty, m.mat_code, m.mat_name, b.mat_ord_date, c.cp_code, c.cp_name, b.mat_price,
+		SELECT b.mat_ord_no, b.mat_ord_qty, m.mat_code, m.mat_name,TO_DATE(b.mat_ord_date,'rrrr/MM/dd') as MAT_ORD_DATE, c.cp_code, c.cp_name, b.mat_price,
                 b.mat_ord_emp, b.mat_ord_yn, e.emp_id
 		FROM mat_buy b 
 		JOIN material m ON m.mat_code = b.mat_code
@@ -16,14 +16,25 @@
         JOIN employee e on e.emp_name = b.mat_ord_emp
         order by mat_ord_no DESC
 	</select>
-	<select id="selectMatbuyInfo" resultType="MatVO" parameterType="MatVO">
-		SELECT b.mat_ord_no, b.mat_ord_qty, m.mat_code, m.mat_name, b.mat_ord_date, c.cp_code, c.cp_name, b.mat_price,
+	<select id="detailMatbuyInfo" resultType="MatVO" parameterType="MatVO">
+		SELECT b.mat_ord_no, b.mat_ord_qty, m.mat_code, m.mat_name,TO_DATE(b.mat_ord_date,'rrrr/MM/dd') as MAT_ORD_DATE, c.cp_code, c.cp_name, b.mat_price,
                 b.mat_ord_emp, b.mat_ord_yn, e.emp_id
 		FROM mat_buy b 
 		JOIN material m ON m.mat_code = b.mat_code
 		JOIN company c ON c.cp_code = m.cp_code
         JOIN employee e on e.emp_name = b.mat_ord_emp
-        WHERE mat_ord_no = #{matOrdNo}
+        <where>
+	        <if test='startDate != null and endDate != null'>
+	           TRUNC(OD_DATE) = #{startDate}
+	        </if>
+	        <if test="prdCd != null and !prdCd.equals('')">
+	           and b.mat_code = #{matCode}
+	        </if>
+	        <if test="actCd != null and !actCd.equals('')">
+	           and c.cp_code = #{cpCode}
+	        </if>
+        </where>        
+        order by mat_ord_no DESC
 	</select>
 <!-- 	<select id="selectMatbuyInfo" resultType="MatVO">
 		SELECT * FROM mat_buy WHERE mat_ord_no = #{matOrdNo}
@@ -42,7 +53,7 @@
 			,#{matCode}
  			,sysdate
 			,#{cpCode}
-			,'N'
+			,'미확인'
 			,#{matPrice}
 			,#{matOrdEmp}
 		)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
@@ -53,8 +64,8 @@
 			<if test="matOrdQty != null and !matOrdQty.equals('')">
 			MAT_ORD_QTY = #{matOrdQty},			
 			</if>
-			<if test="nowCode != null and !nowCode.equals('')">
-			NOW_CODE = #{nowCode},
+			<if test="nowCode != null and !nowCode.equals('') and matOrdYn == '미확인'">
+			NOW_CODE = 'PRG_002',
 			</if>
 			<if test="matOrdDate != null and !matOrdDate.equals('')">
 			MAT_ORD_DATE =#{matOrdDate},
@@ -76,15 +87,14 @@
 	</update>
 	<delete id="deleteMatbuy" parameterType="MatVO">
 		DELETE FROM mat_buy WHERE MAT_ORD_NO = #{matOrdNo}
-	</delete>
-	
-	<delete id="selectDeleteMatbuy" parameterType="list">
+	</delete>	
+<!-- 	<delete id="selectDeleteMatbuy" parameterType="list">
 		DELETE FROM mat_buy WHERE MAT_ORD_NO in(
 		<foreach collection="list" item="item" separator=",">
 			#{item}
 		</foreach>
 		)
-	</delete>
+	</delete> -->
 	
 	<!-- 입고 Mapper -->
 	<select id="matInList" resultType="MatVO">
@@ -103,14 +113,16 @@
 	<update id="updateMat" parameterType="MatVO">
 	</update>
 	<delete id="deleteMat" parameterType="MatVO">
+		DELETE FROM MAT_CHK WHERE MAT_ORD_NO = #{matOrdNo}
 	</delete>
-	<delete id="selectDeleteMatIn" parameterType="list">
+<!-- 	<delete id="selectDeleteMatIn" parameterType="list">
 			DELETE FROM mat_chk WHERE MAT_ORD_NO in(
 		<foreach collection="list" item="item" separator=",">
 			#{item}
 		</foreach>
 		)
-	</delete>
+	</delete> -->
+	
 	
 	<!--출고 Mapper -->
 	<select id="matOutList" resultType="MatVO">
