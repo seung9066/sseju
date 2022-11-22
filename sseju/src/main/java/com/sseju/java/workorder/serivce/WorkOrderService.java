@@ -1,7 +1,6 @@
 package com.sseju.java.workorder.serivce;
 
 import java.util.List;
-import java.util.Map;
 
 public interface WorkOrderService {
 	
@@ -17,4 +16,10 @@ public interface WorkOrderService {
 	public int deleteWorkOrder(WorkOrderVO woVO);
 	//작업지시 번호 조회
 	public int getWoNo();
+	//상품 코드 조회
+	public List<WorkOrderVO> getPrtList();
+	//사원아이디, 사원명 가져오기
+	public List<WorkOrderVO> getManagerList();
+	//주문번호, 상품명, 주문수량, 주문일자 가져오기
+	public List<WorkOrderVO> getOrderList();
 }

@@ -46,11 +46,28 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 		return woMapper.deleteWorkOrder(woVO);
 	}
 	
-	//
+	//단건조회 하게되면 작업지시 번호 기준으로 하기위해서 작업 지시 번호 불러오는 메소드
 	@Override
 	public int getWoNo() {
 		return woMapper.getWoNo();
 	}
+	//상품코드, 상품명 불러오기
+	@Override
+	public List<WorkOrderVO> getPrtList() {
+		// TODO Auto-generated method stub
+		return woMapper.getPrtList();
+	}
+	//사원명, 사원아이디 불러오기
+	@Override
+	public List<WorkOrderVO> getManagerList() {
+		// TODO Auto-generated method stub
+		return woMapper.getManagerList();
+	}
 
+	@Override
+	public List<WorkOrderVO> getOrderList() {
+		// TODO Auto-generated method stub
+		return woMapper.getOrderList();
+	}
 
 }
