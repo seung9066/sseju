@@ -3,12 +3,18 @@
 <mapper namespace="com.sseju.java.workorder.mapper.WorkOrderMapper">
 
 	<!-- 주문 번호, 주문한 상품명, 주문수량, 주문일자 불러오기 -->
-	<select id="getOrderList" resultType="wovO">
-	SELECT ods.order_no, (SELECT pt.prt_name
-	                        FROM product pt JOIN order_inf odi
-	                        ON pt.prt_code = odi.prt_code
-	                        JOIN orders ods
-	                        ON odi.order_no = ods.order_no) AS prt_name,
+	<select id="getOrderList" resultType="woVO">
+	SELECT ods.order_no, 
+		(SELECT pt.prt_code
+	     FROM product pt JOIN order_inf odi
+	     ON pt.prt_code = odi.prt_code
+	     JOIN orders ods
+	     ON odi.order_no = ods.order_no) AS prt_code,
+		(SELECT pt.prt_name
+		 FROM product pt JOIN order_inf odi
+		 ON pt.prt_code = odi.prt_code
+		 JOIN orders ods
+		 ON odi.order_no = ods.order_no) AS prt_name,	                        
 	        odi.order_qty, ods.order_date
 	FROM orders ods JOIN order_inf odi
 	ON ods.order_no = odi.order_no
@@ -17,7 +23,7 @@
 	<!-- 작업 지시 등록 -->
 	<insert id="insertWorkOrder" parameterType="woVO">
 		<selectKey keyProperty="preNo" resultType="String" order="BEFORE">
-			SELECT 'PRE' || TO_CHAR(SYSDATE,'YYYYMMDD')||LPAD(NVL(MAX(SUBSTR(pre_no, -3)),0)+1,3,0) 
+			SELECT 'PRE'||TO_CHAR(SYSDATE,'YYYYMMDD')||LPAD(NVL(MAX(SUBSTR(pre_no, -3)),0)+1,3,0) 
 			FROM	produce
 		</selectKey>
 		INSERT INTO produce( pre_no
@@ -26,23 +32,25 @@
 						    ,ins_qty
 						    ,pre_qty
 						    ,prt_code
-						    ,oder_no
-						    ,pre_prg)
-				   VALUES(  preNo
+						    ,order_no)
+				   VALUES(  #{preNo}
 						   ,#{preDate}
 						   ,#{empId}
 						   ,#{insQty}
 						   ,0 <!-- 생산 지시 등록 시 기본값 0이 들어가게 -->
 						   ,#{prtCode}
-						   ,#{oderNo}
-						   ,#{prePrg})
+						   ,#{orderNo}
+						   )
 	</insert>
 	
 	<!-- 작업 지시 전체 조회 -->
 	<select id="getWorkOrderList" resultType="woVO">
-		SELECT ods.order_no, pe.pre_no, ods.d_day,(SELECT pt.prt_name
+				SELECT ods.order_no, pe.pre_no, ods.d_day,(SELECT pt.prt_name
 		                             FROM product pt JOIN produce pe
-		                             ON pt.prt_code = pe.prt_code) AS prt_name,
+		                             ON pt.prt_code = pe.prt_code
+                                     JOIN orders ods
+                                     on pe.order_no = ods.order_no
+                                     GROUP BY pt.prt_name) AS prt_name,
 		        pe.pre_qty, pe.ins_qty, pe.pre_prg
 		FROM produce pe JOIN orders ods
 		ON ods.order_no = pe.order_no

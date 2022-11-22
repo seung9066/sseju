@@ -48,7 +48,6 @@ public class WorkOrderController {
 	
 	//지시 등록
 	@PostMapping("/insertWorkOrder")
-	@ResponseBody
 	public String insertWorkOrder(WorkOrderVO woVO, Model model) {
 		woService.insertWorkOrder(woVO);
 		return "redirect:workOrder";
