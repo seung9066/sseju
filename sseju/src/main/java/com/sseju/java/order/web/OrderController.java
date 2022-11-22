@@ -82,10 +82,6 @@ public class OrderController {
 		return "/admin/order/inout";
 	}
 
-	@GetMapping("import")
-	public String selectprt(Model model) {
-		return "/admin/quality/import";
-	}
 	
 	
 	

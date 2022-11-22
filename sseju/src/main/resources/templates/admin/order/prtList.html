@@ -62,6 +62,7 @@
 			<div id="ordGrid"></div>
 			<script>
 			all();
+			
 				const allGrid = new tui.Grid({
 					el : document.getElementById('allGrid'),
 					pagination:true,
@@ -71,8 +72,8 @@
 					},
 					scrollX : false,
 					scrollY : false,
-					rowHeaders: ['checkbox'],
-					columns : [
+/* 					rowHeaders: ['checkbox'],
+ */					columns : [
 					    {
 						    header : '주문일자',
 							name : 'orderDate', //납기일자명 수정
@@ -113,6 +114,7 @@
 				           
 				          ]
 				});
+				
 				function all() {
 					url="selectOrdeIng"
 			        fetch(url) 
@@ -136,8 +138,8 @@
 					},
 					scrollX : false,
 					scrollY : false,
-					rowHeaders: ['checkbox'],
-					columns : [ {
+/* 					rowHeaders: ['checkbox'],
+ */					columns : [ {
 						header : '주문번호',
 						name : 'orderNo',
 						align : 'center',
@@ -182,6 +184,7 @@
 				           ordGrid.resetData(obj);
 				        })
 					}
+				    
 				    
 	   	 </script>
 		</main>
