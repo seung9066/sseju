@@ -25,6 +25,8 @@
 						   ,#{oderNo}
 						   ,#{prePrg})
 	</insert>
+	
+	
 	<!-- 작업 지시 전체 조회 -->
 	<select id="getWorkOrderList" resultType="woVO">
 		SELECT pe.pre_no, ods.d_day,(SELECT pt.prt_name
