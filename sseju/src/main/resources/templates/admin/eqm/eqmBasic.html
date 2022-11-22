@@ -136,6 +136,7 @@
                $('#lineYn').val(lineGrid.getValue(ev.rowKey,'lineYn'));
                $('#empNo').val(lineGrid.getValue(ev.rowKey,'empNo'));
                
+               
             });
             
             lineGrid.on('uncheck', ev => {
@@ -170,7 +171,8 @@
                   success:function(data){
                      if(data > 0) {
                         alert("삭제완료");
-                        showAll();               
+                        showAll();
+                        
                      } else {
                         alert("삭제실패");
                      }
@@ -203,9 +205,12 @@
                   success:function(data){
                      if(data > 0) {
                         alert("수정완료");
-                        showAll();               
+                        showAll();   
+                        console.log(UPH);
+                        
                      } else {
                         alert("수정실패");
+                        
                      }
                   },
                   error:function(reject){
@@ -222,6 +227,7 @@
                .then(res=>res.json())
                .then(obj=>{
                   lineGrid.resetData(obj);
+                  console.log(UPH);
                })
             }
 
