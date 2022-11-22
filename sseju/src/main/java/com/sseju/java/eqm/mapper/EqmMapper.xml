@@ -117,7 +117,7 @@
       <selectKey keyProperty="chkNo" resultType="String"
          order="BEFORE">
          SELECT
-         'CHK_'||TO_CHAR(SYSDATE,'YYYYMMDD')||LPAD(NVL(MAX(SUBSTR(chk_no,-3)),0)+1,3,0)
+         'CHK'||TO_CHAR(SYSDATE,'YYYYMMDD')||LPAD(NVL(MAX(SUBSTR(chk_no,-3)),0)+1,3,0)
          as chk_no
          FROM
          EQM_CHK
@@ -132,6 +132,13 @@
       #{chkEmpNo},
       #{eqmCode})
    </insert>
+   
+
+   <!-- 정기점검 삭제  -->
+   <delete id="deleteEqmChk" parameterType="EqmVO">
+   	DELETE FROM EQM_CHK WHERE chk_no = #{chkNo}
+   
+   </delete>
    
    <!-- 비가동 전체조회  -->
    <select id="getUoperList" resultType="EqmVO">

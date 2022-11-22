@@ -44,6 +44,7 @@ public class EqmVO {
    private String chkNo; //정기점검 이력번호
    @DateTimeFormat(pattern = "yyyy-MM-dd")
    private Date chkDate; // 점검일자
+   @DateTimeFormat(pattern = "yyyy-MM-dd")
    private Date chkNdate; // 차기 점검일자
    private String chkState; //판정
    private String chkSol; //조치사항

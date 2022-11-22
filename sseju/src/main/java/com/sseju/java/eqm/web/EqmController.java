@@ -1,5 +1,6 @@
 package com.sseju.java.eqm.web;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,9 +84,10 @@ public class EqmController {
            
            EqmVO vo = new EqmVO();
            vo.setChkNo(line1);
-           
+           System.out.println(vo.getChkNo());
            a  += eqmService.deleteEqmChk(vo);
         }
+        
         return a;
      }
      
@@ -103,11 +105,7 @@ public class EqmController {
         return eqmService.updateEqmInfo(eqmVO);
      }
      
-     @PostMapping("/updateChk")
-     @ResponseBody
-     public int updateChk(EqmVO eqmVO) {
-        return eqmService.updateEqmChk(eqmVO);
-     }
+     
      
      @GetMapping("/lineList")
      @ResponseBody
@@ -121,6 +119,25 @@ public class EqmController {
         eqmService.insertEqmLine(eqmVO);
         return "redirect:eqmBasic";
      }
+     
+     @PostMapping("insertEqmChk")
+     @ResponseBody
+     public int insertChk(@RequestParam(value="insChk[]", required=false) List<String>chk){
+    		
+    	 	int result = 0;
+    	 	for(int i=0; i<chk.size(); i++) {
+    	 		String j = chk.get(i);
+    	 		EqmVO vo = new EqmVO();
+    	 		vo.setChkNo(j);
+    	 		
+    	 		result += eqmService.insertEqmChk(vo);
+    	 		
+    	 	}
+    	 	return result;
+     }
+    		
+    	 
+     
      
      @PostMapping("insertUoper")
      @ResponseBody
@@ -148,6 +165,12 @@ public class EqmController {
      @ResponseBody
      public int updateLine(@RequestBody EqmVO eqmVO) {
         return eqmService.updateEqmLine(eqmVO);
+     }
+     
+     @RequestMapping("/updateChk")
+     @ResponseBody
+     public int updateChk(@RequestBody EqmVO eqmVO) {
+        return eqmService.updateEqmChk(eqmVO);
      }
      
   
