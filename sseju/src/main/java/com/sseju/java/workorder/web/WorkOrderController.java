@@ -28,7 +28,7 @@ public class WorkOrderController {
 		List<WorkOrderVO>a = new ArrayList<WorkOrderVO>();
 		WorkOrderVO b = new WorkOrderVO();
 		b.setPrtName("아무거나");
-		b.setPrtCode("code1");
+		b.setPrtCode("code12");
 		a.add(b);
 		model.addAttribute("prt", a);
 		return "/admin/produce/workOrderList";
