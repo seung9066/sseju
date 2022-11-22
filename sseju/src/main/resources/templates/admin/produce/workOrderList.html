@@ -37,6 +37,7 @@ input {
 				<strong>작업 지시 관리</strong>
 			</h4>
 			<br>
+			<div id=orderNoGrid></div>
 			<div style="float:right;">
 			    <input type="hidden" name="auth" value="ROLE_ADMIN">
 				<button class="button" onclick="updateWorkOrder()">수정</button>
@@ -70,21 +71,32 @@ input {
 									</select>
 								</td>
 							<th>담당자</th>
-							<td><input type="text" name="preManager" id="preManager"></td>
+							<td>
+								<select>
+									<option>---선택---</option>
+										<th:block th:each="e : ${idName}">
+											<option th:value="${e.empId}" th:text="${e.empName}"></option>
+										</th:block>
+								</select>
+							</td>
 							<th>지시수량</th>
 							<td><input type="number" name="preQty" id="preQty" min="1"></td>
 							<th>납기 일자</th>
-							<!-- 납기 일자로 할 경우에는 날짜 선택 가능해야함 -->
 							<td><input type="date" name="preDate" id="preDate"></td>							
 						</tr>
 					</table>
 				</div>
 			</form>
-
+			
 			<script type="text/javascript">
 			
 			showAll();
+			showAll2();
 			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
+			/* 주문 정보 출력 그리드 */
 			var workOrderGrid = new tui.Grid({
 				 el: document.getElementById('workorderGrid'),
 					pagination:true,
@@ -97,26 +109,26 @@ input {
 				    rowHeaders: ['checkbox'],
 				    columns:
 				    	[{
-							header: '작업 지시 번호',
-						    name: 'preNo'
+							header: '주문번호',
+						    name: 'orderNo'
 						},
 						{
-							header: '납기일자',
-					    	name: 'dDay',
+							header: '작업 지시 번호',
+					    	name: 'preNo',
 					    	filter : 'select'
 						},
 						{
-							header: '품목',
-						    name: 'prtName',
-						    filter : 'select'
-						},
-						{
-						 	header: '생산수량',
-						    name: 'preQty'
+						 	header: '품목명',
+						    name: 'prtName'
 						},
 						{
 						 	header: '지시수량',
-						    name: 'inQty'
+						    name: 'insQty'
+						},
+						{
+							header: '납기일자',
+						    name: 'dDay',
+						    filter : 'select'
 						},
 						{
 						    header : '진행상태',
@@ -125,8 +137,6 @@ input {
 						}]
 				      });
 			
-				var token = $("meta[name='_csrf']").attr("content");
-				var header = $("meta[name='_csrf_header']").attr("content");
 				
 				var chkWorkOrder = [];
 				
@@ -134,12 +144,13 @@ input {
 			   		chkWorkOrder.push((workOrderGrid.getValue(ev.rowKey, 'preNo')));
 				      console.log($('input[name=_checked]').val());
 				      
+				      $('#orderNo').val(workOrderGrid.getValue(ev.rowKey, 'orderNo'));
+				      $('#orderNo').attr('readonly', true);
 				      $('#preNo').val(workOrderGrid.getValue(ev.RowKey, 'preNo'));
 				      $('#preNo').attr('readonly', true);
-				      $('#dDay').val(workOrderGrid.getValue(ev.rowKey, 'dDay'));
 				      $('#prtName').val(workOrderGrid.getValue(ev.rowKey, 'prtName'));
-				      $('#preQty').val(workOrderGrid.getValue(ev.rowKey, 'preQty'));
 				      $('#insQty').val(workOrderGrid.getValue(ev.rowKey, 'insQty'));
+				      $('#dDay').val(workOrderGrid.getValue(ev.rowKey, 'dDay'));
 				      $('#prePrg').val(workOrderGrid.getValue(ev.rowKey, 'prePrg'));
 				    });
 
@@ -149,18 +160,20 @@ input {
 				    		  chkWorkOrder.splice(i, 1);
 				    	  }
 				      }
+				      $('#orderNo').val('');
+				      $('#orderNo').attr('readonly', true);
 				      $('#preNo').val('');
 				      $('#preNo').attr('readonly', true);
 				      $('#dDay').val('');
 				      $('#prtName').val('');
-				      $('#preQty').val('');
 				      $('#insQty').val('');
 				      $('#prePrg').val('');
 				    });
 			    /* grid.on('focusChange', ev => {
 				      console.log('change focused cell!', ev);
 				    }); */
-			   	
+				    
+			   	//선택 행 삭제
 			   	function selectDeleteWO(){
 				    console.log(workOrderGrid.getCheckedRows());
 					let deleteWorkOrder = [];
@@ -189,7 +202,33 @@ input {
 				   		}
 					});
 				}
+				    
+				    /* -------------
+				    작업 지시 등록 시 주문 번호 선택 그리드
+				      ---------------*/
+				    var orderNoGrid = new tui.Grid({
+						el : document.getElementById('orderNoGrid'),
+						rowHeaders : [ 'checkbox' ],
+						scrollX : false,
+						scrollY : false,
+						columns : [ {
+							header : '주문 번호',
+							name : 'orderNo'
+						}, {
+							header : '상품명',
+							name : 'prtName'
+						}, {
+							header : '주문 수량',
+							name : 'orderQty'
+						}, {
+							header : '주문일자',
+							name : 'orderDate',
+							filter : 'select'
+						} ]
+					});
 
+				    
+					//
 					function showAll() {
 						       fetch("getWorkOrderList") 
 						       .then(res=>res.json())
@@ -198,16 +237,22 @@ input {
 						           workOrderGrid.resetData(obj);
 						       })
 					}
-	$(function(){
+					
+					function showAll2() {
+					       fetch("getOrderList") 
+					       .then(res=>res.json())
+					       .then(obj=>{
+					           console.log(obj);
+					           orderNoGrid.resetData(obj);
+					       })
+					}
+/* 	$(function(){
 		
 			let data = [
 				{"preNo":"aa", "prtName": "test"}
-				
 			]		
-					
 		workOrderGrid.appendRows(data);
-		
-	})				
+	}) */
 		</script>
 		</main>
 	</article>

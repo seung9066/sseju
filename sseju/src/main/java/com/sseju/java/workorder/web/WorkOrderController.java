@@ -1,7 +1,6 @@
 package com.sseju.java.workorder.web;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +24,11 @@ public class WorkOrderController {
 	//작업 지시 페이지 띄움
 	@GetMapping("/workOrder")
 	public String WorkOrderList(Model model) {
-		List<WorkOrderVO>a = new ArrayList<WorkOrderVO>();
-		WorkOrderVO b = new WorkOrderVO();
-		b.setPrtName("아무거나");
-		b.setPrtCode("code12");
-		a.add(b);
-		model.addAttribute("prt", a);
+		//상품명, 코드 가져오기
+		model.addAttribute("prt", woService.getPrtList());
+		//사원명, 이름 가져오기
+		model.addAttribute("idName", woService.getManagerList());
+		//주문번호, 상품명, 주문수량, 주문일자 가져오기
 		return "/admin/produce/workOrderList";
 	}
 	
@@ -40,15 +38,23 @@ public class WorkOrderController {
 	public List<WorkOrderVO> getWorkOrderList(){
         return woService.getWorkOrderList();
      }
-	   
+	
+	//주문번호~일자, 상품명, 수량 가져오기
+	@GetMapping("/getOrderList")
+	@ResponseBody
+	public List<WorkOrderVO> getOrderList(){
+		return woService.getOrderList();
+	}
+	
 	//지시 등록
 	@PostMapping("/insertWorkOrder")
 	@ResponseBody
-	public String insertWorkOrder(WorkOrderVO woVO) {
+	public String insertWorkOrder(WorkOrderVO woVO, Model model) {
 		woService.insertWorkOrder(woVO);
-		return "redirect:workOrderList";
+		return "redirect:workOrder";
 	}
 	
+	//작업 지시 삭제
 	@PostMapping("/selectDeleteWO")
 	@ResponseBody
 	public int deleteWorkOrder(@RequestParam(value="deleteWorkOrder[]", required=false) List<String> deleteWorkOrder) {
