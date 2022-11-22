@@ -1,7 +1,7 @@
 package com.sseju.java.prtprocess.service;
 
 import java.util.List;
-
+//사용안함
 public interface PrtProcessService {
 	//생산 공정 관리 전체 조회
 	public List<PrtProcessVO> getPrtProcessList();

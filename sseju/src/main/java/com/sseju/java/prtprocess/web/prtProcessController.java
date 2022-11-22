@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class prtProcessController {
-	
+	//생산 공정 사용X
 	//생산 공정 페이지로 연결
 	@GetMapping("/prtProcessList")
 	public String prtProcessList(Model model) {

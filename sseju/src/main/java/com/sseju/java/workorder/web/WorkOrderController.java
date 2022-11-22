@@ -28,7 +28,6 @@ public class WorkOrderController {
 		model.addAttribute("prt", woService.getPrtList());
 		//사원명, 이름 가져오기
 		model.addAttribute("idName", woService.getManagerList());
-		//주문번호, 상품명, 주문수량, 주문일자 가져오기
 		return "/admin/produce/workOrderList";
 	}
 	
@@ -50,6 +49,14 @@ public class WorkOrderController {
 	@PostMapping("/insertWorkOrder")
 	public String insertWorkOrder(WorkOrderVO woVO, Model model) {
 		woService.insertWorkOrder(woVO);
+		return "redirect:workOrder";
+	}
+	
+	//작업 지시 수정
+	@PostMapping("/updateWorkOrder")
+	@ResponseBody
+	public String updateWorkOrder(WorkOrderVO woVO) {
+		woService.updateWorkOrder(woVO);
 		return "redirect:workOrder";
 	}
 	

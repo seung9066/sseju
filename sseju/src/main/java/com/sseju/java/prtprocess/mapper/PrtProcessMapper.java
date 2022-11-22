@@ -3,7 +3,7 @@ package com.sseju.java.prtprocess.mapper;
 import java.util.List;
 
 import com.sseju.java.prtprocess.service.PrtProcessVO;
-
+//사용X 생산공정관리 페이지용
 public interface PrtProcessMapper {
 		//생산 공정 관리 전체 조회
 		public List<PrtProcessVO> getPrtProcessList();

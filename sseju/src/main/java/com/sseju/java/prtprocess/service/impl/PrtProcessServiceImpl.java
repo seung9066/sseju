@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.sseju.java.prtprocess.service.PrtProcessService;
 import com.sseju.java.prtprocess.service.PrtProcessVO;
-
+//생산 공정 페이지, 사용 안하므로 작성X
 @Service
 public class PrtProcessServiceImpl implements PrtProcessService {
 

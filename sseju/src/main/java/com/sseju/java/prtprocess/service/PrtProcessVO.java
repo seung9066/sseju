@@ -2,7 +2,7 @@ package com.sseju.java.prtprocess.service;
 
 import org.apache.ibatis.type.Alias;
 import lombok.Data;
-
+// 미사용 페이지
 @Data
 @Alias("prtpVO")
 public class PrtProcessVO {
