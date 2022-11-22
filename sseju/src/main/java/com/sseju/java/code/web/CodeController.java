@@ -558,11 +558,7 @@ public class CodeController {
 			d = Integer.parseInt(b);
 		}
 		if (c != -1 && d != -1) {
-			
 			b = String.valueOf(Math.round((c-d)/d*100) + "%");
-			if ((c-d) < 0) {
-				b = "-" + b;
-			}
 		}
 		if (d == 0) {
 			b = "전일실적없음";
@@ -592,11 +588,7 @@ public class CodeController {
 			d = Integer.parseInt(b);
 		}
 		if (c != -1 && d != -1) {
-			
 			b = String.valueOf(Math.round((c-d)/d*100) + "%");
-			if ((c-d) < 0) {
-				b = "-" + b;
-			}
 		}
 		if (d == 0) {
 			b = "전일실적없음";
@@ -627,9 +619,6 @@ public class CodeController {
 		}
 		if (c != -1 && d != -1) {
 			b = String.valueOf(Math.round((c-d)/d*100) + "%");
-			if ((c-d) < 0) {
-				b = "-" + b;
-			}
 		}
 		if (d == 0) {
 			b = "전일실적없음";
@@ -651,5 +640,11 @@ public class CodeController {
 	@ResponseBody
 	public List<CodeVO> updatePrttCount() {
 		return service.updatePrttCount();
+	}
+	
+	@GetMapping("/selectPrdNameOut")
+	@ResponseBody
+	public List<CodeVO> selectPrdNameOut() {
+		return service.selectPrtNameOut();
 	}
 }

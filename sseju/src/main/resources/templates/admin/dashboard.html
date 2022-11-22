@@ -9,6 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
 	<article layout:fragment="content">
@@ -67,8 +68,8 @@
 												</div>
 												<div class="ps-3">
 													<h6>{{ soju }}</h6>
-													<span class="text-success small pt-1 fw-bold">{{ percent }}</span> <span
-														class="text-muted small pt-2 ps-1">전일대비</span>
+													<span class="text-success small pt-1 fw-bold">{{
+														percent }}</span> <span class="text-muted small pt-2 ps-1">전일대비</span>
 
 												</div>
 											</div>
@@ -144,8 +145,8 @@
 												</div>
 												<div class="ps-3">
 													<h6>{{ prtOut }}</h6>
-													<span class="text-success small pt-1 fw-bold">{{ percent }}</span> <span
-														class="text-muted small pt-2 ps-1">전일대비</span>
+													<span class="text-success small pt-1 fw-bold">{{
+														percent }}</span> <span class="text-muted small pt-2 ps-1">전일대비</span>
 
 												</div>
 											</div>
@@ -224,8 +225,8 @@
 												</div>
 												<div class="ps-3">
 													<h6>{{ error }}</h6>
-													<span class="text-danger small pt-1 fw-bold">{{ percent }}</span> <span
-														class="text-muted small pt-2 ps-1">전일대비</span>
+													<span class="text-danger small pt-1 fw-bold">{{
+														percent }}</span> <span class="text-muted small pt-2 ps-1">전일대비</span>
 
 												</div>
 											</div>
@@ -280,61 +281,57 @@
 											소주별 생산량 <span>|Today</span>
 										</h5>
 
-										<!-- Line Chart -->
-										<div id="reportsChart"></div>
+										 <div id="columnchart_material" style="height: 500px;"></div>
 
-										<script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                      new ApexCharts(document.querySelector("#reportsChart"), {
-                        series: [{
-                          name: 'Sales',
-                          data: [31, 40, 28, 51, 42, 82, 56],
-                        }, {
-                          name: 'Revenue',
-                          data: [11, 32, 45, 32, 34, 52, 41]
-                        }, {
-                          name: 'Customers',
-                          data: [15, 11, 32, 18, 9, 24, 11]
-                        }],
-                        chart: {
-                          height: 350,
-                          type: 'area',
-                          toolbar: {
-                            show: false
-                          },
-                        },
-                        markers: {
-                          size: 4
-                        },
-                        colors: ['#4154f1', '#2eca6a', '#ff771d'],
-                        fill: {
-                          type: "gradient",
-                          gradient: {
-                            shadeIntensity: 1,
-                            opacityFrom: 0.3,
-                            opacityTo: 0.4,
-                            stops: [0, 90, 100]
-                          }
-                        },
-                        dataLabels: {
-                          enabled: false
-                        },
-                        stroke: {
-                          curve: 'smooth',
-                          width: 2
-                        },
-                        xaxis: {
-                          type: 'datetime',
-                          categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-                        },
-                        tooltip: {
-                          x: {
-                            format: 'dd/MM/yy HH:mm'
-                          },
-                        }
-                      }).render();
-                    });
-                  </script>
+<script>
+let pno = [];
+$.ajax({
+	url:'selectPrdNameOut',
+	type:'GET',
+	async:false,
+	success:function(data){
+		console.log(data)
+		pno.push(data);
+	},
+	error:function(request,status,error){
+		alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+		console.log(code);
+		console.log(reject);
+	}
+})
+
+google.charts.load('current', {'packages':['bar']});
+google.charts.setOnLoadCallback(drawChart);
+
+
+function drawChart() {
+var data = google.visualization.arrayToDataTable([]);
+	
+for (let i = 0; i < pno.length; i++) {
+	for (a of pno[i]) {
+		data.put(pno[i][i].prtName)
+	}
+}
+  var data = google.visualization.arrayToDataTable([
+    ['', '생산량', '불량', '출하량'],
+    [pno.prtName, 1000, 400, 200],
+    ['2015', 1170, 460, 250],
+    ['2016', 660, 1120, 300],
+    ['2017', 1030, 540, 350]
+  ]);
+
+  var options = {
+    chart: {
+      title: '',
+      subtitle: '',
+    }
+  };
+
+  var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+  chart.draw(data, google.charts.Bar.convertOptions(options));
+}
+</script>
 										<!-- End Line Chart -->
 
 									</div>
@@ -356,7 +353,8 @@
 												<h6>창고</h6>
 											</li>
 											<th:block th:each="w : ${wh}">
-											<li><a class="dropdown-item" th:text="${w.whName}" th:value="${w.whCode}" onclick="selectWh(this)"></a></li>
+												<li><a class="dropdown-item" th:text="${w.whName}"
+													th:value="${w.whCode}" onclick="selectWh(this)"></a></li>
 											</th:block>
 										</ul>
 									</div>
@@ -367,7 +365,7 @@
 										</h5>
 										<h6 id="whname"></h6>
 										<div id="WHGrid"></div>
-										
+
 										<script type="text/javascript">
 										const WHGrid = new tui.Grid({
 											el : document.getElementById('WHGrid'),

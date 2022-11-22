@@ -256,12 +256,15 @@
 		WHERE pd.pre_no = pr.pre_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
 		(SELECT TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
 	</select>
-	
+
 	<select id="ydPrtCount" resultType="CodeVO">
 		SELECT
-		NVL(SUM(pr.prt_qty),0) AS prt_qty FROM process_run pr, produce pd
-		WHERE pd.pre_no = pr.pre_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
-		(SELECT TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
+		NVL(SUM(pr.prt_qty),0)
+		AS prt_qty FROM process_run pr, produce pd
+		WHERE pd.pre_no = pr.pre_no
+		AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
+		(SELECT
+		TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
 	</select>
 
 	<select id="updatePrtOutCount" resultType="CodeVO">
@@ -281,14 +284,16 @@
 	<select id="updateErrCount" resultType="CodeVO">
 		SELECT
 		NVL(SUM(pi.prs_err_qty),0) AS prt_qty FROM
-		process_inf pi, process_run pr WHERE pr.prs_no = pi.prs_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
+		process_inf pi, process_run
+		pr WHERE pr.prs_no = pi.prs_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
 		(SELECT TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
 	</select>
-	
+
 	<select id="ydErrCount" resultType="CodeVO">
 		SELECT
 		NVL(SUM(pi.prs_err_qty),0) AS prt_qty FROM
-		process_inf pi, process_run pr WHERE pr.prs_no = pi.prs_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
+		process_inf pi, process_run
+		pr WHERE pr.prs_no = pi.prs_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
 		(SELECT TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
 	</select>
 
@@ -310,5 +315,13 @@
 		AND
 		TO_DATE(pr.prs_date,'rrrr/MM/dd') = (SELECT
 		TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
+	</select>
+
+	<select id="selectPrtNameOut" resultType="CodeVO">
+		SELECT p.prt_name,
+		NVL(SUM(po.prt_out_qty),0) AS prt_qty FROM product p, product_out po, order_inf
+		oi WHERE p.prt_code = oi.prt_code AND po.order_no = oi.order_no AND
+		TO_DATE(po.prt_out_date, 'rrrr/MM/dd') = (SELECT TO_DATE(SYSDATE,
+		'rrrr/MM/dd') FROM dual) GROUP BY p.prt_name
 	</select>
 </mapper>

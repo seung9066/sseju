@@ -77,4 +77,5 @@ public interface CodeMapper {
 	public CodeVO ydPrtCount();
 	public CodeVO ydPrtOutCount();
 	public CodeVO ydErrCount();
+	public List<CodeVO> selectPrtNameOut();
 }
