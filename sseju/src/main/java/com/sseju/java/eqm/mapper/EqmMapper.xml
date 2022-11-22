@@ -93,9 +93,8 @@
       <set>
          tot_prc = #{totPrc},
          UPH = #{UPH},
-         emp_no = #{empNo}
-         line_yn =
-         #{lineYn}
+         emp_no = #{empNo},
+         line_yn = #{lineYn}
       </set>
       WHERE line_no = #{lineNo}
    </update>
