@@ -31,41 +31,27 @@ body {
 				<h2>제품 주문</h2>
 			</div>
 			<div style="text-align: right;">
-
-				<button class="button" type="button" data-toggle="modal"
-					data-target="#myModal">모달 창 열기</button>
-
-				<button class="button" onclick="insertPrtInf">주문하기</button>
+				<button class="button" type="submit">주문하기</button>
 			</div>
 			<div id="prtGrid"></div>
 
 
 			<hr>
-			<div style="text-align: right;"></div>
+
+			<table class="table">
+				<tr>
+					<th>거래처</th>
+					<td><input type="text" name="cpCode" id="cpCode"
+						th:value="${session.user.cpName}"></td>
+					<td><input type="hidden" id="cpCode" name="cpCode"
+						value="${session.user.cpCode}"></td>
+					<th>납기 일자</th>
+					<!-- 납기 일자로 할 경우에는 날짜 선택 가능해야함 -->
+					<td><input type="date" name="ordDate" id="ordDate"></td>
+				</tr>
+			</table>
 
 			<div id="ordGrid"></div>
-			<!-- Modal -->
-
-			<div class="modal fade" id="myModal" role="dialog">
-				<!-- 사용자 지정 부분① : id명 -->
-
-				<div class="modal-dialog">
-					<!-- Modal content-->
-					<div class="modal-content">
-						<div class="modal-header">
-							<h4 class="modal-title">주문한목록</h4>
-							<!-- 사용자 지정 부분② : 타이틀 -->
-						</div>
-						<div class="modal-body" id="">
-							<!-- 사용자 지정 부분③ : 텍스트 메시지 -->
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal">Close</button>
-						</div>
-					</div>
-				</div>
-			</div>
 
 			<script>
 			
@@ -79,48 +65,34 @@ body {
 				},
 				scrollX : false,
 				scrollY : false,
-			
+				rowHeaders: ['checkbox'],
 				columns : [ 
+					{
+					header : '제품코드',
+					name : 'prtCode',
+					align : 'left',
+				}, 
 					{
 					header : '제품',
 					name : 'prtName',
-					align : 'center',
-					filter: 'select'
-				}, {
+					align : 'left',
+				}, 
+				{
 					header : '규격',
 					name : 'prtStandard', //납기일자명 수정
 					align : 'center',
-					filter: 'select'
-				}, {
-					header : '단위',
-					name : 'prtUnit',
-					align : 'center',
-					filter: 'select'
-				}, 
+				},
 				{
 					header : '가격',
 					name : 'prtPrice',
-					align : 'center',
-					filter: 'select'	
+					align : 'right',
 				},
 		
 				]
 				
 			});
-	
-					    
-			prtGrid.on("click", event => {
-                
-                // getRow : 그리드 row(tr) 전체 가져오기.
-                //console.log(event.nativeEvent.target.innerText);  td값. 셀값
-                  //rowKey : 인덱스 번호  
-                // input 태그에 값 넣어주기.
-                $('').val(prtGrid.getRow(event.rowKey).orList);
-                $('#prtName').val(prtGrid.getRow(event.rowKey)['prtName']);
-                
-             })
 			    function prtl() {
-					url="selectPrtList"
+					url="/user/selectPrtList"
 			        fetch(url) 
 			        .then(res=>res.json())
 			        .then(obj=>{
@@ -128,12 +100,12 @@ body {
 			           prtGrid.resetData(obj);
 			        })
 				}
-		
-			    
+			   
 			    
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
-			ordALl();
+			
+			 ordALl();
 			const ordGrid = new tui.Grid({
 				el : document.getElementById('ordGrid'),
 				pagination:true,
@@ -150,31 +122,31 @@ body {
 					header : '주문일자',
 					name : 'orderDate', //납기일자명 수정
 					align : 'center',
-					filter: 'select'
 				}, {
 					header : '품목',
 					name : 'prtName',
-					align : 'center',
-					filter: 'select'
+					align : 'left',
 				}, 
-				{
-					header : '납기일자',
-					name : 'dday',
-					editor: 'text',
-					align : 'center',
-					filter: 'select'
-				},
 				{
 					header : '주문량',
 					name : 'orderQty',
 					editor: 'text',
+					align : 'right',
+				},
+				{
+					header : '제품단가',
+					name : 'right',
 					align : 'center',
-					filter: 'select'
+				},
+				{
+					header : '총가격',
+					name : 'orderPrice',
+					align : 'right',
 				},
 				 ]
 			});
 			    function ordALl() {
-					url="selectPrtInfoList"
+					url=""
 			        fetch(url) 
 			        .then(res=>res.json())
 			        .then(obj=>{
@@ -182,7 +154,22 @@ body {
 			           ordGrid.resetData(obj);
 			        })
 				}
-			    
+
+			    prtGrid.on('check', ev => {
+					let data = prtGrid.getValue(ev.rowKey, 'prtCode')
+					console.log(data);
+					ordALl(data);
+				});
+				
+			    prtGrid.on('uncheck', ev => {
+			    	ordGrid.clear();
+			    	ordGrid.clear();
+
+				});
+		
+				
+				
+			
 		    </script>
 		</main>
 	</article>

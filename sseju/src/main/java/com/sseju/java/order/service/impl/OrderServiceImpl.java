@@ -30,11 +30,7 @@ public class OrderServiceImpl implements ORService {
 		return OMapper.insertOrderInfo(Ovo);
 	}
 
-	@Override
-	public int getOrderNo() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 
 	@Override
 	public List<ORVO> selectOrdeIng() {
@@ -42,35 +38,11 @@ public class OrderServiceImpl implements ORService {
 		return OMapper.selectOrdeIng();
 	}
 
-	@Override
-	public List<ORVO> updateOrdeInfo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public List<ORVO> selectPrtManager() {
 		return OMapper.selectPrtManager();
 	}
-
-	@Override
-	public int insertOrderPrtInfo(ORVO Ovo) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int updateOrderPrt(ORVO Ovo) {
-		// TODO Auto-generated method stub
-		return OMapper.updateOrderPrt(Ovo);
-	}
-
-	@Override
-	public int delectOrderPrt(ORVO Ovo) {
-		// TODO Auto-generated method stub
-		return OMapper.delectOrderPrt(Ovo);
-	}
-
 
 
 
