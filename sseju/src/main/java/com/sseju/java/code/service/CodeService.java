@@ -74,4 +74,5 @@ public interface CodeService {
 	public CodeVO ydPrtOutCount();
 	public CodeVO ydErrCount();
 	public List<CodeVO> selectPrtNameOut();
+	public List<CodeVO> selectErrOut();
 }

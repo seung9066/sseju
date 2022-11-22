@@ -647,4 +647,10 @@ public class CodeController {
 	public List<CodeVO> selectPrdNameOut() {
 		return service.selectPrtNameOut();
 	}
+	
+	@GetMapping("/selectErrOut")
+	@ResponseBody
+	public List<CodeVO> selectErrOut() {
+		return service.selectErrOut();
+	}
 }
