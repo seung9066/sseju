@@ -39,7 +39,6 @@ input {
 			<br>
 			<div id=orderNoGrid></div>
 			<div style="float:right;">
-			    <input type="hidden" name="auth" value="ROLE_ADMIN">
 				<button class="button" onclick="updateWorkOrder()">수정</button>
 				<button class="button" onclick="selectDeleteWO()">삭제</button>
 			</div>
@@ -61,18 +60,22 @@ input {
 				<div>
 					<table class="table">
 						<tr>
+							<th>주문번호</th>
+								<td><input type="text" id="orderNo" name="orderNo" readonly></td>
 							<th>품목명</th>
-								<td>
-									<select id="woPrt" name="woPrt">
+								<td><input type="text" id="prtName" name="prtName" readonly>
+									<input type="hidden" id="prtCode" name="prtCode">
+								</td>
+								
+									<!-- <select id="woPrt" name="woPrt">
 										<option>---선택---</option>
 										<th:block th:each="p : ${prt}">
 											<option th:value="${p.prtCode}" th:text="${p.prtName}"></option>
 										</th:block>
-									</select>
-								</td>
+									</select> -->
 							<th>담당자</th>
 							<td>
-								<select>
+								<select name="empId" id="empId">
 									<option>---선택---</option>
 										<th:block th:each="e : ${idName}">
 											<option th:value="${e.empId}" th:text="${e.empName}"></option>
@@ -80,7 +83,7 @@ input {
 								</select>
 							</td>
 							<th>지시수량</th>
-							<td><input type="number" name="preQty" id="preQty" min="1"></td>
+							<td><input type="number" name="insQty" id="insQty" min="1" readonly></td>
 							<th>납기 일자</th>
 							<td><input type="date" name="preDate" id="preDate"></td>							
 						</tr>
@@ -208,7 +211,6 @@ input {
 				      ---------------*/
 				    var orderNoGrid = new tui.Grid({
 						el : document.getElementById('orderNoGrid'),
-						rowHeaders : [ 'checkbox' ],
 						scrollX : false,
 						scrollY : false,
 						columns : [ {
@@ -226,6 +228,21 @@ input {
 							filter : 'select'
 						} ]
 					});
+				    orderNoGrid.on("click", event => {
+		                  
+		                   // getRow : 그리드 row(tr) 전체 가져오기.
+		                   //console.log(event.nativeEvent.target.innerText);  td값. 셀값
+		                     //rowKey : 인덱스 번호  
+		                   // input 태그에 값 넣어주기.
+		                   $('#orderNo').val(orderNoGrid.getRow(event.rowKey).orderNo);
+		                   $('#prtName').val(orderNoGrid.getRow(event.rowKey)['prtName']);
+		                   $('#prtCode').val(orderNoGrid.getRow(event.rowKey).prtCode);
+		                   $('#insQty').val(orderNoGrid.getRow(event.rowKey).orderQty);
+		                   let a = orderNoGrid.getRow(event.rowKey).orderQty;
+		                   $('#insQty').attr("max", a);
+		                })
+
+				    
 
 				    
 					//
