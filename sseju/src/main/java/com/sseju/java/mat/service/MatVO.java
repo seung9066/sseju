@@ -1,6 +1,7 @@
 package com.sseju.java.mat.service;
 
-import java.util.Date;
+import java.sql.Date;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -86,6 +87,7 @@ public class MatVO {
 	private String nowCode;
 	@DateTimeFormat (pattern = "yyyy-MM-dd")
 	private Date matOrdDate;
+//	private String matOrdDate;
 	private String matOrdYn;
 	private String matPrice;
 	private String matOrdEmp;
@@ -122,4 +124,8 @@ public class MatVO {
 	private String empName;
 	private String empId;
 		
+	//VO
+	private List<String> delno; // 삭제시 매치되는 자재번호
+	@DateTimeFormat (pattern = "yyyy-MM-dd")
+	private Date startDate; // 시작일
 }

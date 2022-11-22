@@ -1,10 +1,11 @@
 package com.sseju.java.mat.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -70,12 +71,6 @@ public class MatController {
 		return service.matordList();
 	}
 	
-	@ResponseBody
-	@GetMapping("/selectMatbuyInfo")
-	public String selectMatbuyInfo(){
-		return "/admin/mat/matOrd";
-	}
-	
 	//발주 등록
 	@ResponseBody
 	@PostMapping("/insertMatbuy")
@@ -97,6 +92,44 @@ public class MatController {
 				result += service.insertMatbuy(vo);
 			}
 		return result;
+	}
+	
+	//발주 수정
+	@ResponseBody
+	@PostMapping("/updateMatbuy")
+	public int updateMatbuy(
+			@RequestParam(value = "mon[]", required = false) List<String> mon,
+			@RequestParam(value = "Qty[]", required = false) List<String> Qty,
+			@RequestParam(value = "mc[]", required = false) List<String> mc,
+			@RequestParam(value = "cd[]", required = false) List<String> cd,
+			@RequestParam(value = "mp[]", required = false) List<String> mp,
+			@RequestParam(value = "moe[]", required = false) List<String> moe,
+			@RequestParam(value = "yn[]", required = false) List<String> yn) {
+			int uM = 0;
+			
+			System.out.println(mon.size());
+			for(int i = 0; i < mon.size(); i++) {
+				MatVO vo = new MatVO();
+				vo.setMatOrdNo(mon.get(i));
+				vo.setMatOrdQty(Integer.valueOf(Qty.get(i)));
+				vo.setMatCode(mc.get(i));
+				vo.setCpCode(cd.get(i));
+				vo.setMatPrice(mp.get(i));
+				vo.setMatOrdEmp(moe.get(i));
+				vo.setMatOrdYn(yn.get(i));
+				
+				uM += service.updateMatbuy(vo);
+			}
+			
+			System.out.println(uM);
+		return uM;
+	}
+	
+	//발주 삭제
+	@PostMapping("/deleteMat")
+	@ResponseBody
+	public int selectDelete(@RequestBody MatVO vo) {
+		return service.deleteMatbuy(vo.getDelno());
 	}
 	
 	@RequestMapping("/matInout")

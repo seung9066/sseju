@@ -17,7 +17,7 @@ public interface MatService {
 	//발주 수정
 	public int updateMatbuy(MatVO MatVO);
 	//발주 삭제
-	public int deleteMatbuy(MatVO MatVO);
+	public int deleteMatbuy(List<String> matOrdNo);
 	public int selectDelete(List<String> list);
 	
 	//입고 전체 조회

@@ -16,14 +16,14 @@ public interface MatMapper {
 	
 	//발주 전체 조회
 	public List<MatVO> matordList();
-	//발주 단건 조회
-	public MatVO selectMatbuyInfo(MatVO MatVO);
+	//발주 조건 조회
+	public List<MatVO> detailMatbuyInfo(MatVO MatVO);
 	//발주 등록
 	public int insertMatbuy(MatVO MatVO);
 	//발주 수정
 	public int updateMatbuy(MatVO MatVO);
 	//발주 삭제
-	public int deleteMatbuy(MatVO MatVO);
+	public int deleteMatbuy(String no);
 	public int selectDeleteMatbuy(List<String> list);
 	
 	
@@ -77,6 +77,9 @@ public interface MatMapper {
 	//검수 삭제
 	public int deleteMatCheck(MatVO MatVO);
 	public int selectDeleteMatCheck(List<String> list);
+
+
+	public MatVO selectMatbuyInfo(MatVO matVO);
 }
 
 
