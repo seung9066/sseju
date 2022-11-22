@@ -10,17 +10,12 @@ public interface PRService {
 
 	// 제품목록 조회
 	public List<PRVO> selectPrtList();
-
 	// 주문상세 목록 조회
 	public List<ORVO> selectPrtInfoList();
-	
-
 	// 등록
 	public int insertPrtInfo(PRVO Pvo);
 	
 	//수정
-
-
 	public int updatePrtinfo(PRVO Pvo);
 
 
