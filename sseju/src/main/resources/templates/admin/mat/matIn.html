@@ -58,32 +58,6 @@
 				</ul>
 				<div id="grid"></div>
 			</div>
-			<hr>
-			<div>
-				<div>
-					<h3>출고내역</h3>
-				</div>
-				<div>
-					<ul class="ul-style">
-						<li><label>품목</label><input type="text"
-							data-bs-toggle="modal" data-bs-target="#prtModal"> <i
-							class="bi bi-search" data-bs-toggle="modal"
-							data-bs-target="#prtModal"></i> <input type="text" readonly>
-						</li>
-						<li><label>출고일</label>
-							<div
-								class="tui-datepicker-input tui-datetime-input tui-has-focus">
-								<input type="text" id="datepicker2-input" aria-label="Date-Time">
-								<span class="tui-ico-date"></span>
-								<div id="wrapper2" style="margin-top: -1px;"></div>
-							</div>
-							<button class="button">등록</button>
-							<button class="button">삭제</button></li>
-
-					</ul>
-				</div>
-				<div id="grid2"></div>
-			</div>
 
 
 			<!-- prtModal -->
@@ -110,63 +84,54 @@
 					</div>
 				</div>
 			</div>
-			</div>
-			</div>
 
 			<script>
-				const inTab = document.getElementById('in-tab');
-				inTab.addEventListener('click', function() {
-					grid.refreshLayout();
-				})
-
-				const outTab = document.getElementById('out-tab');
-				outTab.addEventListener('click', function() {
-					grid2.refreshLayout();
-				})
+			matInList();
+			
+			//발주번호,자재코드,자재명,입고수량(합격수량),입고일,창고,LOT번호
 				const grid = new tui.Grid({
 					el : document.getElementById('grid'),
-					data : [ {
-						odDate : '2022-11-01',
-						odCd : 'ORD-20221101-001',
-						prdCd : 'MD-00100',
-						prdNm : '얇은피 고기만두',
-						odAmt : 200,
-						actCd : 'VDR-1004',
-						actNm : 'YD 마트',
-						deDate : '2022-11-04',
-						sts : '완료'
-					} ],
+					bodyHeight: 500,
 					rowHeaders : [ 'checkbox' ],
 					scrollX : false,
-					scrollY : false,
+					scrollY : true,
 					columns : [ {
-						header : '주문 일자',
-						name : 'odDate'
+						header : 'LOT 번호',
+						name : 'lotNo',
+						align : 'center'
+					},{
+						header : '발주 번호',
+						name : 'matOrdNo',
+						align : 'center'
 					}, {
-						header : '주문 코드',
-						name : 'odCd'
+						header : '자재 코드',
+						name : 'matCode',
+						align : 'center'
 					}, {
-						header : '제품 코드',
-						name : 'prdCd'
+						header : '자재명',
+						name : 'matName',
+						align : 'center'
 					}, {
-						header : '제품명',
-						name : 'prdNm'
+						header : '미검수 수량',
+						name : 'matOrdQty',
+						align : 'center'
 					}, {
-						header : '주문량',
-						name : 'odAmt'
+						header : '입고 수량',
+						name : 'matPassQty',
+						align : 'center'
 					}, {
-						header : '거래처 코드',
-						name : 'actCd'
+						header : '입고일', //입고일은 LOT등록일자 순
+						name : 'lotDate', //LOT등록일이 없으면 등록해주기
+						align : 'center'
 					}, {
-						header : '거래처명',
-						name : 'actNm'
+						header : '창고 코드',
+						name : 'whCode',
+						align : 'center'
 					}, {
-						header : '납기 일자',
-						name : 'deDate'
-					}, {
-						header : '진행 상황',
-						name : 'sts'
-					}, ]
+						header : '창고',
+						name : 'whName',
+						align : 'center'
+					}]
 				});
 
 				var datepicker = new tui.DatePicker('#wrapper', {
@@ -176,61 +141,26 @@
 						format : 'yyyy-MM-dd'
 					}
 				});
+				
+				/*------------
+	            // 함수
+	            ----------------*/
+	            
+	            function matInList(){
+					$.ajax({
+						url : '/',
+						dataType : "json",
+						success : function(data) {
+							grid.resetData(data);
+						},
+						error : function(reject) {
+							console.log(reject);
+						}
+					})
+				}
 			</script>
 			<script>
-				var grid2 = new tui.Grid({
-					el : document.getElementById('grid2'),
-					data : [ {
-						odDate : '2022-11-01',
-						odCd : 'ORD-20221101-001',
-						prdCd : 'MD-00100',
-						prdNm : '얇은피 고기만두',
-						odAmt : 200,
-						actCd : 'VDR-1004',
-						actNm : 'YD 마트',
-						deDate : '2022-11-04',
-						sts : '완료'
-					} ],
-					rowHeaders : [ 'checkbox' ],
-					scrollX : false,
-					scrollY : false,
-					columns : [ {
-						header : '주문 일자',
-						name : 'odDate'
-					}, {
-						header : '주문 코드',
-						name : 'odCd'
-					}, {
-						header : '제품 코드',
-						name : 'prdCd'
-					}, {
-						header : '제품명',
-						name : 'prdNm'
-					}, {
-						header : '주문량',
-						name : 'odAmt'
-					}, {
-						header : '거래처 코드',
-						name : 'actCd'
-					}, {
-						header : '거래처명',
-						name : 'actNm'
-					}, {
-						header : '납기 일자',
-						name : 'deDate'
-					}, {
-						header : '진행 상황',
-						name : 'sts'
-					}, ]
-				});
-
-				var datepicker2 = new tui.DatePicker('#wrapper2', {
-					date : new Date(),
-					input : {
-						element : '#datepicker2-input',
-						format : 'yyyy-MM-dd'
-					}
-				});
+				
 
 				var prtGrid = new tui.Grid({
 					el : document.getElementById('prtGrid'),

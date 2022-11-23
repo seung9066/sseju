@@ -1,11 +1,10 @@
 package com.sseju.java.mat.web;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -132,9 +131,18 @@ public class MatController {
 		return service.deleteMatbuy(vo.getDelno());
 	}
 	
-	@RequestMapping("/matInout")
-	public String ex() {
-		return "/admin/mat/matInout";
+	//입고파트
+	@GetMapping("/matIn")
+	public String matIn(Model model) {
+		//model.addAttribute("mat", model)
+		return "/admin/mat/matIn";
+	}
+	
+	
+	
+	@GetMapping("/matOut")
+	public String matOut() {
+		return "/admin/mat/matOut";
 	}
 	
 	@RequestMapping("/matStock")
