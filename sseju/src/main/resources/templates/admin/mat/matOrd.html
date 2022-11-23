@@ -87,7 +87,7 @@
 						<!-- <button class="button" id="searchBtn" onclick="searchBtnHandler()">조회</button> -->
 						<button class="button" id="insertBtn" onclick="insert()">등록</button>
 						<button class="button" id="updateBtn" onclick="update()">수정</button>
-						<button class="button" id="deletetBtn" onclick="deleteMat()">삭제</button></li>
+						<button class="button" id="deletetBtn" onclick="deleteMat()">삭제</button>
 				<!-- </ul> -->
 			</div>
 			<!-- <form action="insertMatbuy" method="post"> -->
@@ -312,10 +312,11 @@
                         { text: '미확인', value: '미확인' },
                       ]
                     }
-                  },
+                  }
+               /* ,
                  validation: {
                 	 regExp:/진[가-힣]/
-                    }
+                    } */
                } ]
             });
             
@@ -359,10 +360,7 @@
                     validation: {
                        dataType: 'datePicker',
                        required: true
-                        },
-					formatter({value}) {
-                        return `${value.substring(0,10)}`;
-                       }
+                        }
                   }, {
                   header : '거래처 코드',
                   name : 'cpCode'

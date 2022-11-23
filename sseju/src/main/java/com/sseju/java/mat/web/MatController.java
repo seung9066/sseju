@@ -88,7 +88,6 @@ public class MatController {
 				vo.setMatPrice(mp.get(i));
 				vo.setMatOrdEmp(moe.get(i));
 				
-				vo.setMatInQty(Integer.valueOf(Qty.get(i)));
 				
 				result += service.insertMatbuy(vo);
 			}
@@ -119,7 +118,26 @@ public class MatController {
 				vo.setMatOrdEmp(moe.get(i));
 				vo.setMatOrdYn(yn.get(i));
 				
+				
+				System.out.println(vo);
+				
+				vo.setMatInQty(Integer.valueOf(Qty.get(i)));
+				
 				uM += service.updateMatbuy(vo);
+				
+					if(vo.getMatOrdYn() == "확인") {
+						System.out.println(vo.getMatOrdYn());
+						//service.insertMatord(vo);
+					}
+				
+				/*
+				 * update -> Yn이 확인인 경우에만 미입고내역에 뜰수있고 insertMatord 발주확인에 넣고
+				 * 미입고내역에 -> Yn을 '입고'로 update시에는 입고 내역에/ '확인'인 경우에는 미입고내역에
+				 * 뜰수있도록 한다.
+				 * 
+				 */
+				
+				
 			}
 			
 			System.out.println(uM);
