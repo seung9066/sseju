@@ -21,7 +21,7 @@ public interface PRMapper {
 	public PRVO selectPrtInfo(PRVO Ovo);
 
 	// 등록
-	public int insertPrtInfo(PRVO Ovo);
+	public int insertPrtInfo(PRVO Pvo);
 
 	//삭제
 	public int deletePrinfo(PRVO Ovo);

@@ -21,15 +21,13 @@ public class PrtServiceImpl implements PRService {
 	public List<PRVO> selectPrtList() {
 		return pmapper.selectPrtList();
 	}
-	
+
 	// 주문상세 목록 조회
 	@Override
 	public List<ORVO> selectPrtInfoList() {
 		return pmapper.selectPrtInfoList();
 	}
 
-	
-	
 	@Override
 	public int insertPrtInfo(PRVO Pvo) {
 		return pmapper.insertPrtInfo(Pvo);
