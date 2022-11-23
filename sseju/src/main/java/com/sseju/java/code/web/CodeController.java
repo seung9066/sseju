@@ -653,4 +653,16 @@ public class CodeController {
 	public List<CodeVO> selectErrOut() {
 		return service.selectErrOut();
 	}
+	
+	@GetMapping("/prsRun")
+	@ResponseBody
+	public List<CodeVO> selectPrsName() {
+		return service.selectPrsName();
+	}
+
+	@GetMapping("/prsRunNow")
+	@ResponseBody
+	public List<CodeVO> selectPrsRunNow() {
+		return service.selectPrsRunNow();
+	}
 }

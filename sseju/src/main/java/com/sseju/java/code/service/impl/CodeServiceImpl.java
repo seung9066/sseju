@@ -334,4 +334,16 @@ public class CodeServiceImpl implements CodeService {
 		return mapper.selectErrOut();
 	}
 
+	@Override
+	public List<CodeVO> selectPrsName() {
+		// TODO Auto-generated method stub
+		return mapper.selectPrsName();
+	}
+
+	@Override
+	public List<CodeVO> selectPrsRunNow() {
+		// TODO Auto-generated method stub
+		return mapper.selectPrsRunNow();
+	}
+
 }
