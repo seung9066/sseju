@@ -306,13 +306,17 @@
 	</select>
 
 	<select id="updatePrttCount" resultType="CodeVO">
-		SELECT NVL(SUM(pr.prt_qty),0) AS prt_qty,
-		pt.prt_code FROM process_run pr, produce pd, product pt
+		SELECT
+		NVL(SUM(pr.prt_qty),0) AS prt_qty,
+		pt.prt_code FROM process_run pr,
+		produce pd, product pt
 		WHERE pd.pre_no
-		= pr.pre_no AND pd.prt_code = pt.prt_code
+		= pr.pre_no AND pd.prt_code =
+		pt.prt_code
 		AND
 		TO_DATE(pr.prs_date,'rrrr/MM/dd') = (SELECT
-		TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual) GROUP BY pt.prt_code ORDER BY pt.prt_code
+		TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual) GROUP BY pt.prt_code ORDER BY
+		pt.prt_code
 	</select>
 
 	<select id="selectPrtNameOut" resultType="CodeVO">
@@ -323,15 +327,32 @@
 		oi.order_no AND
 		TO_DATE(po.prt_out_date, 'rrrr/MM/dd') = (SELECT
 		TO_DATE(SYSDATE,
-		'rrrr/MM/dd') FROM dual) GROUP BY p.prt_code ORDER BY p.prt_code
+		'rrrr/MM/dd') FROM dual) GROUP BY p.prt_code ORDER BY
+		p.prt_code
 	</select>
 
 	<select id="selectErrOut" resultType="CodeVO">
 		SELECT p.prt_code,
 		NVL(SUM(pi.prs_err_qty),0) AS prt_qty FROM process_inf pi, process_run
 		pr, product p, produce pd WHERE pd.pre_no = pr.pre_no AND pd.prt_code
-		= p.prt_code AND pi.prs_no = pr.prs_no AND TO_DATE(pr.prs_date, 'rrrr/MM/dd') = (SELECT
+		= p.prt_code AND pi.prs_no = pr.prs_no AND TO_DATE(pr.prs_date,
+		'rrrr/MM/dd') = (SELECT
 		TO_DATE(SYSDATE,
-		'rrrr/MM/dd') FROM dual) GROUP BY p.prt_code ORDER BY p.prt_code
+		'rrrr/MM/dd') FROM dual) GROUP
+		BY p.prt_code ORDER BY p.prt_code
+	</select>
+
+	<select id="selectPrsName" resultType="CodeVO">
+		SELECT * FROM process
+	</select>
+
+	<select id="selectPrsRunNow" resultType="CodeVO">	
+		SELECT pr.prs_no prs_no,
+		pr.prs_code prs_code FROM process_run pr, process_inf pi WHERE pr.prs_no =
+		pi.prs_no AND to_char(pi.prs_sp_hour, 'rrrr/MM/dd HH:MM:SS')<![CDATA[ > ]]>(SELECT
+		to_char(sysdate, 'rrrr/MM/dd HH:MM:SS') FROM dual) AND
+		to_char(pi.prs_st_hour, 'rrrr/MM/dd HH:MM:SS')<![CDATA[ < ]]>(SELECT
+		to_char(sysdate, 'rrrr/MM/dd HH:MM:SS') FROM dual)
+		
 	</select>
 </mapper>

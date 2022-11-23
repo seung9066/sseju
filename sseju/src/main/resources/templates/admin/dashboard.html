@@ -9,7 +9,8 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
 	<article layout:fragment="content">
@@ -281,18 +282,16 @@
 											소주별 생산량 <span>|Today</span>
 										</h5>
 
-										 <div id="columnchart_material" style="height: 500px;"></div>
+										<div id="columnchart_material" style="height: 500px;"></div>
 
-<script>
-let pno0 = [];
+										<script>
 function prtn() {
 $.ajax({
 	url:'bomMenu',
 	type:'GET',
 	async:false,
 	success:function(data){
-		console.log(data);
-		pno0.push(data);
+		pno0 = data;
 	},
 	error:function(request,status,error){
 		alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -302,15 +301,25 @@ $.ajax({
 })	
 }
 
-let pno = [];
 function prtc() {
 $.ajax({
 	url:'updatePrttCount',
 	type:'GET',
 	async:false,
 	success:function(data){
-		console.log(data)
-		pno.push(data);
+		if (data.length == 0) {
+			pno = [];
+			for (let i = 0; i < pno0.length; i++) {
+			pno.push({'prtQty':0});
+			}
+		} else if (data.length < pno0.length){
+			pno = data;
+			for (let i = data.length; i < pno0.length; i++) {
+				pno.push({'prtQty':0})
+			}
+		} else {
+		pno = data;
+		}
 	},
 	error:function(request,status,error){
 		alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -320,15 +329,25 @@ $.ajax({
 })	
 }
 
-let pno1 = [];
 function prdc() {
 $.ajax({
 	url:'selectPrdNameOut',
 	type:'GET',
 	async:false,
 	success:function(data){
-		console.log(data)
-		pno1.push(data);
+		if (data.length == 0) {
+			pno1 = [];
+			for (let i = 0; i < pno0.length; i++) {
+			pno1.push({'prtQty':0})				
+			}
+		}  else if (data.length < pno0.length){
+			pno1 = data;
+			for (let i = data.length; i < pno0.length; i++) {
+				pno1.push({'prtQty':0})
+			}
+		} else {
+		pno1 = data;			
+		}
 	},
 	error:function(request,status,error){
 		alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -338,16 +357,26 @@ $.ajax({
 })	
 }
 
-let pno2 = [];
 function prde() {
 $.ajax({
 	url:'selectErrOut',
 	type:'GET',
 	async:false,
 	success:function(data){
-		console.log(data)
-		pno2.push(data);
-	},
+		if (data.length == 0) {
+			pno2 = [];
+			for (let i = 0; i < pno0.length; i++) {
+			pno2.push({'prtQty':0})
+			}
+		} else if (data.length < pno0.length){
+			pno2 = data;
+			for (let i = data.length; i < pno0.length; i++) {
+				pno2.push({'prtQty':0})
+			}
+		} else {
+		pno2 = data;			
+		}
+		},
 	error:function(request,status,error){
 		alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 		console.log(code);
@@ -355,41 +384,62 @@ $.ajax({
 	}
 })	
 }
+
+let pno0 = [];
+let pno = [];
+let pno1 = [];
+let pno2 = [];
+
 function runprr() {
+
 prtn();
 prtc();
 prdc();
 prde();
 	
-}
-runprr();
-
-setInterval(() => runprr(), 100000);
-
 google.charts.load('current', {'packages':['bar']});
 google.charts.setOnLoadCallback(drawChart);
 
 
 function drawChart() {
 var data = google.visualization.arrayToDataTable([]);
-	
+
+let dataa= []
+
 for (let i = 0; i < pno0.length; i++) {
-  var data = google.visualization.arrayToDataTable([
-    ['', '생산량', '출하량', '불량'],
-    [pno0[i][i].prtName, pno[i][i].prtQty, pno1[i][i].prtQty, pno2[i][i].prtQty],
-  ]);
+	dataa.push([pno0[i].prtName, pno[i].prtQty, pno1[i].prtQty, pno2[i].prtQty]);
 }
 
+var data = google.visualization.arrayToDataTable([
+    [''],
+  ]);
+
+data.addColumn('number', '생산량');
+data.addColumn('number', '출하량');
+data.addColumn('number', '불량');
+
+for (let i = 0; i < dataa.length; i++) {
+	data.addRows([dataa[i]])
+}
   var options = {
-    chart: {
-      
-    }
+	vAxis: {
+		viewWindowMode:'explicit',
+		viewWindow: {
+			min:0
+		}
+	}
   };
 
   var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
 
   chart.draw(data, google.charts.Bar.convertOptions(options));
 }
+}
+
+runprr();
+
+setInterval(() => runprr(), 100000);
+
 </script>
 										<!-- End Line Chart -->
 
@@ -592,75 +642,88 @@ for (let i = 0; i < pno0.length; i++) {
 
 							<div class="card-body">
 								<h5 class="card-title">
-									Recent Activity <span>| Today</span>
+									가동현황 <span>| Today</span>
 								</h5>
 
-								<div class="activity">
-
-									<div class="activity-item d-flex">
-										<div class="activite-label">32 min</div>
-										<i
-											class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
-										<div class="activity-content">
-											Quia quae rerum <a href="#" class="fw-bold text-dark">explicabo
-												officiis</a> beatae
-										</div>
-									</div>
-									<!-- End activity item-->
-
-									<div class="activity-item d-flex">
-										<div class="activite-label">56 min</div>
-										<i
-											class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
-										<div class="activity-content">Voluptatem blanditiis
-											blanditiis eveniet</div>
-									</div>
-									<!-- End activity item-->
-
-									<div class="activity-item d-flex">
-										<div class="activite-label">2 hrs</div>
-										<i
-											class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
-										<div class="activity-content">Voluptates corrupti
-											molestias voluptatem</div>
-									</div>
-									<!-- End activity item-->
-
-									<div class="activity-item d-flex">
-										<div class="activite-label">1 day</div>
-										<i
-											class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
-										<div class="activity-content">
-											Tempore autem saepe <a href="#" class="fw-bold text-dark">occaecati
-												voluptatem</a> tempore
-										</div>
-									</div>
-									<!-- End activity item-->
-
-									<div class="activity-item d-flex">
-										<div class="activite-label">2 days</div>
-										<i
-											class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
-										<div class="activity-content">Est sit eum reiciendis
-											exercitationem</div>
-									</div>
-									<!-- End activity item-->
-
-									<div class="activity-item d-flex">
-										<div class="activite-label">4 weeks</div>
-										<i
-											class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
-										<div class="activity-content">Dicta dolorem harum nulla
-											eius. Ut quidem quidem sit quas</div>
-									</div>
-									<!-- End activity item-->
-
-								</div>
+								<div class="activity" id="prsRun"></div>
 
 							</div>
 						</div>
 						<!-- End Recent Activity -->
+						<script type="text/javascript">
 
+let prsRunName = [];
+function prcRun() {
+	$.ajax({
+        url: 'prsRun',
+        type : "GET",
+		dataType:"json",
+		async:false,
+        success : function(data) {
+           prsRunName = data;
+           console.log(data);
+        },
+        error : function(error){
+           console.log(11);
+        }
+     })
+}
+
+
+let prsRunNow = [];
+function prcRunNow() {
+	$.ajax({
+        url: 'prsRunNow',
+        type : "GET",
+		dataType:"json",
+		async:false,
+        success : function(data) {
+           prsRunNow = data;
+           console.log(prsRunNow)
+        },
+        error : function(error){
+           console.log(11);
+        }
+     })
+}
+
+
+function prsWrite() {
+
+	let run = '';
+	let a = '';
+	let b = '';
+	
+	for (let i = 0; i < prsRunName.length; i++) {
+
+		$('#prsRun').append(`<div class="activity-item d-flex">
+			<div class="activite-label">${prsRunName[i].prsName}</div>
+			<i
+				class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
+				<div class="activity-content" id="now">
+				비가동중
+				</div>
+		</div>`);
+		
+		for (let j = 0; j < prsRunNow.length; i++) {
+			a = (prsRunName[i].prsCode);
+			b = (prsRunNow[j].prsCode);
+			if (a == b) {
+				run = prsRunNow[j].prsNo;
+				$('#now').last().html(`${run}`);
+			}
+		}
+	}
+
+}
+function prcOn() {
+	
+prcRun();
+prcRunNow();
+prsWrite();
+}
+prcOn();
+</script>
 						<!-- Budget Report -->
 						<div class="card">
 							<div class="filter">
