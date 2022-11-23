@@ -104,6 +104,8 @@ public class MatVO {
 //	MAT_CHK_CODE	VARCHAR2(50 BYTE)
 	
 	private String lotNo;
+	@DateTimeFormat (pattern ="yyyy-MM-dd")
+	private Date lotDate;
 	private String mpCode;
 	private int lotQty;
 
