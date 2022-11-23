@@ -23,7 +23,6 @@
          <hr>
 
          <div class="row">
-            <div class="col-6">
                <div>
                   <h5 style="width: 200px">
                      <b>라인정보 관리</b>
@@ -135,9 +134,8 @@
                $('#lineNo').attr('readonly',true);
                $('#totPrc').val(lineGrid.getValue(ev.rowKey,'totPrc'));
                $('#uph').val(lineGrid.getValue(ev.rowKey,'uph'));
-               $('#lineYn').val(lineGrid.getValue(ev.rowKey,'lineYn'));
+               $('#lineYn').val([lineGrid.getValue(ev.rowKey,'lineYn')]);  // select/option, radio, checkbox는 배열로 묶어준다.
                $('#empNo').val(lineGrid.getValue(ev.rowKey,'empNo'));
-               
                
             });
             
@@ -151,7 +149,7 @@
                $('#lineNo').attr('readonly',false);
                $('#totPrc').val('');
                $('#uph').val('');
-               $('#lineYn').val('');
+               $('#lineYn').val([]);
                $('#empNo').val('');   
             });
             

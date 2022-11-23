@@ -81,13 +81,12 @@ table  input {
 						<label for="eqmCodeInput" style="width: 100px">설비코드</label> <input
 							type="text" class="form-control"
 							style="width: 200px; display: inline" id="eqmCodeInput">&nbsp;
-						<label for="eqmDivSearch">설비구분</label> <select name="eqmDiv"
-							id="eqmDivSearch">
+						<label for="eqmNameSearch">설비구분</label> <select name="eqmName"
+							id="eqmNameSearch"> 
 							<option value=''>--전체--</option>
-							<option value="주입">주입</option>
-							<option value="포장">포장</option>
-							<option value="병">병</option>
-							<option></option>
+							<th:block th:each="e : ${eqm}">
+								<option th:value="${e.eqmName}" th:text="${e.eqmName}"></option>
+							</th:block>
 						</select>
 						<button type="button" class="button" id="eqmSearch">검색</button>
 						&nbsp;
@@ -99,7 +98,7 @@ table  input {
 
 				</div>
 				<div style="float: right">
-					<input type="hidden" name="auth" value="ROLE_ADMIN">
+					
 					<button class="button" type="button" onclick="dis()">등록</button>
 					<button class="button" onclick="deleteEqm()">삭제</button>
 					<button type="button" class="button download" id="excelDownload">Excel</button>
@@ -115,8 +114,9 @@ table  input {
 				<h5 style="width: 200px">
 					<b>설비정보 등록/수정</b>
 				</h5>
+				<input type="hidden" name="auth" value="ROLE_ADMIN">
 				<div style="float: right">
-					<button class="button" type="submit" onclick="insertEqm()">추가</button>
+					<button class="button" type="button" onclick="insertEqm()">추가</button>
 					<button class="button" onclick="updateEqm()">수정</button>
 				</div>
 				<br>
@@ -128,33 +128,36 @@ table  input {
 
 						<tr>
 							<th class="col1">설비코드</th>
-							<td><input type="text" name="eqmCode" id="eqmCode" value="EQM_"></td>
+							<td><input type="text" name="eqmCode" id="eqmCode"
+								value="EQM_"></td>
 							<th class="col1">설비명</th>
-							<td><input type="text" name="eqmName"></td>
+							<td><input type="text" name="eqmName" id="eqmName"></td>
 							<th class="col1">모델명</th>
 							<td><input type="text" name="eqmModel" id="eqmModel"></td>
 							<th class="col1">라인</th>
-							<td>
-								<select id="line">
+							<td><select id="lineNo" name="lineNo">
 									<option>--선택--</option>
 									<th:block th:each="li : ${line}">
 										<option th:value="${li.lineNo}" th:text="${li.lineNo}"></option>
 									</th:block>
-								
-								</select>
-							</td>
+
+							</select></td>
 						</tr>
 
 						<tr>
 							<th class="col1">설치장소</th>
-							<td><input type="text" name="eqmLoc" id="eqmLoc"></td>
-							<th class="col1">설비구분</th>
-							<td><input type="text" name="eqmDiv" id="eqmDiv"><i
-								class="bi bi-search"></i></td>
+							<td><select id="eqmLoc" name="eqmLoc">
+									<option value=''>--선택--</option>
+									<option value="team1">생산1팀</option>
+									<option value="team2">생산2팀</option>
+									<option value="team3">생산3팀</option>
+							</select></td>
 							<th class="col1">최고온도</th>
 							<td><input type="number" name="eqmMaxTemp" id="eqmMaxTemp"></td>
 							<th class="col1">최저온도</th>
 							<td><input type="number" name="eqmMinTemp" id="eqmMinTemp"></td>
+							<th class="col1">규격</th>
+							<td><input type="text" name="eqmSize" id="eqmSize"></td>
 						</tr>
 
 						<tr>
@@ -165,9 +168,9 @@ table  input {
 							<th class="col1">비상연락망</th>
 							<td><input type="tel" name="eqmPurcTel" id="eqmPurcTel"></td>
 							<th class="col1">입고일</th>
-							<td><input type="date" name="eqmPurcDate"></td>
+							<td><input type="date" name="eqmPurcDate" id="eqmPurcDate"></td>
 							<th class="col1">사용여부</th>
-							<td><input type="radio" class="form-check-input"
+							<td><input type="radio" class="form-check-input" id="eqmYn"
 								name="eqmYn" value="Y">Y <input type="radio"
 								class="form-check-input" name="eqmYn" value="N">N</td>
 						</tr>
@@ -175,7 +178,7 @@ table  input {
 						<tr>
 							<th class="col1">점검주기</th>
 
-							<td id="check"><input type="text" name="eqmChk"> <select
+							<td id="check"><input type="text" name="eqmChk" id="eqmChk"> <select
 								name="">
 									<option value='' selected>--선택--</option>
 									<option value="week">주</option>
@@ -183,7 +186,7 @@ table  input {
 									<option value="year">년</option>
 							</select></td>
 							<th class="col1">이미지</th>
-							<td><input type="file"></td>
+							<td><input type="file" id="eqmImg" name="eqmImg"></td>
 						</tr>
 					</table>
 				</form>
@@ -316,11 +319,6 @@ table  input {
                   align : 'center'
                 
                }, {
-                  header : '설비구분',
-                  name : 'eqmDiv', 
-                  align : 'center',
-                  filter : 'select'
-               }, {
                   header : '최고온도',
                   name : 'eqmMaxTemp', 
                   align : 'center'
@@ -364,6 +362,8 @@ table  input {
                /* $('#eqmYn').val(eqmGrid.getValue(ev.rowKey,'eqmYn')); */
                /*  $('#eqmSize').val(eqmGrid.getValue(ev.rowKey,'eqmSize'));*/
                
+
+               
             });
             
             eqmGrid.on('uncheck', ev => {
@@ -373,40 +373,52 @@ table  input {
                }
             }
             
-            $('#eqmCode').val('');
-            $('#eqmCode').attr('readonly',false);
-            $('#eqmName').val('');
-            $('#eqmModel').val('');
-            $('#lineNo').val('');
-            $('#eqmLoc').val('');
-            $('#eqmMaxTemp').val('');
-            $('#eqmMinTemp').val('');
-            /*  $('#eqmCheck').val('');
-            $('#eqmPurcDate').val('');*/
-            $('#eqmDiv').val('');
-            /*  $('#eqmImg').val('');*/
-            $('#eqmPurcName').val('');
-            /*  $('#eqmPurcTel').val('');
-            $('#eqmYn').val('');
-            $('#eqmSize').val('');*/
+               $('#eqmCode').val('');
+               $('#eqmCode').attr('readonly',false);
+               $('#eqmName').val('');
+               $('#eqmModel').val('');
+               $('#lineNo').val('');
+               $('#eqmLoc').val('');
+               $('#eqmMaxTemp').val('');
+               $('#eqmMinTemp').val('');
+               /*  $('#eqmCheck').val('');
+               $('#eqmPurcDate').val('');*/
+               $('#eqmDiv').val('');
+               /*  $('#eqmImg').val('');*/
+               $('#eqmPurcName').val('');
+               /*  $('#eqmPurcTel').val('');
+               $('#eqmYn').val('');
+               $('#eqmSize').val('');*/
+
                
             });
             
             //등록 insert ajax
             function insertEqm(){
+            	let eqmCode = $('#eqmCode').val();
+            	let eqmName = $('#eqmName').val();
+            	let eqmModel = $('#eqmModel').val();
+            	let eqmSize = $('#eqmSize').val();
+            	let eqmLoc = $('#eqmLoc').val();
+            	let eqmMaxTemp = $('#eqmMaxTemp').val();
+            	let eqmMinTemp = $('#eqmMinTemp').val();
+            	let eqmCheck = $('#eqmCheck').val();
+            	let eqmPurcDate = $('#eqmPurcDate').val();
+            	let eqmImg = $('#eqmImg').val();
+            	let eqmPurcName = $('#eqmPurcName').val();
+            	let eqmPurcTel = $('#eqmPurcTel').val();
+            	let eqmYn = $('#eqmYn').val();
             	let lineNo = $('#lineNo').val();
-            	let totPrc = $('#totPrc').val();
-            	let uph = $('#uph').val();
-            	let lineYn = $('#lineYn').val();
-            	let empNo = $('#empNo').val();
             	
+            	console.log(eqmCode);
+            	console.log(eqmImg);
+            	console.log(eqmName);
             	
             	$.ajax({
-            		url:'insertLine',
+            		url:'insertEqm',
             		type : 'POST',
-            		data : {'lineNo':lineNo, 'totPrc' : totPrc , 'uph':uph, 'lineYn':lineYn,'empNo':empNo},
+            		data : {'eqmCode':eqmCode, 'eqmName' : eqmName , 'eqmModel':eqmModel, 'eqmSize':eqmSize,'eqmLoc':eqmLoc,'eqmMaxTemp':eqmMaxTemp,'eqmMinTemp':eqmMinTemp,'eqmCheck':eqmCheck,'eqmPurcDate':eqmPurcDate,'eqmImg':eqmImg,'eqmPurcName':eqmPurcName ,'eqmPurcTel' : eqmPurcTel,'eqmYn':eqmYn,'lineNo':lineNo},
             		dataType : "json",
-                    
                     async : false,
                     beforeSend : function(xhr){
                        xhr.setRequestHeader(header, token);

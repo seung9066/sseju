@@ -7,12 +7,14 @@
    <!-- 설비 eqm -->
    <!-- 전체조회 -->
    <select id="selectEqmList" resultType="EqmVO">
-      SELECT * FROM EQM ORDER BY
-      EQM_CODE ASC
+      SELECT e.eqm_code, e.eqm_name, e.eqm_model, e.eqm_size, e.eqm_size, e.eqm_loc, e.eqm_max_temp, e.eqm_min_temp, e.eqm_check,
+      		 e.eqm_purc_date, e.eqm_img, e.eqm_purc_name, e.eqm_purc_tel, e.eqm_yn, l.line_no
+      FROM EQM e
+      JOIN EQM_LINE l ON e.line_no = l.line_no
    </select>
 
 
-   <insert id="insertEqm" parameterType="EqmVO">
+   <insert id="insertEqmInfo" parameterType="EqmVO">
     
       INSERT INTO EQM
       VALUES(
@@ -23,43 +25,19 @@
       #{eqmLoc},
       #{eqmMaxTemp},
       #{eqmMinTemp},
-      #{eqmCheck},
+      #{eqmCheck,jdbcType=VARCHAR},
       #{eqmPurcDate},
-      #{eqmDiv},
-      #{eqmImg},
+      #{eqmImg,jdbcType=VARCHAR},
       #{eqmPurcName},
       #{eqmPurcTel},
       #{eqmYn},
-      #{lineNo},
-      #{eqmNo}
+      #{lineNo}
+     
       )
    </insert>
 
    <!-- 설비 수정 -->
-   <update id="updateEqmInfo" parameterType="EqmVO">
-      UPDATE EQM q
-      <set>
-         eqm_name = #{eqmName},
-         eqm_model = #{eqmModel},
-         eqm_size =
-         #{eqmSize},
-         eqm_loc = #{eqmLoc},
-         eqm_max_temp = #{eqmMaxTemp},
-         eqm_min_temp = #{eqmMinTemp},
-         eqm_check = #{eqmCheck},
-         eqm_purc_date =
-         #{eqmPurcDate},
-         eqm_div = #{eqmDiv},
-         eqm_img = #{eqmImg},
-         eqm_purc_name
-         = #{eqmPurcName},
-         eqm_purc_tel = #{eqmPurcTel},
-         eqm_yn =#{eqmYn},
-         line_no = (SELECT l.line_no FROM EQM_LINE l WHERE q.line_no =
-         #{l.line_no} )
-      </set>
-      WHERE eqm_code = #{eqmCode}
-   </update>
+  
    <!-- 설비 삭제 -->
    <delete id="deleteEqmInfo" parameterType="EqmVO">
       DELETE FROM EQM
