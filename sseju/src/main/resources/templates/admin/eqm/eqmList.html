@@ -78,27 +78,24 @@ table  input {
 				</h5>
 				<div>
 					<div>
-						<label for="eqmCodeInput" style="width: 100px">설비코드</label> 
-						<input
+						<label for="eqmCodeInput" style="width: 100px">설비코드</label> <input
 							type="text" class="form-control"
 							style="width: 200px; display: inline" id="eqmCodeInput">&nbsp;
-						<label for="eqmDivSearch">설비구분</label>
-						<select name="eqmDiv" id="eqmDivSearch">
+						<label for="eqmDivSearch">설비구분</label> <select name="eqmDiv"
+							id="eqmDivSearch">
 							<option value=''>--전체--</option>
 							<option value="주입">주입</option>
 							<option value="포장">포장</option>
 							<option value="병">병</option>
 							<option></option>
 						</select>
-						<button type="button" class="button"
-							id="eqmCodeSearch">검색</button>
+						<button type="button" class="button" id="eqmSearch">검색</button>
 						&nbsp;
-						<button type="button" class="button"
-							id="eqmReset">초기화</button>
+						<button type="button" class="button" id="eqmReset">초기화</button>
 
 					</div>
 
-					
+
 
 				</div>
 				<div style="float: right">
@@ -119,7 +116,7 @@ table  input {
 					<b>설비정보 등록/수정</b>
 				</h5>
 				<div style="float: right">
-					<button class="button" type="submit">추가</button>
+					<button class="button" type="submit" onclick="insertEqm()">추가</button>
 					<button class="button" onclick="updateEqm()">수정</button>
 				</div>
 				<br>
@@ -131,14 +128,21 @@ table  input {
 
 						<tr>
 							<th class="col1">설비코드</th>
-							<td><input type="text" name="eqmCode" id="eqmCode"></td>
+							<td><input type="text" name="eqmCode" id="eqmCode" value="EQM_"></td>
 							<th class="col1">설비명</th>
 							<td><input type="text" name="eqmName"></td>
 							<th class="col1">모델명</th>
 							<td><input type="text" name="eqmModel" id="eqmModel"></td>
 							<th class="col1">라인</th>
-							<td><input type="text" name="lineNo" id="lineNo"><i
-								class="bi bi-search"></i></td>
+							<td>
+								<select id="line">
+									<option>--선택--</option>
+									<th:block th:each="li : ${line}">
+										<option th:value="${li.lineNo}" th:text="${li.lineNo}"></option>
+									</th:block>
+								
+								</select>
+							</td>
 						</tr>
 
 						<tr>
@@ -155,13 +159,13 @@ table  input {
 
 						<tr>
 							<th class="col1">구입업체</th>
-							<td><input type="text" name="eqmPurcName"><i
+							<td><input type="text" name="eqmPurcName" id="eqmPurcName"><i
 								class="bi bi-search" data-bs-toggle="modal"
 								data-bs-target="#eqmPurcModal"></i></td>
+							<th class="col1">비상연락망</th>
+							<td><input type="tel" name="eqmPurcTel" id="eqmPurcTel"></td>
 							<th class="col1">입고일</th>
 							<td><input type="date" name="eqmPurcDate"></td>
-							<th class="col1">비상연락망</th>
-							<td><input type="tel" name="eqmPurcTel"></td>
 							<th class="col1">사용여부</th>
 							<td><input type="radio" class="form-check-input"
 								name="eqmYn" value="Y">Y <input type="radio"
@@ -211,23 +215,9 @@ table  input {
 						</div>
 						<div class="modal-body">
 							<!-- 거래처 리스트  -->
-							<table>
-								<thead>
-									<tr>
-										<th>업체코드</th>
-										<th>업체명</th>
-									</tr>
-								</thead>
-								<tbody>
-									<th:block th:each="c : ${cp}">
-										<td th:text="${c.cpCode}" th:value="${c.cpCode}"></td>
-										<td th:text="${c.cpName}" th:value="${c.cpName}"></td>
-									</th:block>
-								</tbody>
-							</table>
+							<div id="cpGrid"></div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-primary">선택</button>
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">취소</button>
 						</div>
@@ -253,6 +243,43 @@ table  input {
 			<script>
    
             showAll();
+            cp();
+            
+            //거래처 그리드(모달)
+			var cpGrid = new tui.Grid({
+               el : document.getElementById('cpGrid'),
+               bodyHeight : 200,
+               rowHeaders : [],
+               scrollX : false,
+               scrollY : false,
+               columns : [{
+                  header : '거래처 코드',
+                  name : 'cpCode'
+               },{
+                  header : '거래처명',
+                  name : 'cpName'
+               },{
+                   header : '연락처',
+                   name : 'cpTel'
+                },{
+                    header : '비고',
+                    name : '' //'설비거래처'만 뜨게
+                 }]
+            
+            });            
+            
+            // 클릭한 거래처 정보 input 태그에 넣기
+            cpGrid.on('click',ev => {
+            	let rowData = cpGrid.getRow(ev.rowKey);
+            	
+            	let cpName = rowData['cpName'];
+            	let cpTel = rowData['cpTel'];
+            	
+            	$('#eqmPurcName').val(cpName);
+            	$('#eqmPurcTel').val(cpTel);
+            	
+            	$('#eqmPurcModal').modal("hide");
+            });
             
             
             
@@ -271,22 +298,22 @@ table  input {
                }, {
                   header : '설비명',
                   name : 'eqmName',
-                  align : 'center',
+                  align : 'center'
                   
                }, {
                   header : '모델명',
                   name : 'eqmModel', 
-                  align : 'center',
+                  align : 'center'
                   
                }, {
                   header : '라인',
                   name : 'lineNo', 
-                  align : 'center',
+                  align : 'center'
                   
                }, {
                   header : '설치장소',
                   name : 'eqmLoc', 
-                  align : 'center',
+                  align : 'center'
                 
                }, {
                   header : '설비구분',
@@ -296,17 +323,17 @@ table  input {
                }, {
                   header : '최고온도',
                   name : 'eqmMaxTemp', 
-                  align : 'center',
+                  align : 'center'
                  
                }, {
                   header : '최저온도',
                   name : 'eqmMinTemp',
-                  align : 'center',
+                  align : 'center'
                   
                }, {
                   header : '구입업체',
                   name : 'eqmPurcName',
-                  align : 'center',
+                  align : 'center'
                   
                }  ]
                
@@ -364,6 +391,42 @@ table  input {
             $('#eqmSize').val('');*/
                
             });
+            
+            //등록 insert ajax
+            function insertEqm(){
+            	let lineNo = $('#lineNo').val();
+            	let totPrc = $('#totPrc').val();
+            	let uph = $('#uph').val();
+            	let lineYn = $('#lineYn').val();
+            	let empNo = $('#empNo').val();
+            	
+            	
+            	$.ajax({
+            		url:'insertLine',
+            		type : 'POST',
+            		data : {'lineNo':lineNo, 'totPrc' : totPrc , 'uph':uph, 'lineYn':lineYn,'empNo':empNo},
+            		dataType : "json",
+                    
+                    async : false,
+                    beforeSend : function(xhr){
+                       xhr.setRequestHeader(header, token);
+                    },
+                    success:function(data){
+                       if(data > 0) {
+                          alert("입력완료");
+                          showAll();   
+                         
+                       } else {
+                          alert("입력실패");
+                          
+                       }
+                    },error : function(reject){
+                    	console.log(reject);
+                    }
+            		
+            		
+            	});
+            }
             
             function deleteEqm(){
                
@@ -446,8 +509,26 @@ table  input {
                    })
             }
             
+            function cp(){
+            	$.ajax({
+            		url : '/cpList',
+            		dataType:"json",
+            		success : function(data){
+            			cpGrid.resetData(data);
+            		},
+            		error : function(reject){
+            			console.log(reject);
+            		}
+            	});
+            }
+            
+            //모달클릭
+            document.addEventListener('shown.bs.modal', function() {
+                cpGrid.refreshLayout();
+               }, '.modal');
+            
             // filter기능
-            eqmCodeSearch.addEventListener('click', () => {
+            eqmSearch.addEventListener('click', () => {
                 eqmGrid.filter('eqmCode' , [{code:'contain', value:$('#eqmCodeInput').val()}])
                 eqmGrid.filter('eqmDiv' , [{code:'eq', value:$('#eqmDivSearch').val()}])
                

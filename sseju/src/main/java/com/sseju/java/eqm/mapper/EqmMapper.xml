@@ -81,7 +81,7 @@
       VALUES (
       #{lineNo},
       #{totPrc},
-      #{UPH},
+      #{uph},
       #{empNo},
       #{lineYn}
       )
@@ -92,7 +92,7 @@
       UPDATE EQM_LINE
       <set>
          tot_prc = #{totPrc},
-         UPH = #{UPH},
+         uph = #{uph},
          emp_no = #{empNo},
          line_yn = #{lineYn}
       </set>
