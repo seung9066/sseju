@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sseju.java.code.service.CodeService;
+import com.sseju.java.code.service.CodeVO;
 import com.sseju.java.company.service.CompanyService;
 import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.eqm.service.EqmService;
@@ -24,6 +26,8 @@ public class EqmController {
 	EqmService eqmService;
 	@Autowired
 	CompanyService cService;
+	@Autowired
+	CodeService cdService;
 
 	// 거래처 정보
 	@GetMapping("/cpList")
@@ -107,10 +111,23 @@ public class EqmController {
 
 	@PostMapping("insertEqm")
 	@ResponseBody
-	public String insertEqm(EqmVO eqmVO) {
-		eqmService.insertEqmInfo(eqmVO);
-		return "redirect:eqmList";
+	public int insertEqm(EqmVO eqmVO) {
+		
+		
+		int a = eqmService.insertEqmInfo(eqmVO);
+		// 설비등록하는 동시에 공통코드에도 값 넣어주기
+		CodeVO vo = new CodeVO();
+		vo.setCode(eqmVO.getEqmCode());
+		vo.setDivName("설비");
+		vo.setDivCode("EQM");
+		vo.setCodeName(eqmVO.getEqmName());
+		
+		cdService.insertCode(vo);
+		
+		return a;
 	}
+	
+	
 
 	@PostMapping("/updateEqm")
 	@ResponseBody

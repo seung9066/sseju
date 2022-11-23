@@ -105,7 +105,8 @@
 				<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}" />
 				<div id='dis' style="display: none;">
-				<div><button type="button" onclick="insertChk()">추가</button></div>
+				<div>
+				<div style="float:right;"><button type="button" class="button" onclick="insertChk()">추가</button></div>
 					<table>
 						<tr>
 							
@@ -115,16 +116,15 @@
 								data-bs-target="#eqmModal"></i></td>
 							<th class="col1">설비명</th>
 							<td><input type="text" name="eqmName" id="eqmName"></td>
-							
-						</tr>
-						<tr>
 							<th class="col1">점검일</th>
 							<td><input type="date" name="chkDate" id="chkDate"></td>
 							<th class="col1">차기점검일</th>
 							<td><input type="date" name="chkNdate" id="chkNdate"></td>
-							<th class="col1">판정</th>
-							<td><input type="radio" name="chkState" id="chkState" value="nor">정상<input
-								type="radio" name="chkState" id="chkState" value="abnor">불량</td>
+							
+						</tr>
+						<tr>
+							
+							
 							<th class="col1">담당자</th>
 							<td><input type="text" name="chkEmpNo" id="chkEmpNo"><i
 								class="bi bi-search" data-bs-toggle="modal"
@@ -134,6 +134,7 @@
 						</tr>
 
 					</table>
+				</div>
 				</div>
 				
 				

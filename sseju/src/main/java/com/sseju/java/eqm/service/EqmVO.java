@@ -1,8 +1,6 @@
 package com.sseju.java.eqm.service;
 
-
-
-import java.sql.Date;
+import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
 import org.springframework.format.annotation.DateTimeFormat;
