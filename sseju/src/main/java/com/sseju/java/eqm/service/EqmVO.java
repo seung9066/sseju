@@ -12,6 +12,7 @@ import lombok.Data;
 @Data
 @Alias("EqmVO")
 public class EqmVO {
+
    //설비
    private String eqmCode;
    private String eqmName;
@@ -29,14 +30,17 @@ public class EqmVO {
    private String eqmPurcTel;
    private String eqmYn;
    
-   /*
-    * //거래처 private String cpCode; private String cpName;
-    */
+   
+     //거래처
+   private String cpCode; 
+   private String cpName;
+   private String cpTel;
+    
    
    // 라인
    private String lineNo; // 라인 번호
    private int totPrc; // 총생산량
-   private int UPH; //UPH
+   private int uph; //UPH
    private String empNo; //담당자
    private String lineYn; // 사용여부
    

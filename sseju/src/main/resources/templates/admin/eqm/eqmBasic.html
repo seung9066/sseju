@@ -41,15 +41,17 @@
                <!-- 라인 등록 폼 : show/hidden  -->
                <div id='dis' style="display:none">
                   <br>
-                  <form action="insertLine" method="POST">
+                 
                      <input type="hidden" th:name="${_csrf.parameterName}"
                         th:value="${_csrf.token}" />
-                     
+                     <form>
                         <input type="hidden" name="auth" value="ROLE_ADMIN">
                         <div style="float:right;">
-                        <button type="submit" class="button">등록</button>
-                        <button type="button" class="button" onclick="updateLine()">수정</button>   
+                        <button type="button" class="button" onclick="insertLine()" id="ins">등록</button>
+                        <button type="button" class="button" onclick="updateLine()" id="upd">수정</button>
+                        <button type="reset" class="button" >초기화</button>   
                         </div>
+                        
                      	<table class="table">
                         <tr>
                            <th>라인명</th>
@@ -61,19 +63,19 @@
                            <th>총생산량</th>
                            <td><input type="number" name="totPrc" id="totPrc" min="1"></td>
                            <th>UPH</th>
-                           <td><input type="number" name="UPH" id="UPH" min="1"></td>
+                           <td><input type="number" name="uph" id="uph" min="1"></td>
                         </tr>
                         <tr>
                            <th>사용여부</th>
                            <td><input type="radio" name="lineYn" id="lineYn"
                               value="Y" style="vertical-align: 0px;">Y <input
-                              type="radio" id="lineYn" name="lineYn" value="N"
+                              type="radio"  name="lineYn" value="N" 
                               style="vertical-align: 1px;">N</td>
                         </tr>
                      </table>
-                  </form>
+                     </form>
+                 
                </div>
-               
                <!-- 등록 폼 end  -->
                <!-- 라인정보관리 등록 폼 : show/hide -->
          <script type="text/javascript">
@@ -108,7 +110,7 @@
                   align : 'right'
                },{
                   header : 'UPH',
-                  name : 'UPH',
+                  name : 'uph',
                   align : 'right'
                }, {
                   header : '사용여부',
@@ -132,7 +134,7 @@
                $('#lineNo').val(lineGrid.getValue(ev.rowKey,'lineNo'));
                $('#lineNo').attr('readonly',true);
                $('#totPrc').val(lineGrid.getValue(ev.rowKey,'totPrc'));
-               $('#UPH').val(lineGrid.getValue(ev.rowKey,'UPH'));
+               $('#uph').val(lineGrid.getValue(ev.rowKey,'uph'));
                $('#lineYn').val(lineGrid.getValue(ev.rowKey,'lineYn'));
                $('#empNo').val(lineGrid.getValue(ev.rowKey,'empNo'));
                
@@ -148,10 +150,45 @@
                $('#lineNo').val('');
                $('#lineNo').attr('readonly',false);
                $('#totPrc').val('');
-               $('#UPH').val('');
+               $('#uph').val('');
                $('#lineYn').val('');
                $('#empNo').val('');   
             });
+            
+            function insertLine(){
+            	let lineNo = $('#lineNo').val();
+            	let totPrc = $('#totPrc').val();
+            	let uph = $('#uph').val();
+            	let lineYn = $('#lineYn').val();
+            	let empNo = $('#empNo').val();
+            	
+            	
+            	$.ajax({
+            		url:'insertLine',
+            		type : 'POST',
+            		data : {'lineNo':lineNo, 'totPrc' : totPrc , 'uph':uph, 'lineYn':lineYn,'empNo':empNo},
+            		dataType : "json",
+                    
+                    async : false,
+                    beforeSend : function(xhr){
+                       xhr.setRequestHeader(header, token);
+                    },
+                    success:function(data){
+                       if(data > 0) {
+                          alert("입력완료");
+                          showAll();   
+                         
+                       } else {
+                          alert("입력실패");
+                          
+                       }
+                    },error : function(reject){
+                    	console.log(reject);
+                    }
+            		
+            		
+            	});
+            }
             
             function deleteLine(){
                let line = [];
@@ -230,14 +267,32 @@
                })
             }
             
-           $('#deleteBt').on('click',function(){
+           
+        	   
+          
+            $('#ins').on('click',function(){
         	  document.getElementById('lineNo').value=''; 
         	  document.getElementById('totPrc').value='';
-        	  document.getElementById('UPH').value='';
+        	  document.getElementById('uph').value='';
         	  document.getElementById('empNo').value='';
         	  document.getElementById('lineYn').value='';
-        	  
            });
+            $('#upd').on('click',function(){
+          	  document.getElementById('lineNo').value=''; 
+          	  document.getElementById('totPrc').value='';
+          	  document.getElementById('uph').value='';
+          	  document.getElementById('empNo').value='';
+          	  document.getElementById('lineYn').value='';
+             });
+            $('#deleteBt').on('click',function(){
+            	  document.getElementById('lineNo').value=''; 
+            	  document.getElementById('totPrc').value='';
+            	  document.getElementById('uph').value='';
+            	  document.getElementById('empNo').value='';
+            	  document.getElementById('lineYn').value='';
+               });
+             
+           
 
          </script>
       </main>
