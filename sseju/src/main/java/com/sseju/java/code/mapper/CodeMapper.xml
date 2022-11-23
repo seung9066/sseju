@@ -54,7 +54,7 @@
 
 	<select id="getBomMenu" resultType="CodeVO">
 		SELECT prt_code, prt_name
-		FROM product
+		FROM product ORDER BY prt_code
 	</select>
 
 	<select id="getBOMMatList" resultType="CodeVO">
@@ -252,19 +252,17 @@
 
 	<select id="updatePrtCount" resultType="CodeVO">
 		SELECT
-		NVL(SUM(pr.prt_qty),0) AS prt_qty FROM process_run pr, produce pd
-		WHERE pd.pre_no = pr.pre_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
-		(SELECT TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
+		NVL(SUM(prt_qty),0) AS prt_qty FROM process_run WHERE
+		TO_DATE(prs_date,'rrrr/MM/dd') =
+		(SELECT TO_DATE(SYSDATE,'rrrr/MM/dd')
+		FROM dual)
 	</select>
 
 	<select id="ydPrtCount" resultType="CodeVO">
 		SELECT
-		NVL(SUM(pr.prt_qty),0)
-		AS prt_qty FROM process_run pr, produce pd
-		WHERE pd.pre_no = pr.pre_no
-		AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
-		(SELECT
-		TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
+		NVL(SUM(prt_qty),0) AS
+		prt_qty FROM process_run WHERE TO_DATE(prs_date,'rrrr/MM/dd') =
+		(SELECT TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
 	</select>
 
 	<select id="updatePrtOutCount" resultType="CodeVO">
@@ -308,20 +306,32 @@
 	</select>
 
 	<select id="updatePrttCount" resultType="CodeVO">
-		SELECT pr.prt_qty,
-		pt.prt_name FROM process_run pr, produce pd, product pt
+		SELECT NVL(SUM(pr.prt_qty),0) AS prt_qty,
+		pt.prt_code FROM process_run pr, produce pd, product pt
 		WHERE pd.pre_no
 		= pr.pre_no AND pd.prt_code = pt.prt_code
 		AND
 		TO_DATE(pr.prs_date,'rrrr/MM/dd') = (SELECT
-		TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
+		TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual) GROUP BY pt.prt_code ORDER BY pt.prt_code
 	</select>
 
 	<select id="selectPrtNameOut" resultType="CodeVO">
-		SELECT p.prt_name,
-		NVL(SUM(po.prt_out_qty),0) AS prt_qty FROM product p, product_out po, order_inf
-		oi WHERE p.prt_code = oi.prt_code AND po.order_no = oi.order_no AND
-		TO_DATE(po.prt_out_date, 'rrrr/MM/dd') = (SELECT TO_DATE(SYSDATE,
-		'rrrr/MM/dd') FROM dual) GROUP BY p.prt_name
+		SELECT p.prt_code,
+		NVL(SUM(po.prt_out_qty),0) AS prt_qty FROM product p, product_out po,
+		order_inf
+		oi WHERE p.prt_code = oi.prt_code AND po.order_no =
+		oi.order_no AND
+		TO_DATE(po.prt_out_date, 'rrrr/MM/dd') = (SELECT
+		TO_DATE(SYSDATE,
+		'rrrr/MM/dd') FROM dual) GROUP BY p.prt_code ORDER BY p.prt_code
+	</select>
+
+	<select id="selectErrOut" resultType="CodeVO">
+		SELECT p.prt_code,
+		NVL(SUM(pi.prs_err_qty),0) AS prt_qty FROM process_inf pi, process_run
+		pr, product p, produce pd WHERE pd.pre_no = pr.pre_no AND pd.prt_code
+		= p.prt_code AND pi.prs_no = pr.prs_no AND TO_DATE(pr.prs_date, 'rrrr/MM/dd') = (SELECT
+		TO_DATE(SYSDATE,
+		'rrrr/MM/dd') FROM dual) GROUP BY p.prt_code ORDER BY p.prt_code
 	</select>
 </mapper>
