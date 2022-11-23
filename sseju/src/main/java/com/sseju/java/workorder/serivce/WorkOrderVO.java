@@ -27,5 +27,6 @@ public class WorkOrderVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date orderDate;		//주문일자
 	private String prePrg;		//작업 진행 상태(진행전, 진행중, 완료)표기용
+	private String orderYn;		//승인Y 대기N, y가되면 작업 지시로, 작업 지시 그리드에서 삭제하면 n이되어서 다시 주문테이블로 돌아감 
 	
 }

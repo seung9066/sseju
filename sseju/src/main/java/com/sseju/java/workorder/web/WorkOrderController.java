@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -49,33 +50,55 @@ public class WorkOrderController {
 	@PostMapping("/insertWorkOrder")
 	public String insertWorkOrder(WorkOrderVO woVO, Model model) {
 		woService.insertWorkOrder(woVO);
+		woService.updateOrderYn(woVO);
 		return "redirect:workOrder";
 	}
 	
 	//작업 지시 수정
 	@PostMapping("/updateWorkOrder")
 	@ResponseBody
-	public String updateWorkOrder(WorkOrderVO woVO) {
-		woService.updateWorkOrder(woVO);
-		return "redirect:workOrder";
+	public int updateWorkOrder(@RequestBody WorkOrderVO woVO) {
+		return woService.updateWorkOrder(woVO);
 	}
 	
 	//작업 지시 삭제
 	@PostMapping("/selectDeleteWO")
 	@ResponseBody
-	public int deleteWorkOrder(@RequestParam(value="deleteWorkOrder[]", required=false) List<String> deleteWorkOrder) {
+	public int deleteWorkOrder(@RequestParam(value="deleteWorkOrder[]", 
+								required=false) List<String> deleteWorkOrder, 
+			@RequestParam(value="deleteOrder[]", 
+								required=false) List<String> deleteOrder) {
 		int res = 0;
 		for(int i=0; i<deleteWorkOrder.size(); i++) {
 			String line = deleteWorkOrder.get(i);
 			System.out.println(line);
 			WorkOrderVO woVO = new WorkOrderVO();
 			woVO.setPreNo(line);
-			
 			res += woService.deleteWorkOrder(woVO);
+			//지시 칸에서 삭제되어 반환값이 들어오면 updateorderyn이 실행되면서 주문칸에 다시 값이 들어가게
+			line = deleteOrder.get(i);
+			woVO.setOrderNo(line);
+			woService.updateOrderYn(woVO);
+			
 		}
 		return res;
 	}
 	
+	//주문 신청 내역 그리드의 행 삭제
+	@PostMapping("/selectDeleteOrder")
+	@ResponseBody
+	public int deleteOrder(@RequestParam(value="deleteOrder[]",
+							required = false) List<String> deleteOrder) {
+		int res = 0;
+		for(int i=0; i<deleteOrder.size(); i++) {
+			String line = deleteOrder.get(i);
+			WorkOrderVO woVO = new WorkOrderVO();
+			woVO.setOrderNo(line);
+			res += woService.deleteOrder(woVO);
+		}
+		return res;
+	}
+
 	
 	/*
 	 * @PostMapping("/selectDeleteWO") public String deleteWorkOrder(WorkOrderVO
