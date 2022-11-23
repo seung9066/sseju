@@ -96,7 +96,7 @@
 					scrollX : false,
 					scrollY : true,
 					columns : [ {
-						header : 'LOT 번호',
+						header : 'LOT 번호', //없는경우 O
 						name : 'lotNo',
 						align : 'center'
 					},{
@@ -116,18 +116,20 @@
 						name : 'matOrdQty',
 						align : 'center'
 					}, {
-						header : '입고 수량',
+						header : '입고 수량',  //ㄱㅖ산
 						name : 'matPassQty',
 						align : 'center'
 					}, {
 						header : '입고일', //입고일은 LOT등록일자 순
 						name : 'lotDate', //LOT등록일이 없으면 등록해주기
-						align : 'center'
-					}, {
+						align : 'center' //없는경우 O
+					}, 
+/* 					{
 						header : '창고 코드',
 						name : 'whCode',
 						align : 'center'
-					}, {
+					}, */ 
+					{
 						header : '창고',
 						name : 'whName',
 						align : 'center'
@@ -148,16 +150,24 @@
 	            
 	            function matInList(){
 					$.ajax({
-						url : '/',
+						url : '/matInList',
 						dataType : "json",
 						success : function(data) {
 							grid.resetData(data);
+							concole.log(data);
 						},
 						error : function(reject) {
 							console.log(reject);
 						}
 					})
 				}
+				
+	            /*------------
+	            // 등록
+	            ----------------*/
+				
+
+	            
 			</script>
 			<script>
 				

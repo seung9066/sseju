@@ -62,8 +62,7 @@ public class MatServiceImpl implements MatService {
 
 	@Override
 	public List<MatVO> matInList() {
-		// TODO Auto-generated method stub
-		return null;
+		return matMapper.matInList();
 	}
 
 	@Override
@@ -208,6 +207,12 @@ public class MatServiceImpl implements MatService {
 	public List<MatVO> material() {
 		// TODO Auto-generated method stub
 		return matMapper.material();
+	}
+
+	@Override
+	public int insertMatord(MatVO MatVO) {
+		// TODO Auto-generated method stub
+		return matMapper.insertMatord(MatVO);
 	}
 
 }

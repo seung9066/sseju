@@ -98,16 +98,33 @@
 	
 	<!-- 입고 Mapper -->
 	<select id="matInList" resultType="MatVO">
-		SELECT c.mat_ord_no, c.mat_code, m.mat_name, 
-        c.mat_in_qty, TO_CHAR(c.mat_chk_date, 'yyyy-MM-dd') as "MAT_CHK_DATE",l.lot_no, w.wh_code, w.wh_name
-		FROM mat_chk c
-		JOIN mat_buy b ON c.mat_ord_no = b.mat_ord_no
-		JOIN lot l ON l.mat_chk_code = c.mat_chk_code
-		JOIN material m ON m.mat_code = c.mat_code
-		JOIN warehouse w ON w.wh_code = l.wh_code
+		SELECT c.mat_ord_no, c.mat_chk_code, m.mat_code, m.mat_name, b.mat_ord_yn,
+        b.mat_ord_qty, c.mat_pass_qty, TO_CHAR(l.lot_date, 'yyyy-MM-dd') as "lot_date",l.lot_no, w.wh_code, w.wh_name
+      FROM mat_chk c
+      JOIN mat_buy b ON c.mat_ord_no = b.mat_ord_no
+      JOIN lot l ON l.mp_code = b.mat_code
+      JOIN material m ON m.mat_code = l.mp_code
+      JOIN warehouse w ON w.wh_code = l.wh_code
+      WHERE mat_ord_yn = '진행'
 	</select>
 	<select id="selectMatIn" resultType="MatVO">
 	</select>
+	<insert id="insertMatord" parameterType="MatVO">
+		<selectKey keyProperty="matChkCode" resultType="String"
+			order="BEFORE">
+			SELECT 'MAT_CK'||LPAD(NVL(MAX(SUBSTR(mat_chk_code, -3)),0)+1,3,0) FROM
+			mat_chk
+		</selectKey>
+		INSERT INTO mat_chk 
+						(mat_chk_code
+						,mat_in_qty
+						,mat_ord_no)
+				VALUES
+						(#{matChkCode}
+						,#{matOrdQty}
+						,#{matOrdNo})
+						
+	</insert>
 	<insert id="insertMat" parameterType="MatVO">
 	</insert>
 	<update id="updateMat" parameterType="MatVO">

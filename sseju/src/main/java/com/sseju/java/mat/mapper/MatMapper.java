@@ -33,6 +33,8 @@ public interface MatMapper {
 	public MatVO selectMatIn(MatVO MatVO);
 	//입고 등록
 	public int insertMat(MatVO MatVO);
+	//입고 자동 등록(발주 수정시)
+	public int insertMatord(MatVO MatVO);
 	//입고 수정
 	public int updateMat(MatVO MatVO);
 	//입고 삭제
