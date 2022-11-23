@@ -13,6 +13,7 @@ body {
 	padding: 20px 30px;
 	transition: all 0.3s;
 }
+
 </style>
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -37,7 +38,9 @@ body {
 
 
 			<hr>
-
+			<div style="text-align: right;">
+				<button class="button" type="submit">취소하기</button>
+			</div>
 			<table class="table">
 				<tr>
 					<th>거래처</th>
@@ -50,8 +53,21 @@ body {
 					<td><input type="date" name="ordDate" id="ordDate"></td>
 				</tr>
 			</table>
-
-			<div id="ordGrid"></div>
+			<table class="table">
+				<tr>
+					<th class="col1">제품코드</th>
+					<td><input type="text" name="prtCode" id="prtCode" readonly></td>
+					<th class="col1">주문일자</th>
+					<td><input type="date" name="orderDate" id="now_date" readonly></td>
+					<th class="col1">제품명</th>
+					<td><input type="text" name="prtName" id="prtName" readonly></td>
+					<th class="col1">주문량</th>
+					<td><input type="text" name="orderQty" id="orderQty"></td>
+					<th class="col1">제품단가</th>
+					<td><input type="text" name="prtPrice" id="prtPrice" readonly></td>
+					<th class="col1">총가격</th>
+					<td><input type="text" name="orderPrice" id="totalPrice" readonly></td>
+			</table>
 
 			<script>
 			
@@ -105,71 +121,23 @@ body {
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
 			
-			 ordALl();
-			const ordGrid = new tui.Grid({
-				el : document.getElementById('ordGrid'),
-				pagination:true,
-				pageOption: {
-					useClient:true,
-					perPage:10
-				},
-				scrollX : false,
-				scrollY : false,
-				rowHeaders: ['checkbox'],
-				columns : [
 				
-				{
-					header : '주문일자',
-					name : 'orderDate', //납기일자명 수정
-					align : 'center',
-				}, {
-					header : '품목',
-					name : 'prtName',
-					align : 'left',
-				}, 
-				{
-					header : '주문량',
-					name : 'orderQty',
-					editor: 'text',
-					align : 'right',
-				},
-				{
-					header : '제품단가',
-					name : 'right',
-					align : 'center',
-				},
-				{
-					header : '총가격',
-					name : 'orderPrice',
-					align : 'right',
-				},
-				 ]
-			});
-			    function ordALl() {
-					url=""
-			        fetch(url) 
-			        .then(res=>res.json())
-			        .then(obj=>{
-			           console.log(obj);
-			           ordGrid.resetData(obj);
-			        })
-				}
-
-			    prtGrid.on('check', ev => {
-					let data = prtGrid.getValue(ev.rowKey, 'prtCode')
-					console.log(data);
-					ordALl(data);
-				});
-				
-			    prtGrid.on('uncheck', ev => {
-			    	ordGrid.clear();
-			    	ordGrid.clear();
-
-				});
-		
-				
-				
-			
+			    prtGrid.on("click", event => {
+	                  
+	                   // getRow : 그리드 row(tr) 전체 가져오기.
+	                   //console.log(event.nativeEvent.target.innerText);  td값. 셀값
+	                     //rowKey : 인덱스 번호  
+	                   // input 태그에 값 넣어주기.
+	                   $('#prtCode').val(prtGrid.getRow(event.rowKey).prtCode);
+	                   $('#orderDate').val(prtGrid.getRow(event.rowKey)['orderDate']);
+	                   $('#prtName').val(prtGrid.getRow(event.rowKey)['prtName']);
+	                   $('#orderQty').val(prtGrid.getRow(event.rowKey)['orderQty']);
+	                   $('#prtPrice').val(prtGrid.getRow(event.rowKey)['prtPrice']);
+	                   $('#orderPrice').val(prtGrid.getRow(event.rowKey)['orderPrice']);
+	                   
+	                })
+	                document.getElementById('now_date').valueAsDate = new Date();
+			 
 		    </script>
 		</main>
 	</article>
