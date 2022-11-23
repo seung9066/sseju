@@ -15,5 +15,5 @@ public interface ORService {
 	// 단건
 	public ORVO selectOrderInfo(ORVO Ovo);
 	// 등록
-	public int insertOrderInfo(ORVO Ovo);
+	public int insertOrder(ORVO Ovo);
 }

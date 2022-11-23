@@ -26,8 +26,8 @@ public class OrderServiceImpl implements ORService {
 	}
 
 	@Override
-	public int insertOrderInfo(ORVO Ovo) {
-		return OMapper.insertOrderInfo(Ovo);
+	public int insertOrder(ORVO Ovo){
+		return OMapper.insertOrder(Ovo);
 	}
 
 	

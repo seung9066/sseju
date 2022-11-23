@@ -25,11 +25,6 @@ public class PrtController {
 	ORService oService;
 	
 	// 제품주문 페이지
-	@GetMapping("prtOrder")
-	public String prtOrder(Model model) {
-		return "/admin/order/prtOrder";
-	}
-
 	// 제품목록 조회 서비스
 	@GetMapping("/user/selectPrtList")
 	@ResponseBody
@@ -51,5 +46,10 @@ public class PrtController {
 	}
 
 	
-	
+	@PostMapping("insertPrtInf")
+	@ResponseBody
+	public String insertPrtInfo(PRVO Pvo) {
+		prService.insertPrtInfo(Pvo);
+		return "redirect:orderList";
+	}
 }
