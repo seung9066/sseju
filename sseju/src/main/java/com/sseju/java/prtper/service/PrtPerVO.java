@@ -18,6 +18,7 @@ public class PrtPerVO {
 	private int preQty;			//생산수량(실제 생산량)
 	private int prsErrQty;	 	//불량수량(process_inf테이블에서 가져와야함)
 	private String preManager;	//담당자명
+	private String empId;		//담당자 명을 불러오기 위한 empid
 	private String errCode;		//불량코드
 	private String errName;		//불량명
 	private int orderNo;		//주문번호

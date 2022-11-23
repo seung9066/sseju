@@ -23,4 +23,8 @@ public interface WorkOrderMapper {
 	public List<WorkOrderVO> getManagerList();
 	//주문번호, 상품명, 주문수량, 주문일자 가져오기
 	public List<WorkOrderVO> getOrderList();
+	//주문->작업지시 처리상태 order_yn값 변경
+	public int updateOrderYn(WorkOrderVO woVO);
+	//주문 신청 삭제 : 사용X
+	public int deleteOrder(WorkOrderVO woVO);
 }

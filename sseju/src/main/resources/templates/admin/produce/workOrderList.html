@@ -37,7 +37,10 @@ input {
 				<strong>작업 지시 관리</strong>
 			</h4>
 			<br>
-			<h6>주문 신청 내역</h6>
+			<h6 style="display: inline-block;">주문 신청 내역</h6>
+			<!-- <div style="float: right">
+				<button class="button" onclick="selectDeleteOrder()">삭제</button>
+			</div> -->
 			<div id=orderNoGrid></div>
 			
 			<!-- DB에서 불러온 데이터 grid로 띄워줌
@@ -45,10 +48,11 @@ input {
 			 -->
 			 <br>
 			 <div>
- 			<div>
 			 <h6 style="display: inline-block;">등록된 작업 지시 내역</h6>
-				<button class="button" onclick="updateWorkOrder()" style="float: right">수정</button>
-				<button class="button" onclick="selectDeleteWO()" style="float: right">삭제</button>
+ 			<div style="float: right">
+				<button class="button" onclick="updateWorkOrder()" >수정</button>
+				
+				<button class="button" onclick="selectDeleteWO()">삭제</button>
 			</div>
 			 
 			 </div>
@@ -118,30 +122,45 @@ input {
 				    columns:
 				    	[{
 							header: '주문번호',
-						    name: 'orderNo'
+						    name: 'orderNo',
+							align : 'center'
 						},
 						{
 							header: '작업 지시 번호',
 					    	name: 'preNo',
-					    	filter : 'select'
+					    	filter : 'select',
+							align : 'center'
 						},
 						{
 						 	header: '품목명',
-						    name: 'prtName'
+						    name: 'prtName',
+							align : 'center'
 						},
 						{
 						 	header: '지시수량',
-						    name: 'insQty'
+						    name: 'insQty',
+							align : 'center'
 						},
 						{
 							header: '작업 시작일',
 						    name: 'preDate',
-						    filter : 'select'
+						    filter : 'select',
+							align : 'center',
+					 		 formatter({value}) {
+							      return `${value.substring(0,10)}`;
+							    } 
+						},
+						{
+						    header : '담당자',
+						    name:'preManager',
+						    filter : 'select',
+							align : 'center'
 						},
 						{
 						    header : '진행상태',
 						    name:'prePrg',
-						    filter : 'select'
+						    filter : 'select',
+							align : 'center'
 						}]
 				      });
 			
@@ -177,21 +196,20 @@ input {
 				      $('#insQty').val('');
 				      $('#prePrg').val('');
 				    });
-			    /* grid.on('focusChange', ev => {
-				      console.log('change focused cell!', ev);
-				    }); */
 				    
-			   	//선택 행 삭제
+			   	//작업 지시 그리드의 선택 행 삭제
 			   	function selectDeleteWO(){
 				    console.log(workOrderGrid.getCheckedRows());
 					let deleteWorkOrder = [];
+					let deleteOrder = [];
 					for(wo of workOrderGrid.getCheckedRows()){
 						deleteWorkOrder.push(wo.preNo);
+						deleteOrder.push(wo.orderNo);
 					}
 				   	$.ajax({
 				   		url : 'selectDeleteWO',
 				   		type : 'POST',
-				   		data : {deleteWorkOrder:deleteWorkOrder},
+				   		data : {deleteWorkOrder:deleteWorkOrder, deleteOrder : deleteOrder},
 				   		dataType : "json",
 				   		async:false,
 				   		beforeSend : function(xhr){
@@ -201,6 +219,8 @@ input {
 				   			if(data > 0){
 				   				alert("삭제완료")
 				   				showAll();
+				   				showAll2();
+				   				
 				   			}else{
 				   				alert("삭제 실패")
 				   			}
@@ -210,47 +230,128 @@ input {
 				   		}
 					});
 				}
-				//선택 행 수정
+				//작업 지시 그리드 선택 행 수정
 				function updateWorkOrder(){
+					let preManager = $('#empId').val();
+					let preDate = $('#preDate').val();
+					let orderNo = $('#orderNo').val();
 					
-				}
-				    /* -------------
-				    작업 지시 등록 시 주문 번호 선택 그리드
+					let updateWorkOrder = {'preManager': preManager, 'preDate':preDate, 'orderNo':orderNo};
+					
+					$.ajax({
+							url : 'updateWorkOrder',
+							type : 'POST',
+							data : JSON.stringify(updateWorkOrder),
+							dataType : "json",
+							contentType : 'application/json',
+							async : false,
+							beforeSend : function(xhr){
+					   			xhr.setRequestHeader(header, token);
+					   		},
+					   		success : function(data){
+					   			if(data > 0){
+					   				alert("수정 완료")
+					   				showAll();
+					   			}else{
+					   				alert("수정 실패")
+					   			}
+					   		},
+					   		error:function(reject){
+					   			console.log(reject);
+					   		}
+						});
+					}
+							
+					
+					/* -------------
+				    	주문 번호 그리드
 				      ---------------*/
 				    var orderNoGrid = new tui.Grid({
 						el : document.getElementById('orderNoGrid'),
 						scrollX : false,
 						scrollY : false,
+						rowHeaders: ['checkbox'],
 						columns : [ {
 							header : '주문 번호',
-							name : 'orderNo'
+							name : 'orderNo',
+							align : 'center'
 						}, {
 							header : '상품명',
-							name : 'prtName'
+							name : 'prtName',
+							align : 'center'
 						}, {
 							header : '주문 수량',
-							name : 'orderQty'
+							name : 'orderQty',
+							align : 'center'
 						}, {
 							header : '주문일자',
 							name : 'orderDate',
-							filter : 'select'
+							filter : 'select',
+							align : 'center',
+					 		 formatter({value}) {
+							      return `${value.substring(0,10)}`;
+							    } 
 						} ]
 					});
-				    orderNoGrid.on("click", event => {
-		                  
-		                   // getRow : 그리드 row(tr) 전체 가져오기.
-		                   //console.log(event.nativeEvent.target.innerText);  td값. 셀값
-		                     //rowKey : 인덱스 번호  
-		                   // input 태그에 값 넣어주기.
-		                   $('#orderNo').val(orderNoGrid.getRow(event.rowKey).orderNo);
-		                   $('#prtName').val(orderNoGrid.getRow(event.rowKey)['prtName']);
-		                   $('#prtCode').val(orderNoGrid.getRow(event.rowKey).prtCode);
-		                   $('#insQty').val(orderNoGrid.getRow(event.rowKey).orderQty);
-		                   let a = orderNoGrid.getRow(event.rowKey).orderQty;
+					
+					
+				    	var chkOrderNo2 = [];
+		            
+				    	orderNoGrid.on('check', ev => {
+			            	chkOrderNo2.push((orderNoGrid.getValue(ev.rowKey,'orderNo')));
+		                   
+		                   $('#orderNo').val(orderNoGrid.getRow(ev.rowKey).orderNo);
+		                   $('#prtName').val(orderNoGrid.getRow(ev.rowKey)['prtName']);
+		                   $('#prtCode').val(orderNoGrid.getRow(ev.rowKey).prtCode);
+		                   $('#insQty').val(orderNoGrid.getRow(ev.rowKey).orderQty);
+		                   let a = orderNoGrid.getRow(ev.rowKey).orderQty;
 		                   $('#insQty').attr("max", a);
-		                })
-
+		                });
+				    var chkOrderNO = [];
+				    orderNoGrid.on('uncheck', ev => {
+					      for(let i=0; i<chkOrderNO.length; i++){
+					    	  if(chkOrderNO[i] == orderNoGrid.getValue(ev.rowKey, 'orderNo')){
+					    		  chkOrderNO.splice(i, 1);
+					    	  }
+					      }
+					      $('#orderNo').val('');
+					      $('#orderNo').attr('readonly', false);
+					      $('#prtName').val('');
+					      $('#insQty').val('');
+					    });
 				    
+		                
+		                /* 사용안함 */
+		                //주문 신청 내역 그리드의 선택 행 삭제
+			             function selectDeleteOrder(){
+						let deleteOrder = [];
+						
+						for(on of orderNoGrid.getCheckedRows()){
+							deleteOrder.push(on.orderNo);
+						}
+						   	$.ajax({
+						   		url : 'selectDeleteOrder',
+						   		type : 'POST',
+						   		data : {deleteOrder:deleteOrder},
+						   		dataType : "json",
+						   		async:false,
+						   		beforeSend : function(xhr){
+						   			xhr.setRequestHeader(header, token);
+						   		},
+						   		success : function(data){
+						   			if(data > 0){
+						   				alert("삭제완료")
+						   				showAll();
+						   				showAll2();
+						   			}else{
+						   				alert("삭제 실패")
+						   			}
+						   		},
+						   		error:function(reject){
+						   			console.log(reject);
+							   		}
+								});
+							}
 
 				    
 					//
@@ -271,6 +372,7 @@ input {
 					           orderNoGrid.resetData(obj);
 					       })
 					}
+
 /* 	$(function(){
 		
 			let data = [

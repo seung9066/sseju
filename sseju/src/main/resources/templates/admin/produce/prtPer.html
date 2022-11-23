@@ -21,7 +21,7 @@
 		<main id="main" class="main">
 			<h4>생산 실적</h4>
 				<form action="select">
-					<table>
+					<table style="margin-bottom:10px">
 						<tr>
 							<td><input type="date"></td>
 							<td> ~ </td>
@@ -35,8 +35,8 @@
 					</table>
 				</form>
 			<!-- Button trigger modal -->
-			<button type="button" class="button" data-bs-toggle="modal"
-				data-bs-target="#exampleModal">행클릭시 모달창으로 상세정보조회가능하게 연결</button>
+			<!-- <button type="button" class="button" data-bs-toggle="modal"
+				data-bs-target="#exampleModal">행클릭시 모달창으로 상세정보조회가능하게 연결</button> -->
 
 			<!-- Modal -->
 			<div class="modal fade" id="exampleModal" tabindex="-1"
@@ -66,31 +66,6 @@
 			<script type="text/javascript">
 				var prtperGrid = new tui.Grid({
 					el : document.getElementById('prtperGrid'),
-					data : [ {
-						preNo : '20221101001',
-						prtName : '포도맛소주',
-						preQty : '30000',
-						insQty : '30000',
-						prsErrQty : '3',
-						prePrg : '김준형'
-					}, {
-						preNo : '20221102001',
-						prtName : '자몽맛소주',
-						preQty : '10000',
-						insQty : '10000',
-						prsErrQty : '0',
-						prePrg : '김두영'
-					}
-					// data 가져오는 법
-					// data: {
-					//    api: {
-					//       readData: {
-					//          url: '/api/readData',
-					//          method: 'GET'
-					//       }
-					//    }
-					// },
-					],
 					scrollX : false,
 					scrollY : false,
 					minBodyHeight : 30,
@@ -98,7 +73,7 @@
 						perPage : 5
 					},
 					columns : [ {
-						header : '주문 번호',
+						header : '작업 지시 번호',
 						name : 'preNo'
 					}, {
 						header : '제품명',
@@ -107,9 +82,6 @@
 					}, {
 						header : '생산량',
 						name : 'preQty'
-					}, {
-						header : '지시량',
-						name : 'insQty'
 					}, {
 						header : '불량 발생 개수',
 						name : 'prsErrQty'

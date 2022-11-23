@@ -69,5 +69,17 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 		// TODO Auto-generated method stub
 		return woMapper.getOrderList();
 	}
+	//주문->작업지시 등록 시 주문 그리드에서 등록 처리된 행은 사라지게
+	@Override
+	public int updateOrderYn(WorkOrderVO woVO) {
+		// TODO Auto-generated method stub
+		return woMapper.updateOrderYn(woVO);
+	}
+	//주문 신청 내역 삭제
+	@Override
+	public int deleteOrder(WorkOrderVO woVO) {
+		// TODO Auto-generated method stub
+		return woMapper.deleteOrder(woVO);
+	}
 
 }
