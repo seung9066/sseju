@@ -88,6 +88,8 @@ public class MatController {
 				vo.setMatPrice(mp.get(i));
 				vo.setMatOrdEmp(moe.get(i));
 				
+				vo.setMatInQty(Integer.valueOf(Qty.get(i)));
+				
 				result += service.insertMatbuy(vo);
 			}
 		return result;
@@ -138,7 +140,12 @@ public class MatController {
 		return "/admin/mat/matIn";
 	}
 	
-	
+	//입고 종합 리스트 
+	@ResponseBody
+	@GetMapping("/matInList")
+	public List<MatVO> matInList(){
+		return service.matInList();
+	}
 	
 	@GetMapping("/matOut")
 	public String matOut() {

@@ -276,7 +276,11 @@
                   validation: {
                      dataType: 'datePicker',
                      required: true
+                      },
+                  formatter({value}) {
+                       return `${value.substring(0,10)}`;
                       }
+                     
                }, {
                   header : '거래처 코드',
                   align : 'center',
@@ -308,7 +312,10 @@
                         { text: '미확인', value: '미확인' },
                       ]
                     }
-                  }
+                  },
+                 validation: {
+                	 regExp:/진[가-힣]/
+                    }
                } ]
             });
             
@@ -352,7 +359,10 @@
                     validation: {
                        dataType: 'datePicker',
                        required: true
-                        }
+                        },
+					formatter({value}) {
+                        return `${value.substring(0,10)}`;
+                       }
                   }, {
                   header : '거래처 코드',
                   name : 'cpCode'
