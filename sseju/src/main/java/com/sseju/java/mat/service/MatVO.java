@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.ibatis.type.Alias;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
@@ -38,6 +40,7 @@ public class MatVO {
 	private int matOutNo;
 	private String WhCode;
 	@DateTimeFormat (pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date matOutDate;
 	private int matOutQty;
 	private String matLotNo;
@@ -68,6 +71,7 @@ public class MatVO {
 	private int matInQty;
 	private int matErrQty;
 	@DateTimeFormat (pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date matChkDate;
 	private int matPassQty;
 
@@ -86,6 +90,7 @@ public class MatVO {
 	private int matOrdQty;
 	private String nowCode;
 	@DateTimeFormat (pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date matOrdDate;
 //	private String matOrdDate;
 	private String matOrdYn;
@@ -105,6 +110,7 @@ public class MatVO {
 	
 	private String lotNo;
 	@DateTimeFormat (pattern ="yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date lotDate;
 	private String mpCode;
 	private int lotQty;
@@ -129,5 +135,6 @@ public class MatVO {
 	//VO
 	private List<String> delno; // 삭제시 매치되는 자재번호
 	@DateTimeFormat (pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date startDate; // 시작일
 }
