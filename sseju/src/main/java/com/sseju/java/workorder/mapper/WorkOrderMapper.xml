@@ -31,34 +31,28 @@
 	<!-- Read : workorder페이지에서 정보를 불러오는 쿼리문 모음 -->
 	<!-- 주문 번호, 주문한 상품명, 주문수량, 주문일자 불러오기(주문 신청 내역 그리드에 대한 쿼리) -->
 	<select id="getOrderList" resultType="woVO">
-		SELECT ods.order_no, 
-			(SELECT pt.prt_code
-		     FROM product pt JOIN order_inf odi
-		     ON pt.prt_code = odi.prt_code
-		     JOIN orders ods
-		     ON odi.order_no = ods.order_no) AS prt_code,
-			(SELECT pt.prt_name
-			 FROM product pt JOIN order_inf odi
-			 ON pt.prt_code = odi.prt_code
-			 JOIN orders ods
-			 ON odi.order_no = ods.order_no) AS prt_name,	                        
-		        odi.order_qty, ods.order_date
+		SELECT ods.order_no, pt.prt_code, pt.prt_name, odi.order_qty, ods.order_date
 		FROM orders ods JOIN order_inf odi
-		ON ods.order_no = odi.order_no
-		WHERE order_yn = 'N'
+		    ON ods.order_no = odi.order_no
+		JOIN product pt
+		    ON pt.prt_code = odi.prt_code
+		WHERE ods.order_yn = 'N'
+		ORDER BY ods.order_no ASC
 	</select>
 	
 	<!-- 작업 지시 전체 조회(등록된 작업 지시 그리드문에 띄우는 쿼리) -->
 	<select id="getWorkOrderList" resultType="woVO">
-		SELECT ods.order_no, pe.pre_no, pe.pre_date,(SELECT pt.prt_name
-                             FROM product pt JOIN produce pe
-                             ON pt.prt_code = pe.prt_code
-                                   JOIN orders ods
-                                   on pe.order_no = ods.order_no
-                                   GROUP BY pt.prt_name) AS prt_name,
+		SELECT ods.order_no, pe.pre_no, pe.pre_date,
+				(SELECT pt.prt_name
+                 FROM product pt JOIN produce pe
+                 	ON pt.prt_code = pe.prt_code
+                 JOIN orders ods
+                 	ON pe.order_no = ods.order_no
+                 GROUP BY pt.prt_name) AS prt_name,
 		        pe.pre_qty, pe.ins_qty, pe.pre_manager ,pe.pre_prg
 		FROM produce pe JOIN orders ods
-		ON ods.order_no = pe.order_no
+			ON ods.order_no = pe.order_no
+		ORDER BY ods.order_no ASC
 	</select>
 	<!-- 직원 아이디, 이름 가져오기 -->
 	<select id="getManagerList" resultType="woVO">
