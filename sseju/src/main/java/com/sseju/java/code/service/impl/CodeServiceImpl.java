@@ -346,4 +346,22 @@ public class CodeServiceImpl implements CodeService {
 		return mapper.selectPrsRunNow();
 	}
 
+	@Override
+	public List<CodeVO> todayWL() {
+		// TODO Auto-generated method stub
+		return mapper.todayWL();
+	}
+
+	@Override
+	public List<CodeVO> todayWLinf(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.todayWLinf(vo);
+	}
+
+	@Override
+	public List<CodeVO> prdCount() {
+		// TODO Auto-generated method stub
+		return mapper.prdCount();
+	}
+
 }

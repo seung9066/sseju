@@ -300,7 +300,8 @@
 		p.prt_name, l.lot_qty FROM
 		lot l, product p WHERE
 		l.mp_code
-		= p.prt_code AND l.mp_code LIKE
+		= p.prt_code
+		AND l.mp_code LIKE
 		'PRD_%' AND l.wh_code = #{whCode}
 	</select>
 
@@ -354,5 +355,39 @@
 		HH24:MM:SS') < (SELECT to_char(current_timestamp, 'rrrr/MM/dd
 		HH24:MM:SS') FROM dual)
 ]]>
+	</select>
+
+	<select id="todayWL" resultType="CodeVO">
+		SELECT p.pre_no, pr.prt_name,
+		p.ins_qty
+		FROM produce p, order_inf oi, orders o, product pr
+		WHERE
+		p.order_no = o.order_no
+		AND o.order_no = oi.order_no
+		AND oi.prt_code =
+		pr.prt_code
+		AND TO_DATE(p.pre_date,
+		'rrrr/MM/dd') = (SELECT
+		TO_DATE(SYSDATE,
+		'rrrr/MM/dd') FROM dual)
+	</select>
+
+	<select id="todayWLinf" parameterType="CodeVO"
+		resultType="CodeVO">
+		SELECT ods.order_no, ods.d_day, e.emp_name
+		FROM orders ods
+		JOIN produce pe
+		ON ods.order_no = pe.order_no
+		JOIN product pt
+		ON pt.prt_code = pe.prt_code
+		JOIN employee e ON e.emp_id = pe.pre_manager WHERE pe.pre_no = #{preNo}
+	</select>
+
+	<select id="prdCount" resultType="CodeVO">
+		SELECT p.prt_name,
+		SUM(oi.order_out_qty) AS order_out_qty
+		FROM product p, order_inf oi
+		WHERE p.prt_code = oi.prt_code
+		GROUP BY p.prt_name
 	</select>
 </mapper>

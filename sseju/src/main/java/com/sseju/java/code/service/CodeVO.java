@@ -84,5 +84,9 @@ public class CodeVO {
 	private int prtQty;
 	private int lotQty;
 	
-	// main
+	private int insQty;
+	private String orderNo;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date dDay;
+	private int orderOutQty;
 }

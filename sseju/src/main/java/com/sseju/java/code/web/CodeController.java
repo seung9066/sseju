@@ -674,4 +674,30 @@ public class CodeController {
 	public List<CodeVO> selectPrsRunNow() {
 		return service.selectPrsRunNow();
 	}
+	
+	@GetMapping("/todayWL")
+	@ResponseBody
+	public List<CodeVO> todayWL() {
+		return service.todayWL();
+	}
+	
+	@PostMapping("/todayWLinf")
+	@ResponseBody
+	public List<CodeVO> todayWLinf(@RequestBody String type) {
+		CodeVO vo = new CodeVO();
+		vo.setPreNo(type.substring(5));
+		return service.todayWLinf(vo);
+	}
+	
+	@GetMapping("/prdCount")
+	@ResponseBody
+	public List<CodeVO> prdCount() {
+		return service.prdCount();
+	}
+	
+	@PostMapping("/startPr")
+	@ResponseBody
+	public void startPr(@RequestBody String type) {
+		String a = type.substring(5);
+	}
 }
