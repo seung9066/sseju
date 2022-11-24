@@ -347,12 +347,13 @@
 	</select>
 
 	<select id="selectPrsRunNow" resultType="CodeVO">	
-		SELECT pr.prs_no prs_no,
-		pr.prs_code prs_code FROM process_run pr, process_inf pi WHERE pr.prs_no =
-		pi.prs_no AND to_char(pi.prs_sp_hour, 'rrrr/MM/dd HH:MM:SS')<![CDATA[ > ]]>(SELECT
-		to_char(sysdate, 'rrrr/MM/dd HH:MM:SS') FROM dual) AND
-		to_char(pi.prs_st_hour, 'rrrr/MM/dd HH:MM:SS')<![CDATA[ < ]]>(SELECT
-		to_char(sysdate, 'rrrr/MM/dd HH:MM:SS') FROM dual)
-		
+		<![CDATA[
+		SELECT pr.prs_no, pr.prs_code FROM process_run pr, process_inf pi
+		WHERE pr.prs_no = pi.prs_no AND to_char(pi.prs_sp_hour, 'rrrr/MM/dd
+		HH24:MM:SS') > (SELECT to_char(current_timestamp, 'rrrr/MM/dd
+		HH24:MM:SS') FROM dual) AND to_char(pi.prs_st_hour, 'rrrr/MM/dd
+		HH24:MM:SS') < (SELECT to_char(current_timestamp, 'rrrr/MM/dd
+		HH24:MM:SS') FROM dual)
+]]>
 	</select>
 </mapper>

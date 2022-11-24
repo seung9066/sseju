@@ -21,6 +21,15 @@ import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.employee.service.EmployeeService;
 import com.sseju.java.employee.service.EmployeeVO;
 
+class produceThread implements Runnable {
+
+	@Override
+	public void run() {
+		
+	}
+	
+}
+
 @Controller
 public class CodeController {
 
@@ -558,7 +567,7 @@ public class CodeController {
 			d = Integer.parseInt(b);
 		}
 		if (c != -1 && d != -1) {
-			b = String.valueOf(Math.round((c-d)/d*100) + "%");
+			b = String.valueOf("전일대비" + Math.round((c-d)/d*100) + "%");
 		}
 		if (d == 0) {
 			b = "전일실적없음";
@@ -588,7 +597,7 @@ public class CodeController {
 			d = Integer.parseInt(b);
 		}
 		if (c != -1 && d != -1) {
-			b = String.valueOf(Math.round((c-d)/d*100) + "%");
+			b = String.valueOf("전일대비" + Math.round((c-d)/d*100) + "%");
 		}
 		if (d == 0) {
 			b = "전일실적없음";
@@ -618,7 +627,7 @@ public class CodeController {
 			d = Integer.parseInt(b);
 		}
 		if (c != -1 && d != -1) {
-			b = String.valueOf(Math.round((c-d)/d*100) + "%");
+			b = String.valueOf("전일대비" + Math.round((c-d)/d*100) + "%");
 		}
 		if (d == 0) {
 			b = "전일실적없음";
