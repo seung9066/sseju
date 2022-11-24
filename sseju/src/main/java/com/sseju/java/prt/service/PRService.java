@@ -12,6 +12,7 @@ public interface PRService {
 	public List<PRVO> selectPrtList();
 	// 주문상세 목록 조회
 	public List<ORVO> selectPrtInfoList();
+	public List<ORVO> selectPrtList2();
 	// 등록
 	public int insertPrtInfo(PRVO Pvo);
 	
