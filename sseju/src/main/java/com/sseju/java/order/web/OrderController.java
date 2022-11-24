@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sseju.java.code.service.CodeService;
@@ -30,12 +31,16 @@ public class OrderController {
 	@Autowired
 	CompanyService service;
 
-
-
 	@GetMapping("/selectOrderList")
 	@ResponseBody
 	public List<ORVO> selectOrderList(Model model) {
 		return oService.selectOrderList();
+	}
+
+	@GetMapping("/selectOrdeIng")
+	@ResponseBody
+	public List<ORVO> selectOrdeIng() {
+		return oService.selectOrdeIng();
 	}
 
 	@GetMapping("/prtList")
@@ -43,37 +48,42 @@ public class OrderController {
 	public List<CompanyVO> cpList() {
 		return service.getCompanyList();
 	}
-	@GetMapping("/selectOrdeIng")
-	@ResponseBody
-	public List<ORVO> selectOrdeIng() {
-		return oService.selectOrdeIng();
-	}
+
 	@GetMapping("/selectPrtManager")
 	@ResponseBody
 	public List<ORVO> selectPrtManager() {
 		return oService.selectPrtManager();
 	}
+
 	@GetMapping("/selectOrder")
 	@ResponseBody
 	public List<ORVO> selectOrder() {
 		return oService.selectOrder();
 	}
-	@PostMapping("/insertOrder")
+
+	@GetMapping("/user/getOrderNo")
 	@ResponseBody
-	public String insertOrder(ORVO Ovo) {
-		oService.insertOrder(Ovo);
-		oService.insertOrderAll(Ovo);
-		return "redirect:orlist";
+	public ORVO getOrderNO() {
+		return oService.getOrderNo();
 	}
-	
 
+	@PostMapping("/user/insertOrder")
+	@ResponseBody
+	public int insertOrder(@RequestBody List<ORVO> list) {
+		int a = 0;
 
-	
+		a += oService.insertOrder(list.get(0));
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(list.get(i));
+			a += oService.insertOrderInfo(list.get(i));
+		}
+
+		return a;
+	}
 
 	// 전체
 	@GetMapping("/orlist")
 	public String OrderList(Model model) {
-
 		return "/admin/order/orderList";
 	}
 
@@ -86,5 +96,4 @@ public class OrderController {
 	public String selectrinout(Model model) {
 		return "/admin/order/inout";
 	}
-
 }

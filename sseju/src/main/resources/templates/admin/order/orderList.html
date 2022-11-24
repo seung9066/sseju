@@ -30,40 +30,35 @@ body {
 			<div id="mat-od-title">
 				<h2>제품 주문</h2>
 			</div>
-		
-			<form action="insertOrder" method="post">
-				<div style="text-align: right;">
+			<div style="text-align: right;">
+				<button type="submit" class="button" style="float: right;"
+					onclick="orInsert()">주문하기</button>
+			</div>
+			<div style="text-align: right;">
 				<button class="button" onclick="clearA()">초기화</button>
-					<button type="submit" class="button" style="float: right;">주문하기</button>
-				</div>
+			</div>
+			<form action="insertOrder" method="post">
+
 
 				<div id="prtGrid"></div>
 				<hr>
-
 				<table class="table">
 					<tr>
 						<th>거래처</th>
-						<td><input type="text" name="cpCode" id="cpCode"
+						<td><input type="text" name="cpName" id="cpName"
 							th:value="${session.user.cpName}"></td>
 						<td><input type="hidden" id="cpCode" name="cpCode"
-							value="${session.user.cpCode}"></td>
+							th:value="${session.user.cpCode}"></td>
 						<th>납기 일자</th>
-						<td><input type="date" name="ordDate" id="ordDate"></td>
-						<td><input type="hidden" id="prtCode" name="prtCode"></td>
-						<td><input type="hidden" id="prtName" name="prtName"></td>
-						<td><input type="hidden" id="prtStandard" name="prtStandard"></td>
-						<td><input type="hidden" id="orderQty" name="orderQty"></td>
-						<td><input type="hidden" id="unitPrice" name="unitPrice"></td>
-						<td><input type="hidden" id="orderPrice" name="orderPrice"></td>
+						<td><input type="date" name="dDay" id="dDay"></td>
 					</tr>
 				</table>
 
 				<div id="prtGrid1"></div>
 			</form>
 			<script>
-			console.log('#cpCode')
+		
 			prtl();
-			ord1();
 			const prtGrid = new tui.Grid({
 				el : document.getElementById('prtGrid'),
 				pagination:true,
@@ -102,7 +97,7 @@ body {
 			        fetch(url) 
 			        .then(res=>res.json())
 			        .then(obj=>{
-			           console.log(obj);
+			          
 			           prtGrid.resetData(obj);
 			        })
 				}
@@ -162,23 +157,65 @@ body {
 			 prtGrid.on("click", event => {
 	        		var prt = {prtCode : prtGrid.getRow(event.rowKey).prtCode,prtName:prtGrid.getRow(event.rowKey).prtName, prtStandard: prtGrid.getRow(event.rowKey).prtStandard,
 	        			unitPrice:prtGrid.getRow(event.rowKey).prtPrice, orderQty:'', orderPrice:''}; //json 형태로 지정해도 됩니다.
-	        			console.log(prt)
+	        			
 	        			prtGrid1.appendRow(prt);
 	                })
 	         function clearA() {
 				 console.log("aaa")
 				 prtGrid1.clear()
 			 }
-			 function ord1() {
-					url="selectOrder"
-			        fetch(url) 
-			        .then(res=>res.json())
-			        .then(obj=>{
-			           console.log(obj);
-			           prtGrid1.resetData(obj);
-			        })
-				}
 			 
+			 
+			 
+	         function orInsert() {
+	        	 let orderNo1 = '';
+	        	 $.ajax({
+						url : "/user/getOrderNo",
+						method : "GET",
+						success : function(data) {
+							orderNo1 = data.orderNo;
+							a(orderNo1);
+						},
+						error : function(reject) {
+							console.log("bbbb")
+						}// suc
+					});
+	        
+	        	 }
+				 
+				 
+				 
+				 
+	        	 function a(a) {
+	        		 
+				 insert = prtGrid1.getData();
+				for (let i = 0; i < insert.length; i++) {
+					insert[i].orderNo = a;
+					insert[i].cpCode = $('#cpCode').val();
+					insert[i].dday = $('#dDay').val();
+					console.log(insert[i])
+	        	 }
+				console.log(insert)
+				ininsert();
+			 }
+	         
+	         function ininsert() {
+				 $.ajax({
+						url : "/user/insertOrder",
+						method : "POST",
+						data: JSON.stringify(insert),
+						dataType : "JSON",
+						contentType: 'application/json; charset=utf-8',
+						beforeSend : function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success : function(list) {
+							if (list > 0) {
+							prtGrid1.clear();								
+							}
+						}// suc
+					}); //ajax 
+		       }
 			</script>
 		</main>
 	</article>

@@ -27,7 +27,14 @@ body {
 				<h2>제품출고관리</h2>
 			</div>
 			<hr>
-			<div id="aGrid"></div>
+			<div id="aGrid">제품별</div>
+			
+			<div id="mat-od-title">
+				<h2>제품출고관리</h2>
+			</div>
+			<hr>
+			
+			<div id="gridP">거래처별</div>
 			<script>
 			all();
 			const aGrid = new tui.Grid({
@@ -74,6 +81,65 @@ body {
 	        .then(obj=>{
 	           console.log(obj);
 	           aGrid.resetData(obj);
+	        })
+		}	
+		all1();
+		const gridP = new tui.Grid({
+			el : document.getElementById('gridP'),
+			pagination:true,
+			pageOption: {
+				useClient:true,
+				perPage:10
+			},
+			scrollX : false,
+			scrollY : false,
+/* 			rowHeaders: ['checkbox'],
+ */			columns : [
+				{
+					header : '거래처코드',
+					name : 'cpCode',
+					align : 'center',
+					filter: 'select'
+				}, 
+				{
+					header : '거래처이름',
+					name : 'cpName',
+					align : 'center',
+					filter: 'select'
+				}, 
+				{
+					header : '주문번호',
+					name : 'orderNo',
+					align : 'center',
+					filter: 'select'
+				}, 
+				{
+					header : '품목',
+					name : 'prtName',
+					align : 'center',
+					filter: 'select'
+				}, 
+				{
+					header : '주문량',
+					name : 'orderQty',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '재고량',
+					name : 'lotQty',
+					align : 'center',
+					filter: 'select'
+				}
+		          ]
+		});
+		function all1() {
+			url="selectPrtList2"
+	        fetch(url) 
+	        .then(res=>res.json())
+	        .then(obj=>{
+	           console.log(obj);
+	           gridP.resetData(obj);
 	        })
 		}
     		</script>

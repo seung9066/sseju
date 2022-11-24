@@ -61,6 +61,9 @@
 			<h4>출고 등록 현황 리스트</h4>
 			<div id="ordGrid"></div>
 			<script>
+			var token = $("meta[name='_csrf']").attr("content");
+			 var header = $("meta[name='_csrf_header']").attr("content");
+
 			all();
 			
 				const allGrid = new tui.Grid({
@@ -99,8 +102,8 @@
 							filter: 'select'
 						},
 						{
-							header : '단위',
-							name : 'prtUnit',
+							header : '주문량',
+							name : 'orderQty',
 							align : 'center',
 							filter: 'select'
 						},
@@ -184,8 +187,6 @@
 				           ordGrid.resetData(obj);
 				        })
 					}
-				    
-				    
 	   	 </script>
 		</main>
 	</article>
