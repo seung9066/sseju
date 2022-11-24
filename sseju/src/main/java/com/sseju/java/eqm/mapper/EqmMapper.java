@@ -20,6 +20,9 @@ public interface EqmMapper {
       // 설비 삭제
       public int deleteEqmInfo(EqmVO eqmVO);
       
+      // 직원 가져오기
+      public List<EqmVO> getEmpList();
+      
       
 
 

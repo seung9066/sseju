@@ -120,6 +120,12 @@ public int deleteUoper(EqmVO eqmVO) {
 	return eqmMapper.deleteUoper(eqmVO);
 }
 
+@Override
+public List<EqmVO> getEmpList() {
+	// TODO Auto-generated method stub
+	return eqmMapper.getEmpList();
+}
+
    
 
    

@@ -35,6 +35,10 @@ public class EqmVO {
    private String cpCode; 
    private String cpName;
    private String cpTel;
+   
+   // 직원
+   private String empId;
+   private String empName;
     
    
    // 라인
