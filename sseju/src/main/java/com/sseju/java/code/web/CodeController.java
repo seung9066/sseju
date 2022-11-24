@@ -641,7 +641,7 @@ public class CodeController {
 	@ResponseBody
 	public List<CodeVO> WhPrd(@RequestBody String type) {
 		CodeVO vo = new CodeVO();
-		vo.setWhCode(type);
+		vo.setWhCode(type.substring(5));
 		return service.WhPrd(vo);
 	}
 	

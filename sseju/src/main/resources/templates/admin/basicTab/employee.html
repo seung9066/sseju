@@ -14,8 +14,16 @@
 .button {
 	width: 100px;
 	height: 30px;
-	margin-right:1%;
-	margin-bottom:1%;
+	margin-right: 1%;
+	margin-bottom: 1%;
+}
+
+th {
+	width: 80px;
+}
+
+td {
+	width: 250px;
 }
 </style>
 </head>
@@ -25,25 +33,29 @@
 			<h4 style="margin-bottom: 3%;">
 				<strong>사원 관리</strong>
 			</h4>
-			<form action="insertEmployee" method="POST">
+			<form action="insertEmployeeA" method="POST" id="insertEmpFrm">
 				<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}" />
 				<table>
 					<tr>
 						<th>아이디</th>
 						<td><input type="text" id="empId" name="empId"></td>
+						<th>비밀번호</th>
+						<td><input type="password" id="password" name="password"
+							required></td>
+					</tr>
+					<tr>
 						<th>이름</th>
 						<td><input type="text" id="empName" name="empName"></td>
 						<th>부서</th>
-						<td><select style="width: 150px;" id="empDept" name="empDept">
+						<td><select style="width: 150px;" id="empDept" name="empDept"
+							required>
 								<option>---선택---</option>
 								<option value="생산부">생산부</option>
 								<option value="생산기술부">생산기술부</option>
 								<option value="생산관리부">생산관리부</option>
 								<option value="품질관리부">품질관리부</option>
 						</select></td>
-					</tr>
-					<tr>
 						<th>직급</th>
 						<td><select style="width: 150px;" id="empRank" name="empRank">
 								<option>---선택---</option>
@@ -52,8 +64,6 @@
 								<option value="반장">반장</option>
 								<option value="직장">직장</option>
 						</select></td>
-						<th>비밀번호</th>
-						<td><input type="password" id="password" name="password"></td>
 					</tr>
 				</table>
 				<input type="hidden" name="auth" value="ROLE_ADMIN">
@@ -61,7 +71,8 @@
 					onclick="updateEmp()">수정</button>
 				<button class="button" type="button" style="float: right;"
 					onclick="selectDeleteEmp()">삭제</button>
-				<button type="submit" class="button" style="float: right;">등록</button>
+				<button type="button" class="button" onclick="chkId()"
+					style="float: right;">등록</button>
 			</form>
 			<div id="empGrid"></div>
 
@@ -212,6 +223,51 @@
 					           console.log(obj);
 					           empGrid.resetData(obj);
 					       })
+				}
+				
+				function chkId() {
+					let id = $('#empId').val();
+					let pw = $('#password').val();
+					let empName = $('#empName').val();
+					let empDept = $('#empDept').val();
+					let empRank = $('#empRank').val();
+					
+					if (id == '') {
+						alert('아이디를 입력하세요');
+						$('#empId').focus();
+					} else if (pw == '') {
+						alert('비밀번호를 입력하세요');
+						$('#password').focus();
+					} else if (empName == '') {
+						alert('이름을 입력하세요');
+						$('#empName').focus();
+					} else if (empDept == '---선택---') {
+						alert('부서를 선택하세요');
+						$('#empDept').focus();
+					} else if (empRank == '---선택---') {
+						alert('직급을 선택하세요');
+						$('#empRank').focus();
+					} else {
+								$.ajax({
+						            url:'idCheck',
+						            type:'GET',
+						            data: {id:id},
+						            async: false,
+						            success:function(data){
+						                if(data == 0){
+											$('#insertEmpFrm').submit();
+						                } else {
+						                    alert("사용중인 아이디 입니다.");
+						                    $('#empId').val('');
+						                    $('#empId').focus();
+						                }
+						            },
+						            error:function(reject){
+						                alert("에러입니다");
+						                console.log(reject);
+						            }
+						        });						
+					}
 				}
 			</script>
 		</main>

@@ -82,6 +82,7 @@ public class CodeVO {
 	private Date prsDate;
 	private String matOutNo;
 	private int prtQty;
+	private int lotQty;
 	
 	// main
 }
