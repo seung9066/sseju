@@ -42,16 +42,11 @@
 	
 	<!-- 작업 지시 전체 조회(등록된 작업 지시 그리드문에 띄우는 쿼리) -->
 	<select id="getWorkOrderList" resultType="woVO">
-		SELECT ods.order_no, pe.pre_no, pe.pre_date,
-				(SELECT pt.prt_name
-                 FROM product pt JOIN produce pe
-                 	ON pt.prt_code = pe.prt_code
-                 JOIN orders ods
-                 	ON pe.order_no = ods.order_no
-                 GROUP BY pt.prt_name) AS prt_name,
-		        pe.pre_qty, pe.ins_qty, pe.pre_manager ,pe.pre_prg
-		FROM produce pe JOIN orders ods
-			ON ods.order_no = pe.order_no
+		SELECT ods.order_no, pe.pre_no, pt.prt_name, pe.pre_qty, pe.ins_qty,pe.pre_date ,pe.pre_manager, pe.pre_prg
+		FROM orders ods JOIN produce pe
+		    ON ods.order_no = pe.order_no
+		JOIN product pt
+		    ON pt.prt_code = pe.prt_code
 		ORDER BY ods.order_no ASC
 	</select>
 	<!-- 직원 아이디, 이름 가져오기 -->
