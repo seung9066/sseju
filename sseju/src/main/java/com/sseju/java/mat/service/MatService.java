@@ -46,6 +46,8 @@ public interface MatService {
 	
 	//미입고 => LOT 입고
 	public int insertLot(MatVO MatVO);
+	//미입고 =>chk테이블
+	public int updateChk(MatVO MatVO);
 	
 	
 	//출고 전체 조회
