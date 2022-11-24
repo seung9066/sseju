@@ -121,7 +121,7 @@
 						,mat_ord_no)
 				VALUES
 						(#{matChkCode}
-						,#{matOrdQty}
+						,#{matInQty}
 						,#{matOrdNo})
 						
 	</insert>

@@ -40,7 +40,7 @@
 <body>
 	<article layout:fragment="content">
 		<main class="main" id="main">
-			<h3>입고내역</h3>
+			<h3>미입고내역</h3>
 			<div>
 				<ul class="ul-style">
 					<li><label>품목</label><input type="text" data-bs-toggle="modal"
@@ -96,7 +96,7 @@
 					scrollX : false,
 					scrollY : true,
 					columns : [ {
-						header : 'LOT 번호',
+						header : 'LOT 번호', //없는경우 O
 						name : 'lotNo',
 						align : 'center'
 					},{
@@ -120,9 +120,9 @@
 						name : 'matPassQty',
 						align : 'center'
 					}, {
-						header : '입고일', 
-						name : 'lotDate',
-						align : 'center' 
+						header : '입고일', //입고일은 LOT등록일자 순
+						name : 'lotDate', //LOT등록일이 없으면 등록해주기
+						align : 'center' //없는경우 O
 					}, 
 /* 					{
 						header : '창고 코드',
