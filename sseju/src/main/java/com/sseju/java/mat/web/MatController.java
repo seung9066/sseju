@@ -198,30 +198,29 @@ public class MatController {
 	}
 
 	// 미입고 => LOT 입고
+
 	/*
 	 * @ResponseBody
 	 * 
 	 * @PostMapping("/insertLot") public int insertLot(
 	 * 
-	 * @RequestParam(value = "mcd[]", required = false) List<String> mcd,
+	 * @RequestParam(value = "lotDate[]", required = false) List<String> lotDate,
 	 * 
-	 * @RequestParam(value = "mc[]", required = false) List<String> mc,
+	 * @RequestParam(value = "mpCode[]", required = false) List<String> mpCode,
 	 * 
-	 * @RequestParam(value = "miq[]", required = false) List<String> miq,
+	 * @RequestParam(value = "whCode[]", required = false) List<String> whCode,
 	 * 
-	 * @RequestParam(value = "wh[]", required = false) List<String> cd) { int result
-	 * = 0; System.out.println(mc.size()); for(int i = 0; i < mc.size(); i++) {
-	 * MatVO vo = new MatVO(); vo.setLotDate((mcd.get(i)));
-	 * vo.setMatOrdQty(Integer.valueOf(Qty.get(i))); vo.setMatCode(mc.get(i));
-	 * vo.setCpCode(cd.get(i)); vo.setMatPrice(mp.get(i));
-	 * vo.setMatOrdEmp(moe.get(i)); vo.setMatOrdYn(yn.get(i));
+	 * @RequestParam(value = "lotQty[]", required = false) List<String> lotQty,
 	 * 
+	 * @RequestParam(value = "matChkCode[]", required = false) List<String>
+	 * matChkCode){ int result= 0; System.out.println(mpCode.size());
 	 * 
-	 * System.out.println(vo.getMatOrdYn()); System.out.println(yn.get(i));
+	 * for(int i = 0; i < mpCode.size(); i++) { MatVO vo = new MatVO();
+	 * //vo.setLotDate((lotDate.get(i))); vo.setMpCode(mpCode.get(i));
+	 * vo.setWhCode(whCode.get(i)); vo.setLotQty(Integer.valueOf(lotQty.get(i)));
+	 * vo.setMatChkCode(matChkCode.get(i));
 	 * 
-	 * vo.setMatInQty(Integer.valueOf(Qty.get(i)));
-	 * 
-	 * uM += service.updateMatbuy(vo);
+	 * result += service.insertLot(vo);
 	 * 
 	 * //if(vo.getMatOrdYn() == "진행") { if(vo.getMatOrdYn().equals("확인")) { MatVO
 	 * vo1 = new MatVO(); //List<MatVO> list = new ArrayList<>();
@@ -231,6 +230,7 @@ public class MatController {
 	 * 
 	 * if(vo1 != null) { service.updateMatnotIn(vo); }else {
 	 * service.insertMatord(vo); } }
+	 * 
 	 * 
 	 * 
 	 * update -> Yn이 확인인 경우에만 미입고내역에 뜰수있고 insertMatord 발주확인에 넣고 미입고내역에 -> Yn을 '입고'로
@@ -244,9 +244,12 @@ public class MatController {
 	 * 
 	 * 
 	 * 
+	 * 
 	 * }
 	 * 
-	 * System.out.println(uM); return uM; }
+	 * System.out.println(uM);return uM;
+	 * 
+	 * }
 	 */
 
 	@GetMapping("/matOut")

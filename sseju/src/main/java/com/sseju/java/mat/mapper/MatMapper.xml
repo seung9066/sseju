@@ -204,11 +204,11 @@
 	<update id="updateChk" parameterType="MatVO">
 		UPDATE mat_chk
 		<set>
-			<if test="matInQty != null and !matInQty.equals('')">
-				mat_err_qty = #{matInQty},
+			<if test="matErrQty != null and !matErrQty.equals('')">
+				mat_err_qty = #{matErrQty},
 			</if>
-			<if test="matCode != null and !matCode.equals('')">
-				mat_pass_qty = #{matCode},
+			<if test="matPassQty != null and !matPassQty.equals('')">
+				mat_pass_qty = #{matPassQty},
 			</if>
 			where mat_ord_no = #{matOrdNo}
 		</set>
