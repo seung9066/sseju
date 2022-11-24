@@ -13,8 +13,10 @@ public class WorkOrderVO {
 	private String preNo; 		//작업 지시 번호 PK
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dDay;		//납기일자
+	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date preDate;		//작업 지시 일자(작업을 시작할 날)
+	
 	private String preManager; 	//작업 담당자
 	private String empName;		//직원이름
 	private String empId;		//직원 아이디, 담당자 명을 가져오기 위해서
