@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sseju.java.prtper.mapper.PrtPerMapper">
+
 	<!-- 등록 -->
 	<insert id="insertPrtPer" parameterType="ppVO">
 		INSERT ALL
@@ -16,15 +17,9 @@
 	</select>
 	<!-- 수정 ㅡ 실적칸 수정 필요없을것 같아서 추가X -->
 	
-	
 	<!-- 삭제 -->
 	<delete id="deletePrtPer">
 		DELETE FROM orders
 		WHERE order_no = #{order_no}
 	</delete>
-
-
-
-
-
 </mapper>

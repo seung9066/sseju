@@ -64,6 +64,11 @@
 
 
 			<script type="text/javascript">
+			showAll();
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
 				var prtperGrid = new tui.Grid({
 					el : document.getElementById('prtperGrid'),
 					scrollX : false,
@@ -91,6 +96,14 @@
 						filter : 'select'
 					} ]
 				});
+				function showAll() {
+				       fetch("getWorkOrderList") 
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           prtperGrid.resetData(obj);
+				       })
+			}
 			</script>
 		</main>
 	</article>
