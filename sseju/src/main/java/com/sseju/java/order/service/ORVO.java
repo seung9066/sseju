@@ -1,6 +1,9 @@
 package com.sseju.java.order.service;
 
+import java.util.Date;
+
 import org.apache.ibatis.type.Alias;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
@@ -12,8 +15,10 @@ public class ORVO {
 	// 주문상세 데이터
 	private String orderNo; 	//주문번호
 	private String orderDate;		//주문일자
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private String prtName;		// 제품명
-	private String dday; 			// 납기일자
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date dday; 			// 납기일자
 	private int orderQty; 		//주문량
 	private String orderPrg;	//진행상태
 		
@@ -23,12 +28,14 @@ public class ORVO {
 	private String prtUnit; // 단위
 	
 	//orderinf 테이블
-	private int preNo; //생산번호
+	private String preNo; //생산번호
 	private int orderOutQty; // 출고량
 	private String preCode; //제품코드
 	private int unitPrice; //주문단가
 	private int orderPrice; //금액
 	
 	private int lotQty;		//생산수량(로트번호가 부여된 제품 단위의 총 개수)
+	private String prtCode;
 	
+//	
 }

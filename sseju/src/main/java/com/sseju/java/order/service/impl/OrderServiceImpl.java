@@ -48,6 +48,18 @@ public class OrderServiceImpl implements ORService {
 		return OMapper.selectOrder();
 	}
 
+	@Override
+	public int insertOrderInfo(ORVO vo) {
+		// TODO Auto-generated method stub
+		return OMapper.insertOrderInfo(vo);
+	}
+
+	@Override
+	public ORVO getOrderNo() {
+		// TODO Auto-generated method stub
+		return OMapper.getOrderNo();
+	}
+
 	
 
 }

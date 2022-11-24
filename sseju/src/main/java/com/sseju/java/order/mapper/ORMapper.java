@@ -19,6 +19,7 @@ public interface ORMapper {
 	// 등록
 	public int insertOrder(ORVO Ovo);
 	public int insertOrderAll(ORVO Ovo);
-	
+	public int insertOrderInfo(ORVO vo);
+	public ORVO getOrderNo();
 
 }

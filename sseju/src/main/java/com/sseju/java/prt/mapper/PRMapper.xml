@@ -37,23 +37,26 @@
 	</select>
 
 	<!-- 전체조회 -->
-	<select id="selectPrtList2" resultType="PRVO">
-		SELECT
-		TO_CHAR(a.order_date, 'YYYY-MM-DD') AS order_date,
-		a.order_no,
-		d.cp_name,
-		c.prt_name,
-		c.prt_unit,
-		b.order_out_qty
-		FROM
-		orders a,
-		order_Inf b,
-		product c,
-		company d
-		where a.order_no = b.order_no
-		and b.prt_code = c.prt_code
-		and
-		a.cp_code = d.cp_code
+	<select id="selectPrtList2" resultType="ORVO">
+			SELECT
+			     a.order_no,
+			     e.cp_code,
+			     e.cp_name,
+			     c.prt_name, 
+			     b.order_qty,
+			     f.lot_qty
+			FROM 
+			    orders a,
+			    order_Inf b,
+			    product c,
+			    product_out d,
+			    company e,
+			    lot f
+			where a.order_no = b.order_no
+			and b.prt_code = c.prt_code
+			and a.cp_code = e.cp_code
+			and a.order_no= d.order_no
+			and f.mp_code =c.prt_code
 	</select>
 	<!-- 단거조회 -->
 	<select id="selectPrtInfo" parameterType="PRVO">
