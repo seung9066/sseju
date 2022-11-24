@@ -39,7 +39,7 @@ public class EqmVO {
    // 직원
    private String empId;
    private String empName;
-    
+   private String empDept;
    
    // 라인
    private String lineNo; // 라인 번호
