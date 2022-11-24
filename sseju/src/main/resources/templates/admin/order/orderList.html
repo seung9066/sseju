@@ -30,16 +30,16 @@ body {
 			<div id="mat-od-title">
 				<h2>제품 주문</h2>
 			</div>
-			<form action="insertOrderInfo">
+		
+			<form action="insertOrder" method="post">
 				<div style="text-align: right;">
+				<button class="button" onclick="clearA()">초기화</button>
 					<button type="submit" class="button" style="float: right;">주문하기</button>
 				</div>
 
 				<div id="prtGrid"></div>
 				<hr>
-				<div style="text-align: right;">
-					<button class="button" onclick="clearA()">초기화</button>
-				</div>
+
 				<table class="table">
 					<tr>
 						<th>거래처</th>
@@ -48,16 +48,22 @@ body {
 						<td><input type="hidden" id="cpCode" name="cpCode"
 							value="${session.user.cpCode}"></td>
 						<th>납기 일자</th>
-						<!-- 납기 일자로 할 경우에는 날짜 선택 가능해야함 -->
 						<td><input type="date" name="ordDate" id="ordDate"></td>
+						<td><input type="hidden" id="prtCode" name="prtCode"></td>
+						<td><input type="hidden" id="prtName" name="prtName"></td>
+						<td><input type="hidden" id="prtStandard" name="prtStandard"></td>
+						<td><input type="hidden" id="orderQty" name="orderQty"></td>
+						<td><input type="hidden" id="unitPrice" name="unitPrice"></td>
+						<td><input type="hidden" id="orderPrice" name="orderPrice"></td>
 					</tr>
 				</table>
+
 				<div id="prtGrid1"></div>
-				<table class="table" id="tableA">
-				</table>
 			</form>
 			<script>
+			console.log('#cpCode')
 			prtl();
+			ord1();
 			const prtGrid = new tui.Grid({
 				el : document.getElementById('prtGrid'),
 				pagination:true,
@@ -163,10 +169,15 @@ body {
 				 console.log("aaa")
 				 prtGrid1.clear()
 			 }
-			 
-			 function order1(){
-				 alert('주문이 완료 되었습니다.');
-			 }
+			 function ord1() {
+					url="selectOrder"
+			        fetch(url) 
+			        .then(res=>res.json())
+			        .then(obj=>{
+			           console.log(obj);
+			           prtGrid1.resetData(obj);
+			        })
+				}
 			 
 			</script>
 		</main>
