@@ -13,7 +13,6 @@ public interface ORMapper {
 	public List<ORVO> selectOrdeIng();
 	public List<ORVO> selectPrtManager();
 	public List<ORVO> selectOrder();
-
 	// 단건
 	public ORVO selectOrderInfo(ORVO Ovo);
 	// 등록

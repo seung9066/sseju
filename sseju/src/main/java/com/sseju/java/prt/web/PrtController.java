@@ -31,11 +31,15 @@ public class PrtController {
 	public List<PRVO> selectPrtList(Model model) {
 		return prService.selectPrtList();
 	}
-	
 	// 주문상세 페이지
 	@GetMapping("orderList")
 	public String orderList(Model model) {
 		return "/admin/order/orderList";
+	}
+	@GetMapping("/selectPrtList2")
+	@ResponseBody
+	public List<ORVO> selectPrtList2(Model model) {
+		return prService.selectPrtList2();
 	}
 
 	// 주문상세 목록 조회 서비스

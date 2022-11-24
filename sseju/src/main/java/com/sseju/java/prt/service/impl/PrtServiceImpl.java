@@ -38,4 +38,9 @@ public class PrtServiceImpl implements PRService {
 		return 0;
 	}
 
+	@Override
+	public List<ORVO> selectPrtList2() {
+		return pmapper.selectPrtList2();
+	}
+
 }

@@ -15,6 +15,7 @@ public interface PRMapper {
 
 	// 주문상세 목록 조회
 	public List<ORVO> selectPrtInfoList();
+	public List<ORVO> selectPrtList2();
 
 	
 	// 단건

@@ -31,7 +31,6 @@ public class OrderServiceImpl implements ORService {
 	}
 	@Override
 	public List<ORVO> selectOrdeIng() {
-		// TODO Auto-generated method stub
 		return OMapper.selectOrdeIng();
 	}
 	@Override
@@ -50,13 +49,11 @@ public class OrderServiceImpl implements ORService {
 
 	@Override
 	public int insertOrderInfo(ORVO vo) {
-		// TODO Auto-generated method stub
 		return OMapper.insertOrderInfo(vo);
 	}
 
 	@Override
 	public ORVO getOrderNo() {
-		// TODO Auto-generated method stub
 		return OMapper.getOrderNo();
 	}
 

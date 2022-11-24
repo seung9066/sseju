@@ -20,23 +20,25 @@ body {
 	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
 </head>
 <body>
-
 	<article class="container" layout:fragment="content">
 		<main id="main" class="main">
 			<div id="mat-od-title">
 				<h2>제품출고관리</h2>
 			</div>
 			<hr>
-			<div id="aGrid">제품별</div>
-			
-			<div id="mat-od-title">
-				<h2>제품출고관리</h2>
+			<div id="aGrid">
+				<h3>제품별</h3>
 			</div>
+			<br>
 			<hr>
-			
-			<div id="gridP">거래처별</div>
+			<div id="pGrid">
+				<h3>거래처별</h3>
+			</div>
 			<script>
-			all();
+			var token = $("meta[name='_csrf']").attr("content");
+			 var header = $("meta[name='_csrf_header']").attr("content");
+
+			AllA();
 			const aGrid = new tui.Grid({
 			el : document.getElementById('aGrid'),
 			pagination:true,
@@ -74,18 +76,20 @@ body {
 				}
 		          ]
 		});
-		function all() {
-			url="selectPrtManager"
-	        fetch(url) 
+		function AllA() {
+	        url="selectPrtManager"
+			fetch(url) 
 	        .then(res=>res.json())
 	        .then(obj=>{
 	           console.log(obj);
 	           aGrid.resetData(obj);
 	        })
 		}	
-		all1();
-		const gridP = new tui.Grid({
-			el : document.getElementById('gridP'),
+		</script>
+			<script>
+		AllA1();
+		const pGrid = new tui.Grid({
+			el : document.getElementById('pGrid'),
 			pagination:true,
 			pageOption: {
 				useClient:true,
@@ -133,17 +137,16 @@ body {
 				}
 		          ]
 		});
-		function all1() {
-			url="selectPrtList2"
-	        fetch(url) 
+		function AllA1() {
+	        url="selectPrtList2"
+			fetch(url) 
 	        .then(res=>res.json())
 	        .then(obj=>{
 	           console.log(obj);
-	           gridP.resetData(obj);
+	           pGrid.resetData(obj);
 	        })
 		}
     		</script>
 		</main>
 	</article>
 </body>
-</html>
