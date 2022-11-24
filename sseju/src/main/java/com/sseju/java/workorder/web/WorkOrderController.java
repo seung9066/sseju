@@ -66,7 +66,7 @@ public class WorkOrderController {
 	@ResponseBody
 	public int deleteWorkOrder(@RequestParam(value="deleteWorkOrder[]", 
 								required=false) List<String> deleteWorkOrder, 
-			@RequestParam(value="deleteOrder[]", 
+							@RequestParam(value="deleteOrder[]", 
 								required=false) List<String> deleteOrder) {
 		int res = 0;
 		for(int i=0; i<deleteWorkOrder.size(); i++) {
@@ -98,11 +98,4 @@ public class WorkOrderController {
 		}
 		return res;
 	}
-
-	
-	/*
-	 * @PostMapping("/selectDeleteWO") public String deleteWorkOrder(WorkOrderVO
-	 * woVO, Model model) { model.addAttribute("workOrderList",
-	 * woService.deleteWorkOrder(woVO)); return "/admin/produce/workOrderList"; }
-	 */
 }

@@ -17,139 +17,82 @@
 		<main id="main" class="main">
 			<h4>생산 진행 현황</h4>
 			<!-- 그리드 -->
-			<div class="row">
 					<div id="prtProgGrid"></div>
-			</div>
 			<br>
-			<div class="row">
-			<h6>자재 상황</h6>
-					<div id="matConditionGrid"></div>
+			<h6 style="display:inline-block">생산 공정별 자재 상황</h6>
+			<div style="float:right">
+				<button type="button" class="button" onclick="location.href='/matOrd'">자재 발주</button>
 			</div>
-			<label><button class="button">자재 발주</button></label>
-			<!-- Button trigger modal -->
-			<button type="button" class="button" data-bs-toggle="modal"
-				data-bs-target="#exampleModal">자재 발주 2</button>
-			<!-- Modal -->
-			<div class="modal fade" id="exampleModal" tabindex="-1"
-				aria-labelledby="exampleModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">자재 발주 신청창</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body">자재 발주
-						
-							<!-- <div id="matOrderGrid"></div> -->
-							
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-primary">확인</button>
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">닫기</button>
-						</div>
-					</div>
-				</div>
-			</div>
+			<div id="matConditionGrid"></div>
 			
 			<script type="text/javascript">
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
 			/* 생산 진행 현황 그리드 */
 				var prtProgGrid= new tui.Grid({
 					el : document.getElementById('prtProgGrid'),
-					data : [ {
-						preNo : '1',
-						prtName : '포도맛소주',
-						preQty : '3000',
-						insQty : '30000',
-						preDate : '2022-11-15',
-						preManager : '김준형'
-					}, {
-						preNo : '2',
-						prtName : '자몽맛소주',
-						preQty : '1000',
-						insQty : '10000',
-						preDate : '2022-11-16',
-						preManager : '김두영'
-					}
-					// data 가져오는 법
-					// data: {
-					//    api: {
-					//       readData: {
-					//          url: '/api/readData',
-					//          method: 'GET'
-					//       }
-					//    }
-					// },
-					],
 					scrollX : false,
 					scrollY : false,
 					columns : [ {
 						header : '작업 지시 번호',
-						name : 'preNo'
+						name : 'preNo',
+						align : 'center'
 					}, {
 						header : '제품명',
 						name : 'prtName',
-						filter : 'select'
+						filter : 'select',
+						align : 'center'
 					}, {
 						header : '생산량',
-						name : 'preQty'
+						name : 'preQty',
+						align : 'center'
 					}, {
 						header : '지시량',
-						name : 'insQty'
+						name : 'insQty',
+						align : 'center'
 					}, {
 						header : '지시일자',
-						name : 'preDate'
+						name : 'preDate',
+						align : 'center',
+				 		 formatter({value}) {
+						      return `${value.substring(0,10)}`;
+						    } 
 					}, {
 						header : '담당자',
 						name : 'preManager', //id값으로 가져오는것 잊지말기
-						filter : 'select'
+						filter : 'select',
+						align : 'center'
 					} ]
 				});
+				function showAll() {
+				       fetch("getPrtProgList") 
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           prtProgGrid.resetData(obj);
+				       })
+			}
 			
 			/* 자재 상황 그리드
 			생산 진행 중인 제품에 대한 자재 상황만 띄워줘야함 */
 			var ProgGrid = new tui.Grid({
 					el : document.getElementById('matConditionGrid'),
-					data : [ {
-						matCode : 'MAT-CA001',
-						matName : '클래식 맛 뚜껑',
-						preQty : '27000',
-						lotQty : '50000',
-					}, {
-						matCode : 'MAT-BT001',
-						matName : '공병',
-						preQty : '10000',
-						lotQty : '50000',
-					}
-					// data 가져오는 법
-					// data: {
-					//    api: {
-					//       readData: {
-					//          url: '/api/readData',
-					//          method: 'GET'
-					//       }
-					//    }
-					// },
-					],
 					scrollX : false,
 					scrollY : false,
 					columns : [ {
 						header : '자재 코드',
-						name : 'matCode'
+						name : 'matCode',
+						align : 'center'
 					}, {
 						header : '자재명',
 						name : 'matName',
-						filter : 'select'
+						align : 'center'
 					}, {
-						header : '투입량(사용량)', //지시수량만큼 빠지게
-						name : 'preQty'
-					}, {
-						header : '재고량(남은량)',
-						name : 'lotQty'
-					/*}, {
-						header : '현 재고 상태',//충분, 주문필요, 과부족(일시 생산 진행 불가,)
-						name : 'inQty'*/
+						header : '재고량',
+						name : 'lotQty',
+						align : 'center'
 					} ]
 				});
 			</script>
