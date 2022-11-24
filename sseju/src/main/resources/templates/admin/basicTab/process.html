@@ -17,6 +17,14 @@
 	margin-right: 1%;
 	margin-bottom: 1%;
 }
+
+th {
+	width: 80px;
+}
+
+td {
+	width: 250px;
+}
 </style>
 </head>
 <body>
@@ -34,6 +42,8 @@
 						<td><input type="text" id="prsCode" name="prsCode" value="PRS_"></td>
 						<th>공정명</th>
 						<td><input type="text" id="prsName" name="prsName"></td>
+					</tr>
+					<tr>
 						<th>관련 설비</th>
 						<td><select style="width: 150px;" id="eqmCode" name="eqmCode">
 								<option>---선택---</option>
@@ -41,8 +51,6 @@
 									<option th:value="${e.eqmCode}" th:text="${e.eqmName}"></option>
 								</th:block>
 						</select></td>
-					</tr>
-					<tr>
 						<th>공정설명</th>
 						<td><textarea id="prsDetail" name="prsDetail"></textarea></td>
 					</tr>
@@ -64,8 +72,6 @@
 						<td><input type="text" id="whCode" name="whCode" value="STO_"></td>
 						<th>창고명</th>
 						<td><input type="text" id="whName" name="whName"></td>
-						<th>창고 주소</th>
-						<td><input type="text" id="whLocation" name="whLocation" style="width:250px;"></td>
 					</tr>
 					<tr>
 						<th>담당자</th>
@@ -75,6 +81,8 @@
 									<option th:value="${e.empId}" th:text="${e.empName}"></option>
 								</th:block>
 						</select></td>
+						<th>창고 주소</th>
+						<td><input type="text" id="whLocation" name="whLocation" style="width:240px;"></td>
 					</tr>
 				</table>
 				<button class="button" type="button" style="float: right;"
@@ -181,7 +189,7 @@
 							deleteCode.splice(i, 1);
 						}
 					}
-					$('#prsCode').val('');
+					$('#prsCode').val('PRS_');
 					$('#prsCode').attr('readonly', false);
 					$('#prsName').val('');
 					$('#eqmCode').val('');
@@ -209,7 +217,7 @@
 							deleteCode.splice(i, 1);
 						}
 					}
-					$('#whCode').val('');
+					$('#whCode').val('STO_');
 					$('#whCode').attr('readonly', false);
 					$('#whName').val('');
 					$('#whLocation').val('');

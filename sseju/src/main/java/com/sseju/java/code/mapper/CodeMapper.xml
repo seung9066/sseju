@@ -298,9 +298,8 @@
 	<select id="WhPrd" parameterType="CodeVO" resultType="CodeVO">
 		SELECT
 		p.prt_name, l.lot_qty FROM
-		warehouse w, lot l, product p WHERE
-		w.wh_code =
-		l.wh_code AND l.mp_code
+		lot l, product p WHERE
+		l.mp_code
 		= p.prt_code AND l.mp_code LIKE
 		'PRD_%' AND l.wh_code = #{whCode}
 	</select>

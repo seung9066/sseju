@@ -39,6 +39,7 @@ public class EmpController {
 	@ResponseBody
 	@GetMapping("/idCheck")
 	public int idCheck(String id) {
+		System.out.println(id);
 		return service.idCheck(id);
 	}
 
@@ -48,7 +49,7 @@ public class EmpController {
 		return service.getEmpList();
 	}
 
-	@PostMapping("/insertEmployee")
+	@PostMapping("/insertEmployeeA")
 	public String insertEmp(EmployeeVO vo) {
 		BCryptPasswordEncoder enco = new BCryptPasswordEncoder();
 		String pw = vo.getPassword();

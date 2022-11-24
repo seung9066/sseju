@@ -17,6 +17,14 @@
 	margin-right: 1%;
 	margin-bottom: 1%;
 }
+
+th {
+	width: 50px;
+}
+
+td {
+	width: 250px;
+}
 </style>
 </head>
 <body>
@@ -28,16 +36,18 @@
 			<form action="insertP" method="POST">
 				<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}" />
-				<table style="margin-bottom:3%;">
+				<table style="margin-bottom: 3%;">
 					<tr>
 						<th>품목명</th>
 						<td><input type="text" id="name" name="name"></td>
 						<th>규격</th>
 						<td><input type="text" id="size" name="size"></td>
+					</tr>
+					<tr>
 						<th>단가</th>
 						<td><input type="number" id="price" name="price"></td>
 						<th>구분
-						<th>
+						</th>
 						<td><select style="width: 150px;" id="type" name="type">
 								<option>--선택--</option>
 								<option value="mat">자재</option>
@@ -53,30 +63,31 @@
 						<td><select style="width: 150px;" id="cpCode" name="cpCode">
 								<option>--선택--</option>
 								<th:block th:each="c : ${code}">
-								<th:block th:if="${#strings.contains(c.code, 'CP')}">
-									<option th:value="${c.code}" th:text="${c.codeName}"></option>
-								</th:block>
+									<th:block th:if="${#strings.contains(c.code, 'CP')}">
+										<option th:value="${c.code}" th:text="${c.codeName}"></option>
+									</th:block>
 								</th:block>
 						</select></td>
 						<th>공정명</th>
 						<td><select style="width: 150px;" id="prsCode" name="prsCode">
 								<option>--선택--</option>
 								<th:block th:each="c : ${code}">
-								<th:block th:if="${#strings.contains(c.code, 'PRS')}">
-									<option th:value="${c.code}" th:text="${c.codeName}"></option>
-								</th:block>
+									<th:block th:if="${#strings.contains(c.code, 'PRS')}">
+										<option th:value="${c.code}" th:text="${c.codeName}"></option>
+									</th:block>
 								</th:block>
 						</select></td>
 						<th>구분</th>
-						<td><select style="width: 150px;" id="matoption" name="matoption">
-							<option>--선택--</option>
-							<option value="MAT_LQ">원액</option>
-							<option value="MAT_BT">공병</option>
-							<option value="MAT_LB">라벨</option>
-							<option value="MAT_CA">뚜껑</option>
-							<option value="MAT_PS">6병포장</option>
-							<option value="MAT_PT">20병포장</option>
-							<option value="MAT_PR">궤짝</option>
+						<td><select style="width: 150px;" id="matoption"
+							name="matoption">
+								<option>--선택--</option>
+								<option value="MAT_LQ">원액</option>
+								<option value="MAT_BT">공병</option>
+								<option value="MAT_LB">라벨</option>
+								<option value="MAT_CA">뚜껑</option>
+								<option value="MAT_PS">6병포장</option>
+								<option value="MAT_PT">20병포장</option>
+								<option value="MAT_PR">궤짝</option>
 						</select></td>
 					</tr>
 				</table>
