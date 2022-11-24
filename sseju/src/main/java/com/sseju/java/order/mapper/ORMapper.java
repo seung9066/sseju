@@ -12,11 +12,13 @@ public interface ORMapper {
 	public List<ORVO> selectOrderList();
 	public List<ORVO> selectOrdeIng();
 	public List<ORVO> selectPrtManager();
+	public List<ORVO> selectOrder();
+
 	// 단건
 	public ORVO selectOrderInfo(ORVO Ovo);
 	// 등록
 	public int insertOrder(ORVO Ovo);
-
+	public int insertOrderAll(ORVO Ovo);
 	
 
 }

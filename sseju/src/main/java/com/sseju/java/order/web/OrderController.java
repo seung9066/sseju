@@ -53,12 +53,19 @@ public class OrderController {
 	public List<ORVO> selectPrtManager() {
 		return oService.selectPrtManager();
 	}
-//	@PostMapping("/insertOrderInfo")
-//	@ResponseBody
-//	public String insertOrderInfo(ORVO Ovo) {
-//		oService.insertOrderInfo(Ovo);
-//		return "redirect:orderList";
-//	}
+	@GetMapping("/selectOrder")
+	@ResponseBody
+	public List<ORVO> selectOrder() {
+		return oService.selectOrder();
+	}
+	@PostMapping("/insertOrder")
+	@ResponseBody
+	public String insertOrder(ORVO Ovo) {
+		oService.insertOrder(Ovo);
+		oService.insertOrderAll(Ovo);
+		return "redirect:orlist";
+	}
+	
 
 
 	
