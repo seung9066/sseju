@@ -130,22 +130,19 @@ img {
 							</tr>
 
 							<tr>
-								<th><button type="button" id="endBtn"
-										onclick="displayDate1()">
+								<th>
+								<button type="button" id="endBtn">
 										<img src="assets/img/stop.png" alt="stop이미지">
 										<p>비가동</p>
-									</button></th>
-								<td class="time"><input type="number" id="hour1"
-									name="hour1">시<input type="number" id="min1"
-									name="min1">분</td>
-								<th><button type="button" id="strBtn"
-										onclick="displayDate2()">
+								</button>
+								</th>
+								<td><input type="text" id="endDate"></td>
+								
+								<th><button type="button" id="strBtn">
 										<img src="assets/img/play-button.png" alt="play이미지">
 										<p>재가동</p>
 									</button></th>
-								<td class="time"><input type="number" id="hour2"
-									name="hour2">시<input type="number" id="min2"
-									name="min2">분</td>
+								<td><input type="text" id="strDate"></td>
 							</tr>
 							<tr>
 								<th class="col1">작업내용</th>
@@ -164,18 +161,40 @@ img {
 
 			<br> <br>
 			<script type="text/javascript">
+			
+			$('#endBtn').on('click', function(){
+				var date = new Date();         //오늘 날짜
+				let yyyy = date.getFullYear();  // 년
+				let mm = date.getMonth() + 1 ;  // 월 0부터 시작 +1 해줌.
+				let dd = date.getDate();
+				let hh = date.getHours();
+				let mn = date.getMinutes();  //분
+				let se = date.getSeconds();  //초
+				
+				$('#endDate').val(hh+":"+mn+":"+se);
+				
+			});
+			$('#strBtn').on('click', function(){
+				var date = new Date();         //오늘 날짜
+				let yyyy = date.getFullYear();  // 년
+				let mm = date.getMonth() + 1 ;  // 월 0부터 시작 +1 해줌.
+				let dd = date.getDate();
+				let hh = date.getHours();
+				let mn = date.getMinutes();  //분
+				let se = date.getSeconds();  //초
+				
+				$('#strDate').val(hh+":"+mn+":"+se);
+				
+			});
+			
 				// 타이머
-				function displayDate1(){
+				/* function displayDate1(){
 				  var now = new Date();
 					document.getElementById('hour1').value = now.getHours();
 					document.getElementById('min1').value = now.getMinutes();
-				}
+				} */
 				
-				function displayDate2(){
-					  var now = new Date();
-						document.getElementById('hour2').value = now.getHours();
-						document.getElementById('min2').value = now.getMinutes();
-					}
+				
 				
 				
 			
@@ -233,12 +252,7 @@ img {
 		              align : 'center',
 		              filter : 'select'
 		            },
-	               {
-	            	   header : '설비구분',
-	                  name : 'eqmDiv', 
-	                  align : 'center',
-	                  filter : 'select'
-	               }, {
+	                {
 	                  header : '설비상태',
 	                  name : 'eqmYn',
 	                  align : 'center',
