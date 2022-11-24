@@ -258,83 +258,78 @@
 	            ----------------*/
 				function insert(){
 			    	let rowData = grid.getCheckedRows();
-			        let inList = [];
-			        
-			         for (let i=0; i<rowData.length; i++) {
-			        	 let matOrdNo = rowData[i].matOrdNo;
-			             let lotDate = rowData[i].matChkDate;
-			             let mpCode = rowData[i].matCode;
-			             let whCode = rowData[i].whCode;
-			             let lotQty = rowData[i].matInQty;
-			             let matChkCode = rowData[i].matChkCode;
-			             let matPassQty = rowData[i].matInQty;
-			             inList.push({matOrdNo,lotDate,matCode,whCode,matInQty,matChkCode,matPassQty});
-
-		            let header = $("meta[name='_csrf_header']").attr('content');
-		            let token = $("meta[name='_csrf']").attr('content');
-		            
-		            if (rowData[i].matOrdYn == "입고"){
-		            	$.ajax({
-		            		url : "/insertLot",
-		            		method: "post",
-		            		contentType: 'application/json',
-	                        data: JSON.stringify(inList),
-	                        dataType : 'json',
-	                        success : function(data) {
-	                        	if(data > 0){
-	                        	console.log(data);
-	                        	}else {
-				           		   alert("실패")
-				           	   }
-	                        },
-	                        error : function(reject) {
-	                        	console.log(reject);
-	                        }		            		
-		            	}),
-		            	$.ajax({
-		            		url : "/updateChk",
-		            		method : "post",
-		            		contentType : 'application/json',
-	                        data: JSON.stringify(inList),
-	                        dataType : 'json',
-	                        success : function(data){
-	                        	if(data > 0){
-		                        	console.log(data);
-		                        	matNotinList();
-		                        	}else {
-					           		   alert("실패")
-					           	   }
-	                        },
-	                        error : function(reject) {
-	                        	console.log(reject);
-	                        }
-		            	})
-		            } else {
+			        let matOrdNo = [];
+			        let lotDate = [];
+			        let mpCode =  [];
+			        let whCode = [];
+			        let lotQty = [];
+			        let matChkCode = [];
+			        let matPassQty = [];
+			        let matOrdYn = [];
+			        console.log("insert()")
+			         for (key of rowData) {
+			        	 matOrdNo.push(key.matOrdNo);
+			        	 lotDate.push(key.matChkDate);
+			        	 mpCode.push(key.matCode);
+			        	 whCode.push(key.whCode);
+			        	 lotQty.push(key.matInQty);
+			        	 matChkCode.push(key.matChkCode);
+			        	 matPassQty.push(key.matInQty);
+			        	 matOrdYn.push(key.matOrdYn);
+			        	 console.log("for문")
+			        	 let header = $("meta[name='_csrf_header']").attr('content');
+		            	 let token = $("meta[name='_csrf']").attr('content');
 		            	
+			         }
+		            	 if(key.matOrdYn == '입고'){
+		            		 console.log(key.matOrdYn);
+			            	$.ajax({
+			            		url : "/insertLot",
+			            		method: "post",
+			            		contentType: 'application/json',
+		                        data: {lotDate:lotDate,mpCode:mpCode,whCode:whCode,lotQty:lotQty,
+		                        		matChkCode:matChkCode},
+		                        dataType : 'json',
+		                        async: false,
+		     	               beforeSend : function(xhr) {
+		     	                  xhr.setRequestHeader(header, token);
+		     	               },
+		     	               success : function(data) {
+		     	            	   if(data > 0) {
+		     	                  	console.log(data);
+		     	                  	matNotinList();
+		     	            	   }else {
+		     	            		   alert("실패")
+		     	            	   }
+		     	               },
+		     	               error : function(reject) {
+		     	                  console.log(reject);
+		     	               }
+		     	            }),
+		     	            $.ajax({
+		     	            	url : "/updateChk",
+			            		method: "post",
+			            		contentType: 'application/json',
+		                        data: {matPassQty:matPassQty,matOrdNo:matOrdNo},
+		                        dataType : 'json',
+		                        async: false,
+		     	               beforeSend : function(xhr) {
+		     	                  xhr.setRequestHeader(header, token);
+		     	               },
+		     	               success : function(data) {
+		     	            	   if(data > 0) {
+		     	                  	console.log(data);
+		     	                  	matNotinList();
+		     	            	   }else {
+		     	            		   alert("실패")
+		     	            	   }
+		     	               },
+		     	               error : function(reject) {
+		     	                  console.log(reject);
+		     	               }
+		     	            })		            	 
 		            }
-		            }
-/* 		            $.ajax({
-		            	url : "/insertLot",
-		            	method : "post",
-		            	data : {mcd : mcd , mc : mc, miq : miq, wh : wh},
-		            	dataType : "json",
-		            	async: false,
-			            beforeSend : function(xhr) {
-			               xhr.setRequestHeader(header, token);
-			            },
-			            success : function(data) {
-			           	   if(data > 0) {
-			               	console.log(data);
-			               	matNotinList();
-			           	   }else { 
-			           		   alert("실패")
-			           	   }
-			            },
-			            error : function(reject) {
-			               console.log(reject);
-			            }
-		            })  */           	
-	            };            
+	            };
 			</script>
 		</main>
 	</article>
