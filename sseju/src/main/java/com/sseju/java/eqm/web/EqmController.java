@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,8 @@ import com.sseju.java.code.service.CodeService;
 import com.sseju.java.code.service.CodeVO;
 import com.sseju.java.company.service.CompanyService;
 import com.sseju.java.company.service.CompanyVO;
+import com.sseju.java.employee.service.EmployeeService;
+import com.sseju.java.employee.service.EmployeeVO;
 import com.sseju.java.eqm.service.EqmService;
 import com.sseju.java.eqm.service.EqmVO;
 
@@ -28,6 +31,10 @@ public class EqmController {
 	CompanyService cService;
 	@Autowired
 	CodeService cdService;
+	@Autowired
+	EmployeeService eService;
+	
+	
 
 	// 거래처 정보
 	@GetMapping("/cpList")
@@ -37,6 +44,8 @@ public class EqmController {
 	}
 	
 
+	
+	
 
 	@GetMapping("/eqmList")
 	public String eqmList(Model model) {
@@ -59,6 +68,7 @@ public class EqmController {
 		return "/admin/eqm/eqmUoper";
 	}
 
+	//설비 리스트
 	@GetMapping("/getEqmList")
 	@ResponseBody
 	public List<EqmVO> getEqmList() {
@@ -153,18 +163,10 @@ public class EqmController {
 
 	@PostMapping("insertEqmChk")
 	@ResponseBody
-	public int insertChk(@RequestParam(value = "insChk[]", required = false) List<String> chk) {
-
-		int result = 0;
-		for (int i = 0; i < chk.size(); i++) {
-			String j = chk.get(i);
-			EqmVO vo = new EqmVO();
-			vo.setChkNo(j);
-
-			result += eqmService.insertEqmChk(vo);
-
-		}
-		return result;
+	public int insertChk(EqmVO eqmVO) {
+		int a = eqmService.insertEqmChk(eqmVO);
+		
+		return a;
 	}
 
 	@PostMapping("insertUoper")
