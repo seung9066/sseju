@@ -43,8 +43,6 @@ public class EqmController {
 		return cService.getCompanyList();
 	}
 	
-
-	
 	
 
 	@GetMapping("/eqmList")
@@ -59,7 +57,8 @@ public class EqmController {
 	}
 
 	@GetMapping("/eqmCheck")
-	public String eqmCheck() {
+	public String eqmCheck(Model model) {
+		model.addAttribute("emp", eqmService.getEmpList());
 		return "/admin/eqm/eqmCheck";
 	}
 
@@ -171,9 +170,9 @@ public class EqmController {
 
 	@PostMapping("insertUoper")
 	@ResponseBody
-	public String insertUoper(EqmVO eqmVO) {
-		eqmService.insertUoper(eqmVO);
-		return "redirect:eqmUoper";
+	public int insertUoper(EqmVO eqmVO) {
+		int a = eqmService.insertUoper(eqmVO);
+		return a;
 	}
 
 	@PostMapping("/deleteLine")

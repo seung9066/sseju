@@ -21,6 +21,9 @@ public interface EqmService {
    /*
     * // 거래처 company public List<CompanyVO> getCompanyList();
     */
+    
+    // 직원 가져오기
+    public List<EqmVO> getEmpList();
 
 
     // 라인 정보 전체조회

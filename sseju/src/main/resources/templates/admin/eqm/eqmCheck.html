@@ -113,8 +113,8 @@
 						<tr>
 
 							<th class="col1">설비코드</th>
-							<td><input type="text" name="eqmCode" id="eqmCode" data-bs-toggle="modal"
-								data-bs-target="#eqmModal" readonly>
+							<td><input type="text" name="eqmCode" id="eqmCode"
+								data-bs-toggle="modal" data-bs-target="#eqmModal" readonly>
 							</td>
 							<th class="col1">설비명</th>
 							<td><input type="text" name="eqmName" id="eqmName"></td>
@@ -126,18 +126,16 @@
 						</tr>
 						<tr>
 							<th>판정</th>
-							<td class="col1">
-								<input type="radio" name="chkState" id="chkState" value="err">불량
-								<input type="radio" name="chkState" value="pas">합격
-							</td>
+							<td class="col1"><input type="radio" name="chkState"
+								id="chkState" value="불량">불량 <input type="radio"
+								name="chkState" value="합격">합격</td>
 							<th class="col1">담당자</th>
-							<td>
-								<select id="chkEmpNo" name="chkEmpNo">
-									<option value=''>--선택--</option>
-									<option value="kim">김씨</option>
-									<option value="park">박씨</option>
-								</select>
-							</td>
+							<td><select name="chkEmpNo" id="chkEmpNo">
+									<option>---선택---</option>
+									<th:block th:each="e : ${emp}">
+										<option th:value="${e.empId}" th:text="${e.empName}"></option>
+									</th:block>
+							</select></td>
 							<th class="col1">조치사항</th>
 							<td><textarea placeholder="입력하시오." name="chkSol" id="chkSol"></textarea></td>
 						</tr>
@@ -152,8 +150,7 @@
 				<button type="button" class="button" onclick="insertChk()">등록</button>
 				<button type="reset" class="button">초기화</button>
 			</div>
-			<br>
-			<br>
+			<br> <br>
 			<div id="insertGrid"></div>
 
 
@@ -178,36 +175,17 @@
 						<div class="modal-body">
 							<div id="eqmGrid"></div>
 						</div>
-						
+
 					</div>
 				</div>
 			</div>
 
-			<!-- 사원 모달  -->
-			<!-- <div class="modal" tabindex="-1" role="dialog" id="empModal">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title">
-								<b>사원코드</b>
-							</h5>
-							<button type="button" class="close" data-bs-dismiss="modal"
-								aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-						</div>
-						<div class="modal-body">
-							<div id="empGrid"></div>
-						</div>
-						
-					</div>
-				</div>
-			</div> -->
+			
 
 
 
 
-	<script type="text/javascript">
+			<script type="text/javascript">
          function dis(){
             if($('#dis').css('display') == 'none'){
                $('#dis').show();
@@ -224,10 +202,9 @@
             
      </script>
 
-		<script>
+			<script>
 			chkList();
 			eqm();
-			emp();
 		
             var chkGrid = new tui.Grid({
                el : document.getElementById('chkGrid'),
@@ -252,12 +229,18 @@
                },  {
                   header : '점검일',
                   name : 'chkDate',
-                  align : 'center'
+                  align : 'center',
+                  formatter({value}){
+                	  return `${value.substring(0,10)}`;
+                  }
                   
                }, {
                   header : '차기점검일',
                   name : 'chkNdate',
-                  align : 'center'
+                  align : 'center',
+                  formatter({value}){
+                	  return `${value.substring(0,10)}`;
+                  }
                  
                }, {
                   header : '판정',
@@ -312,6 +295,7 @@
             	$('#chkSol').val('');
             	$('#chkEmpNo').val('');
             });
+            
             function deleteChk(){
                 let chk = [];
                 
@@ -331,7 +315,7 @@
                    success:function(data){
                       if(data > 0) {
                          alert("삭제완료");
-                         showAll();               
+                         chkList();               
                       } else {
                          alert("삭제실패");
                       }
@@ -343,7 +327,6 @@
              }
             
             function updateChk(){
-                let chkNo = $('#chkNo').val();
                 let eqmCode = $('#eqmCode').val();
                 let eqmName = $('#eqmName').val();
                 let chkDate = $('#chkDate').val();
@@ -353,7 +336,7 @@
                 let chkEmpNo = $('#chkEmpNo').val();
                
                 
-                let updChk={'chkNo':chkNo, 'eqmCode':eqmCode, 'eqmName':eqmName, 'chkDate':chkDate, 'chkNdate':chkNdate, 'chkState':chkState, 'chkSol':chkSol, 'chkEmpNo':chkEmpNo};
+                let updChk={'eqmCode':eqmCode, 'eqmName':eqmName, 'chkDate':chkDate, 'chkNdate':chkNdate, 'chkState':chkState, 'chkSol':chkSol, 'chkEmpNo':chkEmpNo};
                 
                 $.ajax({
                    url : 'updateChk',
@@ -368,7 +351,7 @@
                    success:function(data){
                       if(data > 0) {
                          alert("수정완료");
-                         showAll();               
+                         chkList();               
                       } else {
                          alert("수정실패");
                       }
@@ -495,7 +478,8 @@
               success : function(data) {
            	   if(data > 0) {
            		   chkGrid.resetData(data);
-                 	
+           		   alert("성공");
+           			chkList();
                  	
            	   }else {
            		   alert("실패")
@@ -560,13 +544,13 @@
 			
 			   
 			   //모달클릭
-	            /* document.addEventListener('shown.bs.modal', function() {
-	                eqmGrid.refreshLayout();
-	               }, '.modal'); */
+	             document.addEventListener('shown.bs.modal', function() {
+	                chkGrid.refreshLayout();
+	               }, '.modal'); 
 	            
 			   
 			   // 사원 모달-그리드
-		/* 	   var empGrid = new tui.Grid({
+			   var empGrid = new tui.Grid({
 	               el : document.getElementById('empGrid'),
 	               scrollX : false,
 	               scrollY : true,
@@ -579,22 +563,18 @@
 	                  header : '이름',
 	                  name : 'empName',
 	                  align : 'center'
-	               },  {
-	                  header : '부서',
-	                  name : 'empDept',
-	                  align : 'center'
-	               } ]
-	            }); */
+	               }]
+	            }); 
 			   
-			/*    function emp(){
+			    function emp(){
 				   
-				   url="empLi"
+				   url="eqmCheck"
 				       fetch(url) 
 				       .then(res=>res.json())
 				       .then(obj=>{
 				           empGrid.resetData(obj);
 				       })
-			   } */
+			   } 
 			   
 			   // 사원 그리드 클릭하면 input 태그에 뿌려주기
 			   /* empGrid.on('click',ev => {
