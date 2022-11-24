@@ -57,9 +57,14 @@ public class EqmController {
 	}
 
 	@GetMapping("/eqmCheck")
-	public String eqmCheck(Model model) {
-		model.addAttribute("emp", eqmService.getEmpList());
+	public String eqmCheck() {
 		return "/admin/eqm/eqmCheck";
+	}
+	
+	@GetMapping("eList")
+	@ResponseBody
+	public List<EqmVO> getEmpList(){
+		return eqmService.getEmpList();
 	}
 
 	@GetMapping("/eqmUoper")
