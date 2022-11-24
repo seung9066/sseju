@@ -85,6 +85,7 @@
 							<div id="wrapper" style="margin-top: -1px;"></div>
 						</div> -->
 						<!-- <button class="button" id="searchBtn" onclick="searchBtnHandler()">조회</button> -->
+						<input type="hidden" id="empId"> 
 						<button class="button" id="insertBtn" onclick="insert()">등록</button>
 						<button class="button" id="updateBtn" onclick="update()">수정</button>
 						<button class="button" id="deletetBtn" onclick="deleteMat()">삭제</button>
@@ -296,10 +297,14 @@
                   name : 'matPrice',
                   editor: 'text'
                }, {
-                  header : '담당자',
+                  header : '담당자Id',
                   name : 'matOrdEmp',
                   align : 'center'
                }, {
+                   header : '담당자',
+                   name : 'empName',
+                   align : 'center'
+                }, {
                   header : '진행 상황',
                   name : 'matOrdYn',
                   align : 'center',
@@ -308,7 +313,7 @@
                       type: 'select',
                   	  options: {
                       listItems: [
-                        { text: '진행', value: '진행' },
+                        { text: '확인', value: '확인' },
                         { text: '미확인', value: '미확인' },
                       ]
                     }
@@ -372,9 +377,14 @@
                   name : 'matPrice',
                   editor: 'text'  //값이...자동계산...되어야하는데...
                }, {
-                  header : '담당자',
-                  name : 'matOrdEmp'
-               }]
+                   header : '담당자Id',
+                   name : 'matOrdEmp',
+                   align : 'center'
+                }, {
+                    header : '담당자',
+                    name : 'empName',
+                    align : 'center'
+                 }]
             });
             
             
@@ -384,6 +394,8 @@
                   dataType : "json",
                   success : function(data) {
                      grid.resetData(data);
+                     //grid.setFormatColProperty(col index, "size", 0);
+                     //grid.setFormatColProperty(8, "size", 0);
                   },
                   error : function(reject) {
                      console.log(reject);
@@ -674,7 +686,8 @@
                 
                   console.log(empGrid2.getValue(ev.rowKey,ev.columnName));
                 const cmg = empGrid2.getValue(ev.rowKey,ev.columnName);
-                insertGrid.setValue(val2, 'matOrdEmp', val.empName);
+                insertGrid.setValue(val2, 'matOrdEmp', val.empId);
+                insertGrid.setValue(val2, 'empName', val.empName);
          
                 $('#empModal2').modal("hide");
             });
@@ -686,8 +699,9 @@
                  
                    console.log(empGrid2.getValue(ev.rowKey,ev.columnName));
                  const cmg = empGrid2.getValue(ev.rowKey,ev.columnName);
-                 grid.setValue(val2, 'matOrdEmp', val.empName);
-          
+                 grid.setValue(val2, 'matOrdEmp', val.empId);
+                 grid.setValue(val2, 'empName', val.empName);
+				//$('#empId').val(val.empId);          
                  $('#empModal2').modal("hide");
              });
             

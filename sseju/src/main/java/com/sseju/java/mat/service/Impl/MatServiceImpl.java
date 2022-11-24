@@ -215,4 +215,28 @@ public class MatServiceImpl implements MatService {
 		return matMapper.insertMatord(MatVO);
 	}
 
+	@Override
+	public MatVO selectMatordno(MatVO MatVO) {
+		// TODO Auto-generated method stub
+		return matMapper.selectMatordno(MatVO);
+	}
+
+	@Override
+	public int updateMatnotIn(MatVO MatVo) {
+		// TODO Auto-generated method stub
+		return matMapper.updateMatnotIn(MatVo);
+	}
+
+	@Override
+	public List<MatVO> matNotinList() {
+		// TODO Auto-generated method stub
+		return matMapper.matNotinList();
+	}
+
+	@Override
+	public int insertLot(MatVO MatVO) {
+		// TODO Auto-generated method stub
+		return matMapper.insertLot(MatVO);
+	}
+
 }

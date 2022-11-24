@@ -31,6 +31,8 @@ public interface MatMapper {
 	public List<MatVO> matInList();
 	//입고 단건 조회
 	public MatVO selectMatIn(MatVO MatVO);
+	//ordno 조회
+	public MatVO selectMatordno(MatVO MatVO);
 	//입고 등록
 	public int insertMat(MatVO MatVO);
 	//입고 자동 등록(발주 수정시)
@@ -41,6 +43,16 @@ public interface MatMapper {
 	public int deleteMat(MatVO MatVO);
 	public int selectDeleteMatIn(List<String> list);
 	
+	//미입고 조회
+	public List<MatVO> matNotinList();
+	//미입고 수정
+	public int updateMatnotIn(MatVO MatVo);
+	
+	
+	//미입고 => LOT 입고
+	public int insertLot(MatVO MatVO);
+	//미입고 "입고" => 검수테이블 업데이트
+	public int updateChk(MatVO MatVO);
 	
 	//출고 전체 조회
 	public List<MatVO> matOutList();

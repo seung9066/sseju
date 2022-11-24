@@ -24,6 +24,9 @@ public interface MatService {
 	public List<MatVO> matInList();
 	//입고 단건 조회
 	public MatVO selectMatIn(MatVO MatVO);
+	//ordno 조회
+	public MatVO selectMatordno(MatVO MatVO);
+	
 	//입고 등록
 	public int insertMat(MatVO MatVO);
 	//입고 자동 등록(발주 수정시)
@@ -33,6 +36,17 @@ public interface MatService {
 	//입고 삭제
 	public int deleteMat(MatVO MatVO);
 	public int selectDeleteMatIn(MatVO MatVO);
+	
+	
+	//미입고 조회
+	public List<MatVO> matNotinList();
+	//미입고 수정
+	public int updateMatnotIn(MatVO MatVo);
+	
+	
+	//미입고 => LOT 입고
+	public int insertLot(MatVO MatVO);
+	
 	
 	//출고 전체 조회
 	public List<MatVO> matOutList();
