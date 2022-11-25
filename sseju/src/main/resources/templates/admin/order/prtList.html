@@ -47,6 +47,9 @@
 	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
 <script
 	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<script type="text/javascript"
+	src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+
 </head>
 <body>
 	<article layout:fragment="content">
@@ -69,10 +72,10 @@
 				const allGrid = new tui.Grid({
 					el : document.getElementById('allGrid'),
 					pagination:true,
-					pageOption: {
-						useClient:true,
-						perPage:10
-					},
+					pageOptions: {
+					    useClient: true,
+					    perPage: 5
+					  },
 					scrollX : false,
 					scrollY : false,
 /* 					rowHeaders: ['checkbox'],
@@ -121,6 +124,7 @@
 				function all() {
 					url="selectOrdeIng"
 			        fetch(url) 
+			         .then(res=>res.json())
 			        .then(obj=>{
 			           console.log(obj);
 			           allGrid.resetData(obj);
@@ -134,10 +138,10 @@
 				const ordGrid = new tui.Grid({
 					el : document.getElementById('ordGrid'),
 					pagination:true,
-					pageOption: {
-						useClient:true,
-						perPage:10
-					},
+					pageOptions: {
+					    useClient: true,
+					    perPage: 5
+					  },
 					scrollX : false,
 					scrollY : false,
 /* 					rowHeaders: ['checkbox'],

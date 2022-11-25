@@ -63,7 +63,7 @@ public class OrderController {
 
 	@GetMapping("/user/getOrderNo")
 	@ResponseBody
-	public ORVO getOrderNO() {
+	public ORVO getOrderNo() {
 		return oService.getOrderNo();
 	}
 
