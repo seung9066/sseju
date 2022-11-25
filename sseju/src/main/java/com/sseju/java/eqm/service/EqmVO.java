@@ -21,10 +21,9 @@ public class EqmVO {
    private String eqmLoc;
    private int eqmMaxTemp;
    private int eqmMinTemp;
-   private String eqmCheck;
+   private String eqmCheck; //점검주기
    @DateTimeFormat(pattern = "yyyy-MM-dd")
    private Date eqmPurcDate;
-   private String eqmDiv;
    private String eqmImg;
    private String eqmPurcName;
    private String eqmPurcTel;
@@ -40,6 +39,7 @@ public class EqmVO {
    private String empId;
    private String empName;
    private String empDept;
+    
    
    // 라인
    private String lineNo; // 라인 번호
@@ -61,13 +61,12 @@ public class EqmVO {
    //비가동
    private String uoperCode; // 비가동이력번호
    private String uoperEmpNo; //담당자
-   private String uoperName; // 비가동사유
+   private String uoperRsn; // 비가동사유
    private String uoperWork; //작업내용
    @DateTimeFormat(pattern = "yyyy-MM-dd")
    private Date uoperStartTime; //비가동 시작시간
    @DateTimeFormat(pattern = "yyyy-MM-dd")
    private Date uoperEndTime; // 재가동 시간
-   private String eqmState; // 설비 상태 (비가동/가동)
    
    
 

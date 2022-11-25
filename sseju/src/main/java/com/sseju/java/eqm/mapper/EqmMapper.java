@@ -64,5 +64,8 @@ public interface EqmMapper {
       public int insertUoper(EqmVO eqmVO);
       // 비가동 삭제
       public int deleteUoper(EqmVO eqmVO);
+      
+      //비가동 수정
+      public int updateUoper(EqmVO eqmVO);
   
 }

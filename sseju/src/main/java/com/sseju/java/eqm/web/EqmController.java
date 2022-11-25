@@ -18,7 +18,6 @@ import com.sseju.java.code.service.CodeVO;
 import com.sseju.java.company.service.CompanyService;
 import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.employee.service.EmployeeService;
-import com.sseju.java.employee.service.EmployeeVO;
 import com.sseju.java.eqm.service.EqmService;
 import com.sseju.java.eqm.service.EqmVO;
 
@@ -176,8 +175,7 @@ public class EqmController {
 	@PostMapping("insertUoper")
 	@ResponseBody
 	public int insertUoper(EqmVO eqmVO) {
-		int a = eqmService.insertUoper(eqmVO);
-		return a;
+		return  eqmService.insertUoper(eqmVO);
 	}
 
 	@PostMapping("/deleteLine")
@@ -205,6 +203,11 @@ public class EqmController {
 	@ResponseBody
 	public int updateChk(@RequestBody EqmVO eqmVO) {
 		return eqmService.updateEqmChk(eqmVO);
+	}
+	@RequestMapping("/updateUoper")
+	@ResponseBody
+	public int updateUoper(@RequestBody EqmVO eqmVO) {
+		return eqmService.updateUoper(eqmVO);
 	}
 
 }
