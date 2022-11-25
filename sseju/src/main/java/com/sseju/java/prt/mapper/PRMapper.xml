@@ -41,27 +41,27 @@
 
 	<!-- 전체조회 -->
 	<select id="selectPrtList2" resultType="ORVO">
+	<![CDATA[
 		SELECT
 		a.order_no,
-		e.cp_code,
+		c.prt_code,
 		e.cp_name,
 		c.prt_name,
 		b.order_qty,
-		f.lot_qty
+		d.del
 		FROM
 		orders a,
 		order_Inf b,
 		product c,
 		product_out d,
-		company e,
-		lot f
+		company e
 		where a.order_no = b.order_no
 		and b.prt_code = c.prt_code
-		and
-		a.cp_code = e.cp_code
-		and a.order_no= d.order_no
-		and f.mp_code
-		=c.prt_code
+		and a.cp_code = e.cp_code
+        and b.order_qty <>'0'
+		and a.order_no= d.order_no(+)
+        order by a.d_day
+		]]>
 	</select>
 	<!-- 단거조회 -->
 	<select id="selectPrtInfo" parameterType="PRVO">
