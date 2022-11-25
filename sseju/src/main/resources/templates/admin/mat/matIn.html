@@ -53,7 +53,7 @@
 							<span class="tui-ico-date"></span>
 							<div id="wrapper" style="margin-top: -1px;"></div>
 						</div>
-						<button class="button">등록</button>
+						<button class="button" onclick="whNameUpdate()">수정</button>
 						<button class="button">삭제</button></li>
 				</ul>
 				<div id="grid"></div>
@@ -61,9 +61,9 @@
 
 
 			<!-- prtModal -->
-			<div class="modal fade" id="prtModal" tabindex="-1"
-				aria-labelledby="prtModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-xl">
+			<div class="modal fade" id="whNameModal" tabindex="-1"
+				aria-labelledby="whNameModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
@@ -72,7 +72,7 @@
 						</div>
 						<div class="modal-body">
 							<div>
-								<div id="prtGrid"></div>
+								<div id="whNameGrid"></div>
 							</div>
 						</div>
 						<div class="modal-footer">
@@ -86,7 +86,10 @@
 			</div>
 
 			<script>
+			//입고 => 창고만 수정 가능 // 이미 입고한 부분에 관해서 돈터치~
+			
 			matInList();
+			whName();
 			
 			//발주번호,자재코드,자재명,입고수량(합격수량),입고일,창고,LOT번호
 				const grid = new tui.Grid({
@@ -99,11 +102,14 @@
 						header : 'LOT 번호',
 						name : 'lotNo',
 						align : 'center'
-					},{
+					},
+					/*{
 						header : '발주 번호',
 						name : 'matOrdNo',
 						align : 'center'
-					}, {
+					},
+					*/
+					{
 						header : '자재 코드',
 						name : 'matCode',
 						align : 'center'
@@ -120,11 +126,11 @@
 						name : 'lotDate',
 						align : 'center' 
 					}, 
-/* 					{
+ 					{
 						header : '창고 코드',
 						name : 'whCode',
 						align : 'center'
-					}, */ 
+					},
 					{
 						header : '창고',
 						name : 'whName',
@@ -150,7 +156,7 @@
 						dataType : "json",
 						success : function(data) {
 							grid.resetData(data);
-							concole.log(data);
+							console.log(data);
 						},
 						error : function(reject) {
 							console.log(reject);
@@ -158,50 +164,106 @@
 					})
 				}
 				
+				function whName(){
+					$.ajax({
+						url : '/whList',
+						dataType : "json",
+						success : function(data){
+							whNameGrid.resetData(data);
+						},
+						error : function (reject){
+							console.log(reject);
+						}
+					})
+				}
+				
+				function whNameUpdate() {
+					
+					let rowData = grid.getCheckedRows();
+	            	console.log(rowData);
+           		 
+		     		let header = $("meta[name='_csrf_header']").attr('content');
+		    	    let token = $("meta[name='_csrf']").attr('content');
+					
+					$.ajax({
+						url : '/updateMat',
+						method : 'post',
+						contentType: "application/json",
+				        data:JSON.stringify(rowData),
+				        dataType : "json",
+				        async: false,
+				         beforeSend : function(xhr) {
+				            xhr.setRequestHeader(header, token);
+				         },
+				         success : function(data) {
+				      	   if(data > 0) {
+				            	console.log(data);
+				            	matInList();
+				      	   }else {
+				      		   alert("실패")
+				      	   }
+				         },
+				         error : function(request,status,error) {
+				      	  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				          alert("왜이러냐 진짜");
+				         }
+				      });
+				}
 	            /*------------
-	            // 등록
+	            // 모달창 띄우기
 	            ----------------*/
-				
-
+	            grid.on('click',function(ev){
+	                  if(ev.columnName =='whName'){
+	                     $('#whNameModal').modal('show');
+	                     whNameGrid.refreshLayout();
+	                  }
+	               });
 	            
-			</script>
-			<script>
-				
-
-				var prtGrid = new tui.Grid({
-					el : document.getElementById('prtGrid'),
-					bodyHeight : 200,
-					data : [ {
-						prtCode : 'PCT-001',
-						prtName : '제품',
-						prtStandard : '',
-						prtUnit : '',
-						prtPrice : ''
-					} ],
-					rowHeaders : [ 'checkbox' ],
-					scrollX : false,
-					scrollY : true,
-					columns : [ {
-						header : '제품코드',
-						name : 'prtCode'
-					}, {
-						header : '제품명',
-						name : 'prtName'
-					}, {
-						header : '규격',
-						name : 'prtStandard'
-					}, {
-						header : '단위',
-						name : 'prtUnit'
-					}, {
-						header : '금액',
-						name : 'prtPrice'
-					} ]
-				});
+	            /*------------
+	            // 모달 데이터 가져오기
+	            ----------------*/
+	            
+	            var whNameGrid = new tui.Grid({
+	            	el : document.getElementById('whNameGrid'),
+	            	bodyHeight : 200,
+	            	rowHeaders : [],
+	            	scrollX : false,
+	                scrollY : true,
+	                columns : [{
+	                   		header : '창고코드',
+	                   		name : 'whCode'
+	                },{
+	                   		header : '창고',
+	                   		name : 'whName'
+	                },{
+		               		header : '창고위치',
+		                    name : 'whLocation'
+					},{
+		                    header : '담당자',
+		                    name : 'whManager'
+					}]
+	             });
+	            
+	            /*------------
+	            // 모달 데이터 넣기
+	            ----------------*/
+	            whNameGrid.on('click', ev => {
+	            	let val = whNameGrid.getRow(ev.rowKey); // 거래처클릭한 그리드
+	                
+	                let val2 = grid.getFocusedCell().rowKey; // 진짜 큰 그리드
+	                 
+	                   console.log(whNameGrid.getValue(ev.rowKey,ev.columnName));
+	                 const amg = whNameGrid.getValue(ev.rowKey,ev.columnName);
+	                 grid.setValue(val2, 'whName', val.whName);
+	                 grid.setValue(val2, 'whCode', val.whCode);
+	                 $('#whNameModal').modal("hide");
+	            })
 
 				document.addEventListener('shown.bs.modal', function() {
-					prtGrid.refreshLayout();
+					whNameGrid.refreshLayout();
 				}, '.modal');
+
+	            
 			</script>
 		</main>
 	</article>

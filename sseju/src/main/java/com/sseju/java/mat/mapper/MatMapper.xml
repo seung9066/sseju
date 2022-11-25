@@ -103,6 +103,18 @@
 
 	<!-- 입고 Mapper -->
 	<select id="matInList" resultType="MatVO">
+		select l.lot_no, m.mat_code, m.mat_name , c.mat_pass_qty, l.lot_date,l.wh_code, w.wh_name
+		from lot l,
+		warehouse w,
+		material m,
+		mat_buy b,
+		mat_chk c
+		WHERE l.wh_code = w.wh_code
+		and c.mat_chk_code = l.mat_chk_code
+		and c.mat_ord_no = b.mat_ord_no
+		and b.mat_code = m.mat_code
+		and b.mat_ord_yn = '입고'
+<!-- 
 		SELECT c.mat_ord_no,
 		c.mat_chk_code, m.mat_code, m.mat_name, b.mat_ord_yn,
 		b.mat_ord_qty, c.mat_pass_qty, TO_CHAR(l.lot_date, 'yyyy-MM-dd') as
@@ -112,10 +124,10 @@
 		JOIN lot l ON l.mp_code = b.mat_code
 		JOIN material m ON m.mat_code = l.mp_code
 		JOIN warehouse w ON w.wh_code = l.wh_code
-		WHERE mat_ord_yn = '진행'
+		WHERE mat_ord_yn = '입고' -->
 	</select>
 	<select id="matNotinList" resultType="MatVO">
-		SELECT o.mat_ord_no , m.mat_code, m.mat_name ,c.mat_in_qty, w.wh_name,
+<!-- 		SELECT o.mat_ord_no , m.mat_code, m.mat_name ,c.mat_in_qty, w.wh_name,
 		c.mat_chk_date, o.mat_ord_yn,c.mat_chk_code
 		FROM mat_chk c,
 		mat_buy o,
@@ -127,8 +139,17 @@
 		and l.wh_code = w.wh_code
 		and l.mp_code = c.mat_code
 		and o.mat_ord_yn = '확인'
-		order by o.mat_ord_no DESC
+		order by o.mat_ord_no DESC -->		
+		select b.mat_ord_no, b.mat_code, m.mat_name, c.mat_chk_code, c.mat_in_qty, b.mat_ord_yn
+		from mat_buy b
+		join mat_chk c on b.mat_ord_no = c.mat_ord_no
+		join material m on m.mat_code = b.mat_code
+		where b.mat_ord_yn = '확인'
+		order by b.mat_ord_no DESC 
 	</select>
+	<update id="updateMoy" parameterType="MatVo">
+		update mat_buy set mat_ord_yn = '입고' where mat_ord_no = #{matOrdNo}
+	</update>
 	<select id="selectMatIn" resultType="MatVO">
 	</select>
 	<select id="selectMatordno" resultType="MatVO">
@@ -170,6 +191,13 @@
 		WHERE MAT_ORD_NO = #{matOrdNo}
 	</update>
 	<update id="updateMat" parameterType="MatVO">
+		UPDATE lot
+		<set>
+			<if test="whCode != null and !whCode.equals('')">
+				wh_code = #{whCode}
+			</if>
+			WHERE lot_no = #{lotNo}
+		</set>
 	</update>
 	<delete id="deleteMat" parameterType="MatVO">
 		DELETE FROM MAT_CHK WHERE
@@ -195,8 +223,8 @@
 						,mat_chk_code)
 				VALUES
 						(#{lotNo}
-						,#{lotDate}
-						,#{mpCode}
+						,#{matChkDate}
+						,#{matCode}
 						,#{lotQty}
 						,#{whCode}
 						,#{matChkCode})

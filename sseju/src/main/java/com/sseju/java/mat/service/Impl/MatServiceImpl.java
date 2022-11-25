@@ -80,7 +80,7 @@ public class MatServiceImpl implements MatService {
 	@Override
 	public int updateMat(MatVO MatVO) {
 		// TODO Auto-generated method stub
-		return 0;
+		return matMapper.updateMat(MatVO);
 	}
 
 	@Override
@@ -243,6 +243,12 @@ public class MatServiceImpl implements MatService {
 	public int updateChk(MatVO MatVO) {
 		// TODO Auto-generated method stub
 		return matMapper.updateChk(MatVO);
+	}
+
+	@Override
+	public int updateMoy(MatVO MatVO) {
+		// TODO Auto-generated method stub
+		return matMapper.updateMoy(MatVO);
 	}
 
 }
