@@ -17,6 +17,7 @@ public class PrtProgVO {
 	private int insQty;		//지시수량 "4
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date preDate;	//작업 지시 일자5
-	private String preManager;//작업 지시 담당자6
-	private String empId;	//회원 아이디, 아래에empId있으므로 조인사용 필요
+	private String preManager;//작업 지시 담당자6 = 실제로는 emp_id값이 담겨있음
+	private String empId;	//회원 아이디, 아래에empId있으므로 조인사용 필요 <-안쓸것같음
+	private String empName;	//회원 이름 가져오기, 담긴 empid값으로 가져와야함
 }

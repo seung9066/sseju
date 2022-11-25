@@ -28,7 +28,7 @@ public class WorkOrderController {
 		//상품명, 코드 가져오기
 		model.addAttribute("prt", woService.getPrtList());
 		//사원명, 이름 가져오기
-		model.addAttribute("idName", woService.getManagerList());
+		model.addAttribute("idName", woService.getWoEmpList());
 		return "/admin/produce/workOrderList";
 	}
 	
@@ -44,6 +44,13 @@ public class WorkOrderController {
 	@ResponseBody
 	public List<WorkOrderVO> getOrderList(){
 		return woService.getOrderList();
+	}
+	
+	//사원이름, 아이디 가져오기
+	@GetMapping("/getWoEmpList")
+	@ResponseBody
+	public List<WorkOrderVO> getWoEmpList(){
+		return woService.getWoEmpList();
 	}
 	
 	//지시 등록
@@ -66,18 +73,22 @@ public class WorkOrderController {
 	@ResponseBody
 	public int deleteWorkOrder(@RequestParam(value="deleteWorkOrder[]", 
 								required=false) List<String> deleteWorkOrder, 
-							@RequestParam(value="deleteOrder[]", 
-								required=false) List<String> deleteOrder) {
+			@RequestParam(value="deleteOrder[]", required=false) List<String> deleteOrder				
+			,@RequestParam(value="deleteCode[]", required=false) List<String> deleteCode
+							) {
 		int res = 0;
 		for(int i=0; i<deleteWorkOrder.size(); i++) {
 			String line = deleteWorkOrder.get(i);
-			System.out.println(line);
 			WorkOrderVO woVO = new WorkOrderVO();
 			woVO.setPreNo(line);
-			res += woService.deleteWorkOrder(woVO);
-			//지시 칸에서 삭제되어 반환값이 들어오면 updateorderyn이 실행되면서 주문칸에 다시 값이 들어가게
+			
 			line = deleteOrder.get(i);
 			woVO.setOrderNo(line);
+			res += woService.deleteWorkOrder(woVO);
+			//지시 칸에서 삭제되어 반환값이 들어오면 updateorderyn이 실행되면서 주문칸에 다시 값이 들어가게
+			line = deleteCode.get(i);
+			woVO.setPrtCode(line);
+			
 			woService.updateOrderYn(woVO);
 			
 		}

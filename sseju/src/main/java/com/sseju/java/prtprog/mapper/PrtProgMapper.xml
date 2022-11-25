@@ -7,17 +7,42 @@
 	</insert>
 	
 	<!-- R select 관련 쿼리 -->
+		<!-- 생산 진행 현황의 첫번째 그리드 -->
 	<select id="getPrtProgList" resultType="pprVO">
-		SELECT pe.pre_no, (SELECT pt.prt_name
-		                   FROM produce_inf pei JOIN product pt
-		                   ON pei.prt_code = pt.prt_code) AS prt_name,
-		       pe.pre_qty, pe.ins_qty, pe.pre_date, pe.pre_manager
-		FROM produce_inf pei JOIN produce pe
-		ON pei.pre_no = pe.pre_no
-		WHERE pre_yn = 'Y'
+		SELECT pei.pre_no, pt.prt_name, pe.pre_qty, pe.ins_qty, pe.pre_date, pe.pre_manager, ee.emp_name
+		FROM produce_inf pei JOIN product pt
+		    ON pei.prt_code = pt.prt_code
+		JOIN produce pe
+		    ON pe.pre_no = pei.pre_no
+		JOIN employee ee
+		    ON ee.emp_id = pe.pre_manager
+		WHERE pei.pre_yn = 'Y'
 	</select>
-	<!-- U update 관련 쿼리 -->
+		<!-- 생산 공정별 자재 상황 그리드용 쿼리 -->
+	<select id="progPrtCondition" resultType="pprVO">
+		SELECT  ma.mat_code, ma.mat_name, lo.lot_qty
+		FROM material ma JOIN process pr
+		    ON ma.prs_code = pr.prs_code
+		JOIN process_run prr
+		    ON prr.prs_code = pr.prs_code
+		JOIN mat_out mo
+		    ON prr.mat_out_no = mo.mat_out_no
+		JOIN lot lo
+		    ON lo.lot_no =  mat_lot_no
+		JOIN produce_inf pi
+		    ON pi.prs_code = pr.prs_code
+		WHERE pi.pre_yn = 'Y'
+	</select>
 	
+	<!-- U update 관련 쿼리 -->
+		<!-- 작업 진행이 완료된(생산이 끝난) 공정은 pre_yn을 'E'으로 업데이트 해줘야함 -->
+	<update id="updateProgYtoE">
+		UPDATE produce_inf
+		SET pre_yn = 'E'
+		WHERE pre_no = (SELECT pre_no
+		                FROM produce
+		                WHERE pre_qty = ins_qty)
+	</update>
 	<!-- D delete관련 쿼리 -->
 	<delete id="deletePrtProg" parameterType="pprVO">
 	

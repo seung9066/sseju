@@ -121,14 +121,14 @@ input {
 				    rowHeaders: ['checkbox'],
 				    columns:
 				    	[{
-							header: '주문번호',
-						    name: 'orderNo',
-							align : 'center'
-						},
-						{
 							header: '작업 지시 번호',
 					    	name: 'preNo',
 					    	filter : 'select',
+							align : 'center'							
+						},
+						{
+							header: '주문번호',
+						    name: 'orderNo',
 							align : 'center'
 						},
 						{
@@ -146,21 +146,29 @@ input {
 						    name: 'preDate',
 						    filter : 'select',
 							align : 'center',
-					 		/*  formatter({value}) {
-							      return `${value.substring(0,10)}`;
-							    }  */
+					 		formatter({value}) {
+						      return `${value.substring(0,10)}`;
+						    } 
 						},
 						{
 						    header : '담당자',
-						    name:'preManager',
+						    name:'empName',
 						    filter : 'select',
 							align : 'center'
 						},
 						{
 						    header : '납기일자',
-						    name:'dDay',
+						    name:'dday',
 						    filter : 'select',
-							align : 'center'
+							align : 'center',
+							formatter({value}) {
+						      return `${value.substring(0,10)}`;
+						    },
+						},
+						{
+							header : '제품코드',
+						    name : 'prtCode',
+						    hidden : 1
 						}]
 				      });
 			
@@ -179,6 +187,7 @@ input {
 				      $('#insQty').val(workOrderGrid.getValue(ev.rowKey, 'insQty'));
 				      $('#dDay').val(workOrderGrid.getValue(ev.rowKey, 'dDay'));
 				      $('#prePrg').val(workOrderGrid.getValue(ev.rowKey, 'prePrg'));
+				      $('#prtCode').val(workOrderGrid.getValue(ev.rowKey, 'prtCode'));
 				    });
 
 			   	workOrderGrid.on('uncheck', ev => {
@@ -195,6 +204,7 @@ input {
 				      $('#prtName').val('');
 				      $('#insQty').val('');
 				      $('#prePrg').val('');
+				      $('#prtCode').val('');
 				    });
 				    
 			   	//작업 지시 그리드의 선택 행 삭제
@@ -202,14 +212,16 @@ input {
 				    console.log(workOrderGrid.getCheckedRows());
 					let deleteWorkOrder = [];
 					let deleteOrder = [];
+					let deleteCode = [];
 					for(wo of workOrderGrid.getCheckedRows()){
 						deleteWorkOrder.push(wo.preNo);
 						deleteOrder.push(wo.orderNo);
+						deleteCode.push(wo.prtCode);
 					}
 				   	$.ajax({
 				   		url : 'selectDeleteWO',
 				   		type : 'POST',
-				   		data : {deleteWorkOrder:deleteWorkOrder, deleteOrder : deleteOrder},
+				   		data : {deleteWorkOrder:deleteWorkOrder, deleteOrder:deleteOrder, deleteCode : deleteCode},
 				   		dataType : "json",
 				   		async:false,
 				   		beforeSend : function(xhr){
@@ -285,12 +297,12 @@ input {
 							align : 'center'
 						}, {
 							header : '납기일자',
-							name : 'dDay',
+							name : 'dday',
 							filter : 'select',
 							align : 'center',
-					 		/*  formatter({value}) {
+					 		formatter({value}) {
 						      return `${value.substring(0,10)}`;
-							    }  */
+							    }
 						} ]
 					});
 					
@@ -354,7 +366,7 @@ input {
 							}
 
 				    
-					//
+					//작업 지시 내역 그리드
 					function showAll() {
 						       fetch("getWorkOrderList") 
 						       .then(res=>res.json())
@@ -363,7 +375,7 @@ input {
 						           workOrderGrid.resetData(obj);
 						       })
 					}
-					
+					//주문 신청 목록 그리드
 					function showAll2() {
 					       fetch("getOrderList") 
 					       .then(res=>res.json())
@@ -372,14 +384,6 @@ input {
 					           orderNoGrid.resetData(obj);
 					       })
 					}
-
-/* 	$(function(){
-		
-			let data = [
-				{"preNo":"aa", "prtName": "test"}
-			]		
-		workOrderGrid.appendRows(data);
-	}) */
 		</script>
 		</main>
 	</article>

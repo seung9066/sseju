@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 //생산 진행 현황 페이지 컨트롤러
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sseju.java.prtprog.service.PrtProgService;
@@ -26,6 +28,20 @@ public class PrtProgController {
 	@GetMapping("/getPrtProgList")
 	@ResponseBody
 	public List<PrtProgVO> getPrtProgList(){
+		
 		return pprService.getPrtProgList();
 	}
+	//ㄴ위 그리드의 각 행 클릭 시 해당 행의 제품에 대한 자재 상황 가져오기
+	@GetMapping("/progPrtCondition")
+	@ResponseBody
+	public List<PrtProgVO> progPrtCondition(){
+		return pprService.progPrtCondition();
+	}
+	//생산 진행 현황에서 생산 진행이 끝나면 update실행
+	@PostMapping("/updateProgYtoE")
+	@ResponseBody
+	public int updateProgYtoE(@RequestBody PrtProgVO pprVO) {
+		return pprService.updateProgYtoE(pprVO);
+	}
+	
 }
