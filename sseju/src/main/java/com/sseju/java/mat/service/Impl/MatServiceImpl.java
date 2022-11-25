@@ -239,4 +239,10 @@ public class MatServiceImpl implements MatService {
 		return matMapper.insertLot(MatVO);
 	}
 
+	@Override
+	public int updateChk(MatVO MatVO) {
+		// TODO Auto-generated method stub
+		return matMapper.updateChk(MatVO);
+	}
+
 }

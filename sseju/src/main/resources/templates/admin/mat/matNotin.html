@@ -277,19 +277,23 @@
 			        	 matPassQty.push(key.matInQty);
 			        	 matOrdYn.push(key.matOrdYn);
 			        	 console.log("for문")
-			        	 let header = $("meta[name='_csrf_header']").attr('content');
-		            	 let token = $("meta[name='_csrf']").attr('content');
 		            	
 			         }
+			        
+			        
 		            	 if(key.matOrdYn == '입고'){
 		            		 console.log(key.matOrdYn);
+		            		 
+		     	            let header = $("meta[name='_csrf_header']").attr('content');
+		    	            let token = $("meta[name='_csrf']").attr('content');
 			            	$.ajax({
 			            		url : "/insertLot",
 			            		method: "post",
-			            		contentType: 'application/json',
+			            		contentType: "application/json",
 		                        data: {lotDate:lotDate,mpCode:mpCode,whCode:whCode,lotQty:lotQty,
-		                        		matChkCode:matChkCode},
-		                        dataType : 'json',
+		                        		matChkCode:matChkCode,matPassQty:matPassQty,matOrdNo:matOrdNo,
+		                        		matOrdYn:matOrdYn},
+		                        dataType : "json",
 		                        async: false,
 		     	               beforeSend : function(xhr) {
 		     	                  xhr.setRequestHeader(header, token);
@@ -303,31 +307,10 @@
 		     	            	   }
 		     	               },
 		     	               error : function(reject) {
+		     	            	  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 		     	                  console.log(reject);
 		     	               }
-		     	            }),
-		     	            $.ajax({
-		     	            	url : "/updateChk",
-			            		method: "post",
-			            		contentType: 'application/json',
-		                        data: {matPassQty:matPassQty,matOrdNo:matOrdNo},
-		                        dataType : 'json',
-		                        async: false,
-		     	               beforeSend : function(xhr) {
-		     	                  xhr.setRequestHeader(header, token);
-		     	               },
-		     	               success : function(data) {
-		     	            	   if(data > 0) {
-		     	                  	console.log(data);
-		     	                  	matNotinList();
-		     	            	   }else {
-		     	            		   alert("실패")
-		     	            	   }
-		     	               },
-		     	               error : function(reject) {
-		     	                  console.log(reject);
-		     	               }
-		     	            })		            	 
+		     	            })
 		            }
 	            };
 			</script>
