@@ -31,7 +31,7 @@
 	<!-- Read : workorder페이지에서 정보를 불러오는 쿼리문 모음 -->
 	<!-- 주문 번호, 주문한 상품명, 주문수량, 주문일자 불러오기(주문 신청 내역 그리드에 대한 쿼리) -->
 	<select id="getOrderList" resultType="woVO">
-		SELECT ods.order_no, pt.prt_code, pt.prt_name, odi.order_qty, ods.order_date
+		SELECT ods.order_no, pt.prt_code, pt.prt_name, odi.order_qty, ods.d_day
 		FROM orders ods JOIN order_inf odi
 		    ON ods.order_no = odi.order_no
 		JOIN product pt
@@ -40,9 +40,9 @@
 		ORDER BY ods.order_no ASC
 	</select>
 	
-	<!-- 작업 지시 전체 조회(등록된 작업 지시 그리드문에 띄우는 쿼리) -->
+	<!-- 작업 지시 전체 조회(등록된 작업 지시 그리드에 띄우는 쿼리) -->
 	<select id="getWorkOrderList" resultType="woVO">
-		SELECT ods.order_no, pe.pre_no, pt.prt_name, pe.pre_qty, pe.ins_qty,pe.pre_date ,pe.pre_manager, pe.pre_prg
+		SELECT ods.order_no, pe.pre_no, pt.prt_name, pe.pre_qty, pe.ins_qty, pe.pre_date, pe.pre_manager, ods.d_day
 		FROM orders ods JOIN produce pe
 		    ON ods.order_no = pe.order_no
 		JOIN product pt

@@ -146,9 +146,9 @@ input {
 						    name: 'preDate',
 						    filter : 'select',
 							align : 'center',
-					 		 formatter({value}) {
+					 		/*  formatter({value}) {
 							      return `${value.substring(0,10)}`;
-							    } 
+							    }  */
 						},
 						{
 						    header : '담당자',
@@ -157,8 +157,8 @@ input {
 							align : 'center'
 						},
 						{
-						    header : '진행상태',
-						    name:'prePrg',
+						    header : '납기일자',
+						    name:'dDay',
 						    filter : 'select',
 							align : 'center'
 						}]
@@ -284,13 +284,13 @@ input {
 							name : 'orderQty',
 							align : 'center'
 						}, {
-							header : '주문일자',
-							name : 'orderDate',
+							header : '납기일자',
+							name : 'dDay',
 							filter : 'select',
 							align : 'center',
-					 		 formatter({value}) {
-							      return `${value.substring(0,10)}`;
-							    } 
+					 		/*  formatter({value}) {
+						      return `${value.substring(0,10)}`;
+							    }  */
 						} ]
 					});
 					
