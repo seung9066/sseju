@@ -126,6 +126,12 @@ public List<EqmVO> getEmpList() {
 	return eqmMapper.getEmpList();
 }
 
+@Override
+public int updateUoper(EqmVO eqmVO) {
+	// TODO Auto-generated method stub
+	return eqmMapper.updateUoper(eqmVO);
+}
+
    
 
    

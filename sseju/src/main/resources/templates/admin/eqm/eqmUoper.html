@@ -109,17 +109,17 @@ img {
 							<tr>
 								
 								<th class="col1">비가동사유</th>
-								<td><select name="uoperName">
+								<td><select name="uoperRsn">
 									<option value='' selected>--선택--</option>
 									<option value='chk'>점검</option>
 									<option value='fix'>수리</option>
-									<option value=''>재고부족?</option>
+									<option value='matQty'>자재부족</option>
 								</select></td>
 							</tr>
 							<tr>
 								
 								<th class="col1">작업자</th>
-								<td><input type="text" name="empNo" id="empNo"></td>
+								<td><input type="text" name="empId" id="empId" data-bs-toggle="modal" data-bs-target="#empModal" readonly></td>
 							</tr>
 
 							<tr>
@@ -129,13 +129,13 @@ img {
 										<p>비가동</p>
 								</button>
 								</th>
-								<td><input type="text" id="endDate"></td>
+								<td><input type="text" id="uoperEndTime" name="uoperEndTime"></td>
 								
 								<th><button type="button" id="strBtn" disabled>
 										<img src="assets/img/play-button.png" alt="play이미지">
 										<p>재가동</p>
 									</button></th>
-								<td><input type="text" id="strDate"></td>
+								<td><input type="text" id="uoperStartTime" name="uoperStartTime"></td>
 							</tr>
 							<tr id="work" style="display:none;">
 								<th class="col1">작업내용</th>
@@ -148,17 +148,42 @@ img {
 				</div>
 
 			</div>
+			<!-- 사원 모달  -->
+			<div class="modal" tabindex="-1" role="dialog" id="empModal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">
+								<b>사원 코드</b>
+							</h5>
+							<button type="button" class="close" data-bs-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div id="empgrid"></div>
+						</div>
+
+					</div>
+				</div>
+			</div>
 
 		
 
 			<br> <br>
 			<script type="text/javascript">
 			
-			 //사원 모달-그리드
-			 	   var empGrid = new tui.Grid({
-		               el : document.getElementById('empGrid'),
+				   
+			 	  // 사원 모달-그리드
+				   var empgrid = new tui.Grid({
+		               el : document.getElementById('empgrid'),
 		               scrollX : false,
 		               scrollY : true,
+		               pageOptions: {
+		            	    useClient: true, 
+		            	    perPage: 5
+		            	  },
 		               columns : [{
 		                  header : '아이디',
 		                  name : 'empId',
@@ -166,35 +191,41 @@ img {
 		                  
 		               }, {
 		                  header : '이름',
-		                  name : 'empName',
+		                  name : 'empName',	
 		                  align : 'center'
-		               },  {
-		                  header : '부서',
-		                  name : 'empDept',
-		                  align : 'center'
-		               } ]
+		               }, {
+			               header : '부서',
+			               name : 'empDept',
+			               align : 'center'
+			               }]
 		            }); 
 				   
-				/*    function emp(){
+				    function emp(){
 					   
-					   url="empLi"
-					       fetch(url) 
+					       fetch("eList") 
 					       .then(res=>res.json())
 					       .then(obj=>{
-					           empGrid.resetData(obj);
+					           empgrid.resetData(obj);
+					           console.log(obj);
 					       })
-				   } */
+				   } 
 				   
 				   // 사원 그리드 클릭하면 input 태그에 뿌려주기
-				   /* empGrid.on('click',ev => {
-					  let rowData=empGrid.getRow(ev.rowKey);
-					  
+				    empgrid.on('click',ev => {
+					  let rowData=empgrid.getRow(ev.rowKey);
+					  console.log(rowData);
 					  let a = rowData['empName'];
 					  
-					  $('#chkEmpNo').val(a);
+					  $('#empId').val(a);
 					  
 					  $('#empModal').modal("hide");
-				   }); */
+				   }); 
+				   
+				   
+				    const myModalEl = document.getElementById('empModal')
+				    myModalEl.addEventListener('shown.bs.modal', event => {
+				     empgrid.refreshLayout();
+				    })
 			
 			$('#endBtn').on('click', function(){
 				var date = new Date();         //오늘 날짜
@@ -206,7 +237,8 @@ img {
 				
 				let se = date.getSeconds();  //초
 				
-				$('#endDate').val(hh+":"+mn+":"+se);
+				$('#uoperEndTime').val(yyyy +"-"+mm+"-"+dd+" "+hh+":"+mn+":"+se);
+				
 				
 				// let hh = (date.getHours()<10?'0':'') + date.getMinutes();;
 			});
@@ -219,7 +251,7 @@ img {
 				let mn = date.getMinutes();  //분
 				let se = date.getSeconds();  //초
 				
-				$('#strDate').val(hh+":"+mn+":"+se);
+				$('#uoperStartTime').val(hh+":"+mn+":"+se);
 				
 			});
 			
@@ -266,10 +298,11 @@ img {
 			
 			</script>
 
-			<script type="text/javascript">
-			
-			showEqm();
+	<script type="text/javascript">
 			uoperShow();
+			showEqm();
+			emp();
+			
 			
 				/* radio버튼 누를때 */
 				$('input[type=radio][name=eqmState]').on(
@@ -354,7 +387,6 @@ img {
 	            
 	           
 	            
-	            /* 설비 모달에서 한 행 클릭하면 input에 값 들어감 */
 	                  
 	           
 	            
@@ -366,17 +398,18 @@ img {
 	            	let eqmCode = $('#eqmCode').val();
 	            	let eqmName = $('#eqmName').val();
 	            	//let uoperCode = $('#uoperCode').val();
-	            	let uoperState = $('#uoperState').val(); // 비가동사유
-	            	let uoperEmpNo = $('#uoperEmpNo').val();
+	            	let uoperRsn = $('#uoperRsn').val(); // 비가동사유
+	            	let empId = $('#empId').val();
 	            	let uoperStartTime = $('#uoperStartTime').val();
 	            	let uoperEndTime = $('#uoperEndTime').val();
 	            	let uoperWork = $('#uoperWork').val(); // 작업내용
 	            	
 	            	console.log(eqmCode);
+	            	
 	            	$.ajax({
 	            		url:'insertUoper',
 	            		type : 'POST',
-	            		data : {'eqmCode':eqmCode, 'eqmName' : eqmName , 'uoperState':uoperState,'empId':empId,'uoperStartTime':uoperStartTime,'uoperEndTime':uoperEndTime,'uoperWork':uoperWork},
+	            		data : {'eqmCode':eqmCode, 'eqmName' : eqmName , 'uoperRsn':uoperRsn,'empId':empId,'uoperStartTime':uoperStartTime,'uoperEndTime':uoperEndTime,'uoperWork':uoperWork},
 	            		dataType : "json",
 	                    
 	                    async : false,
@@ -410,28 +443,39 @@ img {
 					scrollY : false,
 					columns : [ {
 						header : '비가동',
-						name : 'uoperCode',
+						name : 'uoperCode'
 					}, {
 						header : '설비코드',
-						name : ' eqmCode',
+						name : 'eqmCode',
+						align : 'center'
 					}, {
 						header : '설비명',
 						name : 'eqmName',
+						align : 'center'
 					}, {
 						header : '시작시간',
 						name : 'uoperStartTime',
+		                  formatter({value}){
+		                	  return `${value.substring(0,10)}`;
+		                  }
 					}, {
 						header : '종료시간',
-						name : 'uoperEndTime'
+						name : 'uoperEndTime',
+		                  formatter({value}){
+		                	  return `${value.substring(0,10)}`;
+		                  }
 					}, {
 						header : '상태',
-						name : 'uoperState',
+						name: 'uoperRsn',
+						align : 'center'
 					}, {
 						header : '담당자',
-						name : 'empId',
+						name : 'empName',
+						align : 'center'
 					}, {
 						header : '작업내용',
 						name : 'uoperWork',
+						align : 'center'
 					} ]
 				});
 				

@@ -128,7 +128,7 @@
 						<tr>
 							<th>판정</th>
 							<td class="col1"><input type="radio" name="chkState"
-								id="chkState" value="불량">불량 <input type="radio"
+								 value="불량" >불량 <input type="radio"
 								name="chkState" value="합격">합격</td>
 							<th class="col1">담당자</th>
 							<td><input type="text" name="chkEmpNo" id="chkEmpNo"
@@ -215,6 +215,12 @@
          document.addEventListener('shown.bs.modal', function (){
                 eqmGrid.refreshLayout();
                 }, '.modal');
+         
+         // 모달 사이즈에 맞게 바로 출력해줌
+         const myModalEl = document.getElementById('empModal')
+		    myModalEl.addEventListener('shown.bs.modal', event => {
+		     empGrid.refreshLayout();
+		    })
             
          
             
@@ -395,15 +401,21 @@
                 })
              }
             
-           
+           // 몰라
             function chkList() {
                 
                 fetch("eqmChkList") 
                 .then(res=>res.json())
                 .then(obj=>{
                     chkGrid.resetData(obj);
-                })
-         }
+                    /*obj.forEach((item,index,arr) => {
+                    	if(getDateDiff(sysdate,$('#chkNdate')) <0){
+                    		background-color : red;
+                    	}
+                    }*/
+                
+         })
+           }
             
            
             
@@ -427,60 +439,7 @@
 		      chkGrid.unfilter('eqmDiv');
 		   })   
 		   
-		   /* 입력 그리드  */
-		    var insertGrid = new tui.Grid({
-               el : document.getElementById('insertGrid'),
-               scrollX : true,
-               scrollY : false,
-               rowHeaders : [ 'checkbox' ],
-               columns : [{
-                  header : '설비코드',
-                  name : 'eqmCode',
-                  align : 'center'
-                  
-               }, {
-                  header : '설비명',
-                  name : 'eqmName',
-                  align : 'center',
-                  filter: 'select'
-               },  {
-                  header : '점검일',
-                  name : 'chkDate',
-                  align : 'center'
-               }, {
-                  header : '차기점검일',
-                  name : 'chkNdate',
-                  align : 'center'
-               }, {
-                  header : '판정',
-                  name : 'chkState',
-                  align : 'center',
-                  filter: 'select'
-               }, {
-                  header : '조치사항',
-                  name : 'chkSol',
-                  align : 'center',
-                  filter: 'select'
-               }, {
-                  header : '점검 담당자',
-                  name : 'chkEmpNo',
-                  align : 'center',
-                  filter: 'select'
-               } ]
-            });
 		   
-		   function add(){
-			   var rowData = [{chkNo : "" , eqmCode : "", eqmName : "", chkDate : "", chkNdate : "", chkState: "", chkSol:"", chkEmpNo:""}]
-		   		insertGrid.appendRow(rowData);
-		   }
-		   
-		  /* insertGrid.on('click', function(ev){
-			  if(ev.columnName == 'eqmCode'){
-				  $('#eqmModal').show();
-			  } else if(ev.columnName == 'chkEmpNo'{
-				  $('#chkEmpModal').show();
-			  })
-		   });*/
 		   
 		   // 등록 
 		   function insertChk(){
@@ -489,12 +448,18 @@
                let eqmName = $('#eqmName').val();
                let chkDate = $('#chkDate').val();
                let chkNdate = $('#chkNdate').val();
-               let chkState = $('#chkState').val([]);
+               let chkState = $("input[name='chkState']:checked").val();
                let chkSol = $('#chkSol').val();
                let chkEmpNo = $('#chkEmpNo').val();
 			   
-               /*  let insChk={'chkNo':chkNo, 'eqmCode':eqmCode, 'eqmName':eqmName, 'chkDate':chkDate, 'chkNdate':chkNdate, 'chkState':chkState, 'chkSol':chkSol, 'chkEmpNo':chkEmpNo};*/
-				
+                let insChk={'chkNo':chkNo, 'eqmCode':eqmCode,'eqmName':eqmName, 'chkDate':chkDate, 'chkNdate':chkNdate, 'chkState':chkState, 'chkSol':chkSol, 'chkEmpNo':chkEmpNo};
+				console.log(chkSol);
+               console.log(chkNdate);
+               console.log(eqmCode);
+               console.log(chkDate);
+               console.log(chkEmpNo);
+               console.log(chkNo);
+              console.log(insChk)
        	
 			   
            let header = $("meta[name='_csrf_header']").attr('content');
@@ -502,17 +467,17 @@
            $.ajax({
               url : "insertEqmChk",
               method : "POST",
-              data : {'chkNo':chkNo, 'eqmCode':eqmCode, 'eqmName':eqmName, 'chkDate':chkDate, 'chkNdate':chkNdate, 'chkState':chkState, 'chkSol':chkSol, 'chkEmpNo':chkEmpNo},
-              dataType:'json',
+              data : insChk,
+              dataType:"json",
               async: false,
               beforeSend : function(xhr) {
                  xhr.setRequestHeader(header, token);
               },
               success : function(data) {
             	  if(data > 0) {
-            		  chkGrid.resetData(data);
-                      alert("입력완료");
-                      chkList(); 
+            		  alert("입력완료");
+            		  chkList();
+                      
                       console.log(data);
                    } else {
                       alert("입력실패!");
@@ -521,11 +486,41 @@
               error : function(reject) {
                  console.log(reject);
               }
-           })
+           });
     		} 
 		   
 		   // 차기점검일이 점검일 보다 빠르면 alert창 뜨면서 값 들어가지 못하게 하기
-		   
+		   // 문자열로 된 날짜 => Date 형식으로 변환
+		   var date1 = new Date($('#chkDate').val());
+		   var date2 = new Date($('#chkNdate').val());
+		
+		
+		  $('#chkNdate').change(function(){
+			  
+			  if(date1.getTime() > date2.getTime()){
+				   alert("차기점검일을 정확하게 입력하세요!");
+				   $('#chkNdate').val('');
+			   }
+			   
+		  });
+		  
+		  // 차기점검일과 현재날짜 차이 구해서 행에 색깔 주기 (for-if문)
+		  const getDateDiff = (d1,d2) => {
+			  const date1 = new Date(d1);
+			  const date2 = new Date(d2);
+			  
+			  const diffDate = date1.getTime() - date2.getTime();
+			  
+			  return diffDate/(1000*60*60*24); // 하루(1일)
+		  }
+		  
+		  /*if getDateDiff(sysdate, $('#chkNdate')) < 0){
+			  // 색 = red
+		  }else if(getDateDiff(sysdate, $('#chkNdate')) < 3)){
+			  // 색 = 주황
+		  }else if(getDateDiff(sysdate, $('#chkNdate')) < 7)){
+			  // 색 = 초록
+		  }*/
 		   
 		   // 설비코드 모달-그리드
 		   var eqmGrid = new tui.Grid({
