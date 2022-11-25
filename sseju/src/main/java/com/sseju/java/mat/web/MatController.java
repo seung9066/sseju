@@ -181,6 +181,18 @@ public class MatController {
 	public List<MatVO> matInList() {
 		return service.matInList();
 	}
+	
+	//입고 수정
+	@ResponseBody
+	@PostMapping("/updateMat")
+	public int updateMat(@RequestBody List<MatVO> vo) {
+		int a = 0;
+		
+		for(int i=0; i < vo.size(); i++) {
+			a += service.updateMat(vo.get(i));
+		}
+		return a;
+	}
 
 	// 미입고
 	@GetMapping("/matNotin")
@@ -199,6 +211,7 @@ public class MatController {
 
 	// 미입고 => LOT 입고
 
+	/*
 	@ResponseBody
 	@PostMapping("/insertLot")
 	public int insertLot(@RequestParam(value = "lotDate[]", required = false) List<Date> lotDate,
@@ -239,15 +252,45 @@ public class MatController {
 
 				service.updateChk(vo);
 				// 미검수 수량 matInQty의 3%를 불량처리하고 나머지를 PassQty로 처리해서 넣기
-
+				
+				//if(insert[i].matOrdYn.equals("입고")){
+				//if(insert[i].matOrdYn == "입고"){
 			}
 
 		}
 
 		return result;
 
-	}
+	}*/
 
+	@ResponseBody
+	@PostMapping("/insertLot")
+	public int insertLot(@RequestBody List<MatVO> vo) {
+		int a = 0;
+		
+		for (int i = 0; i<vo.size(); i++) {
+			System.out.println("돌고있나????");
+			System.out.println(vo.get(i));
+			a += service.insertLot(vo.get(i));
+			a += service.updateMoy(vo.get(i));
+			a += service.updateChk(vo.get(i));
+		}		
+		return a;
+	}
+	
+	@ResponseBody
+	@PostMapping("/updateMatnotIn")
+	public int updateMatnotIn(@RequestBody List<MatVO> vo) {
+		int a = 0;
+
+		for (int i = 0; i < vo.size(); i++) {
+			System.out.println(vo.get(i));
+			a += service.updateMatnotIn(vo.get(i));
+			
+		}
+		return a;
+	}
+	
 	@GetMapping("/matOut")
 	public String matOut() {
 		return "/admin/mat/matOut";

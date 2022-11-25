@@ -11,13 +11,8 @@
 <script
 	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
 
-<link rel="stylesheet"
-	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
-<style>
+
+<style type="text/css">
 .tui-datepicker {
 	z-index: 1001;
 }
@@ -45,7 +40,7 @@
 <body>
 	<article layout:fragment="content">
 		<main class="main" id="main">
-			<h3>미입고내역</h3>
+			<h3>출고내역</h3>
 			<div>
 				<ul class="ul-style">
 					<li><label>품목</label><input type="text" data-bs-toggle="modal"
@@ -58,16 +53,16 @@
 							<span class="tui-ico-date"></span>
 							<div id="wrapper" style="margin-top: -1px;"></div>
 						</div>
-						<button type="button" class="button" onclick="insertNotin()">등록</button>
+						<button class="button" onclick="whNameUpdate()">수정</button>
 						<button class="button">삭제</button></li>
 				</ul>
 				<div id="grid"></div>
 			</div>
 
 
-			<!-- whNameGrid -->
+			<!-- prtModal -->
 			<div class="modal fade" id="whNameModal" tabindex="-1"
-				aria-labelledby="prtModalLabel" aria-hidden="true">
+				aria-labelledby="whNameModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -91,12 +86,9 @@
 			</div>
 
 			<script>
+			//입고 => 창고만 수정 가능 // 이미 입고한 부분에 관해서 돈터치~
 			
-			
-			//미입고 내역 => 수정 기능 외엔 없음 (수정으로 입고를 시킴)
-			
-			
-			matNotinList();
+			matOutList();
 			whName();
 			
 			//발주번호,자재코드,자재명,입고수량(합격수량),입고일,창고,LOT번호
@@ -106,11 +98,18 @@
 					rowHeaders : [ 'checkbox' ],
 					scrollX : false,
 					scrollY : true,
-					columns : [{
+					columns : [ {
+						header : 'LOT 번호',
+						name : 'lotNo',
+						align : 'center'
+					},
+					/*{
 						header : '발주 번호',
 						name : 'matOrdNo',
 						align : 'center'
-					}, {
+					},
+					*/
+					{
 						header : '자재 코드',
 						name : 'matCode',
 						align : 'center'
@@ -119,48 +118,23 @@
 						name : 'matName',
 						align : 'center'
 					}, {
-						header : '확인번호',
-						name : 'matChkCode',
-						align : 'center'
-					},{
-						header : '미검수 수량',
-						name : 'matInQty',
-						editor: 'text',
-						align : 'center'
-					}, {
-						header : '창고 코드',
-						name : 'whCode',
-						align : 'center'
-					}, {
-						header : '창고',
-						name : 'whName',
+						header : '입고 수량',  //ㄱㅖ산
+						name : 'matPassQty',
 						align : 'center'
 					}, {
 						header : '입고일', 
-						name : 'matChkDate',
-						align : 'center',
-		                editor: 'datePicker',
-		                validation: {
-		                   dataType: 'datePicker',
-		                   required: true
-		                   }
-/* 							,
-		                    formatter({value}) {
-		                     return `${value.substring(0,10)}`;
-		                   } */
-					},{
-						header : '진행사항',
-						name : 'matOrdYn',						
-						align : 'center',
-		                  editor: {
-		                      type: 'select',
-		                  	  options: {
-		                      listItems: [
-		                        { text: '확인', value: '확인' },
-		                        { text: '입고', value: '입고' },
-		                      ]
-		                    }
-		                  }
+						name : 'lotDate',
+						align : 'center' 
+					}, 
+ 					{
+						header : '창고 코드',
+						name : 'whCode',
+						align : 'center'
+					},
+					{
+						header : '창고',
+						name : 'whName',
+						align : 'center'
 					}]
 				});
 
@@ -176,9 +150,9 @@
 	            // 함수
 	            ----------------*/
 	            
-	            function matNotinList(){
+	            function matInList(){
 					$.ajax({
-						url : '/matNotinList',
+						url : '/matInList',
 						dataType : "json",
 						success : function(data) {
 							grid.resetData(data);
@@ -188,7 +162,7 @@
 							console.log(reject);
 						}
 					})
-				};
+				}
 				
 				function whName(){
 					$.ajax({
@@ -202,6 +176,39 @@
 						}
 					})
 				}
+				
+				function whNameUpdate() {
+					
+					let rowData = grid.getCheckedRows();
+	            	console.log(rowData);
+           		 
+		     		let header = $("meta[name='_csrf_header']").attr('content');
+		    	    let token = $("meta[name='_csrf']").attr('content');
+					
+					$.ajax({
+						url : '/updateMat',
+						method : 'post',
+						contentType: "application/json",
+				        data:JSON.stringify(rowData),
+				        dataType : "json",
+				        async: false,
+				         beforeSend : function(xhr) {
+				            xhr.setRequestHeader(header, token);
+				         },
+				         success : function(data) {
+				      	   if(data > 0) {
+				            	console.log(data);
+				            	matInList();
+				      	   }else {
+				      		   alert("실패")
+				      	   }
+				         },
+				         error : function(request,status,error) {
+				      	  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				          alert("왜이러냐 진짜");
+				         }
+				      });
+				}
 	            /*------------
 	            // 모달창 띄우기
 	            ----------------*/
@@ -211,7 +218,7 @@
 	                     whNameGrid.refreshLayout();
 	                  }
 	               });
-				
+	            
 	            /*------------
 	            // 모달 데이터 가져오기
 	            ----------------*/
@@ -249,94 +256,14 @@
 	                 const amg = whNameGrid.getValue(ev.rowKey,ev.columnName);
 	                 grid.setValue(val2, 'whName', val.whName);
 	                 grid.setValue(val2, 'whCode', val.whCode);
-	          
 	                 $('#whNameModal').modal("hide");
 	            })
 
 				document.addEventListener('shown.bs.modal', function() {
 					whNameGrid.refreshLayout();
 				}, '.modal');
+
 	            
-	            
-	             var token = $("meta[name='_csrf']").attr("content");
-				 var header = $("meta[name='_csrf_header']").attr("content");
-	            
-	            
-	            /*------------
-	            // 등록
-	            ----------------*/
-	            
-	            
-	            
-				function insertNotin() {
-	            	console.log("눌렸음");
-	            	let rowData = grid.getCheckedRows();
-	            	console.log(rowData);
-		            		 
-		     		let header = $("meta[name='_csrf_header']").attr('content');
-		    	    let token = $("meta[name='_csrf']").attr('content');
-		    	    
-		    	    for(let i=0; i<rowData.length; i++){
-		    	    	
-		    	    	rowData[i].matErrQty = rowData[i].matInQty
-		    	    	rowData[i].matPassQty = (rowData[i].matInQty-rowData[i].matErrQty);
-			    	    if(rowData[i].matOrdYn == "입고"){
-					    	console.log(rowData[i].matOrdYn)
-					    	console.log(rowData[i].matChkDate)					    	
-					    	console.log("입고아작스실행")
-			    	        $.ajax({
-				    		url : "/insertLot",
-				    		method: "post",
-				    		contentType: "application/json",
-					        data:JSON.stringify(rowData),
-					        dataType : "json",
-					        async: false,
-					         beforeSend : function(xhr) {
-					            xhr.setRequestHeader(header, token);
-					         },
-					         success : function(data) {
-					      	   if(data > 0) {
-					            	console.log(data);
-					            	matNotinList();
-					      	   }else {
-					      		   alert("실패")
-					      	   }
-					         },
-					         error : function(request,status,error) {
-					      	  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-					          alert("왜이러냐 진짜") 
-					      	  console.log(reject);
-					         }
-					      });
-					 } else {
-						 	console.lot("업데이트")
-				         	$.ajax({
-				         	url : "/updateMatnotIn",
-				         	method : "post",
-				         	contentType : "application/json",
-				         	data:JSON.stringify(rowData),
-				         	dataType:"json",
-				         	async:false,
-				         	beforeSend : function(xhr) {
-						    	xhr.setRequestHeader(header, token);
-						        },
-							success : function(data) {
-							   if(data > 0) {
-									console.log(data);
-						            matNotinList();
-							   }else {
-						       	   alert("실패")
-						       }
-						     },
-					         error : function(reject) {
-						      	  //alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-						         alert("와우")  
-						      	  console.log(reject);			         		
-				         	}
-				         	});
-					 }
-		    	}
-	          }
 			</script>
 		</main>
 	</article>

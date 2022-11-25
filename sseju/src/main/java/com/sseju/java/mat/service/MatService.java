@@ -42,12 +42,12 @@ public interface MatService {
 	public List<MatVO> matNotinList();
 	//미입고 수정
 	public int updateMatnotIn(MatVO MatVo);
-	
-	
 	//미입고 => LOT 입고
 	public int insertLot(MatVO MatVO);
 	//미입고 =>chk테이블
 	public int updateChk(MatVO MatVO);
+	//미입고 => 발주Yn => 입고로 수정
+	public int updateMoy(MatVO MatVO);
 	
 	
 	//출고 전체 조회
