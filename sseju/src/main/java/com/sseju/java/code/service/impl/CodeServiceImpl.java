@@ -364,4 +364,28 @@ public class CodeServiceImpl implements CodeService {
 		return mapper.prdCount();
 	}
 
+	@Override
+	public List<CodeVO> getBomListC(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.getBomListC(vo);
+	}
+
+	@Override
+	public CodeVO getLotMat(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.getLotMat(vo);
+	}
+
+	@Override
+	public int insertMatOut(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.insertMatOut(vo);
+	}
+
+	@Override
+	public int useLotQty(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.useLotQty(vo);
+	}
+
 }

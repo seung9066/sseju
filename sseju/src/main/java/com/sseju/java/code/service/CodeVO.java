@@ -89,4 +89,17 @@ public class CodeVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dDay;
 	private int orderOutQty;
+	
+	// Thread
+	private String mpCode;
+	private String lotNo;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date lotDate;
+	private String outForm;
+	private String lotOption;
+	private String matChkCode;
+	
+	private int matOutQty;
+	
+	
 }
