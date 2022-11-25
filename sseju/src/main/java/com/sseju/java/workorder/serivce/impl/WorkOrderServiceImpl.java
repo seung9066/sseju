@@ -59,9 +59,9 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 	}
 	//사원명, 사원아이디 불러오기
 	@Override
-	public List<WorkOrderVO> getManagerList() {
+	public List<WorkOrderVO> getWoEmpList() {
 		// TODO Auto-generated method stub
-		return woMapper.getManagerList();
+		return woMapper.getWoEmpList();
 	}
 
 	@Override

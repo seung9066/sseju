@@ -19,7 +19,7 @@ public interface WorkOrderService {
 	//상품 코드 조회
 	public List<WorkOrderVO> getPrtList();
 	//사원아이디, 사원명 가져오기
-	public List<WorkOrderVO> getManagerList();
+	public List<WorkOrderVO> getWoEmpList();
 	//주문번호, 상품명, 주문수량, 주문일자 가져오기
 	public List<WorkOrderVO> getOrderList();
 	//주문->작업지시 처리상태 order_yn값 변경
