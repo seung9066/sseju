@@ -28,6 +28,7 @@
 			<script type="text/javascript">
 			showAll();
 			showMat();
+			
 			var token = $("meta[name='_csrf']").attr("content");
 			var header = $("meta[name='_csrf_header']").attr("content");
 			
@@ -76,7 +77,24 @@
 				           prtProgGrid.resetData(obj);
 				       })
 			}
-			
+			/* 생산 진행 현황 그리드 행 클릭 시 아래 자재 상황 그리드에 맞는 데이터 불러오는 자리 */
+			//자재 상황 그리드에 띄워줄 데이터 가져오는 함수
+			prtProgGrid.on('click', (event)=>{
+				let preNo = ev.nativeEvent.target.innerText;
+				console.log(preNo);
+				$.ajax({
+					url:'progPrtCondition',
+					data : {preNo:preNo},
+					dataType:"json",
+					async:false,
+					success:function(data){
+						matConditionGrid.resetData(data);
+					},
+					error:function(reject){
+						console.log(reject);
+					}
+				})
+			})
 			/* 자재 상황 그리드
 			생산 진행 중인 제품에 대한 자재 상황만 띄워줘야함 */
 			var matConditionGrid = new tui.Grid({
@@ -86,10 +104,12 @@
 					columns : [ {
 						header : '자재 코드',
 						name : 'matCode',
+						filter: 'select',
 						align : 'center'
 					}, {
 						header : '자재명',
 						name : 'matName',
+						filter: 'select',
 						align : 'center'
 					}, {
 						header : '재고량',
@@ -97,7 +117,7 @@
 						align : 'center'
 					} ]
 				});
-			//자재 상황 그리드에 띄워줄 데이터 가져오는 함수
+
 			function showMat(){
 				fetch("progPrtCondition")
 				.then(res=>res.json())
