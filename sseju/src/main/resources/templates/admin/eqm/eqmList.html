@@ -54,6 +54,11 @@ table  input {
 #regEqm td {
 	padding-left: 10px;
 }
+.showModal{
+/* 커서 손모양 */
+ cursor : pointer;  
+
+}
 </style>
 
 
@@ -162,9 +167,8 @@ table  input {
 
 						<tr>
 							<th class="col1">구입업체</th>
-							<td><input type="text" name="eqmPurcName" id="eqmPurcName"><i
-								class="bi bi-search" data-bs-toggle="modal"
-								data-bs-target="#eqmPurcModal"></i></td>
+							<td><input type="text" name="eqmPurcName" id="eqmPurcName" data-bs-toggle="modal" class="showModal"
+								data-bs-target="#eqmPurcModal"></td>
 							<th class="col1">비상연락망</th>
 							<td><input type="tel" name="eqmPurcTel" id="eqmPurcTel"></td>
 							<th class="col1">입고일</th>
@@ -189,12 +193,15 @@ table  input {
 							<td><input type="file" id="eqmImg" name="eqmImg"></td>
 						</tr>
 					</table>
+					<div>
+						<div id="imgDiv" style="width:300px; height:300px">
+							<img src = "" alt ="설비이미지" id="imgTag" name="imgTag"> 
+						
+						</div>
+					
+					</div>
 				</form>
-				<!-- <div style="text-align: center;">
-               <img src="assets/img/설비1.jpg" alt="설비1이미지" width="500px"
-                  height="300px;">
-            </div> -->
-				<!-- </div> -->
+				
 			</div>
 
 
@@ -285,7 +292,6 @@ table  input {
             });
             
             
-            
             const eqmGrid = new tui.Grid({
                el : document.getElementById('eqmGrid'),
             
@@ -336,6 +342,51 @@ table  input {
                }  ]
                
             });
+            
+            //이미지 관련 js
+            function img(){
+            	img.addEventListner('change',function(ev){
+            		 // 파일명 가져오기
+                    let index = document.getElementById('img').value.lastIndexOf('\\');
+                    let fileStr = document.getElementById('img').value.substring(index + 1);
+                    
+                    // img태그 생성
+                    let newImgTag = document.createElement('img');
+                    newImgTag.setAttribute('id', 'imgTag');
+                    newImgTag.setAttribute('name', 'imgTag');
+                    newImgTag.setAttribute('alt', '설비사진');
+                    newImgTag.setAttribute('width', '300px');
+                    newImgTag.setAttribute('height', '300px');
+                    
+                    // 이미 document에 img태그 존재시 삭제. 미존재시 src 속성 만들어 넣기
+                    if (document.getElementById('imgTag') != null) {
+                       document.getElementById('imgTag').remove();
+                       
+                       // 새 파일을 고른 경우
+                       if (fileStr != '') {
+                          newImgTag.setAttribute('src', 'images/' + fileStr);
+                       }
+                    } else {
+                       newImgTag.setAttribute('src', 'images/' + fileStr);
+                    }
+                    
+                    // document에 삽입
+                    imgDiv.prepend(newImgTag);
+                 });
+                 
+              }
+              
+              
+              
+              /* ---------------
+              초기화 버튼 눌렀을때 img태그 src도 같이 초기화
+              --------------- */
+              function imgTagReset() {
+                 reset.addEventListener('click', function () {
+                    document.getElementById('imgTag').src = '';
+                
+            	});
+            }
             
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
