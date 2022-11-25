@@ -2,8 +2,11 @@ package com.sseju.java.code.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.sseju.java.employee.service.EmployeeVO;
 
+@Service
 public interface CodeService {
 
 	public List<CodeVO> getCodeList();
@@ -80,4 +83,10 @@ public interface CodeService {
 	public List<CodeVO> todayWL();
 	public List<CodeVO> todayWLinf(CodeVO vo);
 	public List<CodeVO> prdCount();
+	
+	// Thread
+	public List<CodeVO> getBomListC(CodeVO vo);
+	public CodeVO getLotMat(CodeVO vo);
+	public int insertMatOut(CodeVO vo);
+	public int useLotQty(CodeVO vo);
 }

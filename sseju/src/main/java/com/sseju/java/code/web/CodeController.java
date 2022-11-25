@@ -23,11 +23,57 @@ import com.sseju.java.employee.service.EmployeeVO;
 
 class produceThread implements Runnable {
 
+	private List<CodeVO> type;
+
+	private CodeService service;
+
+	public produceThread(List<CodeVO> type) {
+		this.type = type;
+	}
+
 	@Override
 	public void run() {
+		service = ApplicationContextProvider.getBean(CodeService.class);
+		System.out.println("aaaaaaaaa");
+
+		CodeVO vo = new CodeVO();
+
+		// 작업시작
+		vo = type.get(0);
+
+		// 주문량
+		int prdOrder = vo.getInsQty();
+
+		// 주문제품 bom
+		List<CodeVO> bomList = new ArrayList<>();
+		bomList = service.getBomListC(vo);
+		// lot 찾기
+		CodeVO voMat = new CodeVO();
+		// lot 정보 담기용
+		CodeVO voLot = new CodeVO();
+		for (int i = 0; i < bomList.size(); i++) {
+			if (bomList.get(i).getMatCode().contains("LQ")) {
+				voMat.setMpCode(bomList.get(i).getMatCode());
+				voMat.setLotQty(prdOrder * 110 / 100);
+				voLot = service.getLotMat(voMat);
+			}
+		}
 		
+		// 자재출고용
+		CodeVO voMout = new CodeVO();
+		voMout.setLotNo(voLot.getLotNo());
+		voMout.setMatOutQty(prdOrder);
+		service.insertMatOut(voMout);
+		
+		// lot 수량 변경
+		service.useLotQty(voMout);
+		try {
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
-	
+
 }
 
 @Controller
@@ -125,14 +171,14 @@ public class CodeController {
 				CodeVO vo = new CodeVO();
 				vo.setCode(code.get(i));
 				vo.setEqmCode(code.get(i));
-				
+
 				a += service.deleteEqm(vo);
 				a += service.deleteCode(vo);
 			} else if (code1.equals("PRS")) {
 				CodeVO vo = new CodeVO();
 				vo.setCode(code.get(i));
 				vo.setPrsCode(code.get(i));
-				
+
 				a += service.deletePrs(vo);
 				a += service.deleteCode(vo);
 			} else if (code1.equals("ERP")) {
@@ -146,14 +192,14 @@ public class CodeController {
 				CodeVO vo = new CodeVO();
 				vo.setCode(code.get(i));
 				vo.setErrCode(code.get(i));
-				
+
 				a += service.deleteErr(vo);
 				a += service.deleteCode(vo);
 			} else if (code1.equals("PRD")) {
 				CodeVO vo = new CodeVO();
 				vo.setCode(code.get(i));
 				vo.setPrtCode(code.get(i));
-				
+
 				a += service.deleteBOM(vo);
 				a += service.selectDeleteP(vo);
 				a += service.deleteCode(vo);
@@ -161,26 +207,23 @@ public class CodeController {
 				CodeVO vo = new CodeVO();
 				vo.setCode(code.get(i));
 				vo.setMatCode(code.get(i));
-				
+
 				a += service.selectDeleteM(vo);
 				a += service.deleteCode(vo);
 			} else if (code1.equals("EQS")) {
 				CodeVO vo = new CodeVO();
 				vo.setCode(code.get(i));
 
-
 				a += service.deleteCode(vo);
 			} else if (code1.equals("UOR")) {
 				CodeVO vo = new CodeVO();
 				vo.setCode(code.get(i));
 
-				
 				a += service.deleteCode(vo);
 			} else if (code1.equals("PRG")) {
 				CodeVO vo = new CodeVO();
 				vo.setCode(code.get(i));
 
-				
 				a += service.deleteCode(vo);
 			} else if (code1.equals("STO")) {
 				CodeVO vo = new CodeVO();
@@ -306,7 +349,7 @@ public class CodeController {
 	@PostMapping("/insertP")
 	public String insertP(CodeVO vo) {
 		if (vo.getType().equals("mat")) {
-			
+
 			service.insertMat(vo);
 
 			CodeVO vo1 = new CodeVO();
@@ -376,16 +419,16 @@ public class CodeController {
 		}
 		return a;
 	}
-	
+
 	@GetMapping("/prList")
 	@ResponseBody
 	public List<CodeVO> prList() {
 		return service.prList();
 	}
-	
+
 	@PostMapping("/insertPrs")
 	public String insertPrs(CodeVO vo) {
-		
+
 		service.insertPrs(vo);
 		vo.setCode(vo.getPrsCode());
 		vo.setDivName("공정");
@@ -394,7 +437,7 @@ public class CodeController {
 		service.insertCode(vo);
 		return "redirect:basicProcess";
 	}
-	
+
 	@PostMapping("/selectDeletePW")
 	@ResponseBody
 	public int selectDeletePW(@RequestParam(value = "prt[]", required = false) List<String> prt,
@@ -421,13 +464,13 @@ public class CodeController {
 		}
 		return a;
 	}
-	
+
 	@GetMapping("/whList")
 	@ResponseBody
 	public List<CodeVO> whList() {
 		return service.whList();
 	}
-	
+
 	@PostMapping("/insertWh")
 	public String insertWh(CodeVO vo) {
 		service.insertWh(vo);
@@ -438,7 +481,7 @@ public class CodeController {
 		service.insertCode(vo);
 		return "redirect:basicWarehouse";
 	}
-	
+
 	@PostMapping("/updatePrs")
 	@ResponseBody
 	public int updatePrs(@RequestBody CodeVO vo) {
@@ -447,7 +490,7 @@ public class CodeController {
 		vo1.setCodeName(vo.getPrsName());
 		return service.updatePrs(vo);
 	}
-	
+
 	@PostMapping("/updateWh")
 	@ResponseBody
 	public int updateWh(@RequestBody CodeVO vo) {
@@ -456,13 +499,13 @@ public class CodeController {
 		vo1.setCodeName(vo.getWhName());
 		return service.updateWh(vo);
 	}
-	
+
 	@GetMapping("/errList")
 	@ResponseBody
 	public List<CodeVO> errList() {
 		return service.errList();
 	}
-	
+
 	@PostMapping("/insertErr")
 	public String inserErr(CodeVO vo) {
 		CodeVO vo1 = new CodeVO();
@@ -470,7 +513,7 @@ public class CodeController {
 		vo1.setCodeName(vo.getErrName());
 		vo1.setDivName("불량");
 		if (vo.getErrOption().equals("MAT")) {
-			vo1.setDivCode("ERM");			
+			vo1.setDivCode("ERM");
 		} else if (vo.getErrOption().equals("PRS")) {
 			vo1.setDivCode("ERP");
 		}
@@ -478,7 +521,7 @@ public class CodeController {
 		service.insertErr(vo);
 		return "redirect:basicError";
 	}
-	
+
 	@PostMapping("/updateErr")
 	@ResponseBody
 	public int updateErr(@RequestBody CodeVO vo) {
@@ -488,43 +531,43 @@ public class CodeController {
 		service.updateCode(vo1);
 		return service.updateErr(vo);
 	}
-	
+
 	@GetMapping("/workerList")
 	@ResponseBody
-	public List<CodeVO> workerList(){
+	public List<CodeVO> workerList() {
 		return service.workerList();
 	}
-	
+
 	@PostMapping("/workerAList")
 	@ResponseBody
-	public List<CodeVO> workerAList(@RequestBody String data){
+	public List<CodeVO> workerAList(@RequestBody String data) {
 		CodeVO vo = new CodeVO();
 		vo.setPrsNo(data);
 		System.out.println(vo.getPrsNo() + "  aaaaaaaa");
 		System.out.println(service.workerAList(vo));
 		return service.workerAList(vo);
 	}
-	
+
 	@PostMapping("/workerBList")
 	@ResponseBody
-	public List<CodeVO> workerBList(@RequestBody String data){	
+	public List<CodeVO> workerBList(@RequestBody String data) {
 		CodeVO vo = new CodeVO();
 		vo.setPrsNo(data);
 		System.out.println(vo.getPrsNo());
 		return service.workerBList(vo);
 	}
-	
+
 	@PostMapping("/updateWorker")
 	@ResponseBody
 	public Map<String, String> updateWorker(@RequestParam(value = "prsNo[]", required = false) List<String> prsNo,
 			@RequestParam(value = "inputId[]", required = false) List<String> inputId,
 			@RequestParam(value = "deleteId[]", required = false) List<String> deleteId) {
 		Map<String, String> map = new HashMap<>();
-		
+
 		int a = 0;
 		CodeVO vo = new CodeVO();
 		vo.setPrsNo(prsNo.get(0));
-		
+
 		String b = vo.getPrsNo();
 		if (inputId != null) {
 			for (int i = 0; i < inputId.size(); i++) {
@@ -540,13 +583,13 @@ public class CodeController {
 		}
 		if (a > 0) {
 			map.put("msg", b);
-			return map;		
+			return map;
 		} else {
 			map.put("msg", "error");
 			return map;
 		}
 	}
-	
+
 	@GetMapping("/updatePrtCount")
 	@ResponseBody
 	public Map<String, String> updatePrtCount() {
@@ -567,7 +610,7 @@ public class CodeController {
 			d = Integer.parseInt(b);
 		}
 		if (c != -1 && d != -1) {
-			b = String.valueOf("전일대비" + Math.round((c-d)/d*100) + "%");
+			b = String.valueOf("전일대비" + Math.round((c - d) / d * 100) + "%");
 		}
 		if (d == 0) {
 			b = "전일실적없음";
@@ -576,7 +619,7 @@ public class CodeController {
 		map.put("percent", b);
 		return map;
 	}
-	
+
 	@GetMapping("/updatePrtOutCount")
 	@ResponseBody
 	public Map<String, String> updatePrtOutCount() {
@@ -597,7 +640,7 @@ public class CodeController {
 			d = Integer.parseInt(b);
 		}
 		if (c != -1 && d != -1) {
-			b = String.valueOf("전일대비" + Math.round((c-d)/d*100) + "%");
+			b = String.valueOf("전일대비" + Math.round((c - d) / d * 100) + "%");
 		}
 		if (d == 0) {
 			b = "전일실적없음";
@@ -606,7 +649,7 @@ public class CodeController {
 		map.put("percent", b);
 		return map;
 	}
-	
+
 	@GetMapping("/updateErrCount")
 	@ResponseBody
 	public Map<String, String> updateErrCount() {
@@ -627,7 +670,7 @@ public class CodeController {
 			d = Integer.parseInt(b);
 		}
 		if (c != -1 && d != -1) {
-			b = String.valueOf("전일대비" + Math.round((c-d)/d*100) + "%");
+			b = String.valueOf("전일대비" + Math.round((c - d) / d * 100) + "%");
 		}
 		if (d == 0) {
 			b = "전일실적없음";
@@ -636,7 +679,7 @@ public class CodeController {
 		map.put("percent", b);
 		return map;
 	}
-	
+
 	@PostMapping("/WhPrd")
 	@ResponseBody
 	public List<CodeVO> WhPrd(@RequestBody String type) {
@@ -644,25 +687,25 @@ public class CodeController {
 		vo.setWhCode(type.substring(5));
 		return service.WhPrd(vo);
 	}
-	
+
 	@GetMapping("/updatePrttCount")
 	@ResponseBody
 	public List<CodeVO> updatePrttCount() {
 		return service.updatePrttCount();
 	}
-	
+
 	@GetMapping("/selectPrdNameOut")
 	@ResponseBody
 	public List<CodeVO> selectPrdNameOut() {
 		return service.selectPrtNameOut();
 	}
-	
+
 	@GetMapping("/selectErrOut")
 	@ResponseBody
 	public List<CodeVO> selectErrOut() {
 		return service.selectErrOut();
 	}
-	
+
 	@GetMapping("/prsRun")
 	@ResponseBody
 	public List<CodeVO> selectPrsName() {
@@ -674,13 +717,13 @@ public class CodeController {
 	public List<CodeVO> selectPrsRunNow() {
 		return service.selectPrsRunNow();
 	}
-	
+
 	@GetMapping("/todayWL")
 	@ResponseBody
 	public List<CodeVO> todayWL() {
 		return service.todayWL();
 	}
-	
+
 	@PostMapping("/todayWLinf")
 	@ResponseBody
 	public List<CodeVO> todayWLinf(@RequestBody String type) {
@@ -688,16 +731,21 @@ public class CodeController {
 		vo.setPreNo(type.substring(5));
 		return service.todayWLinf(vo);
 	}
-	
+
 	@GetMapping("/prdCount")
 	@ResponseBody
 	public List<CodeVO> prdCount() {
 		return service.prdCount();
 	}
-	
+
 	@PostMapping("/startPr")
 	@ResponseBody
-	public void startPr(@RequestBody String type) {
-		String a = type.substring(5);
+	public int startPr(@RequestBody List<CodeVO> type) {
+		int a = 0;
+
+		Runnable prRunnable = new produceThread(type);
+		Thread thread = new Thread(prRunnable);
+		thread.start();
+		return a;
 	}
 }

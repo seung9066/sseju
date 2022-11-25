@@ -634,9 +634,10 @@ function prsWrite() {
 	let run = '';
 	let a = '';
 	let b = '';
+
+	$('#prsRun').empty();
 	
 	for (let i = 0; i < prsRunName.length; i++) {
-
 		$('#prsRun').append(`<div class="activity-item d-flex">
 			<div class="activite-label">${prsRunName[i].prsName}</div>
 			<i
@@ -806,8 +807,9 @@ function startPr() {
 	$.ajax({
 	    url: 'startPr',
 	    type : "POST",
-	    data:{'type':type},
-		dataType:"json",
+	    data:JSON.stringify(WL2Grid.getData()),
+		dataType:"JSON",
+		contentType: 'application/json; charset=utf-8',
 		async:false,
 	    beforeSend : function(xhr){
 			xhr.setRequestHeader(header, token);
