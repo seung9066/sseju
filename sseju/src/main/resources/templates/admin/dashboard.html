@@ -11,6 +11,7 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script type="text/javascript"
 	src="https://www.gstatic.com/charts/loader.js"></script>
+
 </head>
 <body>
 	<article layout:fragment="content">
@@ -33,21 +34,6 @@
 							<!-- Sales Card -->
 							<div class="col-xxl-4 col-md-6">
 								<div class="card info-card sales-card">
-
-									<div class="filter">
-										<a class="icon" href="#" data-bs-toggle="dropdown"><i
-											class="bi bi-three-dots"></i></a>
-										<ul
-											class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-											<li class="dropdown-header text-start">
-												<h6>Filter</h6>
-											</li>
-
-											<li><a class="dropdown-item" href="#">Today</a></li>
-											<li><a class="dropdown-item" href="#">This Month</a></li>
-											<li><a class="dropdown-item" href="#">This Year</a></li>
-										</ul>
-									</div>
 
 									<div class="card-body">
 										<h5 class="card-title">
@@ -119,20 +105,6 @@
 							<div class="col-xxl-4 col-md-6">
 								<div class="card info-card revenue-card">
 
-									<div class="filter">
-										<a class="icon" href="#" data-bs-toggle="dropdown"><i
-											class="bi bi-three-dots"></i></a>
-										<ul
-											class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-											<li class="dropdown-header text-start">
-												<h6>Filter</h6>
-											</li>
-
-											<li><a class="dropdown-item" href="#">Today</a></li>
-											<li><a class="dropdown-item" href="#">This Month</a></li>
-											<li><a class="dropdown-item" href="#">This Year</a></li>
-										</ul>
-									</div>
 									<div id="sojuoutcard">
 										<div class="card-body">
 											<h5 class="card-title">
@@ -197,21 +169,6 @@
 							<div class="col-xxl-4 col-xl-12">
 
 								<div class="card info-card customers-card">
-
-									<div class="filter">
-										<a class="icon" href="#" data-bs-toggle="dropdown"><i
-											class="bi bi-three-dots"></i></a>
-										<ul
-											class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-											<li class="dropdown-header text-start">
-												<h6>Filter</h6>
-											</li>
-
-											<li><a class="dropdown-item" href="#">Today</a></li>
-											<li><a class="dropdown-item" href="#">This Month</a></li>
-											<li><a class="dropdown-item" href="#">This Year</a></li>
-										</ul>
-									</div>
 
 									<div id="errorcountcard">
 										<div class="card-body">
@@ -500,7 +457,6 @@ setInterval(() => runprr(), 100000);
 										var header = $("meta[name='_csrf_header']").attr("content");
 										
 										function selectWh(a) {
-											console.log(a.getAttribute('value'))
 											let type = a.getAttribute('value');
 											$.ajax({
 									            url: 'WhPrd',
@@ -528,7 +484,7 @@ setInterval(() => runprr(), 100000);
 							</div>
 							<!-- End Recent Sales -->
 
-							<!-- Top Selling -->
+							<!-- <!-- Top Selling
 							<div class="col-12">
 								<div class="card top-selling overflow-auto">
 
@@ -615,7 +571,7 @@ setInterval(() => runprr(), 100000);
 
 								</div>
 							</div>
-							<!-- End Top Selling -->
+							End Top Selling -->
 
 						</div>
 					</div>
@@ -626,19 +582,6 @@ setInterval(() => runprr(), 100000);
 
 						<!-- Recent Activity -->
 						<div class="card">
-							<div class="filter">
-								<a class="icon" href="#" data-bs-toggle="dropdown"><i
-									class="bi bi-three-dots"></i></a>
-								<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-									<li class="dropdown-header text-start">
-										<h6>Filter</h6>
-									</li>
-
-									<li><a class="dropdown-item" href="#">Today</a></li>
-									<li><a class="dropdown-item" href="#">This Month</a></li>
-									<li><a class="dropdown-item" href="#">This Year</a></li>
-								</ul>
-							</div>
 
 							<div class="card-body">
 								<h5 class="card-title">
@@ -661,7 +604,6 @@ function prcRun() {
 		async:false,
         success : function(data) {
            prsRunName = data;
-           console.log(data);
         },
         error : function(error){
            console.log(11);
@@ -679,7 +621,6 @@ function prcRunNow() {
 		async:false,
         success : function(data) {
            prsRunNow = data;
-           console.log(prsRunNow)
         },
         error : function(error){
            console.log(11);
@@ -726,79 +667,160 @@ prcOn();
 
 setInterval(() => prcOn(), 100000);
 </script>
+						<div class="modal" id="WLModal" tabindex="-1"
+							aria-labelledby="WLModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel">Modal
+											title</h5>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<div>
+											<div id="todayWorkListInf"></div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Close</button>
+										<button type="button" class="btn btn-primary"
+											onclick="startPr()">작업시작</button>
+									</div>
+								</div>
+							</div>
+						</div>
 						<!-- Budget Report -->
 						<div class="card">
-							<div class="filter">
-								<a class="icon" href="#" data-bs-toggle="dropdown"><i
-									class="bi bi-three-dots"></i></a>
-								<ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-									<li class="dropdown-header text-start">
-										<h6>Filter</h6>
-									</li>
-
-									<li><a class="dropdown-item" href="#">Today</a></li>
-									<li><a class="dropdown-item" href="#">This Month</a></li>
-									<li><a class="dropdown-item" href="#">This Year</a></li>
-								</ul>
-							</div>
-
 							<div class="card-body pb-0">
 								<h5 class="card-title">
-									Budget Report <span>| This Month</span>
+									금일작업목록 <span>| Today</span>
 								</h5>
 
-								<div id="budgetChart" style="min-height: 400px;" class="echart"></div>
+								<div id="todayWorkList"></div>
 
 								<script>
-                document.addEventListener("DOMContentLoaded", () => {
-                  var budgetChart = echarts.init(document.querySelector("#budgetChart")).setOption({
-                    legend: {
-                      data: ['Allocated Budget', 'Actual Spending']
-                    },
-                    radar: {
-                      // shape: 'circle',
-                      indicator: [{
-                          name: 'Sales',
-                          max: 6500
-                        },
-                        {
-                          name: 'Administration',
-                          max: 16000
-                        },
-                        {
-                          name: 'Information Technology',
-                          max: 30000
-                        },
-                        {
-                          name: 'Customer Support',
-                          max: 38000
-                        },
-                        {
-                          name: 'Development',
-                          max: 52000
-                        },
-                        {
-                          name: 'Marketing',
-                          max: 25000
-                        }
-                      ]
-                    },
-                    series: [{
-                      name: 'Budget vs spending',
-                      type: 'radar',
-                      data: [{
-                          value: [4200, 3000, 20000, 35000, 5000, 18000],
-                          name: 'Allocated Budget'
-                        },
-                        {
-                          value: [5000, 14000, 28000, 26000, 42000, 21000],
-                          name: 'Actual Spending'
-                        }
-                      ]
-                    }]
-                  });
-                });
-              </script>
+function upWL() {	
+$.ajax({
+    url: 'todayWL',
+    type : "GET",
+    success : function(result) {
+       WLGrid.resetData(result);
+    },
+    error : function(error){
+       console.log(11);
+    }
+ })
+}
+
+upWL();
+setInterval(() => upWL(), 100000);
+
+const WLGrid = new tui.Grid({
+	el : document.getElementById('todayWorkList'),
+	pagination : true,
+	pageOption : {
+		useClient : true,
+		perPage : 10
+	},
+	scrollX : false,
+	scrollY : false,
+	columns : [ {
+		header : '작업지시번호',
+		name : 'preNo',
+		align : 'center'
+	}, {
+		header : '제품명',
+		name : 'prtName',
+		align : 'center'
+	}, {
+		header : '지시수량',
+		name : 'insQty',
+		align : 'center'
+	} ]
+});
+
+const WL2Grid = new tui.Grid({
+	el : document.getElementById('todayWorkListInf'),
+	pagination : true,
+	pageOption : {
+		useClient : true,
+		perPage : 10
+	},
+	scrollX : false,
+	scrollY : false,
+	columns : [ {
+		header : '주문번호',
+		name : 'orderNo',
+		align : 'center'
+	}, {
+		header : '담당자',
+		name : 'empName',
+		align : 'center'
+	}, {
+		header : '납기일',
+		name : 'dday',
+		align : 'center',
+		formatter({value}) {
+		      return `${value.substring(0,10)}`;
+		    } 
+	} 
+	 ]
+});
+
+
+document.addEventListener('shown.bs.modal', function() {
+    WL2Grid.refreshLayout();
+   }, '.modal');
+
+var type = '';
+
+WLGrid.on('click',function(ev){
+      $('#WLModal').modal('show');
+      type = WLGrid.getRow(ev.rowKey).preNo
+      upWLinf(type);
+});
+
+function upWLinf(type) {
+$.ajax({
+    url: 'todayWLinf',
+    type : "POST",
+    data:{'type':type},
+	dataType:"json",
+	async:false,
+    beforeSend : function(xhr){
+		xhr.setRequestHeader(header, token);
+	},
+    success : function(result) {
+       console.log(result)
+       WL2Grid.resetData(result);
+    },
+    error : function(error){
+       console.log(11);
+    }
+ })	
+}
+
+function startPr() {
+	$.ajax({
+	    url: 'startPr',
+	    type : "POST",
+	    data:{'type':type},
+		dataType:"json",
+		async:false,
+	    beforeSend : function(xhr){
+			xhr.setRequestHeader(header, token);
+		},
+	    success : function(result) {
+	       console.log(type)
+	    },
+	    error : function(error){
+	       console.log(11);
+	    }
+	 })	
+}
+</script>
 
 							</div>
 						</div>
@@ -822,72 +844,69 @@ setInterval(() => prcOn(), 100000);
 
 							<div class="card-body pb-0">
 								<h5 class="card-title">
-									Website Traffic <span>| Today</span>
+									소주별 판매량<span>| total</span>
 								</h5>
 
-								<div id="trafficChart" style="min-height: 400px;" class="echart"></div>
+								<div id="prdCount"></div>
 
-								<script>
-                document.addEventListener("DOMContentLoaded", () => {
-                  echarts.init(document.querySelector("#trafficChart")).setOption({
-                    tooltip: {
-                      trigger: 'item'
-                    },
-                    legend: {
-                      top: '5%',
-                      left: 'center'
-                    },
-                    series: [{
-                      name: 'Access From',
-                      type: 'pie',
-                      radius: ['40%', '70%'],
-                      avoidLabelOverlap: false,
-                      label: {
-                        show: false,
-                        position: 'center'
-                      },
-                      emphasis: {
-                        label: {
-                          show: true,
-                          fontSize: '18',
-                          fontWeight: 'bold'
-                        }
-                      },
-                      labelLine: {
-                        show: false
-                      },
-                      data: [{
-                          value: 1048,
-                          name: 'Search Engine'
-                        },
-                        {
-                          value: 735,
-                          name: 'Direct'
-                        },
-                        {
-                          value: 580,
-                          name: 'Email'
-                        },
-                        {
-                          value: 484,
-                          name: 'Union Ads'
-                        },
-                        {
-                          value: 300,
-                          name: 'Video Ads'
-                        }
-                      ]
-                    }]
-                  });
-                });
-              </script>
+<script>
+var CChart = [];
+
+function prdCount() {	
+	$.ajax({
+	    url: 'prdCount',
+	    type : "GET",
+	    success : function(result) {
+	       CChart = result;
+	    },
+	    error : function(error){
+	       console.log(11);
+	    }
+	 })
+	}
+
+function prdChart1() {
+prdCount();
+chartt1();
+}
+
+prdChart1();
+
+setInterval(() => prdChart1(), 100000);
+
+function chartt1() {
+	
+google.charts.load('current', {'packages':['corechart']}); 
+google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+          var data = new google.visualization.DataTable();
+          data.addColumn('string','소주');
+          data.addColumn('number','비중');
+		  
+          let chartA = [];
+          for (let i = 0; i < CChart.length; i++) {
+        	  chartA.push([CChart[i].prtName, CChart[i].orderOutQty]);
+          }
+          
+          data.addRows(chartA);
+          var opt = {
+        		  width:430,
+        		  height:430,
+                  pieSliceText:'label',
+                  legend:'none' 
+          };
+          var chart = new google.visualization.PieChart(document.getElementById('prdCount'));
+          chart.draw(data,opt);
+      }
+}
+</script>
 
 							</div>
 						</div>
 						<!-- End Website Traffic -->
 
 						<!-- News & Updates Traffic -->
-						<div class="card">
+						<!-- <div class="card">
 							<div class="filter">
 								<a class="icon" href="#" data-bs-toggle="dropdown"><i
 									class="bi bi-three-dots"></i></a>
@@ -955,10 +974,10 @@ setInterval(() => prcOn(), 100000);
 									</div>
 
 								</div>
-								<!-- End sidebar recent posts-->
+								End sidebar recent posts
 
 							</div>
-						</div>
+						</div> -->
 						<!-- End News & Updates -->
 
 					</div>

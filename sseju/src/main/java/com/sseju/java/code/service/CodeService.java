@@ -77,4 +77,7 @@ public interface CodeService {
 	public List<CodeVO> selectErrOut();
 	public List<CodeVO> selectPrsName();
 	public List<CodeVO> selectPrsRunNow();
+	public List<CodeVO> todayWL();
+	public List<CodeVO> todayWLinf(CodeVO vo);
+	public List<CodeVO> prdCount();
 }
