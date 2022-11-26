@@ -38,14 +38,18 @@ class produceThread implements Runnable {
 
 		CodeVO vo = new CodeVO();
 
-		// 작업시작
+		// 작업시작 empName, prtCode, preNo, insQty, orderNo, dDay, preManager
 		vo = type.get(0);
+		System.out.println(vo);
 
 		// 주문량
-		int prdOrder = vo.getInsQty();
-		prdOrder = (prdOrder * 110 / 100) - (prdOrder * 5 / 100);
+		int prdOrder1 = vo.getInsQty();
+		// 주문량 - 자재량
+		int prdOrderA = prdOrder1 * 110 / 100;
+		// 자재량
+		int prdOrder = prdOrderA - (prdOrderA * 5 / 100);
 
-		// 주문제품 bom
+		// 주문제품 bom 리스트
 		List<CodeVO> bomList = new ArrayList<>();
 		bomList = service.getBomListC(vo);
 		// lot 찾기
@@ -54,41 +58,239 @@ class produceThread implements Runnable {
 		CodeVO voLot = new CodeVO();
 		// lot 번호 리스트
 		List<CodeVO> lotList = new ArrayList<>();
+		// mat_out 번호
+		List<CodeVO> matOutList = new ArrayList<>();
+
+		// lot테이블, 자재출고 테이블
 		for (int i = 0; i < bomList.size(); i++) {
 			voMat.setMpCode(bomList.get(i).getMatCode());
 			voMat.setLotQty(prdOrder);
-			System.out.println(voMat.getLotQty());
 			voLot = service.getLotMat(voMat);
-			
+
 			// lot 번호 리스트 담기
 			lotList.add(voLot);
-			
+
 			// 자재출고 테이블 등록
 			CodeVO voMout = new CodeVO();
 			voMout.setLotNo(voLot.getLotNo());
 			voMout.setMatOutQty(prdOrder);
+			voMout.setMatOutNo(service.matOutNo().getMatOutNo());
+
+			// matoutno 리스트 담기
+			matOutList.add(voMout);
 			service.insertMatOut(voMout);
-			
-			// lot 테이블 out_from 용 공정코드 찾기
+
+			// lot 테이블 out_from 출고처용 공정코드 찾기
 			voMout.setPrsCode(service.getMatPrs(voMout).getPrsCode());
 			// lot 테이블 수량 출고처 변경
 			service.useLotQty(voMout);
 		}
-		
+
 		// 공정 종류 담는 list
 		List<CodeVO> prsList = new ArrayList<>();
 		prsList = service.selectPrsName();
-		
+
+		// process_run 테이블
+		CodeVO voPR = new CodeVO();
+		// process_inf 테이블
+		CodeVO voPI = new CodeVO();
+		// process_err 테이블
+		CodeVO voPE = new CodeVO();
+
+		// process_run, process_inf, process_err 테이블
 		for (int i = 0; i < prsList.size(); i++) {
-			
-		}
-		
-		System.out.println(lotList);
-		
-		try {
-			Thread.sleep(1000);
-		} catch (Exception e) {
-			// TODO: handle exception
+			// process_run insert
+			String prsNo = service.prsNo().getPrsNo();
+			voPR.setPrsNo(prsNo);
+			voPR.setPrsCode(prsList.get(i).getPrsCode());
+			voPR.setPreNo(vo.getPreNo());
+			voPR.setPrsManager(vo.getPreManager());
+			voPR.setMatOutNo(matOutList.get(i / 2).getMatOutNo());
+			service.insertProcessRun(voPR);
+
+			// process_inf insert
+			String prfNo = service.prfNo().getPrsPfNo();
+			voPI.setPrsPfNo(prfNo);
+			voPI.setPrsNo(prsNo);
+			service.insertProcessInf(voPI);
+
+			if (i > prsList.size() / 2 - 1) {
+				// process_err insert
+				String prerrNo = service.processErrNo().getPrsErrNo();
+				voPE.setPrsErrNo(prerrNo);
+				voPE.setErrCode(service.getError(voPR).getErrCode());
+				service.insertProcessErr(voPE);
+			}
+
+			// update
+			int j = 0;
+			int k = 0;
+			// 10초후 완료 될 초당 생산량
+			int prdOut = (prdOrder / 10);
+			// 주문량 2000
+			if (prdOrderA == 2200) {
+				if (i == prsList.size() - 1) {
+
+					// 완제품 공정
+					while (j < prdOrder) {
+						j += prdOut;
+
+						k += prdOut * 1 / 100;
+
+						if (j + (prdOrder % 10) == prdOrder) {
+							j += prdOrder % 10;
+							if (prdOrder % 100 > 10) {
+								String a = Integer.toString(prdOrder % 100);
+								k += Integer.parseInt(a.substring(0,1))+1;
+							} else {
+								k += prdOrder % 100;
+							}
+						}
+						
+						voPE.setPrsErrQty(k);
+						service.upCountProcessErr(voPE);
+
+						voPI.setPrsErrQty(k);
+						service.upCountPIErr(voPI);
+						
+						
+						if (j + (prdOrder % 10) == prdOrder) {
+							service.endProcessInf(voPI);
+						}
+
+						voPR.setPrtQty(j - (k * (prsList.size() / 2)));
+						service.endProcessRun(voPR);
+
+						try {
+							Thread.sleep(1000);
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+
+					}
+
+				} else {
+
+					// 완제품 이전 공정
+					while (j < prdOrder) {
+						j += prdOut;
+
+						// 불량수량
+						if (i > prsList.size() / 2 - 1) {
+							k += prdOut * 1 / 100;
+							if (j + (prdOrder % 10) == prdOrder) {
+								j += prdOrder % 10;
+								if (prdOrder % 100 > 10) {
+									String a = Integer.toString(prdOrder % 100);
+									k += Integer.parseInt(a.substring(0,1))+1;
+								} else {
+									k += prdOrder % 100;
+								}
+							}
+							voPE.setPrsErrQty(k);
+							service.upCountProcessErr(voPE);
+
+							voPI.setPrsErrQty(k);
+							service.upCountPIErr(voPI);
+						} else {
+							voPI.setPrsOutPut(j);
+							service.upCountProcessInf(voPI);
+						}
+
+						if (j + (prdOrder % 10) == prdOrder) {
+							service.endProcessInf(voPI);
+						}
+
+						try {
+							Thread.sleep(1000);
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+					}
+				}
+				
+			} else {
+				// 주문량 2200 이외
+				if (i == prsList.size() - 1) {
+
+					// 완제품 공정
+					while (j < prdOrder) {
+						j += prdOut;
+
+						k += prdOut * 1 / 100;
+
+						if (j + (prdOrder % 10) == prdOrder) {
+							j += prdOrder % 10;
+							if (prdOrder % 100 > 10) {
+								String a = Integer.toString(prdOrder % 100);
+								k += Integer.parseInt(a.substring(0,1))+1;
+							} else {
+								k += prdOrder % 100;
+							}
+						}
+						
+						voPE.setPrsErrQty(k);
+						service.upCountProcessErr(voPE);
+
+						voPI.setPrsErrQty(k);
+						service.upCountPIErr(voPI);
+						
+						
+						if (j + (prdOrder % 10) == prdOrder) {
+							service.endProcessInf(voPI);
+						}
+
+						voPR.setPrtQty(j - (k * (prsList.size() / 2)));
+						service.endProcessRun(voPR);
+						
+						try {
+							Thread.sleep(1000);
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+
+					}
+
+				} else {
+
+					// 완제품 이전 공정
+					while (j < prdOrder) {
+						j += prdOut;
+
+						// 불량수량
+						if (i > prsList.size() / 2 - 1) {
+							k += prdOut * 1 / 100;
+							if (j + (prdOrder % 10) == prdOrder) {
+								j += prdOrder % 10;
+								if (prdOrder % 100 > 10) {
+									String a = Integer.toString(prdOrder % 100);
+									k += Integer.parseInt(a.substring(0,1))+1;
+								} else {
+									k += prdOrder % 100;
+								}
+							}
+							voPE.setPrsErrQty(k);
+							service.upCountProcessErr(voPE);
+
+							voPI.setPrsErrQty(k);
+							service.upCountPIErr(voPI);
+						} else {
+							voPI.setPrsOutPut(j);
+							service.upCountProcessInf(voPI);
+						}
+
+						if (j + (prdOrder % 10) == prdOrder) {
+							service.endProcessInf(voPI);
+						}
+
+						try {
+							Thread.sleep(1000);
+						} catch (Exception e) {
+							// TODO: handle exception
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -550,17 +752,11 @@ public class CodeController {
 		return service.updateErr(vo);
 	}
 
-	@GetMapping("/workerList")
-	@ResponseBody
-	public List<CodeVO> workerList() {
-		return service.workerList();
-	}
-
 	@PostMapping("/workerAList")
 	@ResponseBody
 	public List<CodeVO> workerAList(@RequestBody String data) {
 		CodeVO vo = new CodeVO();
-		vo.setPrsNo(data);
+		vo.setPreNo(data);
 		System.out.println(vo.getPrsNo() + "  aaaaaaaa");
 		System.out.println(service.workerAList(vo));
 		return service.workerAList(vo);
@@ -570,23 +766,23 @@ public class CodeController {
 	@ResponseBody
 	public List<CodeVO> workerBList(@RequestBody String data) {
 		CodeVO vo = new CodeVO();
-		vo.setPrsNo(data);
+		vo.setPreNo(data);
 		System.out.println(vo.getPrsNo());
 		return service.workerBList(vo);
 	}
 
 	@PostMapping("/updateWorker")
 	@ResponseBody
-	public Map<String, String> updateWorker(@RequestParam(value = "prsNo[]", required = false) List<String> prsNo,
+	public Map<String, String> updateWorker(@RequestParam(value = "preNo[]", required = false) List<String> preNo,
 			@RequestParam(value = "inputId[]", required = false) List<String> inputId,
 			@RequestParam(value = "deleteId[]", required = false) List<String> deleteId) {
 		Map<String, String> map = new HashMap<>();
 
 		int a = 0;
 		CodeVO vo = new CodeVO();
-		vo.setPrsNo(prsNo.get(0));
+		vo.setPreNo(preNo.get(0));
 
-		String b = vo.getPrsNo();
+		String b = vo.getPreNo();
 		if (inputId != null) {
 			for (int i = 0; i < inputId.size(); i++) {
 				vo.setEmpId(inputId.get(i));
