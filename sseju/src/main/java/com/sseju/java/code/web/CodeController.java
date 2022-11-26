@@ -43,6 +43,7 @@ class produceThread implements Runnable {
 
 		// 주문량
 		int prdOrder = vo.getInsQty();
+		prdOrder = (prdOrder * 110 / 100) - (prdOrder * 5 / 100);
 
 		// 주문제품 bom
 		List<CodeVO> bomList = new ArrayList<>();
@@ -51,22 +52,39 @@ class produceThread implements Runnable {
 		CodeVO voMat = new CodeVO();
 		// lot 정보 담기용
 		CodeVO voLot = new CodeVO();
+		// lot 번호 리스트
+		List<CodeVO> lotList = new ArrayList<>();
 		for (int i = 0; i < bomList.size(); i++) {
-			if (bomList.get(i).getMatCode().contains("LQ")) {
-				voMat.setMpCode(bomList.get(i).getMatCode());
-				voMat.setLotQty(prdOrder * 110 / 100);
-				voLot = service.getLotMat(voMat);
-			}
+			voMat.setMpCode(bomList.get(i).getMatCode());
+			voMat.setLotQty(prdOrder);
+			System.out.println(voMat.getLotQty());
+			voLot = service.getLotMat(voMat);
+			
+			// lot 번호 리스트 담기
+			lotList.add(voLot);
+			
+			// 자재출고 테이블 등록
+			CodeVO voMout = new CodeVO();
+			voMout.setLotNo(voLot.getLotNo());
+			voMout.setMatOutQty(prdOrder);
+			service.insertMatOut(voMout);
+			
+			// lot 테이블 out_from 용 공정코드 찾기
+			voMout.setPrsCode(service.getMatPrs(voMout).getPrsCode());
+			// lot 테이블 수량 출고처 변경
+			service.useLotQty(voMout);
 		}
 		
-		// 자재출고용
-		CodeVO voMout = new CodeVO();
-		voMout.setLotNo(voLot.getLotNo());
-		voMout.setMatOutQty(prdOrder);
-		service.insertMatOut(voMout);
+		// 공정 종류 담는 list
+		List<CodeVO> prsList = new ArrayList<>();
+		prsList = service.selectPrsName();
 		
-		// lot 수량 변경
-		service.useLotQty(voMout);
+		for (int i = 0; i < prsList.size(); i++) {
+			
+		}
+		
+		System.out.println(lotList);
+		
 		try {
 			Thread.sleep(1000);
 		} catch (Exception e) {

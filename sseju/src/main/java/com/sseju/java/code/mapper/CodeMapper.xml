@@ -134,14 +134,20 @@
 	</select>
 
 	<select id="prList" resultType="CodeVO">
-		SELECT p.prs_code, p.prs_name,
+		SELECT p.prs_code, p.prs_name, p.run_no
 		p.prs_detail, p.eqm_code, e.eqm_name FROM process p, eqm e WHERE
-		p.eqm_code = e.eqm_code
+		p.eqm_code = e.eqm_code ORDER BY p.run_no
 	</select>
 
 	<insert id="insertPrs" parameterType="CodeVO">
+		<selectKey keyProperty="runNo" resultType="Integer"
+			order="BEFORE">
+			SELECT (NVL(MAX(run_no),0)+1)
+			FROM
+			process
+		</selectKey>
 		INSERT INTO process VALUES
-		(#{prsCode}, #{prsName}, #{prsDetail}, #{eqmCode})
+		(#{prsCode}, #{prsName}, #{prsDetail}, #{eqmCode}, #{runNo})
 	</insert>
 
 	<delete id="deletePrs" parameterType="CodeVO">
@@ -425,12 +431,19 @@
 			order="BEFORE">
 			SELECT 'MO'||to_char(sysdate,
 			'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0)
-			FROM mat_out
+			FROM
+			mat_out
 		</selectKey>
-		INSERT INTO mat_out VALUES(#{matOutNo}, sysdate, #{matOutQty}, #{lotNo})
+		INSERT INTO mat_out VALUES(#{matOutNo}, sysdate, #{matOutQty},
+		#{lotNo})
 	</insert>
-
+	
 	<update id="useLotQty" parameterType="CodeVO">
-		UPDATE lot SET lot_qty = 0 WHERE lot_no = #{lotNo}
+		UPDATE lot SET lot_qty = 0, out_from = #{prsCode} WHERE lot_no = #{lotNo}
 	</update>
+	
+	<select id="getMatPrs" parameterType="CodeVO" resultType="CodeVO">
+		SELECT prs_code FROM material WHERE mat_code = #{matCode}
+	</select>
+	
 </mapper>

@@ -388,4 +388,10 @@ public class CodeServiceImpl implements CodeService {
 		return mapper.useLotQty(vo);
 	}
 
+	@Override
+	public CodeVO getMatPrs(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.getMatPrs(vo);
+	}
+
 }
