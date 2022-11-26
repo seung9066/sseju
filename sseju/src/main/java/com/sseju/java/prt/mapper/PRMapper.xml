@@ -60,7 +60,7 @@
 		and a.cp_code = e.cp_code
         and b.order_qty <>'0'
 		and a.order_no= d.order_no(+)
-        order by a.d_day
+        order by c.prt_code ASC
 		]]>
 	</select>
 	<!-- 단거조회 -->
