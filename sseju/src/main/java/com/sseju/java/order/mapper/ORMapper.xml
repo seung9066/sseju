@@ -3,6 +3,12 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sseju.java.order.mapper.ORMapper">
+
+	<select id="select" resultType="ORVO"> 
+	select * from orders
+	</select>
+
+
 	<!-- 주문내역 조회 -->
 	<select id="selectOrderList" resultType="ORVO">
 		SELECT
@@ -48,20 +54,18 @@
 
 
 	<select id="selectPrtManager" resultType="ORVO">
-	   select
-		c.prt_name,
-		sum(b.order_qty) as order_qty,
-		sum(b.order_out_qty) as order_out_qty,
-        sum(lot_qty) as lot_qty
-		from 
-        orders a,
-        order_inf b,
-        product c,
-        lot d
-		where a.order_no =b.order_no
-		and c.prt_code = b.prt_code
-        and c.prt_code =d.mp_code(+)
-		GROUP BY c.prt_name   
+	select
+	a.lot_no,
+	sum(b.order_qty) as order_qty,
+	sum(b.order_out_qty) as order_out_qty,
+	sum(lot_qty) as lot_qty
+
+	from
+	lot a,order_inf b,orders c,product d
+	where a.mp_code = d.prt_code
+	and b.order_no=c.order_no
+	and d.prt_code=b.prt_code(+)
+	GROUP BY a.lot_no
 	</select>
 
 	<select id="getOrderNo" resultType="ORVO">
@@ -87,6 +91,7 @@
 	sysdate,
 	#{cpCode})
 	</insert>
+	
 	<!-- 주문상세 테이블 등록 쿼리 추가하기 -->
 	<insert id="insertOrderInfo" parameterType="ORVO">
 		<selectKey keyProperty="preNo" resultType="String"

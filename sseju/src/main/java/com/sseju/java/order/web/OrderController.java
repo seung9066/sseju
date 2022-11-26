@@ -60,6 +60,17 @@ public class OrderController {
 	public List<ORVO> selectOrder() {
 		return oService.selectOrder();
 	}
+	
+	@GetMapping("/select")
+	@ResponseBody
+	public List<ORVO> select() {
+		return oService.select();
+	}
+	@GetMapping("/select1")
+	@ResponseBody
+	public List<ORVO> select1() {
+		return oService.select1();
+	}
 
 	@GetMapping("/user/getOrderNo")
 	@ResponseBody
@@ -81,6 +92,12 @@ public class OrderController {
 		return a;
 	}
 
+//	@PostMapping("insertOrderAll")
+//	@ResponseBody
+//	public int insertOrderAll(@RequestBody List<ORVO> list) {
+//		return oService.insertOrderAll(getOrderNo()) ;
+//	}
+	//들어가는 주소 Controller
 	// 전체
 	@GetMapping("/orlist")
 	public String OrderList(Model model) {
@@ -95,5 +112,9 @@ public class OrderController {
 	@GetMapping("inout")
 	public String selectrinout(Model model) {
 		return "/admin/order/inout";
+	}
+	@GetMapping("/ordetail")
+	public String ordetail(Model model) {
+		return "/admin/order/ordetail";
 	}
 }

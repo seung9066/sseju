@@ -64,14 +64,14 @@ body {
 					filter: 'select'
 				}, 
 				{
-					header : '총출고량',
-					name : 'orderOutQty',
+					header : '주문량',
+					name : 'orderQty',
 					align : 'center',
 					filter: 'select'
 				},
 				{
-					header : '주문량',
-					name : 'orderQty',
+					header : '총출고량',
+					name : 'orderOutQty',
 					align : 'center',
 					filter: 'select'
 				},
@@ -149,24 +149,53 @@ body {
 	           pGrid.resetData(obj);
 	        })
 
-		}  
-		  function prOut() {
-				 $.ajax({
-						url : "insertOrder",
-						method : "POST",
-						data: JSON.stringify(insert),
-						dataType : "JSON",
-						contentType: 'application/json; charset=utf-8',
-						beforeSend : function(xhr){
-							xhr.setRequestHeader(header, token);
-						},
-						success : function(list) {
-							if (list > 0) {
-								aGrid.clear();								
-							}
-						}// suc
-					}); //ajax 
-		  }
+		}	 
+         function orInsert() {
+        	 let orderNo1 = '';
+        	 $.ajax({
+					url : "insertOrderAll",
+					method : "GET",
+					success : function(data) {
+						orderNo1 = data.orderNo;
+						a(orderNo1);
+					},
+					error : function(reject) {
+						console.log("bbbb")
+					}// suc
+				});
+        
+        	 }
+			 
+        	 function a(a) {
+        		 
+			 insert = pGrid.getData();
+			for (let i = 0; i < insert.length; i++) {
+				insert[i].orderNo = a;
+				insert[i].cpCode = $('#cpCode').val();
+				insert[i].dday = $('#dDay').val();
+				console.log(insert[i])
+        	 }
+			console.log(insert)
+			ininsert();
+		 }
+         
+         function prOut() {
+			 $.ajax({
+					url : "insertOrder",
+					method : "POST",
+					data: JSON.stringify(insert),
+					dataType : "JSON",
+					contentType: 'application/json; charset=utf-8',
+					beforeSend : function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(list) {
+						if (list > 0) {
+							pGrid.clear();								
+						}
+					}// suc
+				}); //ajax 
+	       }
     		</script>
 		</main>
 	</article>

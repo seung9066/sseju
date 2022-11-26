@@ -13,8 +13,8 @@ public class ORVO {
 
 	// 주문상세 데이터
 	private String orderNo; // 주문번호
-	private String orderDate; // 주문일자
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date orderDate; // 주문일자
 	private String prtName; // 제품명
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dday; // 납기일자
@@ -35,6 +35,7 @@ public class ORVO {
 
 	private int lotQty; // 생산수량(로트번호가 부여된 제품 단위의 총 개수)
 	private String prtCode;
+	private String lotNo;	//로트번호(시리얼번호) lot
 
 //	
 }

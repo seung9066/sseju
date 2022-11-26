@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- 제이쿼리 -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!-- 토스트UI -->
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<!-- 토스트 UI 그리드 페이징 cdn -->
+<script type="text/javascript"
+	src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main id="main" class="main">
+
+			<div id="mat-od-title">
+				<h2>제품 주문 상세</h2>
+			</div>
+			<div>
+			<h3>주문승인전목록</h3>
+				<div id="grid1"></div>
+			</div>
+			<div>
+			<h2>주문목승인후록</h2>
+			<div id="grid123"></div>
+			</div>
+			<script>
+			var token = $("meta[name='_csrf']").attr("content");
+			 var header = $("meta[name='_csrf_header']").attr("content");
+
+			alls();
+			const grid1 = new tui.Grid({
+			el : document.getElementById('grid1'),
+			pagination:true,
+			pageOptions: {
+			    useClient: true,
+			    perPage: 5
+			  },
+			scrollX : false,
+			scrollY : false,
+			columns : [
+				{
+					header : '주문번호',
+					name : 'orderNo',
+					align : 'center',
+					filter: 'select'
+				}, 
+				{
+					header : '업체코드',
+					name : 'cpCode',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '주문일자',
+					name : 'orderDate',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '납기일자',
+					name : 'dday',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '총금액',
+					name : 'orderPrice',
+					align : 'center',
+					filter: 'select'
+				},
+		          ]
+		});
+		function alls() {
+	        url="select"
+			fetch(url) 
+	        .then(res=>res.json())
+	        .then(obj=>{
+	           console.log(obj);
+	           grid1.resetData(obj);
+	        })
+		}
+		
+		</script>
+
+		</main>
+	</article>
+</body>
+</html>
