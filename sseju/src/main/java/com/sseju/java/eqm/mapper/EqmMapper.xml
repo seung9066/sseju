@@ -7,11 +7,15 @@
 	<!-- 설비 eqm -->
 	<!-- 전체조회 -->
 	<select id="selectEqmList" resultType="EqmVO">
-		SELECT e.eqm_code, e.eqm_name, e.eqm_model, e.eqm_size, e.eqm_size,
-		e.eqm_loc, e.eqm_max_temp, e.eqm_min_temp, e.eqm_check,
-		e.eqm_purc_date, e.eqm_img, e.eqm_purc_name, e.eqm_purc_tel, e.eqm_yn,
+		SELECT e.eqm_code,
+		e.eqm_name, e.eqm_model, e.eqm_size, e.eqm_size,
+		e.eqm_loc,
+		e.eqm_max_temp, e.eqm_min_temp, e.eqm_check,
+		e.eqm_purc_date,
+		e.eqm_img, e.eqm_purc_name, e.eqm_purc_tel, e.eqm_yn,
 		l.line_no
-		FROM EQM e
+		FROM EQM
+		e
 		JOIN EQM_LINE l ON e.line_no = l.line_no
 	</select>
 
@@ -19,6 +23,8 @@
 	<insert id="insertEqmInfo" parameterType="EqmVO">
 
 		INSERT INTO EQM
+		(eqm_code,eqm_name,eqm_model,eqm_size,eqm_loc,eqm_max_temp,eqm_min_temp
+		,eqm_check,eqm_check_term,eqm_purc_date,eqm_img,eqm_purc_name,eqm_purc_tel,eqm_yn,line_no)
 		VALUES(
 		#{eqmCode},
 		#{eqmName},
@@ -28,6 +34,7 @@
 		#{eqmMaxTemp},
 		#{eqmMinTemp},
 		#{eqmCheck,jdbcType=VARCHAR},
+		#{eqmCheckTerm,jdbcType=VARCHAR},
 		#{eqmPurcDate},
 		#{eqmImg,jdbcType=VARCHAR},
 		#{eqmPurcName},
@@ -39,6 +46,56 @@
 	</insert>
 
 	<!-- 설비 수정 -->
+	<update id="updateEqmInfo" parameterType="EqmVO">
+		UPDATE EQM
+		<set>
+		<if test="eqmName != null and !eqmName.equals('')">
+			eqm_name=#{eqmName},
+		</if>
+		<if test="eqmModel != null and !eqmModel.equals('')">
+			eqm_model=#{eqmModel},
+		</if>
+		<if test="eqmSize != null and !eqmSize.equals('')">
+			eqm_size = #{eqmSize},
+		</if>
+		<if test="eqmLoc != null and !eqmLoc.equals('')">
+			eqm_loc = #{eqmLoc},
+		</if>
+		<if test="eqmMaxTemp != null and !eqmMaxTemp.equals('')">
+			eqm_max_temp = #{eqmMaxTemp},
+		</if>
+		<if test="eqmMinTemp != null and !eqmMinTemp.equals('')">
+			eqm_min_tem = #{eqmMinTemp},
+		</if>
+		<if test="eqmCheck != null and !eqmCheck.equals('')">
+			eqm_check = #{eqmCheck},
+		</if>
+		<if test="eqmPurcDate != null and !eqmPurcDate.equals('')">
+			eqm_purc_date = #{eqmPurcDate},
+		</if>
+		<if test="eqmImg != null and !eqmImg.equals('')">
+			eqm_img=#{eqmImg},
+		</if>
+		<if test="eqmPurcName != null and !eqmPurcName.equals('')">
+			eqm_purc_name=#{eqmPurcName},
+		</if>
+		<if test="eqmPurcTel != null and !eqmPurcTel.equals('')">
+			eqm_purc_tel= #{eqmPurcTel},
+		</if>
+		<if test="eqmYn != null and !eqmYn.equals('')">
+			eqm_yn=#{eqmYn},
+		</if>
+		<if test="lineNo != null and !lineNo.equals('')">
+			line_no =#{lineNo},
+		</if>
+		<if test="eqmCheckTerm != null and !eqmCheckTerm.equals('')">
+			eqm_check_term=#{eqmCheckTerm}
+		</if>
+
+		</set>
+		WHERE eqm_code = #{eqmCode}
+	</update>
+
 
 	<!-- 설비 삭제 -->
 	<delete id="deleteEqmInfo" parameterType="EqmVO">
@@ -74,7 +131,8 @@
 			tot_prc = #{totPrc},
 			uph = #{uph},
 			emp_no = #{empNo},
-			line_yn = #{lineYn}
+			line_yn =
+			#{lineYn}
 		</set>
 		WHERE line_no = #{lineNo}
 	</update>
@@ -87,10 +145,12 @@
 
 	<!-- 정기점검 전체조회 -->
 	<select id="getEqmChkList" resultType="EqmVO">
-		SELECT c.CHK_NO, c.CHK_DATE, c.CHK_NDATE, c.CHK_STATE, c.CHK_SOL,
+		SELECT c.CHK_NO,
+		c.CHK_DATE, c.CHK_NDATE, c.CHK_STATE, c.CHK_SOL,
 		p.emp_name,q.EQM_CODE, q.EQM_NAME
 		FROM EQM_CHK c JOIN EQM q
-		ON c.eqm_code = q.eqm_code
+		ON
+		c.eqm_code = q.eqm_code
 		JOIN EMPLOYEE p
 		ON c.chk_emp_no = p.emp_id
 
@@ -99,24 +159,26 @@
 	<!-- 정기점검 등록 -->
 
 	<insert id="insertEqmChk" parameterType="EqmVO">
-		<selectKey keyProperty="chkNo" resultType="String" order="BEFORE">
-			SELECT 'CHK'||LPAD(NVL(MAX(SUBSTR(chk_no,-3)),0)+1,3,0) as chk_no
+		<selectKey keyProperty="chkNo" resultType="String"
+			order="BEFORE">
+			SELECT 'CHK'||LPAD(NVL(MAX(SUBSTR(chk_no,-3)),0)+1,3,0) as
+			chk_no
 			FROM EQM_CHK
 		</selectKey>
 		INSERT INTO EQM_CHK(CHK_NO,
-							CHK_DATE,
-							CHK_NDATE,
-							CHK_STATE,
-							CHK_SOL,
-							CHK_EMP_NO,
-							EQM_CODE							)
+		CHK_DATE,
+		CHK_NDATE,
+		CHK_STATE,
+		CHK_SOL,
+		CHK_EMP_NO,
+		EQM_CODE )
 		VALUES (#{chkNo},
-				#{chkDate,jdbcType=VARCHAR},
-				#{chkNdate,jdbcType=VARCHAR},
-				#{chkState,jdbcType=VARCHAR},
-				#{chkSol,jdbcType=VARCHAR},
-				#{chkEmpNo,jdbcType=VARCHAR},
-				#{eqmCode})
+		#{chkDate,jdbcType=VARCHAR},
+		#{chkNdate,jdbcType=VARCHAR},
+		#{chkState,jdbcType=VARCHAR},
+		#{chkSol,jdbcType=VARCHAR},
+		#{chkEmpNo,jdbcType=VARCHAR},
+		#{eqmCode})
 	</insert>
 
 
@@ -132,10 +194,12 @@
 		<set>
 			chk_date = #{chkDate},
 			chk_ndate = #{chkNdate},
-			chk_state = #{chkState},
+			chk_state =
+			#{chkState},
 			chk_sol = #{chkSol},
 			chk_emp_no = #{chkEmpNo},
-			eqm_code = #{eqmCode}
+			eqm_code =
+			#{eqmCode}
 		</set>
 		WHERE chk_no = #{chkNo}
 
@@ -145,7 +209,8 @@
 
 	<!-- 정기점검 삭제 -->
 	<delete id="deleteEqmChk" parameterType="EqmVO">
-		DELETE FROM EQM_CHK WHERE chk_no = #{chkNo}
+		DELETE FROM EQM_CHK
+		WHERE chk_no = #{chkNo}
 
 	</delete>
 
@@ -155,7 +220,8 @@
 		u.uoper_rsn,u.UOPER_WORK,u.UOPER_START_TIME,u.UOPER_END_TIME,q.EQM_CODE,q.eqm_name,p.emp_name
 		FROM EQM_UOPER u
 		JOIN EQM q ON u.eqm_code = q.eqm_code
-		JOIN EQM_CHK c ON q.eqm_code = c.eqm_code
+		JOIN EQM_CHK c ON
+		q.eqm_code = c.eqm_code
 		JOIN EMPLOYEE p ON c.chk_emp_no = p.emp_id
 	</select>
 
@@ -169,8 +235,10 @@
 		</selectKey>
 		INSERT INTO
 		EQM_UOPER
-		VALUES (#{uoperCode}, #{empId}, #{uoperRsn}, #{uoperWork},
-		#{uoperStartTime}, #{uoperEndTime}, #{eqmCode},#{eqmName})
+		VALUES (#{uoperCode}, #{empId}, #{uoperRsn},
+		#{uoperWork},
+		#{uoperStartTime}, #{uoperEndTime},
+		#{eqmCode},#{eqmName})
 
 	</insert>
 
@@ -187,7 +255,8 @@
 			uoper_rsn = #{uoperRsn},
 			uoper_work = #{uoperWork},
 			uoper_start_time = #{uoperStartTime},
-			uoper_end_time = #{uoperEndTime},
+			uoper_end_time =
+			#{uoperEndTime},
 			eqm_code = #{empCode},
 			emp_id = #{empId}
 

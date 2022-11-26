@@ -2,6 +2,8 @@ package com.sseju.java.eqm.service;
 
 
 
+
+
 import java.util.Date;
 
 import org.apache.ibatis.type.Alias;
@@ -21,7 +23,8 @@ public class EqmVO {
    private String eqmLoc;
    private int eqmMaxTemp;
    private int eqmMinTemp;
-   private String eqmCheck; //점검주기
+   private int eqmCheck; //점검일수 숫자
+   private String eqmCheckTerm; // 점검 '주기' 
    @DateTimeFormat(pattern = "yyyy-MM-dd")
    private Date eqmPurcDate;
    private String eqmImg;

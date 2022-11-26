@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,6 +77,14 @@ public class EqmController {
 
 		return eqmService.selectEqmList();
 	}
+	
+	//설비 단건조회
+	@GetMapping("eqmInfo")
+	@ResponseBody
+	public String selectEqmInfo(EqmVO eqmVO,Model model) {
+		 model.addAttribute("eqm", eqmService.getEqmInfo(eqmVO));
+		 return "/admin/eqm/eqmList";
+	}
 
 	@GetMapping("/eqmChkList")
 	@ResponseBody
@@ -100,8 +107,12 @@ public class EqmController {
 
 			EqmVO vo = new EqmVO();
 			vo.setEqmCode(line1);
-
 			a += eqmService.deleteEqmInfo(vo);
+			
+			//공통코드에서도 삭제해주기
+			CodeVO cvo = new CodeVO();
+			cvo.setCode(line1);
+			cdService.deleteCode(cvo);
 		}
 		return a;
 	}
