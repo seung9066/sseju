@@ -18,12 +18,15 @@
 	<article layout:fragment="content">
 		<main id="main" class="main">
 			<h4>자재 투입 내역 조회 / 관리</h4>
+			<div style="float:right">
+				<button type="button" class="button" onclick="location.href='/matOrd'">자재 발주 신청</button>
+			</div>
 			<!-- Button trigger modal -->
-			<button type="button" class="button" data-bs-toggle="modal"
+			<!-- <button type="button" class="button" data-bs-toggle="modal"
 				data-bs-target="#exampleModal">자재 발주 신청</button>
-
+ -->
 			<!-- Modal -->
-			<div class="modal fade" id="exampleModal" tabindex="-1"
+<!-- 			<div class="modal fade" id="exampleModal" tabindex="-1"
 				aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
@@ -39,62 +42,64 @@
 								data-bs-dismiss="modal">닫기</button>
 						</div>
 					</div>
-				</div>
-			</div>
+				</div> 
+				-->
 			<!-- 그리드 -->
 			<div id="mihGrid"></div>
 
-
 			<script type="text/javascript">
+			
+			showMihList();
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
 				var mihGrid = new tui.Grid({
 					el : document.getElementById('mihGrid'),
-					data : [ {
-						matOutDate : '2022-11-16',
-						prsCode : 'EQM-BT / 공병분리기',
-						matOutQty : '30000',
-						lotQty : '30000',
-						prsManager : '김준형' //id값으로 끌어와야함
-					}, {
-						matOutDate : '2022-11-20',
-						prsCode : '자몽맛소주',
-						matOutQty : '10000',
-						lotQty : '10000',
-						prsManager : '김두영'
-					}
-					// data 가져오는 법
-					// data: {
-					//    api: {
-					//       readData: {
-					//          url: '/api/readData',
-					//          method: 'GET'
-					//       }
-					//    }
-					// },
-					],
 					scrollX : false,
 					scrollY : false,
 					minBodyHeight : 30,
 					pageOptions : {
-						perPage : 5
+						perPage : 10
 					},
 					columns : [ {
-						header : '투입일자',
-						name : 'matOutDate'
-					}, {
+						header : '투입일자', //투입일자, sql에 투입일자 기준으로DESC 해두었음
+						name : 'matOutDate',
+						align : 'center',
+						formatter({value}) {
+					      return `${value.substring(0,10)}`;
+					    },
+						filter : 'select'
+					},{
+						header : '자재명', //공정에 투입된 자재의 이름
+						name : 'matName',
+						filter : 'select',
+						align : 'center'
+					},
+					{
 						header : '공정코드', //각 자재별로 어느 공정에 투입되었는지
 						name : 'prsCode',
-						filter : 'select'
+						filter : 'select',
+						align : 'center'
 					}, {
 						header : '투입수량', //각 공정에 몇개씩 투입되었는지=이거는 필요한가? 다똑같이 투입될건데
-						name : 'matOutQty'
-					}, {
-						header : '재고수량',
-						name : 'lotQty'
+						name : 'matOutQty',
+						align : 'center'
 					}, {
 						header : '자재 출고 담당자',
-						name : 'prsManager'
+						name : 'empName',
+						align : 'center',
+						filter : 'select'
 					} ]
 				});
+				//자재 투입 이력 그리드의 데이터 가져오기
+				function showMihList(){
+					fetch("getmihList")
+					.then(res=>res.json())
+					.then(obj=>{
+						consoel.log(obj);
+						mihGrid.resetData(obj);
+					})
+				}
 			</script>
 
 		</main>

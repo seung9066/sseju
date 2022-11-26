@@ -2,4 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.sseju.java.workhistory.mapper.WorkHistoryMapper">
+	
+	<select id="getWorkHistoryList" resultType="whVO">
+		SELECT prr.prs_date, pi.prs_st_hour, pi.prs_sp_hour, pr.prs_name, pr.prs_code, pi.prs_output, prr.prs_manager, ee.emp_name
+		FROM process_inf pi JOIN process_run prr
+		    ON pi.prs_no = prr.prs_no
+		JOIN process pr
+		    ON pr.prs_code = prr.prs_code
+		JOIN employee ee
+		    ON ee.emp_id = prr.prs_manager
+	</select>
 </mapper>

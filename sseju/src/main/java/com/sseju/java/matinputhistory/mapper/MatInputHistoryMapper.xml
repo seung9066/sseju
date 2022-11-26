@@ -2,14 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.sseju.java.matinputhistory.mapper.MatInputHistoryMapper">
+	
+	<!-- Create mapper -->
 	<insert id="insertMatInputHistory" parameterType="mihVO">
 	
 	</insert>
 	
+	<!-- Read -->
 	<select id="getMatInputHistory" resultType="mihVO">
-	
+	SELECT ma.mat_code, ma.mat_name, mo.mat_out_date, prr.prs_code, mo.mat_out_qty, ee.emp_name
+		FROM material ma JOIN process pr
+		    ON ma.prs_code = pr.prs_code
+		JOIN process_run prr
+		    ON pr.prs_code = prr.prs_code
+		JOIN mat_out mo
+		    ON prr.mat_out_no = mo.mat_out_no
+		JOIN employee ee
+		    ON ee.emp_id = prr.prs_manager
+	ORDER BY mo.mat_out_date
 	</select>
+	<!-- 아래는 재고수량(lot_qty)있는 쿼리문, 페이지에서 재고수량을 보여줄 필요가 없는것 같아서 빼고 새로짬 -->
+<!-- 	<select id="getMatInputHistory" resultType="mihVO">
+		SELECT ma.mat_code, ma.mat_name, mo.mat_out_date, prr.prs_code, mo.mat_out_qty, prr.prs_manager
+		FROM material ma JOIN process pr
+			    ON ma.prs_code = pr.prs_code
+			JOIN process_run prr
+			    ON pr.prs_code = prr.prs_code
+			JOIN mat_out mo
+			    ON prr.mat_out_no = mo.mat_out_no
+			JOIN lot lo
+			    ON lo.lot_no = mo.mat_lot_no
+			JOIN employee ee
+			    ON ee.emp_id = prr.prs_manager
+		ORDER BY mo.mat_out_date
+	</select>
+	 -->
+	<!-- Update -->
 	
+	<!-- Delete -->
+		<!-- 자재 투입 내역 조회 -->
 	<delete id="deleteMatInputHistory" parameterType="mihVO">
 	
 	</delete>
