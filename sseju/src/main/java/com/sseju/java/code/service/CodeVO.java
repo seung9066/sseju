@@ -62,6 +62,7 @@ public class CodeVO {
 	private String prsName;
 	private String prsDetail;
 	private String eqmCode;
+	private int runNo;
 	
 	// eqm
 	private String eqmName;
@@ -100,6 +101,7 @@ public class CodeVO {
 	private String matChkCode;
 	
 	private int matOutQty;
-	
+	private String outType;
+	private String outFrom;
 	
 }

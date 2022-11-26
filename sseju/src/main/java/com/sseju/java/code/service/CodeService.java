@@ -89,4 +89,5 @@ public interface CodeService {
 	public CodeVO getLotMat(CodeVO vo);
 	public int insertMatOut(CodeVO vo);
 	public int useLotQty(CodeVO vo);
+	public CodeVO getMatPrs(CodeVO vo);
 }
