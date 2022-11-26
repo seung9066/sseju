@@ -251,4 +251,10 @@ public class MatServiceImpl implements MatService {
 		return matMapper.updateMoy(MatVO);
 	}
 
+	@Override
+	public List<MatVO> matOrdModal() {
+		// TODO Auto-generated method stub
+		return matMapper.matOrdModal();
+	}
+
 }

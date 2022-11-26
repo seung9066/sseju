@@ -17,6 +17,7 @@
 		JOIN company c ON c.cp_code =
 		m.cp_code
 		JOIN employee e on e.emp_id = b.mat_ord_emp
+		WHERE b.mat_ord_yn = '미확인'
 		order by mat_ord_no DESC
 	</select>
 	<select id="detailMatbuyInfo" resultType="MatVO"
@@ -42,6 +43,22 @@
 			</if>
 		</where>
 		order by mat_ord_no DESC
+	</select>
+	<select id="matOrdModal" resultType="MatVO" parameterType="MatVO">
+		select bom.prt_code, bom.mat_code, bom.capacity, m.mat_name, (i.order_qty * 110/100) as "mat_qty" , c.cp_code , c.cp_name
+		from 
+		    orders ord,
+		    order_inf i,
+		    product pd,
+		    bom bom,
+		    material m,
+		    company c
+		where i.order_no = ord.order_no
+		and i.prt_code = pd.prt_code
+		and pd.prt_code = bom.prt_code
+		and bom.mat_code = m.mat_code
+		and m.cp_code = c.cp_code
+		and ord.order_no = #{orderNo}
 	</select>
 	<!-- <select id="selectMatbuyInfo" resultType="MatVO"> SELECT * FROM mat_buy 
 		WHERE mat_ord_no = #{matOrdNo} </select> -->
@@ -185,7 +202,7 @@
 				MAT_IN_QTY = #{matInQty},
 			</if>
 			<if test="matCode != null and !matCode.equals('')">
-				MAT_CODE = #{matCode},
+				MAT_CODE = #{matCode}
 			</if>
 		</set>
 		WHERE MAT_ORD_NO = #{matOrdNo}
@@ -236,7 +253,7 @@
 				mat_err_qty = #{matErrQty},
 			</if>
 			<if test="matPassQty != null and !matPassQty.equals('')">
-				mat_pass_qty = #{matPassQty},
+				mat_pass_qty = #{matPassQty}
 			</if>
 			where mat_ord_no = #{matOrdNo}
 		</set>

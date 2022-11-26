@@ -18,6 +18,8 @@ public interface MatMapper {
 	public List<MatVO> matordList();
 	//발주 조건 조회
 	public List<MatVO> detailMatbuyInfo(MatVO MatVO);
+	//발주 자재량 조회
+	public List<MatVO> matOrdModal();
 	//발주 등록
 	public int insertMatbuy(MatVO MatVO);
 	//발주 수정
