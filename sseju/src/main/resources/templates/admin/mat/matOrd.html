@@ -86,17 +86,16 @@
 						</div> -->
 						<!-- <button class="button" id="searchBtn" onclick="searchBtnHandler()">조회</button> -->
 						<input type="hidden" id="empId"> 
-						<button class="button" id="insertBtn" onclick="insert()">등록</button>
-						<button class="button" id="updateBtn" onclick="update()">수정</button>
+						<button class="button" id="insertBtn" onclick="insertMatOrd()">등록</button>
+						<button class="button" id="updateBtn" onclick="updateMatOrd()">수정</button>
 						<button class="button" id="deletetBtn" onclick="deleteMat()">삭제</button>
 				<!-- </ul> -->
 			</div>
 			<!-- <form action="insertMatbuy" method="post"> -->
 				<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}" />
-				<div id="insert" style="display: none;">
-					<div id="insertGrid"></div>
-					<button type="button" class="button" onclick="ordAdd()">추가</button>
+				<div>
+					<div id="orderNoGrid"></div>
 					<button type="submit" class="button" onclick="insertMatbuy()">등록</button>
 				</div>
 			<!-- </form>-->
@@ -106,9 +105,9 @@
 
 			</div>
 
-			<!-- matCodeModal -->
-			<div class="modal" id="matCodeModal" tabindex="-1"
-				aria-labelledby="matCodeModalLabel" aria-hidden="true">
+			<!-- matModal -->
+			<div class="modal" id="matModal" tabindex="-1"
+				aria-labelledby="matModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -118,7 +117,7 @@
 						</div>
 						<div class="modal-body">
 							<div>
-								<div id="matCodeGrid"></div>
+								<div id="matGrid"></div>
 							</div>
 						</div>
 						<div class="modal-footer">
@@ -130,115 +129,38 @@
 					</div>
 				</div>
 			</div>
-
-			<!-- cpCodeModal -->
-			<div class="modal" id=cpCodeModal tabindex="-1"
-				aria-labelledby="cpCodeModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div>
-								<div id="cpCodeGrid"></div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Save
-								changes</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
+			
 			<!-- empModal2 -->
-			<div class="modal" id="empModal2" tabindex="-1"
-				aria-labelledby="empModal2Label" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div>
-								<div id="empGrid2"></div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Save
-								changes</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-
-			<!-- matCodeModal2 -->
-			<div class="modal fade" id="matCodeModal2" tabindex="-1"
-				aria-labelledby="matCodeModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div>
-								<div id="matCodeGrid2"></div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Save
-								changes</button>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- cpCodeModal2 -->
-			<div class="modal" id="cpCodeModal2" tabindex="-1"
-				aria-labelledby="cpCodeModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div>
-								<div id="cpCodeGrid2"></div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Save
-								changes</button>
-						</div>
-					</div>
-				</div>
-			</div>
+         <div class="modal" id="empModal2" tabindex="-1"
+            aria-labelledby="empModal2Label" aria-hidden="true">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                     <div>
+                        <div id="empGrid2"></div>
+                     </div>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Close</button>
+                     <button type="button" class="btn btn-primary">Save
+                        changes</button>
+                  </div>
+               </div>
+            </div>
+         </div>
 			<script>
 
 
             matOrdList();            
-            company();
-            material();
+            showAll2();
+            matOrdModal();
             emp();
-
 
             const grid = new tui.Grid({
                el : document.getElementById('grid'),
@@ -317,7 +239,11 @@
                         { text: '미확인', value: '미확인' },
                       ]
                     }
-                  }
+                  },
+                  validation: {
+                 	 regExp:/진[가-힣]/ ,
+                 	 validatorFn: (value, row, columnName) => value !== '미확인'
+                     }
                /* ,
                  validation: {
                 	 regExp:/진[가-힣]/
@@ -325,67 +251,35 @@
                } ]
             });
             
-            function insert(){               
-               if($('#insert').css('display') == 'none'){
-                     $('#insert').show();
-                     insertGrid.refreshLayout();
-                  }else{
-                        $('#insert').hide();
-                  }
-               }; 
-               
-               function ordAdd(){
-                  var rowData = [{matOrdQty: "", matCode: "", matName: "", matOrdDate: "", cpCode: "", cpName : "" , matPrice: "", matOrdEmp: ""}]
-                   insertGrid.appendRow(rowData); 
-               }
-               
-            const insertGrid = new tui.Grid({
-               el : document.getElementById('insertGrid'),
-               rowHeaders : [ 'checkbox' ],
-               scrollX : false,
-               scrollY : false,
-               columns : [{
-                  header : '수량',
-                  name : 'matOrdQty',
-                  editor: 'text',
-                  validation: {
-                       dataType: 'text',
-                       required: true
-                        }
-                  }, {
-                  header : '품목 코드',
-                  name : 'matCode'
-               }, {
-                  header : '품목명',
-                  name : 'matName'
-               }, {
-                  header : '일자',
-                  name : 'matOrdDate',
-                    editor: 'datePicker',
-                    validation: {
-                       dataType: 'datePicker',
-                       required: true
-                        }
-                  }, {
-                  header : '거래처 코드',
-                  name : 'cpCode'
-               }, {
-                  header : '거래처명',
-                  name : 'cpName'
-               }, {
-                  header : '금액',
-                  name : 'matPrice',
-                  editor: 'text'  //값이...자동계산...되어야하는데...
-               }, {
-                   header : '담당자Id',
-                   name : 'matOrdEmp',
-                   align : 'center'
-                }, {
-                    header : '담당자',
-                    name : 'empName',
-                    align : 'center'
-                 }]
-            });
+               /* -------------
+		    	주문 번호 그리드
+		      ---------------*/
+		    var orderNoGrid = new tui.Grid({
+				el : document.getElementById('orderNoGrid'),
+				scrollX : false,
+				scrollY : false,
+				rowHeaders: ['checkbox'],
+				columns : [ {
+					header : '주문 번호',
+					name : 'orderNo',
+					align : 'center'
+				}, {
+					header : '상품명',
+					name : 'prtName',
+					align : 'center'
+				}, {
+					header : '주문 수량',
+					name : 'orderQty',
+					align : 'center'
+				}, {
+					header : '납기일자',
+					name : 'dday',
+					align : 'center',
+		            formatter({value}) {
+		            	return `${value.substring(0,10)}`;
+		            	}
+				} ]
+			});
             
             
             function matOrdList() {
@@ -401,34 +295,25 @@
                      console.log(reject);
                   }
                })
-            }
+            };
             
-            function company() {
-               $.ajax({
-                  url : '/company',
-                  dataType : "json",
-                  success : function(data) {
-                     cpCodeGrid.resetData(data);
-                     cpCodeGrid2.resetData(data);
-                  },
-                  error : function(reject) {
-                     console.log(reject);
-                  }
-               })
-            }
+			//주문 신청 목록 그리드
+			function showAll2() {
+			       fetch("getOrderList")
+			       .then(res=>res.json())
+			       .then(obj=>{
+			           console.log(obj);
+			           orderNoGrid.resetData(obj);
+			       })
+			};
             
-            function material() {
-               $.ajax({
-                  url : '/material',
-                  dataType : "json",
-                  success : function(data) {
-                     matCodeGrid.resetData(data);
-                     matCodeGrid2.resetData(data);
-                  },
-                  error : function(reject) {
-                     console.log(reject);
-                  }
-               })
+            function matOrdModal(){
+            	fetch("matOrdModal") 
+			       .then(res=>res.json())
+			       .then(obj=>{
+			           console.log(obj);
+			           matGrid.resetData(obj);
+			       })
             }
             
             function emp() {
@@ -444,6 +329,7 @@
                })
             };
             
+            
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
             
@@ -453,123 +339,33 @@
              ----------------*/
              
              document.addEventListener('shown.bs.modal', function() {
-                matCodeGrid2.refreshLayout();
-               }, '.modal');
-             
-             document.addEventListener('shown.bs.modal', function() {
-                cpCodeGrid2.refreshLayout();
+            	 empGrid2.refreshLayout();
                }, '.modal');
              
              /*------------
                // 해당하는 header의 모달창 띄우기
                ----------------*/
                grid.on('click',function(ev){
-                   /*if(!ev.rowKey) {
-                    return;
-                 } */
-                  if(ev.columnName =='matCode'){
-                     $('#matCodeModal').modal('show');
-                   matCodeGrid.refreshLayout();
-                  }else if (ev.columnName =='cpCode'){
-                           $('#cpCodeModal').modal('show');
-                         cpCodeGrid.refreshLayout();
-               }else if (ev.columnName == 'matOrdEmp'){
+                   
+            	   if (ev.columnName == 'matOrdEmp'){
                   $('#empModal2').modal('show');
                   empGrid2.refreshLayout();
                }
                });
                
                
-               insertGrid.on('click',function(ev){
+               orderNoGrid.on('click',function(ev){
                       /*if(!ev.rowKey) {
                        return;
                     } */
-                     if(ev.columnName =='matCode'){
-                        $('#matCodeModal').modal('show');
-                      matCodeGrid.refreshLayout();
-                     }else if (ev.columnName =='cpCode'){
-                              $('#cpCodeModal').modal('show');
-                            cpCodeGrid.refreshLayout();
-                  }else if (ev.columnName == 'matOrdEmp'){
-                     $('#empModal2').modal('show');
-                     empGrid2.refreshLayout();
+                     if(ev.columnName =='orderNo'){
+                        $('#matModal').modal('show');
+                      matGrid.refreshLayout();
                   }
                   });
              
              
-            /*------------
-            // matCode 모달 데이터 가져오기
-            ----------------*/
-               var matCodeGrid = new tui.Grid({
-               el : document.getElementById('matCodeGrid'),
-               bodyHeight : 200,
-               rowHeaders : [],
-               scrollX : false,
-               scrollY : true,
-               columns : [{
-                  header : '자재코드',
-                  name : 'matCode'
-               },{
-                  header : '자재명',
-                  name : 'matName'
-               },{
-                  header : '단가',
-                  name : 'matUnitPrc'
-               }]
-            });
-            
-            
-               var matCodeGrid2 = new tui.Grid({
-                  el : document.getElementById('matCodeGrid2'),
-                  bodyHeight : 200,
-                  rowHeaders : [],
-                  scrollX : false,
-                  scrollY : true,
-                  columns : [{
-                     header : '자재코드',
-                     name : 'matCode'
-                  },{
-                     header : '자재명',
-                     name : 'matName'
-                  }]
-               });
-            
-            
-            /*------------
-            // cpCode 모달 데이터 가져오기
-            ----------------*/
-            var cpCodeGrid = new tui.Grid({
-               el : document.getElementById('cpCodeGrid'),
-               bodyHeight : 200,
-               rowHeaders : [],
-               scrollX : false,
-               scrollY : true,
-               columns : [{
-                  header : '거래처 코드',
-                  name : 'cpCode'
-               },{
-                  header : '거래처명',
-                  name : 'cpName'
-               }]
-            
-            });
-            
-            var cpCodeGrid2 = new tui.Grid({
-               el : document.getElementById('cpCodeGrid2'),
-               bodyHeight : 200,
-               rowHeaders : [],
-               scrollX : false,
-               scrollY : true,
-               columns : [{
-                  header : '거래처 코드',
-                  name : 'cpCode'
-               },{
-                  header : '거래처명',
-                  name : 'cpName'
-               }]
-            
-            });
-            
+                  
             /*------------
             // empModal2 모달 데이터 가져오기
             ----------------*/
@@ -588,10 +384,13 @@
                }]
             });
             
+            
+            
+            
             /*------------
             // matCode 모달 데이터 가져오기
             ----------------*/
-             matCodeGrid2.on('click', ev => {
+/*              matCodeGrid2.on('click', ev => {
                let rowData = matCodeGrid2.getRow(ev.rowKey); // 거래처클릭한 그리드
                
                let mcVal = rowData['matCode'];
@@ -603,24 +402,11 @@
                $('#matCodeModal2').modal("hide");
                
             });
-            
-             cpCodeGrid2.on('click', ev => {
-                let rowData = cpCodeGrid2.getRow(ev.rowKey); // 거래처클릭한 그리드
-                
-                let ccVal = rowData['cpCode'];
-                let cnVal = rowData['cpName'];
-                
-                $('#cpCode1').val(ccVal);
-                $('#cpCode2').val(cnVal);
-                
-                $('#cpCodeModal2').modal("hide");
-                
-             });
-            
+             */
                /*------------
             // 거래처 모달에서 가져온 데이터 행에 넣어주기
             ----------------*/
-            matCodeGrid.on('click', ev => {
+/*             matCodeGrid.on('click', ev => {
                let val = matCodeGrid.getRow(ev.rowKey); // 거래처클릭한 그리드
               
                let val2 = insertGrid.getFocusedCell().rowKey; // 진짜 큰 그리드
@@ -631,66 +417,13 @@
                 insertGrid.setValue(val2, 'matName', val.matName);
          
                 $('#matCodeModal').modal("hide");
-            });
+            }); */
                
-            matCodeGrid.on('click', ev => {
-                let val = matCodeGrid.getRow(ev.rowKey); // 거래처클릭한 그리드
                
-                let val2 = grid.getFocusedCell().rowKey; // 진짜 큰 그리드
-                 
-                   console.log(matCodeGrid.getValue(ev.rowKey,ev.columnName));
-                 const amg = matCodeGrid.getValue(ev.rowKey,ev.columnName);
-                 grid.setValue(val2, 'matCode', val.matCode);
-                 grid.setValue(val2, 'matName', val.matName);
-          
-                 $('#matCodeModal').modal("hide");
-             })
-            
-            
-             /*------------
-            // 거래처 모달에서 가져온 데이터 행에 넣어주기
-            ----------------*/
-            cpCodeGrid.on('click', ev => {
-               let val = cpCodeGrid.getRow(ev.rowKey); // 거래처클릭한 그리드
-              
-               let val2 = insertGrid.getFocusedCell().rowKey; // 진짜 큰 그리드
-                
-                  console.log(cpCodeGrid.getValue(ev.rowKey,ev.columnName));
-                const cmg = cpCodeGrid.getValue(ev.rowKey,ev.columnName);
-                insertGrid.setValue(val2, 'cpCode', val.cpCode);
-                insertGrid.setValue(val2, 'cpName', val.cpName);
-         
-                $('#cpCodeModal').modal("hide");
-            });
-            
-            cpCodeGrid.on('click', ev => {
-                let val = cpCodeGrid.getRow(ev.rowKey); // 거래처클릭한 그리드
                
-                let val2 = grid.getFocusedCell().rowKey; // 진짜 큰 그리드
-                 
-                   console.log(cpCodeGrid.getValue(ev.rowKey,ev.columnName));
-                 const cmg = cpCodeGrid.getValue(ev.rowKey,ev.columnName);
-                 grid.setValue(val2, 'cpCode', val.cpCode);
-                 grid.setValue(val2, 'cpName', val.cpName);
-          
-                 $('#cpCodeModal').modal("hide");
-             })
-            
             /*------------
             // 거래처 모달에서 가져온 데이터 행에 넣어주기
             ----------------*/
-            empGrid2.on('click', ev => {
-               let val = empGrid2.getRow(ev.rowKey); // 거래처클릭한 그리드
-              
-               let val2 = insertGrid.getFocusedCell().rowKey; // 진짜 큰 그리드
-                
-                  console.log(empGrid2.getValue(ev.rowKey,ev.columnName));
-                const cmg = empGrid2.getValue(ev.rowKey,ev.columnName);
-                insertGrid.setValue(val2, 'matOrdEmp', val.empId);
-                insertGrid.setValue(val2, 'empName', val.empName);
-         
-                $('#empModal2').modal("hide");
-            });
             
             empGrid2.on('click', ev => {
                 let val = empGrid2.getRow(ev.rowKey); // 거래처클릭한 그리드

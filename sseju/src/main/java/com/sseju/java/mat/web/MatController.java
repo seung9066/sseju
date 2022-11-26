@@ -22,6 +22,8 @@ import com.sseju.java.employee.service.EmployeeService;
 import com.sseju.java.employee.service.EmployeeVO;
 import com.sseju.java.mat.service.MatService;
 import com.sseju.java.mat.service.MatVO;
+import com.sseju.java.workorder.serivce.WorkOrderService;
+import com.sseju.java.workorder.serivce.WorkOrderVO;
 
 @Controller
 public class MatController {
@@ -37,6 +39,9 @@ public class MatController {
 
 	@Autowired
 	EmployeeService empservice;
+	
+	@Autowired
+	WorkOrderService woService;
 
 //	@GetMapping("/matOrd")
 //	@ResponseBody
@@ -76,6 +81,11 @@ public class MatController {
 		return service.matordList();
 	}
 
+	@ResponseBody
+	@GetMapping("/matOrdModal")
+	public List<MatVO> matOrdModal() {
+		return service.matOrdModal();
+	}
 	// 발주 등록
 	@ResponseBody
 	@PostMapping("/insertMatbuy")
@@ -102,7 +112,8 @@ public class MatController {
 	// 발주 수정
 	@ResponseBody
 	@PostMapping("/updateMatbuy")
-	public int updateMatbuy(@RequestParam(value = "mon[]", required = false) List<String> mon,
+	public int updateMatbuy(
+			@RequestParam(value = "mon[]", required = false) List<String> mon,
 			@RequestParam(value = "Qty[]", required = false) List<String> Qty,
 			@RequestParam(value = "mc[]", required = false) List<String> mc,
 			@RequestParam(value = "cd[]", required = false) List<String> cd,
@@ -268,6 +279,7 @@ public class MatController {
 	public int insertLot(@RequestBody List<MatVO> vo) {
 		int a = 0;
 		
+//		vo.get(mat)
 		for (int i = 0; i<vo.size(); i++) {
 			System.out.println("돌고있나????");
 			System.out.println(vo.get(i));

@@ -137,4 +137,6 @@ public class MatVO {
 	@DateTimeFormat (pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date startDate; // 시작일
+	private String orderNo;
+
 }

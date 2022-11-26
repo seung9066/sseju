@@ -12,6 +12,8 @@ public interface MatService {
 	public List<MatVO> matordList();
 	//발주 단건 조회
 	public MatVO selectMatbuyInfo(MatVO MatVO);
+	//발주 자재량 조회
+	public List<MatVO> matOrdModal();
 	//발주 등록
 	public int insertMatbuy(MatVO MatVO);
 	//발주 수정
