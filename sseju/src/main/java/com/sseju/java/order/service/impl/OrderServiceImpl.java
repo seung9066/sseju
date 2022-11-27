@@ -26,17 +26,20 @@ public class OrderServiceImpl implements ORService {
 	}
 
 	@Override
-	public int insertOrder(ORVO Ovo){
+	public int insertOrder(ORVO Ovo) {
 		return OMapper.insertOrder(Ovo);
 	}
+
 	@Override
 	public List<ORVO> selectOrdeIng() {
 		return OMapper.selectOrdeIng();
 	}
+
 	@Override
 	public List<ORVO> selectPrtManager() {
 		return OMapper.selectPrtManager();
 	}
+
 	@Override
 	public int insertOrderAll(ORVO Ovo) {
 		return OMapper.insertOrderAll(Ovo);
@@ -64,10 +67,18 @@ public class OrderServiceImpl implements ORService {
 
 	@Override
 	public List<ORVO> select1() {
-		// TODO Auto-generated method stub
 		return OMapper.select1();
 	}
 
-	
+	@Override
+	public int updateOrderNy(ORVO vo) {
+		return OMapper.updateOrderNy(vo);
+	}
+
+	@Override
+	public List<ORVO> select2() {
+		// TODO Auto-generated method stub
+		return OMapper.select2();
+	}
 
 }

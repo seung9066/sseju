@@ -71,6 +71,11 @@ public class OrderController {
 	public List<ORVO> select1() {
 		return oService.select1();
 	}
+	@GetMapping("/select2")
+	@ResponseBody
+	public List<ORVO> select2() {
+		return oService.select2();
+	}
 
 	@GetMapping("/user/getOrderNo")
 	@ResponseBody
@@ -91,7 +96,11 @@ public class OrderController {
 
 		return a;
 	}
-
+	@PostMapping("updateOrderNy")
+	public int updateOrderNy(@RequestBody ORVO Ovo) {
+		
+		return oService.updateOrderNy(Ovo);
+	}
 //	@PostMapping("insertOrderAll")
 //	@ResponseBody
 //	public int insertOrderAll(@RequestBody List<ORVO> list) {

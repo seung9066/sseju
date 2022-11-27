@@ -29,15 +29,30 @@ body {
 			</div>
 			<hr>
 			<div id="aGrid">
-				<h3>LOT별</h3>
+				<h3>제품별</h3>
 			</div>
 			<br>
 			<hr>
 			<div id="pGrid">
 				<h3>제품별</h3>
-				<div style="text-align: right;">
-					<button type="submit" class="button" style="float: right;"
-						onclick="prOut()">출고하기</button>
+				<div class="modal" id="prModal" tabindex="-1"
+					aria-labelledby="prModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">출고상세리스트</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+							<div id="aGrid1"></div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="button" data-bs-dismiss="modal">닫기</button>
+								<button type="submit" class="button" onclick="updateOrderNy()">출고하기</button>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div id="AllA1" class="tui-pagination"></div>
@@ -58,13 +73,50 @@ body {
  			rowHeaders: ['checkbox'],
 			columns : [
 				{
-					header : '시리얼번호',
-					name : 'lotNo',
+					header : '제품명',
+					name : 'prtName',
 					align : 'center',
 					filter: 'select'
 				}, 
 				{
-					header : '주문량',
+					header : '총주문량',
+					name : 'orderQty',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '총출고량',
+					name : 'orderOutQty',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '재고량',
+					name : 'lotQty',
+					align : 'center',
+					filter: 'select'
+				}
+		          ]
+		});
+			const aGrid1 = new tui.Grid({
+			el : document.getElementById('aGrid1'),
+			pagination:true,
+			pageOptions: {
+			    useClient: true,
+			    perPage: 5
+			  },
+			scrollX : false,
+			scrollY : false,
+ 			rowHeaders: ['checkbox'],
+			columns : [
+				{
+					header : '제품명',
+					name : 'prtName',
+					align : 'center',
+					filter: 'select'
+				}, 
+				{
+					header : '총주문량',
 					name : 'orderQty',
 					align : 'center',
 					filter: 'select'
@@ -84,6 +136,16 @@ body {
 		          ]
 		});
 		function AllA() {
+	        url="selectPrtManager"
+			fetch(url) 
+	        .then(res=>res.json())
+	        .then(obj=>{
+	           console.log(obj);
+	           aGrid.resetData(obj);
+	        })
+		}	
+		function AllA1
+		() {
 	        url="selectPrtManager"
 			fetch(url) 
 	        .then(res=>res.json())
@@ -131,12 +193,7 @@ body {
 					align : 'center',
 					filter: 'select'
 				},
-				{
-					header : '진행상태',
-					name : 'del',
-					align : 'center',
-					filter: 'select'
-				}
+			
 		          ]
 		});
 
@@ -148,54 +205,18 @@ body {
 	           console.log(obj);
 	           pGrid.resetData(obj);
 	        })
-
-		}	 
-         function orInsert() {
-        	 let orderNo1 = '';
-        	 $.ajax({
-					url : "insertOrderAll",
-					method : "GET",
-					success : function(data) {
-						orderNo1 = data.orderNo;
-						a(orderNo1);
-					},
-					error : function(reject) {
-						console.log("bbbb")
-					}// suc
-				});
-        
-        	 }
-			 
-        	 function a(a) {
-        		 
-			 insert = pGrid.getData();
-			for (let i = 0; i < insert.length; i++) {
-				insert[i].orderNo = a;
-				insert[i].cpCode = $('#cpCode').val();
-				insert[i].dday = $('#dDay').val();
-				console.log(insert[i])
-        	 }
-			console.log(insert)
-			ininsert();
-		 }
-         
-         function prOut() {
-			 $.ajax({
-					url : "insertOrder",
-					method : "POST",
-					data: JSON.stringify(insert),
-					dataType : "JSON",
-					contentType: 'application/json; charset=utf-8',
-					beforeSend : function(xhr){
-						xhr.setRequestHeader(header, token);
-					},
-					success : function(list) {
-						if (list > 0) {
-							pGrid.clear();								
-						}
-					}// suc
-				}); //ajax 
-	       }
+		}	
+		 document.addEventListener('shown.bs.modal', function() {
+			 pGrid.refreshLayout();
+              }, '.modal');
+		  
+		 pGrid.on('click',function(ev){
+           
+            if(ev.columnName =='prtCode'){
+               $('#prModal').modal('show');
+               pGrid.refreshLayout();
+         }
+         });
     		</script>
 		</main>
 	</article>

@@ -25,19 +25,64 @@
 				<h2>제품 주문 상세</h2>
 			</div>
 			<div>
-			<h3>주문승인전목록</h3>
+				<h3>주문승인전목록</h3>
+				<!-- matModal -->
+				<div class="modal" id="orModal" tabindex="-1"
+					aria-labelledby="orModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">주문승인상세정보</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div id="Agrid1"></div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="button" data-bs-dismiss="modal">닫기</button>
+								<button type="submit" class="button" onclick="updateOrderNy()">승인하기</button>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div id="grid1"></div>
 			</div>
 			<div>
-			<h2>주문목승인후록</h2>
-			<div id="grid123"></div>
+				<h2>주문목승인후목록</h2>
+				<div id="grid123"></div>
+					<!-- empModal2 -->
+         <div class="modal" id="orModal2" tabindex="-1"
+            aria-labelledby="orModal2Label" aria-hidden="true">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="exampleModalLabel">승인된주문목록</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                     <div>
+                        <div id="grid123"></div>
+                     </div>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="button"
+                        data-bs-dismiss="modal">Close</button>
+                  </div>
+               </div>
+            </div>
+         </div>
 			</div>
+
+
 			<script>
 			
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
 
 			alls();
+			alls1();
 			const grid1 = new tui.Grid({
 			el : document.getElementById('grid1'),
 			pagination:true,
@@ -80,6 +125,54 @@
 				},
 		          ]
 		});
+			const Agrid1 = new tui.Grid({
+			el : document.getElementById('Agrid1'),
+			pagination:true,
+			pageOptions: {
+			    useClient: true,
+			    perPage: 5
+			  },
+			scrollX : false,
+			scrollY : false,
+			columns : [
+				{
+					header : '제품명',
+					name : 'prtName',
+					align : 'center',
+					filter: 'select'
+				}, 
+				{
+					header : '주문량',
+					name : 'orderQty',
+					align : 'center',
+					filter: 'select'
+				},
+				
+				{
+					header : '금액',
+					name : 'orderPrice',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '총금액',
+					name : 'orderPrice',
+					align : 'center',
+					filter: 'select'
+				},
+		          ]
+		});
+			  document.addEventListener('shown.bs.modal', function() {
+				  grid1.refreshLayout();
+	               }, '.modal');
+			  
+			  grid1.on('click',function(ev){
+                 if(ev.columnName =='orderNo'){
+                    $('#orModal').modal('show');
+                    Agrid1.refreshLayout();
+              }
+              });
+		
 		function alls() {
 	        url="select"
 			fetch(url) 
@@ -89,7 +182,137 @@
 	           grid1.resetData(obj);
 	        })
 		}
-		
+		function alls1() {
+	        url="select2"
+			fetch(url) 
+	        .then(res=>res.json())
+	        .then(obj=>{
+	           console.log(obj);
+	           Agrid1.resetData(obj);
+	        })
+		}
+	   
+		</script>
+			<script>
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			 var header = $("meta[name='_csrf_header']").attr("content");
+
+			 alls1();
+			const grid123 = new tui.Grid({
+			el : document.getElementById('grid123'),
+			pagination:true,
+			pageOptions: {
+			    useClient: true,
+			    perPage: 5
+			  },
+			scrollX : false,
+			scrollY : false,
+			columns : [
+				{
+					header : '주문번호',
+					name : 'orderNo',
+					align : 'center',
+					filter: 'select'
+				}, 
+				{
+					header : '제품코드',
+					name : 'prtCode',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '주문일자',
+					name : 'orderDate',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '납기일자',
+					name : 'dday',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '제품명',
+					name : 'prtName',
+					align : 'center',
+					filter: 'select'
+				},
+		          ]
+		});
+			const Agrid123 = new tui.Grid({
+			el : document.getElementById('Agrid123'),
+			pagination:true,
+			pageOptions: {
+			    useClient: true,
+			    perPage: 5
+			  },
+			scrollX : false,
+			scrollY : false,
+			columns : [
+				{
+					header : '주문번호',
+					name : 'orderNo',
+					align : 'center',
+					filter: 'select'
+				}, 
+				{
+					header : '제품코드',
+					name : 'prtCode',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '주문일자',
+					name : 'orderDate',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '납기일자',
+					name : 'dday',
+					align : 'center',
+					filter: 'select'
+				},
+				{
+					header : '제품명',
+					name : 'prtName',
+					align : 'center',
+					filter: 'select'
+				},
+		          ]
+		});
+		function alls1() {
+	        url="select1"
+			fetch(url) 
+	        .then(res=>res.json())
+	        .then(obj=>{
+	           console.log(obj);
+	           grid123.resetData(obj);
+	        })
+		}
+		function alls1() {
+	        url="select1"
+			fetch(url) 
+	        .then(res=>res.json())
+	        .then(obj=>{
+	           console.log(obj);
+	           grid123.resetData(obj);
+	        })
+		}
+		  document.addEventListener('shown.bs.modal', function() {
+			  grid123.refreshLayout();
+               }, '.modal');
+		  
+		  grid123.on('click',function(ev){
+            
+             if(ev.columnName =='orderNo'){
+                $('#orModal2').modal('show');
+                grid123.refreshLayout();
+          }
+          });
+	
 		</script>
 
 		</main>
