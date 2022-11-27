@@ -42,6 +42,8 @@ td {
 						<td><input type="text" id="prsCode" name="prsCode" value="PRS_"></td>
 						<th>공정명</th>
 						<td><input type="text" id="prsName" name="prsName"></td>
+						<th>공정순서</th>
+						<td><input type="number" id="runNo" name="runNo" min="1"></td>
 					</tr>
 					<tr>
 						<th>관련 설비</th>
@@ -94,7 +96,13 @@ td {
 			<div id="whGrid"></div>
 
 			<script type="text/javascript">
-	
+				
+			$('#eqmCode').change(function(){
+				let codeA = $('#eqmCode').val()
+				$('#prsCode').val('PRS_' + codeA.substr(4));
+				$('#prsCode').attr('readonly', true);
+			});
+			
 				showPr();
 				showWh();
 

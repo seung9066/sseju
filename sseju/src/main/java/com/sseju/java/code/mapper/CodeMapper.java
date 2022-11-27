@@ -91,4 +91,20 @@ public interface CodeMapper {
 	public int insertMatOut(CodeVO vo);
 	public int useLotQty(CodeVO vo);
 	public CodeVO getMatPrs(CodeVO vo);
+	public CodeVO matOutNo();
+	public CodeVO prsNo();
+	public int insertProcessRun(CodeVO vo);
+	public CodeVO prfNo();
+	public int insertProcessInf(CodeVO vo);
+	public CodeVO getError(CodeVO vo);
+	public CodeVO processErrNo();
+	public int insertProcessErr(CodeVO vo);
+	public int upCountProcessInf(CodeVO vo);
+	public int upCountProcessErr(CodeVO vo);
+	public int upCountPIErr(CodeVO vo);
+	public int endProcessInf(CodeVO vo);
+	public int endProcessRun(CodeVO vo);
+	public int insertLot(CodeVO vo);
+	public List<CodeVO> WHListA();
+	public int updateEqm(CodeVO vo);
 }

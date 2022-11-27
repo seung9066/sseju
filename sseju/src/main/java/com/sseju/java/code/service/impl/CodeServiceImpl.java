@@ -394,4 +394,100 @@ public class CodeServiceImpl implements CodeService {
 		return mapper.getMatPrs(vo);
 	}
 
+	@Override
+	public CodeVO matOutNo() {
+		// TODO Auto-generated method stub
+		return mapper.matOutNo();
+	}
+
+	@Override
+	public CodeVO prsNo() {
+		// TODO Auto-generated method stub
+		return mapper.prsNo();
+	}
+
+	@Override
+	public int insertProcessRun(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.insertProcessRun(vo);
+	}
+
+	@Override
+	public CodeVO prfNo() {
+		// TODO Auto-generated method stub
+		return mapper.prfNo();
+	}
+
+	@Override
+	public int insertProcessInf(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.insertProcessInf(vo);
+	}
+
+	@Override
+	public CodeVO getError(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.getError(vo);
+	}
+
+	@Override
+	public CodeVO processErrNo() {
+		// TODO Auto-generated method stub
+		return mapper.processErrNo();
+	}
+
+	@Override
+	public int insertProcessErr(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.insertProcessErr(vo);
+	}
+
+	@Override
+	public int upCountProcessInf(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.upCountProcessInf(vo);
+	}
+
+	@Override
+	public int upCountProcessErr(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.upCountProcessErr(vo);
+	}
+
+	@Override
+	public int upCountPIErr(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.upCountPIErr(vo);
+	}
+
+	@Override
+	public int endProcessInf(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.endProcessInf(vo);
+	}
+
+	@Override
+	public int endProcessRun(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.endProcessRun(vo);
+	}
+
+	@Override
+	public int insertLot(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.insertLot(vo);
+	}
+
+	@Override
+	public List<CodeVO> WHListA() {
+		// TODO Auto-generated method stub
+		return mapper.WHListA();
+	}
+
+	@Override
+	public int updateEqm(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.updateEqm(vo);
+	}
+
 }

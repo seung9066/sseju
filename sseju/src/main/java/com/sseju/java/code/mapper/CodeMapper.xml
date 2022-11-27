@@ -134,8 +134,10 @@
 	</select>
 
 	<select id="prList" resultType="CodeVO">
-		SELECT p.prs_code, p.prs_name, p.run_no
-		p.prs_detail, p.eqm_code, e.eqm_name FROM process p, eqm e WHERE
+		SELECT p.prs_code, p.prs_name,
+		p.run_no,
+		p.prs_detail, p.eqm_code, e.eqm_name FROM process p, eqm e
+		WHERE
 		p.eqm_code = e.eqm_code ORDER BY p.run_no
 	</select>
 
@@ -147,7 +149,8 @@
 			process
 		</selectKey>
 		INSERT INTO process VALUES
-		(#{prsCode}, #{prsName}, #{prsDetail}, #{eqmCode}, #{runNo})
+		(#{prsCode}, #{prsName}, #{prsDetail},
+		#{eqmCode}, #{runNo})
 	</insert>
 
 	<delete id="deletePrs" parameterType="CodeVO">
@@ -209,16 +212,6 @@
 		#{errCode}
 	</update>
 
-	<select id="workerList" resultType="CodeVO">
-		SELECT p.prs_no, pp.prs_name,
-		p.prs_code, p.pre_no, p.prs_manager,
-		p.prs_date, p.mat_out_no,
-		p.prt_qty, e.emp_id, e.emp_name FROM
-		process_run p, employee e, process
-		pp WHERE e.emp_id = p.prs_manager
-		AND p.prs_code = pp.prs_code
-	</select>
-
 	<delete id="deleteEqm" parameterType="CodeVO">
 		DELETE FROM eqm WHERE
 		eqm_code = #{eqmCode}
@@ -227,15 +220,17 @@
 	<select id="workerAList" parameterType="CodeVO"
 		resultType="CodeVO">
 		SELECT e.emp_id, e.emp_name, e.emp_dept, e.emp_rank FROM
-		employee e, emp_mng ee WHERE emp_rank = '사원' AND emp_dept = '생산부' AND
-		NOT ee.prs_no = #{prsNo} AND e.emp_id = ee.emp_id
+		employee e, emp_mng ee WHERE e.emp_id = ee.emp_id AND emp_rank = '사원'
+		AND emp_dept = '생산부' AND
+		NOT ee.pre_no = #{preNo} AND e.emp_id =
+		ee.emp_id
 	</select>
 
 	<select id="workerBList" parameterType="CodeVO"
 		resultType="CodeVO">
-		SELECT e.emp_name, e.emp_id, p.prs_no, e.emp_dept,
-		e.emp_rank FROM employee e, emp_mng ee, process_run p WHERE e.emp_id =
-		ee.emp_id AND ee.prs_no = p.prs_no AND ee.prs_no = #{prsNo}
+		SELECT e.emp_name, e.emp_id, p.pre_no, e.emp_dept,
+		e.emp_rank FROM employee e, emp_mng ee, produce p WHERE e.emp_id =
+		ee.emp_id AND ee.pre_no = p.pre_no AND ee.pre_no = #{preNo}
 	</select>
 
 	<insert id="insertEmpMng" parameterType="CodeVO">
@@ -247,12 +242,12 @@
 	</insert>
 
 	<update id="insertWM" parameterType="CodeVO">
-		UPDATE emp_mng SET prs_no =
-		#{prsNo} WHERE emp_id = #{empId}
+		UPDATE emp_mng SET pre_no =
+		#{preNo} WHERE emp_id = #{empId}
 	</update>
 
 	<update id="deleteWM" parameterType="CodeVO">
-		UPDATE emp_mng SET prs_no =
+		UPDATE emp_mng SET pre_no =
 		'0' WHERE emp_id = #{empId}
 	</update>
 
@@ -350,17 +345,15 @@
 
 	<select id="selectPrsName" resultType="CodeVO">
 		SELECT * FROM process
+		ORDER BY run_no
 	</select>
 
-	<select id="selectPrsRunNow" resultType="CodeVO">	
-		<![CDATA[
-		SELECT pr.prs_no, pr.prs_code FROM process_run pr, process_inf pi
-		WHERE pr.prs_no = pi.prs_no AND to_char(pi.prs_sp_hour, 'rrrr/MM/dd
-		HH24:MM:SS') > (SELECT to_char(current_timestamp, 'rrrr/MM/dd
-		HH24:MM:SS') FROM dual) AND to_char(pi.prs_st_hour, 'rrrr/MM/dd
-		HH24:MM:SS') < (SELECT to_char(current_timestamp, 'rrrr/MM/dd
-		HH24:MM:SS') FROM dual)
-]]>
+	<select id="selectPrsRunNow" resultType="CodeVO">
+		SELECT pr.prs_no,
+		pr.prs_code FROM process_run pr, process_inf pi, process p
+		WHERE
+		pr.prs_no = pi.prs_no AND p.prs_code = pr.prs_code AND pi.prs_sp_hour
+		is null AND pi.prs_st_hour is not null ORDER BY p.run_no
 	</select>
 
 	<select id="todayWL" resultType="CodeVO">
@@ -384,14 +377,16 @@
 	<select id="todayWLinf" parameterType="CodeVO"
 		resultType="CodeVO">
 		SELECT ods.order_no, ods.d_day, e.emp_name, pe.ins_qty,
-		pe.pre_manager, pe.prt_code
+		pe.pre_manager, pe.prt_code, pe.pre_no
 		FROM orders ods
 		JOIN produce pe
 		ON
 		ods.order_no = pe.order_no
 		JOIN product pt
-		ON pt.prt_code = pe.prt_code
-		JOIN employee e ON e.emp_id = pe.pre_manager WHERE pe.pre_no =
+		ON pt.prt_code =
+		pe.prt_code
+		JOIN employee e ON e.emp_id = pe.pre_manager WHERE
+		pe.pre_no =
 		#{preNo}
 	</select>
 
@@ -402,18 +397,6 @@
 		WHERE p.prt_code = oi.prt_code
 		GROUP BY p.prt_name
 	</select>
-
-	<insert id="TdinsertPR" parameterType="CodeVO">
-		<selectKey keyProperty="prsNo" resultType="String"
-			order="BEFORE">
-			SELECT 'PRS'||to_char(sysdate,
-			'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(prt_code, -3)),0)+1,3,0)
-			FROM
-			process_run
-		</selectKey>
-		INSERT INTO process_run VALUES(#{prsNo}, #{prsCode}, #{preNo},
-		#{prsManager}, sysdate, #{matOutNo}, #{prtQty})
-	</insert>
 
 	<select id="getBomListC" parameterType="CodeVO"
 		resultType="CodeVO">
@@ -426,24 +409,120 @@
 		#{lotQty} AND rownum = 1 ORDER BY lot_date
 	</select>
 
+	<select id="matOutNo" resultType="CodeVO">
+		SELECT 'MO'||to_char(sysdate,
+		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0) AS mat_out_no
+		FROM
+		mat_out
+	</select>
+
 	<insert id="insertMatOut" parameterType="CodeVO">
-		<selectKey keyProperty="matOutNo" resultType="String"
-			order="BEFORE">
-			SELECT 'MO'||to_char(sysdate,
-			'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0)
-			FROM
-			mat_out
-		</selectKey>
-		INSERT INTO mat_out VALUES(#{matOutNo}, sysdate, #{matOutQty},
+		INSERT INTO mat_out
+		VALUES(#{matOutNo}, sysdate, #{matOutQty},
 		#{lotNo})
 	</insert>
-	
+
 	<update id="useLotQty" parameterType="CodeVO">
-		UPDATE lot SET lot_qty = 0, out_from = #{prsCode} WHERE lot_no = #{lotNo}
+		UPDATE lot SET lot_qty = 0,
+		out_from = #{prsCode} WHERE lot_no = #{lotNo}
 	</update>
-	
-	<select id="getMatPrs" parameterType="CodeVO" resultType="CodeVO">
-		SELECT prs_code FROM material WHERE mat_code = #{matCode}
+
+	<select id="getMatPrs" parameterType="CodeVO"
+		resultType="CodeVO">
+		SELECT prs_code FROM material WHERE mat_code = #{mpCode}
 	</select>
-	
+
+	<insert id="insertprr" parameterType="CodeVO">
+		<selectKey keyProperty="prsNo" resultType="Integer"
+			order="BEFORE">
+			SELECT NVL(MAX(no),0) + 1 FROM emp_mng
+		</selectKey>
+		INSERT INTO process_run VALUES()
+	</insert>
+
+	<select id="prsNo" resultType="CodeVO">
+		SELECT 'PRS'||to_char(sysdate,
+		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0) AS prs_no
+		FROM
+		process_run
+	</select>
+
+	<insert id="insertProcessRun" parameterType="CodeVO">
+		INSERT INTO
+		process_run VALUES(#{prsNo}, #{prsCode}, #{preNo}, #{prsManager},
+		sysdate, #{matOutNo}, '')
+	</insert>
+
+	<select id="prfNo" resultType="CodeVO">
+		SELECT 'PRF'||to_char(sysdate,
+		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0) AS prf_no
+		FROM
+		process_inf
+	</select>
+
+	<insert id="insertProcessInf" parameterType="CodeVO">
+		INSERT INTO
+		process_inf VALUES(#{prsPfNo}, #{prsNo}, '', '', sysdate, '')
+	</insert>
+
+	<select id="getError" parameterType="CodeVO" resultType="CodeVO">
+		SELECT *
+		FROM error WHERE code = #{prsCode}
+	</select>
+
+	<select id="processErrNo" resultType="CodeVO">
+		SELECT
+		(NVL(MAX(prs_err_no),0)+1)
+		FROM
+		process_err
+	</select>
+
+	<insert id="insertProcessErr" parameterType="CodeVO">
+		INSERT INTO
+		process_err VALUES(#{prsErrNo}, '', #{prsPfNo}, #{errCode})
+	</insert>
+
+	<update id="upCountProcessInf" parameterType="CodeVO">
+		UPDATE process_inf
+		SET prs_out_put = #{prsOutPut} WHERE prs_pf_no = #{prsPfNo}
+	</update>
+
+	<update id="upCountProcessErr" parameterType="CodeVO">
+		UPDATE process_err
+		SET prs_err_qty = #{prsErrQty} WHERE prs_err_no = #{prsErrNo}
+	</update>
+
+	<update id="upCountPIErr" parameterType="CodeVO">
+		UPDATE process_inf SET
+		prs_err_qty = #{prsErrQty} WHERE prs_pf_no = #{prsPfNo}
+	</update>
+
+	<update id="endProcessInf" parameterType="CodeVO">
+		UPDATE process_inf SET
+		prs_sp_hour = sysdate WHERE prs_pf_no = #{prsPfNo}
+	</update>
+
+	<update id="endProcessRun" parameterType="CodeVO">
+		UPDATE process_run SET
+		prt_qty = #{prtQty} WHERE prs_no = #{prsNo}
+	</update>
+
+	<insert id="insertLot" parameterType="CodeVO">
+		<selectKey keyProperty="lotNo" resultType="String"
+			order="BEFORE">
+			SELECT LPAD(NVL(MAX(SUBSTR(lot_no, -3)),0)+1,3,0) FROM lot
+		</selectKey>
+		INSERT INTO lot VALUES(#{lotNo}, sysdate, #{mpCode}, #{outFrom}, '',
+		#{lotQty}, #{whCode}, '')
+	</insert>
+
+	<select id="WHListA" resultType="CodeVO">
+		SELECT * FROM warehouse
+	</select>
+
+	<update id="updateEqm" parameterType="CodeVO">
+		UPDATE eqm SET eqm_yn =
+		CASE WHEN eqm_yn = 'Y' THAN 'N' WHEN eqm_yn = 'N' THAN 'Y' WHERE
+		eqm_code = #{eqmCode}
+	</update>
 </mapper>
