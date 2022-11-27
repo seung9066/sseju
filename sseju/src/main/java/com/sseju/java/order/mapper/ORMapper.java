@@ -15,6 +15,7 @@ public interface ORMapper {
 	public List<ORVO> selectOrder();
 	public List<ORVO> select();
 	public List<ORVO> select1();
+	public List<ORVO> select2();
 
 	// 단건
 	public ORVO selectOrderInfo(ORVO Ovo);
@@ -22,6 +23,7 @@ public interface ORMapper {
 	public int insertOrder(ORVO Ovo);
 	public int insertOrderAll(ORVO Ovo);
 	public int insertOrderInfo(ORVO vo);
+	public int updateOrderNy(ORVO vo);
 	public ORVO getOrderNo();
 
 }
