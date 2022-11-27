@@ -30,12 +30,17 @@ public class PrePerController {
 		return "/admin/produce/prtPer"; 
 	}
 //	ㄴ페이지에 지시 목록 가져오기
-	@GetMapping("getPrtPerList")
+	@GetMapping("/getPrtPerList")
 	@ResponseBody
 	public List<PrtPerVO> getPrtPerList(){
 		return ppService.getPrtPerList();
 	}
-	
+	//ㄴ행클릭시 불량코드, 불량명, 상세조회 가져오기
+	@GetMapping("/getErrList")
+	@ResponseBody
+	public List<PrtPerVO> getErrList(){
+		return ppService.getErrList();
+	}
 	//생산 실적 삭제 D
 //	@PostMapping("/deletePrtPer")
 //	public String deletePrtPer() {

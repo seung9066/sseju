@@ -20,6 +20,11 @@
 			<div id="whGrid"></div>
 
 			<script type="text/javascript">
+			showWhGrid();
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
 				var whGrid = new tui.Grid({
 					el : document.getElementById('whGrid'),
 					scrollX : false,
@@ -67,6 +72,15 @@
 						align : 'center'
 					} ]
 				});
+				/* 작업 이력 조회 그리드에 데이터 가져오기 */
+				function showWhGrid(){
+					fetch("workHistoryGrid")
+					.then(res=>res.json())
+					.then(obj=>{
+						console.log(obj);
+						whGrid.resetData(obj);
+					})
+				}
 			</script>
 		</main>
 	</article>
