@@ -22,7 +22,8 @@
 	<article layout:fragment="content">
 		<main id="main" class="main">
 			<h4>생산 실적</h4>
-<!-- 					<table style="margin-bottom:10px">
+<!--date picker 아직 기능구현 안했고 사용유무 판단후 만들거나 지울예정
+ 					<table style="margin-bottom:10px">
 						<tr>
 							<td>
 								<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
@@ -109,7 +110,25 @@
 				           console.log(obj);
 				           prtperGrid.resetData(obj);
 				       })
-			}
+				}
+				/* prtPerGrid 행 클릭 시 prrErrGrid그리드에 데이터를 가져오는 클릭이벤트 */
+				prtperGrid.on('click', (event)=>{
+					let preNo = ev.nativeEvent.target.innerText;
+					console.log(preNo);
+					$.ajax({
+						url:'getErrList',
+						data : {preNo:preNo},
+						dataType:"json",
+						async:false,
+						success:function(data){
+							prrErrGrid.resetData(data);
+						},
+						error:function(reject){
+							console.log(reject);
+						}
+					})
+				})
+				
 				/*------------------------
 				생산 실적 그리드 행 클릭 시, 불량갯수와 불량사유를 보여주는 그리드
 				--------------------------*/

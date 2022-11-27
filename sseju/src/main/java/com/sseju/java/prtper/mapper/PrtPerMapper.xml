@@ -28,7 +28,8 @@
 		ORDER BY pe.pre_no DESC
 	</select>
 	
-	<!-- 실적 한 행 클릭 시 아래 그리드에 불량코드, 불량명 상세조회 띄워주기 -->
+	<!-- 실적 한 행 클릭 시 아래 그리드에 불량코드, 불량명 상세조회 띄워주기
+	11/28 학원에서 쿼리문 수정 필요함 -->
 	<select id="getErrList" resultType="ppVO">
 		SELECT er.err_code, er.err_name, prer.prs_err_qty
 		FROM error er JOIN process_err prer
