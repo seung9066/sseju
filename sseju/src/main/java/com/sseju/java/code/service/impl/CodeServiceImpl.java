@@ -472,4 +472,22 @@ public class CodeServiceImpl implements CodeService {
 		return mapper.endProcessRun(vo);
 	}
 
+	@Override
+	public int insertLot(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.insertLot(vo);
+	}
+
+	@Override
+	public List<CodeVO> WHListA() {
+		// TODO Auto-generated method stub
+		return mapper.WHListA();
+	}
+
+	@Override
+	public int updateEqm(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.updateEqm(vo);
+	}
+
 }

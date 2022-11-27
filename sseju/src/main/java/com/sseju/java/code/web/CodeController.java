@@ -40,8 +40,6 @@ class produceThread implements Runnable {
 
 		// 작업시작 empName, prtCode, preNo, insQty, orderNo, dDay, preManager
 		vo = type.get(0);
-		System.out.println(vo);
-
 		// 주문량
 		int prdOrder1 = vo.getInsQty();
 		// 주문량 - 자재량
@@ -52,6 +50,8 @@ class produceThread implements Runnable {
 		// 주문제품 bom 리스트
 		List<CodeVO> bomList = new ArrayList<>();
 		bomList = service.getBomListC(vo);
+		System.out.println(bomList);
+		System.out.println("bbbbb");
 		// lot 찾기
 		CodeVO voMat = new CodeVO();
 		// lot 정보 담기용
@@ -63,7 +63,9 @@ class produceThread implements Runnable {
 
 		// lot테이블, 자재출고 테이블
 		for (int i = 0; i < bomList.size(); i++) {
+			System.out.println("lot수량 줄이기");
 			voMat.setMpCode(bomList.get(i).getMatCode());
+			System.out.println(voMat);
 			voMat.setLotQty(prdOrder);
 			voLot = service.getLotMat(voMat);
 
@@ -86,10 +88,6 @@ class produceThread implements Runnable {
 			service.useLotQty(voMout);
 		}
 
-		// 공정 종류 담는 list
-		List<CodeVO> prsList = new ArrayList<>();
-		prsList = service.selectPrsName();
-
 		// process_run 테이블
 		CodeVO voPR = new CodeVO();
 		// process_inf 테이블
@@ -97,8 +95,15 @@ class produceThread implements Runnable {
 		// process_err 테이블
 		CodeVO voPE = new CodeVO();
 
+		// 공정 종류 담는 list
+		List<CodeVO> prsList = new ArrayList<>();
+		prsList = service.selectPrsName();
+
+		CodeVO voEqm = new CodeVO();
+
 		// process_run, process_inf, process_err 테이블
 		for (int i = 0; i < prsList.size(); i++) {
+			System.out.println("process_run");
 			// process_run insert
 			String prsNo = service.prsNo().getPrsNo();
 			voPR.setPrsNo(prsNo);
@@ -122,44 +127,68 @@ class produceThread implements Runnable {
 				service.insertProcessErr(voPE);
 			}
 
+			// 완제품 lot에 insert
+			CodeVO voLotI = new CodeVO();
+			// 창고 리스트용
+			List<CodeVO> whList = new ArrayList<>();
+			whList = service.WHListA();
+
+			// 공정별 eqm코드 담기
+			voEqm.setEqmCode(prsList.get(i).getEqmCode());
+
 			// update
 			int j = 0;
 			int k = 0;
 			// 10초후 완료 될 초당 생산량
 			int prdOut = (prdOrder / 10);
-			// 주문량 2000
-			if (prdOrderA == 2200) {
+			System.out.println("생산시작");
+			// 주문량 3000
+			if (prdOrderA == 3300) {
+				
+				prdOut = prdOut * 10 / 3;
+
 				if (i == prsList.size() - 1) {
+
+					service.updateEqm(voEqm);
 
 					// 완제품 공정
 					while (j < prdOrder) {
+						
 						j += prdOut;
 
 						k += prdOut * 1 / 100;
 
 						if (j + (prdOrder % 10) == prdOrder) {
 							j += prdOrder % 10;
-							if (prdOrder % 100 > 10) {
-								String a = Integer.toString(prdOrder % 100);
-								k += Integer.parseInt(a.substring(0,1))+1;
-							} else {
-								k += prdOrder % 100;
-							}
+							k += 2;
 						}
-						
+
 						voPE.setPrsErrQty(k);
 						service.upCountProcessErr(voPE);
 
 						voPI.setPrsErrQty(k);
 						service.upCountPIErr(voPI);
-						
-						
+
 						if (j + (prdOrder % 10) == prdOrder) {
 							service.endProcessInf(voPI);
+							service.updateEqm(voEqm);
 						}
 
 						voPR.setPrtQty(j - (k * (prsList.size() / 2)));
 						service.endProcessRun(voPR);
+
+						voLotI.setMpCode(vo.getPrtCode());
+						voLotI.setOutFrom(vo.getOrderNo());
+						voLotI.setLotQty(j - (k * (prsList.size() / 2)));
+
+						int wh = whList.size();
+						int whCode = (int) (Math.random() * wh + 1);
+						for (int q = 1; q <= wh; q++) {
+							if (q == whCode) {
+								voLotI.setWhCode(whList.get(q).getWhCode());
+							}
+						}
+						service.insertLot(voLotI);
 
 						try {
 							Thread.sleep(1000);
@@ -170,7 +199,9 @@ class produceThread implements Runnable {
 					}
 
 				} else {
-
+					
+					service.updateEqm(voEqm);
+					
 					// 완제품 이전 공정
 					while (j < prdOrder) {
 						j += prdOut;
@@ -180,12 +211,7 @@ class produceThread implements Runnable {
 							k += prdOut * 1 / 100;
 							if (j + (prdOrder % 10) == prdOrder) {
 								j += prdOrder % 10;
-								if (prdOrder % 100 > 10) {
-									String a = Integer.toString(prdOrder % 100);
-									k += Integer.parseInt(a.substring(0,1))+1;
-								} else {
-									k += prdOrder % 100;
-								}
+								k += 2;
 							}
 							voPE.setPrsErrQty(k);
 							service.upCountProcessErr(voPE);
@@ -199,6 +225,7 @@ class produceThread implements Runnable {
 
 						if (j + (prdOrder % 10) == prdOrder) {
 							service.endProcessInf(voPI);
+							service.updateEqm(voEqm);
 						}
 
 						try {
@@ -208,10 +235,12 @@ class produceThread implements Runnable {
 						}
 					}
 				}
-				
+
 			} else {
 				// 주문량 2200 이외
 				if (i == prsList.size() - 1) {
+
+					service.updateEqm(voEqm);
 
 					// 완제품 공정
 					while (j < prdOrder) {
@@ -223,26 +252,39 @@ class produceThread implements Runnable {
 							j += prdOrder % 10;
 							if (prdOrder % 100 > 10) {
 								String a = Integer.toString(prdOrder % 100);
-								k += Integer.parseInt(a.substring(0,1))+1;
+								k += Integer.parseInt(a.substring(0, 1)) + 1;
 							} else {
 								k += prdOrder % 100;
 							}
 						}
-						
+
 						voPE.setPrsErrQty(k);
 						service.upCountProcessErr(voPE);
 
 						voPI.setPrsErrQty(k);
 						service.upCountPIErr(voPI);
-						
-						
+
 						if (j + (prdOrder % 10) == prdOrder) {
 							service.endProcessInf(voPI);
+							service.updateEqm(voEqm);
 						}
 
 						voPR.setPrtQty(j - (k * (prsList.size() / 2)));
 						service.endProcessRun(voPR);
-						
+
+						voLotI.setMpCode(vo.getPrtCode());
+						voLotI.setOutFrom(vo.getOrderNo());
+						voLotI.setLotQty(j - (k * (prsList.size() / 2)));
+
+						int wh = whList.size();
+						int whCode = (int) (Math.random() * wh + 1);
+						for (int q = 1; q <= wh; q++) {
+							if (q == whCode) {
+								voLotI.setWhCode(whList.get(q).getWhCode());
+							}
+						}
+						service.insertLot(voLotI);
+
 						try {
 							Thread.sleep(1000);
 						} catch (Exception e) {
@@ -252,6 +294,8 @@ class produceThread implements Runnable {
 					}
 
 				} else {
+					
+					service.updateEqm(voEqm);
 
 					// 완제품 이전 공정
 					while (j < prdOrder) {
@@ -264,7 +308,7 @@ class produceThread implements Runnable {
 								j += prdOrder % 10;
 								if (prdOrder % 100 > 10) {
 									String a = Integer.toString(prdOrder % 100);
-									k += Integer.parseInt(a.substring(0,1))+1;
+									k += Integer.parseInt(a.substring(0, 1)) + 1;
 								} else {
 									k += prdOrder % 100;
 								}
@@ -281,6 +325,7 @@ class produceThread implements Runnable {
 
 						if (j + (prdOrder % 10) == prdOrder) {
 							service.endProcessInf(voPI);
+							service.updateEqm(voEqm);
 						}
 
 						try {

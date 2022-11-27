@@ -411,13 +411,14 @@
 
 	<select id="matOutNo" resultType="CodeVO">
 		SELECT 'MO'||to_char(sysdate,
-		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0)
+		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0) AS mat_out_no
 		FROM
 		mat_out
 	</select>
-	
+
 	<insert id="insertMatOut" parameterType="CodeVO">
-		INSERT INTO mat_out VALUES(#{matOutNo}, sysdate, #{matOutQty},
+		INSERT INTO mat_out
+		VALUES(#{matOutNo}, sysdate, #{matOutQty},
 		#{lotNo})
 	</insert>
 
@@ -428,7 +429,7 @@
 
 	<select id="getMatPrs" parameterType="CodeVO"
 		resultType="CodeVO">
-		SELECT prs_code FROM material WHERE mat_code = #{matCode}
+		SELECT prs_code FROM material WHERE mat_code = #{mpCode}
 	</select>
 
 	<insert id="insertprr" parameterType="CodeVO">
@@ -438,60 +439,90 @@
 		</selectKey>
 		INSERT INTO process_run VALUES()
 	</insert>
-	
+
 	<select id="prsNo" resultType="CodeVO">
 		SELECT 'PRS'||to_char(sysdate,
-		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0)
+		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0) AS prs_no
 		FROM
 		process_run
 	</select>
-	
+
 	<insert id="insertProcessRun" parameterType="CodeVO">
-		INSERT INTO process_run VALUES(#{prsNo}, #{prsCode}, #{preNo}, #{prsManager}, sysdate, #{matOutNo}, '')
+		INSERT INTO
+		process_run VALUES(#{prsNo}, #{prsCode}, #{preNo}, #{prsManager},
+		sysdate, #{matOutNo}, '')
 	</insert>
-	
+
 	<select id="prfNo" resultType="CodeVO">
 		SELECT 'PRF'||to_char(sysdate,
-		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0)
+		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0) AS prf_no
 		FROM
 		process_inf
 	</select>
-	
+
 	<insert id="insertProcessInf" parameterType="CodeVO">
-		INSERT INTO process_inf VALUES(#{prsPfNo}, #{prsNo}, '', '', sysdate, '')
+		INSERT INTO
+		process_inf VALUES(#{prsPfNo}, #{prsNo}, '', '', sysdate, '')
 	</insert>
-	
+
 	<select id="getError" parameterType="CodeVO" resultType="CodeVO">
-		SELECT * FROM error WHERE code = #{prsCode}
+		SELECT *
+		FROM error WHERE code = #{prsCode}
 	</select>
-	
+
 	<select id="processErrNo" resultType="CodeVO">
-		SELECT (NVL(MAX(prs_err_no),0)+1)
+		SELECT
+		(NVL(MAX(prs_err_no),0)+1)
 		FROM
 		process_err
 	</select>
-	
+
 	<insert id="insertProcessErr" parameterType="CodeVO">
-		INSERT INTO process_err VALUES(#{prsErrNo}, '', #{prsPfNo}, #{errCode})
+		INSERT INTO
+		process_err VALUES(#{prsErrNo}, '', #{prsPfNo}, #{errCode})
 	</insert>
-	
+
 	<update id="upCountProcessInf" parameterType="CodeVO">
-		UPDATE process_inf SET prs_out_put = #{prsOutPut} WHERE prs_pf_no = #{prsPfNo}
+		UPDATE process_inf
+		SET prs_out_put = #{prsOutPut} WHERE prs_pf_no = #{prsPfNo}
 	</update>
-	
+
 	<update id="upCountProcessErr" parameterType="CodeVO">
-		UPDATE process_err SET prs_err_qty = #{prsErrQty} WHERE prs_err_no = #{prsErrNo}
+		UPDATE process_err
+		SET prs_err_qty = #{prsErrQty} WHERE prs_err_no = #{prsErrNo}
 	</update>
-	
+
 	<update id="upCountPIErr" parameterType="CodeVO">
-		UPDATE process_inf SET prs_err_qty = #{prsErrQty} WHERE prs_pf_no = #{prsPfNo}
+		UPDATE process_inf SET
+		prs_err_qty = #{prsErrQty} WHERE prs_pf_no = #{prsPfNo}
 	</update>
-	
+
 	<update id="endProcessInf" parameterType="CodeVO">
-		UPDATE process_inf SET prs_sp_hour = sysdate WHERE prs_pf_no = #{prsPfNo}
+		UPDATE process_inf SET
+		prs_sp_hour = sysdate WHERE prs_pf_no = #{prsPfNo}
 	</update>
-	
+
 	<update id="endProcessRun" parameterType="CodeVO">
-		UPDATE process_run SET prt_qty = #{prtQty} WHERE prs_no = #{prsNo}
+		UPDATE process_run SET
+		prt_qty = #{prtQty} WHERE prs_no = #{prsNo}
+	</update>
+
+	<insert id="insertLot" parameterType="CodeVO">
+		<selectKey keyProperty="lotNo" resultType="String"
+			order="BEFORE">
+			SELECT LPAD(NVL(MAX(SUBSTR(lot_no, -3)),0)+1,3,0) FROM lot
+		</selectKey>
+		INSERT INTO lot VALUES(#{lotNo}, sysdate, #{mpCode}, #{outFrom}, '',
+		#{lotQty}, #{whCode}, '')
+	</insert>
+
+	<select id="WHListA" resultType="CodeVO">
+		SELECT * FROM warehouse
+	</select>
+
+	<update id="updateEqm" parameterType="CodeVO">
+		UPDATE eqm SET eqm_yn =
+		CASE WHEN eqm_yn = 'Y' THAN 'N' WHEN eqm_yn = 'N' THAN 'Y' WHERE
+		eqm_code = #{eqmCode}
 	</update>
 </mapper>

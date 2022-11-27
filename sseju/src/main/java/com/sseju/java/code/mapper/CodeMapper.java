@@ -104,4 +104,7 @@ public interface CodeMapper {
 	public int upCountPIErr(CodeVO vo);
 	public int endProcessInf(CodeVO vo);
 	public int endProcessRun(CodeVO vo);
+	public int insertLot(CodeVO vo);
+	public List<CodeVO> WHListA();
+	public int updateEqm(CodeVO vo);
 }
