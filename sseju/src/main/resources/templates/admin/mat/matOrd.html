@@ -160,7 +160,6 @@
 
             matOrdList();            
             showAll2();
-            matOrdModal();
             emp();
 
             const grid = new tui.Grid({
@@ -263,7 +262,7 @@
 				columns : [ {
 					header : '주문 번호',
 					name : 'orderNo',
-					align : 'center'
+					align : 'center' // where로 값을 넘겨줌
 				}, {
 					header : '상품명',
 					name : 'prtName',
@@ -300,7 +299,7 @@
             
 			//주문 신청 목록 그리드
 			function showAll2() {
-			       fetch("getOrderList")
+			       fetch("prtOrdList")
 			       .then(res=>res.json())
 			       .then(obj=>{
 			           console.log(obj);
@@ -308,14 +307,19 @@
 			       })
 			};
             
-            function matOrdModal(){
-            	fetch("matOrdModal") 
-			       .then(res=>res.json())
-			       .then(obj=>{
-			           console.log(obj);
-			           matGrid.resetData(obj);
-			       })
-            }
+             function matOrdModal(){
+            	$.ajax({
+            		url : '/matOrdModal',
+            		dataType : "json",
+            		data : {"orderNo" : orderNo},
+            		success : function(data){
+            			matGrid.resetData(data);
+            		},
+            		error : function(reject){
+            			console.log(reject);
+            		}
+            	})
+            }; 
             
             function emp() {
                $.ajax({
@@ -343,6 +347,10 @@
             	 empGrid2.refreshLayout();
                }, '.modal');
              
+             document.addEventListener('shown.bs.modal', function() {
+            	 matGrid.refreshLayout();
+               }, '.modal');
+             
              /*------------
                // 해당하는 header의 모달창 띄우기
                ----------------*/
@@ -360,9 +368,16 @@
                        return;
                     } */
                      if(ev.columnName =='orderNo'){
+                  		  let orderNo = ev.nativeEvent.target.innerText;
+                  		  console.log(orderNo);
+                  		  
                         $('#matModal').modal('show');
-                      matGrid.refreshLayout();
+                      matOrdModal();
                   }
+                    
+                    
+                    
+                    
                   });
              
              
@@ -370,7 +385,7 @@
             /*------------
             // empModal2 모달 데이터 가져오기
             ----------------*/
-               var empGrid2 = new tui.Grid({
+			var empGrid2 = new tui.Grid({
                el : document.getElementById('empGrid2'),
                bodyHeight : 200,
                rowHeaders : [],
@@ -385,7 +400,41 @@
                }]
             });
             
-            
+   		    var matGrid = new tui.Grid({
+				el : document.getElementById('matGrid'),
+				scrollX : false,
+				scrollY : false,
+				rowHeaders: ['checkbox'],
+				columns : [ {
+					header : '제품 코드',
+					name : 'prtCode',
+					align : 'center'
+				}, {
+					header : '제품명',
+					name : 'prtName',
+					align : 'center'
+				}, {
+					header : '자재 코드',
+					name : 'matCode',
+					align : 'center'
+				}, {
+					header : '자재명',
+					name : 'matName',
+					align : 'center'
+				}, {
+					header : '주문수량',
+					name : 'matOrdQty',
+					align : 'center'
+				},  {
+					header : '거래처 코드',
+					name : 'cpCode',
+					align : 'center'
+				},  {
+					header : '거래처명',
+					name : 'cpName',
+					align : 'center'
+				} ]
+			});
             
             
             /*------------
@@ -404,10 +453,15 @@
                
             });
              */
+             
+/*              	grid.on('click', function(){
+             		let orderNo = 
+             	}
+             	}) */
                /*------------
-            // 거래처 모달에서 가져온 데이터 행에 넣어주기
+            // matCode 모달에서 가져온 데이터 행에 넣어주기
             ----------------*/
-/*             matCodeGrid.on('click', ev => {
+/*              matCodeGrid.on('click', ev => {
                let val = matCodeGrid.getRow(ev.rowKey); // 거래처클릭한 그리드
               
                let val2 = insertGrid.getFocusedCell().rowKey; // 진짜 큰 그리드
@@ -423,11 +477,11 @@
                
                
             /*------------
-            // 거래처 모달에서 가져온 데이터 행에 넣어주기
+            // 사원 모달에서 가져온 데이터 행에 넣어주기
             ----------------*/
             
             empGrid2.on('click', ev => {
-                let val = empGrid2.getRow(ev.rowKey); // 거래처클릭한 그리드
+                let val = empGrid2.getRow(ev.rowKey); // 사원 클릭한 그리드
                
                 let val2 = grid.getFocusedCell().rowKey; // 진짜 큰 그리드
                  
@@ -648,13 +702,13 @@
         		};
          </script>
 			<script>
-            var datepicker = new tui.DatePicker('#wrapper', {
+/*             var datepicker = new tui.DatePicker('#wrapper', {
                date : new Date(),
                input : {
                   element : '#datepicker-input',
                   format : 'yyyy-MM-dd'
                }
-            });
+            }); */
          </script>
 		</main>
 	</article>

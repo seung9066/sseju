@@ -80,11 +80,21 @@ public class MatController {
 	public List<MatVO> matordList() {
 		return service.matordList();
 	}
+	
+	@ResponseBody
+	@GetMapping("/prtOrdList")
+	public List<MatVO> prtOrdList(){
+		return service.prtOrdList();
+	}
 
 	@ResponseBody
 	@GetMapping("/matOrdModal")
-	public List<MatVO> matOrdModal() {
-		return service.matOrdModal();
+	public List<MatVO> matOrdModal
+		(@RequestParam (value = "orderNo", required = false) String orderNo) {
+		MatVO vo = new MatVO();
+		vo.setOrderNo(orderNo);
+		
+		return service.matOrdModal(vo);
 	}
 	// 발주 등록
 	@ResponseBody
