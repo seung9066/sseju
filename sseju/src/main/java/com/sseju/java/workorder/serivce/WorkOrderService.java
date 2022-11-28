@@ -13,7 +13,7 @@ public interface WorkOrderService {
 	//수정
 	public int updateWorkOrder(WorkOrderVO woVO);
 	//삭제
-	public int deleteWorkOrder(WorkOrderVO woVO);
+	public int deleteWorkOrder(List<WorkOrderVO> list);
 	//작업지시 번호 조회
 	public int getWoNo();
 	//상품 코드 조회

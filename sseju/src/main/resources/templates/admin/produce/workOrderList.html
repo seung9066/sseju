@@ -214,14 +214,20 @@ input {
 					let deleteOrder = [];
 					let deleteCode = [];
 					for(wo of workOrderGrid.getCheckedRows()){
-						deleteWorkOrder.push(wo.preNo);
-						deleteOrder.push(wo.orderNo);
-						deleteCode.push(wo.prtCode);
+				    	let workOrderVO = {}
+				    	workOrderVO.preNo = wo.preNo
+				    	workOrderVO.orderNo= wo.orderNo
+				    	workOrderVO.prtCode = wo.prtCode
+						deleteWorkOrder.push(workOrderVO);
+						//deleteOrder.push(wo.orderNo);
+						//deleteCode.push(wo.prtCode);
 					}
 				   	$.ajax({
 				   		url : 'selectDeleteWO',
 				   		type : 'POST',
-				   		data : {deleteWorkOrder:deleteWorkOrder, deleteOrder:deleteOrder, deleteCode : deleteCode},
+				   		contentType : "application/json", 
+				   		data :JSON.stringify(deleteWorkOrder), 
+				   			//{deleteWorkOrder:deleteWorkOrder, deleteOrder:deleteOrder, deleteCode : deleteCode},
 				   		dataType : "json",
 				   		async:false,
 				   		beforeSend : function(xhr){

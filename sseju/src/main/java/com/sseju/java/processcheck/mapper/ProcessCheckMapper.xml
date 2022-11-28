@@ -22,6 +22,11 @@
 		    ON pe.pre_no = prr.pre_no
 		ORDER BY prr.prs_date DESC
 	</select>
+	
+	<select id="prschkSearch" resultType="pcVO">
+		SELECT TO_CHAR(prr.prs_date, 'YYYY-MM-DD') AS "prs_date"
+		FROM process_run
+	</select>
 	<!-- U -->
 	
 	<!-- D -->
