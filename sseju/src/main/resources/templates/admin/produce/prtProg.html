@@ -83,7 +83,7 @@
 				let preNo = ev.nativeEvent.target.innerText;
 				console.log(preNo);
 				$.ajax({
-					url:'progPrtCondition',
+					url:'/progPrtCondition',
 					data : {preNo:preNo},
 					dataType:"json",
 					async:false,

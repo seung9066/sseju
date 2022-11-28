@@ -55,9 +55,8 @@ public class WorkOrderController {
 	
 	//지시 등록
 	@PostMapping("/insertWorkOrder")
-	public String insertWorkOrder(WorkOrderVO woVO, Model model) {
+	public String insertWorkOrder(WorkOrderVO woVO) {
 		woService.insertWorkOrder(woVO);
-		woService.updateOrderYn(woVO);
 		return "redirect:workOrder";
 	}
 	
@@ -71,27 +70,9 @@ public class WorkOrderController {
 	//작업 지시 삭제
 	@PostMapping("/selectDeleteWO")
 	@ResponseBody
-	public int deleteWorkOrder(@RequestParam(value="deleteWorkOrder[]", 
-								required=false) List<String> deleteWorkOrder, 
-			@RequestParam(value="deleteOrder[]", required=false) List<String> deleteOrder				
-			,@RequestParam(value="deleteCode[]", required=false) List<String> deleteCode
-							) {
+	public int deleteWorkOrder(@RequestBody List<WorkOrderVO> deleteCode) {
 		int res = 0;
-		for(int i=0; i<deleteWorkOrder.size(); i++) {
-			String line = deleteWorkOrder.get(i);
-			WorkOrderVO woVO = new WorkOrderVO();
-			woVO.setPreNo(line);
-			
-			line = deleteOrder.get(i);
-			woVO.setOrderNo(line);
-			res += woService.deleteWorkOrder(woVO);
-			//지시 칸에서 삭제되어 반환값이 들어오면 updateorderyn이 실행되면서 주문칸에 다시 값이 들어가게
-			line = deleteCode.get(i);
-			woVO.setPrtCode(line);
-			
-			woService.updateOrderYn(woVO);
-			
-		}
+		res = woService.deleteWorkOrder(deleteCode);
 		return res;
 	}
 	

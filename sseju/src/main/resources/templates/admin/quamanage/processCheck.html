@@ -22,24 +22,6 @@
 	padding: 0px;
 }
 
-.ul-style li>label {
-	width: 100px;
-	text-align: center;
-}
-
-.ul-style li {
-	padding: 5px;
-}
-
-#od-title {
-	font-weight: bold;
-}
-
-#od-btn {
-	display: inline-block;
-	margin: 0 5px;
-	float: right;
-}
 </style>
 
 <link rel="stylesheet"
@@ -75,8 +57,8 @@
 								<span class="tui-ico-date"></span>
 								<div id="endpicker-container" style="margin-left: -1px;"></div>
 							</div> <!-- 버튼 -->
-							<button class="button">조회</button>
-							<button class="button">초기화</button></li>
+							<button class="button" id="pcSearch">조회</button>
+							<button class="button" id="resetBtn">초기화</button></li>
 					</ul>
 				</div>
 			</div>
@@ -180,7 +162,47 @@
 								prsChkGrid.resetData(obj);
 							})
 						}
+						
+					/* date pricker */
+					function datePicker() {
+						rangeDatepickerInit('#startpicker-input', '#startpicker-container','#endpicker-input','#endpicker-container')
+						document.getElementById('startpicker-input').value = null;
+						document.getElementById('endpicker-input').value = null;	
+					}
+					
+					/*------------------------
+					// DatePicker 초기화버튼 이벤트
+					--------------------------*/
+					function resetDate() {
+						document.getElementById('resetDpBtn').addEventListener('click',function(){
+							document.getElementById('startpicker-input').value = null;
+							document.getElementById('endpicker-input').value = null;
+						});	
+					}
+					
+					// 공정조회 작업일자 조회버튼 클릭 이벤트 (조건 조회 탭)
+					function pcSearch() {
+						document.getElementById('pcSearch').addEventListener('click', function(){
+							let startDate = document.getElementById('startpicker-input').value;
+							let matOdDd = document.getElementById('endpicker-input').value;
+							let list = {matOdDd:matOdDd, matEdate:startDate};
 							
+							// 시작 일 <= 검색 날짜 <= 마지막 일
+							$.ajax({
+								url: '/prschkSearch',
+								method: 'POST',
+								contentType: 'application/json',					
+								data: JSON.stringify(list),
+								success: function(result){
+									console.log(result);
+									grid2.resetData(result);
+								},
+								error: function(reject){
+									console.log(reject);
+								}
+							})
+						})
+					}							
 			</script>
 
 		</main>

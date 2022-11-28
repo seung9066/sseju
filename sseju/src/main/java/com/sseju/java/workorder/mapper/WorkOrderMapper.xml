@@ -31,31 +31,53 @@
 	<!-- Read : workorder페이지에서 정보를 불러오는 쿼리문 모음 -->
 		<!-- 주문 번호, 주문한 상품명, 주문수량, 주문일자 불러오기(주문 신청 내역 그리드에 대한 쿼리) -->
 	<select id="getOrderList" resultType="woVO">
-		SELECT odi.order_no, pt.prt_code, pt.prt_name, odi.order_qty, ods.d_day
-		FROM orders ods JOIN order_inf odi
+		SELECT odi.order_no, 
+		       pt.prt_code, 
+		       pt.prt_name, 
+		       odi.order_qty, 
+		       ods.d_day
+		
+		  FROM orders ods
+		   
+		  JOIN order_inf odi
 		    ON ods.order_no = odi.order_no
-		JOIN product pt
+		    
+		  JOIN product pt
 		    ON pt.prt_code= odi.prt_code
-		WHERE odi.order_yn = 'N'
-		ORDER BY odi.order_no ASC
+		
+		 WHERE odi.order_yn = 'N'
+		 ORDER BY odi.order_no ASC
 	</select>
 	
 		<!-- 등록된 작업 지시 내역 그리드에 띄우는 쿼리 -->
 	<select id="getWorkOrderList" resultType="woVO">
-		SELECT pe.order_no, pe.pre_no, pt.prt_name, pt.prt_code ,pe.pre_qty, pe.ins_qty,
-				 pe.pre_date, pe.pre_manager,ee.emp_name ,ods.d_day
+		SELECT  pe.order_no,
+				pe.pre_no, pt.prt_name, 
+				pt.prt_code,
+				pe.pre_qty, 
+				pe.ins_qty,
+				pe.pre_date, 
+				pe.pre_manager,
+				ee.emp_name,
+				ods.d_day
+                
+
 		FROM orders ods JOIN produce pe
 		    ON ods.order_no = pe.order_no
 		JOIN product pt
 		    ON pt.prt_code = pe.prt_code
 		JOIN employee ee
 			ON ee.emp_id = pe.pre_manager
+        JOIN order_inf odi
+            ON (odi.order_yn ='N') OR (odi.order_yn ='K')
 		ORDER BY ods.order_no ASC
 	</select>
+	
 	<!-- 직원 아이디, 이름 가져오기 -->
 	<select id="getWoEmpList" resultType="woVO">
 		SELECT *
 		FROM employee
+		ORDER BY emp_id
 	</select>
 	
 	<!-- 단건조회 아직 미사용 -->
@@ -68,19 +90,23 @@
 		       pe.pre_qty,
 		       pe.prt_code,
 		       pe.pre_prg
-		FROM produce pe JOIN orders ods
+		FROM produce pe 
+		 JOIN orders ods
 		ON pe.order_no = ods.order_no
 		<where>
 			ods.order_no = #{orderNo}
 		</where> 
 	</select>
+	
 	<!--그리드에서 바로 가져가는 형식으로 바뀌었기 때문에 사용X  
 		상품 코드, 이름 가져오기, 
 		workorder 페이지에 select박스에 제품 종류 띄워주기 위해서-->
 	<select id="getPrtList" resultType="woVO">
 		SELECT *
 		FROM product
+		ORDER BY prt_code
 	</select>
+	
 	<!-- 사용안하는중
 		 단건 조회 시 작업 지시 번호로 조회할까싶어서 넣어뒀던것
 		작업 지시 번호 조회 -->
@@ -97,7 +123,7 @@
 	<update id="updateOrderYn" parameterType="woVO">
 			UPDATE order_inf set
 			order_yn = CASE
-		                WHEN order_yn = 'N' THEN 'Y' ELSE 'N'
+		                WHEN order_yn = 'N' THEN 'W' ELSE 'N'
 					   END
 			where
 			 order_no = #{orderNo}
@@ -110,9 +136,7 @@
 				pre_date = #{preDate},
 				pre_manager = #{preManager}
 			</set>
-			<where>
-				order_no = #{orderNo}
-			</where>
+				where order_no = #{orderNo}
 	</update>
 	
 	
@@ -127,7 +151,7 @@
 	<!-- 주문 내역 삭제 -->
 	<delete id="deleteOrder" parameterType="woVO">
 		DELETE FROM order
-		WHERE order_no = #{orderNO}
+		WHERE order_no = #{orderNo}
 	</delete>
 	
 </mapper>
