@@ -76,9 +76,33 @@ public class OrderServiceImpl implements ORService {
 	}
 
 	@Override
-	public List<ORVO> select2() {
+	public List<ORVO> select2(ORVO vo) {
 		// TODO Auto-generated method stub
-		return OMapper.select2();
+		return OMapper.select2(vo);
+	}
+
+	@Override
+	public List<ORVO> selectA() {
+		// TODO Auto-generated method stub
+		return OMapper.selectA();
+	}
+
+	@Override
+	public int updateOrderWK(ORVO vo) {
+		// TODO Auto-generated method stub
+		return OMapper.updateOrderWK(vo);
+	}
+
+	@Override
+	public List<ORVO> selectB() {
+		// TODO Auto-generated method stub
+		return OMapper.selectB();
+	}
+
+	@Override
+	public int updateLot(ORVO vo) {
+		// TODO Auto-generated method stub
+		return OMapper.updateLot(vo);
 	}
 
 }

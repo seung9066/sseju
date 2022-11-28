@@ -5,32 +5,61 @@
 <mapper namespace="com.sseju.java.order.mapper.ORMapper">
 
 	<select id="select" resultType="ORVO">
-		select * from orders
+		select
+		a.order_no ,a.d_day,
+		a.order_prg ,a.order_date, a.cp_code,
+		sum(b.order_price) as order_price
+		from
+		orders
+		a,order_inf b
+		where a.order_no=b.order_no
+        and b.order_yn ='N'
+        group by a.order_no, a.d_day, a.order_prg, a.order_date, a.cp_code
+	</select>
+	<select id="selectA" resultType="ORVO">
+		select
+		a.order_no ,a.d_day,
+		a.order_prg ,a.order_date, a.cp_code,
+		sum(b.order_price) as order_price
+		from
+		orders
+		a,order_inf b
+		where a.order_no=b.order_no
+        and b.order_yn ='W'
+        group by a.order_no, a.d_day, a.order_prg, a.order_date, a.cp_code
 	</select>
 	<select id="select1" resultType="ORVO">
-		select b.order_qty,
-		a.d_day,
-		a.order_date,
-		b.prt_code,
-		a.order_no,
-		c.prt_name
+		select
+		a.order_no ,a.d_day,
+		a.order_prg ,a.order_date, a.cp_code,
+		sum(b.order_price) as order_price
 		from
-		orders a,order_inf
-		b,product c
-		where a.order_no = b.order_no
-		and b.prt_code=c.prt_code
-		and
-		b.order_yn ='Y'
+		orders
+		a,order_inf b
+		where a.order_no=b.order_no
+        and b.order_yn ='Y' or b.order_yn = 'W' or b.order_yn = 'K'
+        group by a.order_no, a.d_day, a.order_prg, a.order_date, a.cp_code
+	</select>
+	<select id="selectB" resultType="ORVO">
+		select
+		a.order_no ,a.d_day,
+		a.order_prg ,a.order_date, a.cp_code,
+		sum(b.order_price) as order_price
+		from
+		orders
+		a,order_inf b
+		where a.order_no=b.order_no
+        and b.order_yn ='K'
+        group by a.order_no, a.d_day, a.order_prg, a.order_date, a.cp_code
 	</select>
 
-	<select id="select2" resultType="ORVO">
-		select
-		b.prt_name,
-		sum(a.order_qty) as order_qty,
-		sum(a.order_price) as order_price
+	<select id="select2" resultType="ORVO" parameterType="ORVO">
+		select b.prt_name,
+		a.order_qty,
+		a.order_price, a.prt_code, a.order_no
 		from order_inf a, product b
-		where a.prt_code =b.prt_code
-		group by b.prt_name
+		where a.order_no = #{orderNo}
+		and b.prt_code = a.prt_code
 	</select>
 
 	<!-- 주문내역 조회 -->
@@ -81,16 +110,19 @@
 		select
 		c.prt_name,
 		sum(b.order_qty) as order_qty,
-		sum(b.order_out_qty) as order_out_qty,
-        sum(lot_qty) as lot_qty
-		from 
-        orders a,
-        order_inf b,
-        product c,
-        lot d
-		where a.order_no =b.order_no
+		sum(b.order_out_qty) as
+		order_out_qty,
+		sum(lot_qty) as lot_qty
+		from
+		orders a,
+		order_inf b,
+		product c,
+		lot d
+		where
+		a.order_no =b.order_no
 		and c.prt_code = b.prt_code
-        and c.prt_code = d.mp_code
+		and c.prt_code
+		=d.mp_code(+)
 		GROUP BY c.prt_name
 	</select>
 
@@ -181,6 +213,23 @@
 		order_no =
 		#{orderNo}
 		AND prt_code = #{prtCode}
+	</update>
+	<update id="updateOrderWK" parameterType="ORVO">
+		UPDATE order_inf set
+		order_yn = CASE
+		WHEN order_yn = 'W' THEN 'K' ELSE 'W'
+		END
+		where
+		order_no =
+		#{orderNo}
+		AND prt_code = #{prtCode}
+	</update>
+	<update id="updateLot" parameterType="ORVO">
+		UPDATE lot set
+		lot_qty = 0
+		where
+		out_from =
+		#{orderNo}
 	</update>
 
 	<!-- 삭제 -->

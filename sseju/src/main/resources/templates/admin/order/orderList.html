@@ -90,6 +90,9 @@ body {
 					header : '가격',
 					name : 'prtPrice',
 					align : 'right',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	                    }
 				},
 				]
 			});
@@ -132,12 +135,18 @@ body {
 						header : '단가',
 						name : 'unitPrice', 
 						align : 'right',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		                    }
 					},
 					{
 						header : '주문량',
 						name : 'orderQty1', 
 						editor: 'text',
 						align : 'right',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		                    },
 						onAfterChange : function(ev) {
 				            //console.log(ev.value,this)   
 				            let row = prtGrid1.getRow(ev.rowKey)
@@ -152,12 +161,18 @@ body {
 						header : '총주문량',
 						name : 'orderQty', 
 						align : 'right',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		                    }
 					},
 				
 					{
 						header : '총가격',
 						name : 'orderPrice',
 						align : 'right',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		                    }
 					}
 					]
 				}); 
