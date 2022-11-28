@@ -51,28 +51,27 @@
 			<div>
 				<h2>주문목승인후목록</h2>
 				<div id="grid123"></div>
-					<!-- empModal2 -->
-         <div class="modal" id="orModal2" tabindex="-1"
-            aria-labelledby="orModal2Label" aria-hidden="true">
-            <div class="modal-dialog">
-               <div class="modal-content">
-                  <div class="modal-header">
-                     <h5 class="modal-title" id="exampleModalLabel">승인된주문목록</h5>
-                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                     <div>
-                        <div id="grid123"></div>
-                     </div>
-                  </div>
-                  <div class="modal-footer">
-                     <button type="button" class="button"
-                        data-bs-dismiss="modal">Close</button>
-                  </div>
-               </div>
-            </div>
-         </div>
+				<!-- empModal2 -->
+				<div class="modal" id="orModal2" tabindex="-1"
+					aria-labelledby="orModal2Label" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">승인된주문목록</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div>
+									<div id="Agrid123"></div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="button" data-bs-dismiss="modal">Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 
 
@@ -82,7 +81,6 @@
 			 var header = $("meta[name='_csrf_header']").attr("content");
 
 			alls();
-			alls1();
 			const grid1 = new tui.Grid({
 			el : document.getElementById('grid1'),
 			pagination:true,
@@ -153,13 +151,7 @@
 					name : 'orderPrice',
 					align : 'center',
 					filter: 'select'
-				},
-				{
-					header : '총금액',
-					name : 'orderPrice',
-					align : 'center',
-					filter: 'select'
-				},
+				}
 		          ]
 		});
 			  document.addEventListener('shown.bs.modal', function() {
@@ -167,10 +159,12 @@
 	               }, '.modal');
 			  
 			  grid1.on('click',function(ev){
-                 if(ev.columnName =='orderNo'){
-                    $('#orModal').modal('show');
-                    Agrid1.refreshLayout();
-              }
+				  let a = grid1.getRow(ev.rowKey).orderNo;
+                  alls1(a);
+                  
+                  $('#orModal').modal('show');
+                  Agrid1.refreshLayout();
+              	
               });
 		
 		function alls() {
@@ -182,23 +176,56 @@
 	           grid1.resetData(obj);
 	        })
 		}
-		function alls1() {
-	        url="select2"
-			fetch(url) 
-	        .then(res=>res.json())
-	        .then(obj=>{
-	           console.log(obj);
-	           Agrid1.resetData(obj);
-	        })
+		function alls1(a) {
+			let b = {'orderNo' : a}
+			 $.ajax({
+					url : "select2",
+					method : "POST",
+					data: JSON.stringify(b),
+					dataType : "JSON",
+					contentType: 'application/json; charset=utf-8',
+					beforeSend : function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(list) {
+						
+							Agrid1.resetData(list)								
+
+					}// suc
+				});
 		}
-	   
+	   	
+		function updateOrderNy() {
+			console.log(Agrid1.getData())
+			let b = Agrid1.getData();
+			$.ajax({
+				url : "updateOrderNy",
+				method : "POST",
+				data: JSON.stringify(b),
+				dataType : "JSON",
+				contentType: 'application/json; charset=utf-8',
+				beforeSend : function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
+				success : function(list) {
+					if (list > 0) {
+						alls();
+						alls3();
+						 $('#orModal').modal('hide');
+						alert('수정완료');
+					}								
+
+				}// suc
+			});
+		}
+		
 		</script>
 			<script>
 			
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
 
-			 alls1();
+			 alls3();
 			const grid123 = new tui.Grid({
 			el : document.getElementById('grid123'),
 			pagination:true,
@@ -216,8 +243,8 @@
 					filter: 'select'
 				}, 
 				{
-					header : '제품코드',
-					name : 'prtCode',
+					header : '업체코드',
+					name : 'cpCode',
 					align : 'center',
 					filter: 'select'
 				},
@@ -225,20 +252,30 @@
 					header : '주문일자',
 					name : 'orderDate',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+				    formatter({value}) {
+                        return `${value.substring(0,10)}`;
+                      }
 				},
 				{
 					header : '납기일자',
 					name : 'dday',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+				    formatter({value}) {
+                        return `${value.substring(0,10)}`;
+                      }
 				},
 				{
-					header : '제품명',
-					name : 'prtName',
+					header : '총금액',
+					name : 'orderPrice',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	                    }
 				},
+				
 		          ]
 		});
 			const Agrid123 = new tui.Grid({
@@ -252,38 +289,33 @@
 			scrollY : false,
 			columns : [
 				{
-					header : '주문번호',
-					name : 'orderNo',
-					align : 'center',
-					filter: 'select'
-				}, 
-				{
-					header : '제품코드',
-					name : 'prtCode',
-					align : 'center',
-					filter: 'select'
-				},
-				{
-					header : '주문일자',
-					name : 'orderDate',
-					align : 'center',
-					filter: 'select'
-				},
-				{
-					header : '납기일자',
-					name : 'dday',
-					align : 'center',
-					filter: 'select'
-				},
-				{
 					header : '제품명',
 					name : 'prtName',
 					align : 'center',
 					filter: 'select'
+				}, 
+				{
+					header : '주문량',
+					name : 'orderQty',
+					align : 'center',
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	                    }
 				},
+				
+				{
+					header : '금액',
+					name : 'orderPrice',
+					align : 'center',
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	                    }
+				}
 		          ]
 		});
-		function alls1() {
+		function alls3() {
 	        url="select1"
 			fetch(url) 
 	        .then(res=>res.json())
@@ -292,27 +324,34 @@
 	           grid123.resetData(obj);
 	        })
 		}
-		function alls1() {
-	        url="select1"
-			fetch(url) 
-	        .then(res=>res.json())
-	        .then(obj=>{
-	           console.log(obj);
-	           grid123.resetData(obj);
-	        })
+		function alls4(a) {
+			let b = {'orderNo' : a}
+			 $.ajax({
+					url : "select2",
+					method : "POST",
+					data: JSON.stringify(b),
+					dataType : "JSON",
+					contentType: 'application/json; charset=utf-8',
+					beforeSend : function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(list) {
+
+							Agrid123.resetData(list)								
+
+					}// suc
+				});
 		}
 		  document.addEventListener('shown.bs.modal', function() {
 			  grid123.refreshLayout();
                }, '.modal');
 		  
 		  grid123.on('click',function(ev){
-            
-             if(ev.columnName =='orderNo'){
-                $('#orModal2').modal('show');
-                grid123.refreshLayout();
-          }
+			  let a = grid123.getRow(ev.rowKey).orderNo;
+              alls4(a);  
+			  $('#orModal2').modal('show');
+                Agrid123.refreshLayout();
           });
-	
 		</script>
 
 		</main>

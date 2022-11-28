@@ -71,10 +71,20 @@ public class OrderController {
 	public List<ORVO> select1() {
 		return oService.select1();
 	}
-	@GetMapping("/select2")
+	@GetMapping("/selectA")
 	@ResponseBody
-	public List<ORVO> select2() {
-		return oService.select2();
+	public List<ORVO> selectA() {
+		return oService.selectA();
+	}
+	@GetMapping("/selectB")
+	@ResponseBody
+	public List<ORVO> selectB() {
+		return oService.selectB();
+	}
+	@PostMapping("/select2")
+	@ResponseBody
+	public List<ORVO> select2(@RequestBody ORVO a) {
+		return oService.select2(a);
 	}
 
 	@GetMapping("/user/getOrderNo")
@@ -97,9 +107,33 @@ public class OrderController {
 		return a;
 	}
 	@PostMapping("updateOrderNy")
-	public int updateOrderNy(@RequestBody ORVO Ovo) {
-		
-		return oService.updateOrderNy(Ovo);
+	@ResponseBody
+	public int updateOrderNy(@RequestBody List<ORVO> Ovo) {
+		int a = 0;
+		System.out.println("aaaaaaa");
+		System.out.println(Ovo);
+		ORVO vo = new ORVO();
+		for (int i = 0; i < Ovo.size(); i++) {
+			vo.setOrderNo(Ovo.get(i).getOrderNo());
+			vo.setPrtCode(Ovo.get(i).getPrtCode());
+			a += oService.updateOrderNy(vo);
+		}
+		return a;
+	}
+	@PostMapping("updateOrderWK")
+	@ResponseBody
+	public int updateOrderWK(@RequestBody List<ORVO> Ovo) {
+		int a = 0;
+		System.out.println("aaaaaaa");
+		System.out.println(Ovo);
+		ORVO vo = new ORVO();
+		for (int i = 0; i < Ovo.size(); i++) {
+			vo.setOrderNo(Ovo.get(i).getOrderNo());
+			vo.setPrtCode(Ovo.get(i).getPrtCode());
+			a += oService.updateOrderWK(vo);
+			oService.updateLot(vo);
+		}
+		return a;
 	}
 //	@PostMapping("insertOrderAll")
 //	@ResponseBody
