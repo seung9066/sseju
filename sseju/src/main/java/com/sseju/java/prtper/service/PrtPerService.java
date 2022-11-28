@@ -12,5 +12,5 @@ public interface PrtPerService {
 	//생산 실적 삭제(실적은 지우면 안되므로 만들지 말지 회의후 결정)
 	public int deletePrtPer(PrtPerVO ppVO);
 	//에러 리스트 조회
-	public List<PrtPerVO> getErrList();
+	public List<PrtPerVO> getErrList(String preNo);
 }

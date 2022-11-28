@@ -8,7 +8,7 @@
 <title>PrtPerList</title>
 <!-- 제이쿼리 -->
 <script
-	src="https://ajax.googleapis.완료com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <!-- 토스트UI -->
 <link rel="stylesheet"
 	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
@@ -72,6 +72,10 @@
 					el : document.getElementById('prtperGrid'),
 					scrollX : false,
 					scrollY : false,
+			        pageOptions: {
+			            useClient: true,
+			            perPage: 10
+			        },
 					columns : [ {
 						header : '작업 지시 번호',
 						name : 'preNo',
@@ -83,12 +87,18 @@
 						align : 'center'
 					}, {
 						header : '생산량',
-						name : 'preQty',
-						align : 'center'
+						name : 'prtQty',
+						align : 'center',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+		                    }
 					}, {
 						header : '불량 발생 개수',
 						name : 'prsErrQty',
-						align : 'center'
+						align : 'center',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+		                    }
 					}, {
 						header : '담당자',
 						name : 'empName',
@@ -97,6 +107,12 @@
 					}, {
 						header : '작업일자',
 						name : 'prsDate',
+						filter: {
+				            type: 'date',
+				            options: {
+				              format: 'yyyy-MM-dd'
+				            }
+			            },
 						align : 'center',
 						 formatter({value}) {
 						      return `${value.substring(0,10)}`;
