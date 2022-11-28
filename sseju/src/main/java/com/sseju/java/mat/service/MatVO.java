@@ -138,5 +138,12 @@ public class MatVO {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date startDate; // 시작일
 	private String orderNo;
+	private Integer orderQty;
+	private String prtCode;
+	@DateTimeFormat (pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Date dDay;
+	private String prtName;
+	private String capacity;
 
 }
