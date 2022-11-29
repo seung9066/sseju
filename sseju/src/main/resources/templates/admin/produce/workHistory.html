@@ -15,7 +15,7 @@
 			<!-- 그리드 -->
 			<div id="workHistoryGrid"></div>
 
-			<script th:inline="javascript">
+			<script type="text/javascript">
 			showWhGrid();
 			
 			var token = $("meta[name='_csrf']").attr("content");
@@ -29,16 +29,12 @@
 	                     useClient: true,
 	                     perPage: 10
 	                 },
-					minBodyHeight : 30,
-					pageOptions : {
-						perPage : 5
-					},
 					columns : [ {
 						header : '작업일자',
 						name : 'prsDate',
 						align : 'center',
 						formatter({value}) {
-                        return `${value.substring(1,10)}`;
+                        return `${value.substring(0,10)}`;
                       } ,
 					    filter: {
 	                        type: 'date',
@@ -84,7 +80,6 @@
 						align : 'center'
 					} ]
 				});
-				
 				/* 작업 이력 조회 그리드에 데이터 가져오기 */
 				function showWhGrid(){
 					fetch("getWorkHistoryList")

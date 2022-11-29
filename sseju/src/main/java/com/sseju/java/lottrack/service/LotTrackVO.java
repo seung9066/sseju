@@ -23,8 +23,11 @@ public class LotTrackVO {
 	private String whManager; //로트 담당자 
 		//ㄴ로트 표기에 창고담당자를할지,prs_run의 담당자로 가져와야할지 몰라서 
 	private String empId;		//담당자명을 받아오기 위한 id값
+	private String empName;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date lotDate;	//등록일자 lot테이블 2
 	private String matChkCode;//검수코드, FK, matChk테이블의 외래키
 	private String whCode;		//창고코드, FK,warehouse 테이블의 외래키
+	private String prtName;		//제품명
+
 }
