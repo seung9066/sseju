@@ -11,12 +11,10 @@
 	<article layout:fragment="content">
 		<main id="main" class="main">
 		<h4>제품 로트 조회</h4>
-		<!-- <label><span> 검색 : </span><input type="text" placeholder="로트번호, 제품코드, 담당자명, 등록일자 등"></label> -->
 			<!-- 그리드 -->
 			<div id="lotGrid"></div>
 
-
-			<script type="text/javascript">
+		<script type="text/javascript">
 			showLotGrid();
 			
 			var token = $("meta[name='_csrf']").attr("content");
@@ -33,6 +31,18 @@
 						header : '로트번호',
 						name : 'lotNo'
 					}, {
+						header : '로트 등록 일자',
+						name : 'lotDate',
+						formatter({value}) {
+	                        return `${value.substring(0,10)}`;
+	                      } ,
+						    filter: {
+		                        type: 'date',
+		                        options: {
+		                          format: 'yyyy-MM-dd'
+		                        }
+		                     }
+					}, {
 						header : '제품명',
 						name : 'prtName',
 						filter : 'select'
@@ -43,11 +53,7 @@
 						header : '담당자',
 						name : 'empName',
 						filter : 'select'
-					}, {
-						header : '로트 등록 일자',
-						name : 'lotDate',
-						filter : 'select'
-					} ]
+					}]
 				});
 				//lotGrid의 정보 가져오기
 				function showLotGrid(){
