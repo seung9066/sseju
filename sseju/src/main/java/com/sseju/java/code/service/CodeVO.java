@@ -11,6 +11,7 @@ import lombok.Data;
 @Alias("CodeVO")
 public class CodeVO {
 	
+	private String dell;
 	private String CpName;
 	
 	// code
@@ -102,6 +103,10 @@ public class CodeVO {
 	private int matErrQty;
 	private String matOrdNo;
 	private int matPassQty;
+	
+	private int matNo;
+	private String matErrRs;
+	private String matErrDoc;
 	
 	// Thread
 	private String mpCode;

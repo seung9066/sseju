@@ -6,6 +6,7 @@
 
 <head>
 <meta charset="utf-8">
+
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -44,15 +45,13 @@ th {
 					<tr>
 						<th onclick="showAll()">전체</th>
 						<th onclick="showCompany(this.innerText)">거래처</th>
-						<th onclick="showCompany(this.innerText)">설비</th>
 						<th onclick="showCompany(this.innerText)">공정</th>
 						<th onclick="showCompany(this.innerText)">제품</th>
 						<th onclick="showCompany(this.innerText)">자재</th>
 					</tr>
 					<tr>
 						<th onclick="showCompany(this.innerText)">창고</th>
-						<th onclick="showCompany(this.innerText)">설비상태</th>
-						<th onclick="showCompany(this.innerText)">비가동</th>
+						<th onclick="showCompany(this.innerText)">설비</th>
 						<th onclick="showCompany(this.innerText)">진행</th>
 						<th onclick="showCompany(this.innerText)">제품(공정)불량</th>
 						<th onclick="showCompany(this.innerText)">자재불량</th>
@@ -75,7 +74,7 @@ th {
 			const codeGrid = new tui.Grid({
 				el : document.getElementById('codeGrid'),
 				pagination:true,
-				pageOption: {
+				pageOptions: {
 					useClient:true,
 					perPage:10
 				},

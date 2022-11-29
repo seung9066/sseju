@@ -93,6 +93,9 @@ public interface CodeMapper {
 	public List<CodeVO> todayWLinf(CodeVO vo);
 	public List<CodeVO> prdCount();
 	public int insertLotA(CodeVO vo);
+	public CodeVO getMatChkNo();
+	public int insertMatErr(CodeVO vo);
+	public List<CodeVO> selectMatErr(CodeVO vo);
 	
 	// Thread
 	public List<CodeVO> getBomListC(CodeVO vo);

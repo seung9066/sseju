@@ -164,7 +164,7 @@ public class CodeController {
 	public List<CodeVO> bomList(@RequestParam(value = "prtName", required = false) String prtName) {
 		CodeVO vo = new CodeVO();
 		vo.setPrtName(prtName);
-
+		
 		return service.getBomList(vo);
 	}
 	
@@ -317,7 +317,7 @@ public class CodeController {
 	@GetMapping("/updatePrtOutCount")
 	@ResponseBody
 	public Map<String, String> updatePrtOutCount() {
-		return service.updatePrtCountA();
+		return service.updatePrtOutCountA();
 	}
 
 	@GetMapping("/updateErrCount")
