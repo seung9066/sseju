@@ -41,89 +41,48 @@
 	<article layout:fragment="content">
 		<main class="main" id="main">
 			<h3>출고내역</h3>
+			<hr>
 			<div>
-				<ul class="ul-style">
-					<li><label>품목</label><input type="text" data-bs-toggle="modal"
-						data-bs-target="#prtModal"> <i class="bi bi-search"
-						data-bs-toggle="modal" data-bs-target="#prtModal"></i> <input
-						type="text" readonly></li>
-					<li><label>입고일</label>
-						<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-							<input type="text" id="datepicker-input" aria-label="Date-Time">
-							<span class="tui-ico-date"></span>
-							<div id="wrapper" style="margin-top: -1px;"></div>
-						</div>
-						<button class="button" onclick="whNameUpdate()">수정</button>
-						<button class="button">삭제</button></li>
-				</ul>
-				<div id="grid"></div>
-			</div>
-
-
-			<!-- prtModal -->
-			<div class="modal fade" id="whNameModal" tabindex="-1"
-				aria-labelledby="whNameModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div>
-								<div id="whNameGrid"></div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Save
-								changes</button>
-						</div>
-					</div>
-				</div>
+				<div id="outGrid"></div>
 			</div>
 
 			<script>
 			//입고 => 창고만 수정 가능 // 이미 입고한 부분에 관해서 돈터치~
 			
 			matOutList();
-			whName();
 			
 			//발주번호,자재코드,자재명,입고수량(합격수량),입고일,창고,LOT번호
-				const grid = new tui.Grid({
-					el : document.getElementById('grid'),
-					bodyHeight: 500,
-					rowHeaders : [ 'checkbox' ],
+				const outGrid = new tui.Grid({
+					el : document.getElementById('outGrid'),
+					rowHeaders : [],
 					scrollX : false,
-					scrollY : true,
+					scrollY : false,
 					columns : [ {
-						header : 'LOT 번호',
-						name : 'lotNo',
+						header : '출고 번호',
+						name : 'matOutNo',
 						align : 'center'
-					},
-					/*{
-						header : '발주 번호',
-						name : 'matOrdNo',
-						align : 'center'
-					},
-					*/
-					{
-						header : '자재 코드',
-						name : 'matCode',
+					},{
+						header : '출고일',
+						name : 'matOutDate',
+						align : 'center',
+			            formatter({value}) {
+			            	return `${value.substring(0,10)}`;
+			            	}
+					}, {
+						header : '출고 수량',
+						name : 'matOutQty',
 						align : 'center'
 					}, {
-						header : '자재명',
+						header : 'LOT번호',
+						name : 'matLotNo',
+						align : 'center'
+					}, {
+						header : '자재 코드',  //ㄱㅖ산
+						name : 'mpCode',
+						align : 'center'
+					}, {
+						header : '자재명', 
 						name : 'matName',
-						align : 'center'
-					}, {
-						header : '입고 수량',  //ㄱㅖ산
-						name : 'matPassQty',
-						align : 'center'
-					}, {
-						header : '입고일', 
-						name : 'lotDate',
 						align : 'center' 
 					}, 
  					{
@@ -137,25 +96,22 @@
 						align : 'center'
 					}]
 				});
+			
+				outGrid.hideColumn("mpCode", "mpCode");
+				outGrid.hideColumn("whCode", "whCode");
 
-				var datepicker = new tui.DatePicker('#wrapper', {
-					date : new Date(),
-					input : {
-						element : '#datepicker-input',
-						format : 'yyyy-MM-dd'
-					}
-				});
+
 				
 				/*------------
 	            // 함수
 	            ----------------*/
 	            
-	            function matInList(){
+	            function matOutList(){
 					$.ajax({
-						url : '/matInList',
+						url : "/matOutList",
 						dataType : "json",
 						success : function(data) {
-							grid.resetData(data);
+							outGrid.resetData(data);
 							console.log(data);
 						},
 						error : function(reject) {
@@ -164,106 +120,7 @@
 					})
 				}
 				
-				function whName(){
-					$.ajax({
-						url : '/whList',
-						dataType : "json",
-						success : function(data){
-							whNameGrid.resetData(data);
-						},
-						error : function (reject){
-							console.log(reject);
-						}
-					})
-				}
-				
-				function whNameUpdate() {
-					
-					let rowData = grid.getCheckedRows();
-	            	console.log(rowData);
-           		 
-		     		let header = $("meta[name='_csrf_header']").attr('content');
-		    	    let token = $("meta[name='_csrf']").attr('content');
-					
-					$.ajax({
-						url : '/updateMat',
-						method : 'post',
-						contentType: "application/json",
-				        data:JSON.stringify(rowData),
-				        dataType : "json",
-				        async: false,
-				         beforeSend : function(xhr) {
-				            xhr.setRequestHeader(header, token);
-				         },
-				         success : function(data) {
-				      	   if(data > 0) {
-				            	console.log(data);
-				            	matInList();
-				      	   }else {
-				      		   alert("실패")
-				      	   }
-				         },
-				         error : function(request,status,error) {
-				      	  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-				          alert("왜이러냐 진짜");
-				         }
-				      });
-				}
-	            /*------------
-	            // 모달창 띄우기
-	            ----------------*/
-	            grid.on('click',function(ev){
-	                  if(ev.columnName =='whName'){
-	                     $('#whNameModal').modal('show');
-	                     whNameGrid.refreshLayout();
-	                  }
-	               });
-	            
-	            /*------------
-	            // 모달 데이터 가져오기
-	            ----------------*/
-	            
-	            var whNameGrid = new tui.Grid({
-	            	el : document.getElementById('whNameGrid'),
-	            	bodyHeight : 200,
-	            	rowHeaders : [],
-	            	scrollX : false,
-	                scrollY : true,
-	                columns : [{
-	                   		header : '창고코드',
-	                   		name : 'whCode'
-	                },{
-	                   		header : '창고',
-	                   		name : 'whName'
-	                },{
-		               		header : '창고위치',
-		                    name : 'whLocation'
-					},{
-		                    header : '담당자',
-		                    name : 'whManager'
-					}]
-	             });
-	            
-	            /*------------
-	            // 모달 데이터 넣기
-	            ----------------*/
-	            whNameGrid.on('click', ev => {
-	            	let val = whNameGrid.getRow(ev.rowKey); // 거래처클릭한 그리드
-	                
-	                let val2 = grid.getFocusedCell().rowKey; // 진짜 큰 그리드
-	                 
-	                   console.log(whNameGrid.getValue(ev.rowKey,ev.columnName));
-	                 const amg = whNameGrid.getValue(ev.rowKey,ev.columnName);
-	                 grid.setValue(val2, 'whName', val.whName);
-	                 grid.setValue(val2, 'whCode', val.whCode);
-	                 $('#whNameModal').modal("hide");
-	            })
-
-				document.addEventListener('shown.bs.modal', function() {
-					whNameGrid.refreshLayout();
-				}, '.modal');
-
-	            
+          
 			</script>
 		</main>
 	</article>

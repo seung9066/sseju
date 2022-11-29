@@ -67,69 +67,14 @@
 			<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}" />
 			<div id="input-group">
-<!-- 				<ul class="ul-style">
-					<li><label>품목</label><input type="text" data-bs-toggle="modal"
-					
-						data-bs-target="#matCodeModal2" id="matCode1"> <i
-						class="bi bi-search" data-bs-toggle="modal"
-						data-bs-target="#matCodeModal2"></i> <input type="text"
-						style="background-color: #E9E9E9" id="matCode2" readonly></li>
-					<li><label>거래처</label><input type="text"
-						data-bs-toggle="modal" data-bs-target="#cpCodeModal2" id="cpCode1">
-						<i class="bi bi-search" data-bs-toggle="modal"
-						data-bs-target="#cpCodeModal2"></i> <input type="text"
-						style="background-color: #E9E9E9" id="cpCode2" readonly></li>
-					<li><label>발주일자</label>
-						<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-							<input type="text" id="datepicker-input" aria-label="Date-Time">
-							<span class="tui-ico-date"></span>
-							<div id="wrapper" style="margin-top: -1px;"></div>
-						</div> -->
-						<!-- <button class="button" id="searchBtn" onclick="searchBtnHandler()">조회</button> -->
-						<input type="hidden" id="empId"> 
-						<button class="button" id="updateBtn" onclick="updateMatOrd()">수정</button>
-						<button class="button" id="deletetBtn" onclick="deleteMat()">삭제</button>
-				<!-- </ul> -->
+						<input type="hidden" id="empId">
 			</div>
 			<!-- <form action="insertMatbuy" method="post"> -->
 				<input type="hidden" th:name="${_csrf.parameterName}"
 					th:value="${_csrf.token}" />
-				<div>
-					<div id="orderNoGrid"></div>
-				</div>
-			<!-- </form>-->
-			<hr>
 			<div>
 				<div id="grid" class="col"></div>
 			</div>
-
-			<!-- matModal -->
-			<div class="modal" id="matModal" tabindex="-1"
-				aria-labelledby="matModalLabel" aria-hidden="true">
-				<div class="modal-dialog modal-xl">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div>
-								<div id="infoInfo"></div>
-								<hr>
-								<div id="matGrid"></div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary" onclick="insertMatbuy()">Save
-								changes</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			
 			<!-- empModal2 -->
          <div class="modal" id="empModal2" tabindex="-1"
             aria-labelledby="empModal2Label" aria-hidden="true">
@@ -157,16 +102,18 @@
 			<script>
 
 
-            matOrdList();            
-            showAll2();
+            matOrdList();
             emp();
 
             const grid = new tui.Grid({
                el : document.getElementById('grid'),
-               bodyHeight: 500,
-               rowHeaders : [ 'checkbox' ],
+               rowHeaders : [],
                scrollX : false,
                scrollY : true,
+               pageOptions: {
+                   useClient: true,
+                   perPage: 10
+               },
                columns : [ {
                   header : '발주 번호',
                   name : 'matOrdNo',
@@ -174,12 +121,7 @@
                }, {
                   header : '수량',
                   name : 'matOrdQty',
-                  align : 'center',
-                  editor: 'text',
-                  validation: {
-                       dataType: 'text',
-                       required: true
-                        }
+                  align : 'center'
                }, {
                   header : '품목 코드',
                   name : 'matCode',
@@ -193,7 +135,6 @@
                   header : '일자',
                   name : 'matOrdDate',
                   align : 'center',
-				  filter: 'select',
                   editor: 'datePicker',
                   validation: {
                      dataType: 'datePicker',
@@ -201,7 +142,13 @@
                       },
                   formatter({value}) {
                        return `${value.substring(0,10)}`;
-                      }
+                      },
+                  filter: {
+				  	type: 'date',
+                 	options: {
+                    	format: 'yyyy-MM-dd'
+                    		}
+                       },
                      
                }, {
                   header : '거래처 코드',
@@ -229,16 +176,6 @@
                   header : '진행 상황',
                   name : 'matOrdYn',
                   align : 'center',
-				  filter: 'select',
-                  editor: {
-                      type: 'select',
-                  	  options: {
-                      listItems: [
-                        { text: '확인', value: '확인' },
-                        { text: '미확인', value: '미확인' },
-                      ]
-                    }
-                  },
                   validation: {
                  	 regExp:/진[가-힣]/ ,
                  	 validatorFn: (value, row, columnName) => value !== '미확인'
@@ -250,65 +187,11 @@
                } ]
             });
             
-               /* -------------
-		    	주문 번호 그리드
-		      ---------------*/
-		    var orderNoGrid = new tui.Grid({
-				el : document.getElementById('orderNoGrid'),
-				scrollX : false,
-				scrollY : false,
-				rowHeaders: ['checkbox'],
-				columns : [ {
-					header : '주문 번호',
-					name : 'orderNo',
-					align : 'center' // where로 값을 넘겨줌
-				}, {
-					header : '상품명',
-					name : 'prtName',
-					align : 'center'
-				}, {
-					header : '주문 수량',
-					name : 'orderQty',
-					align : 'center'
-				}, {
-					header : '납기일자',
-					name : 'dday',
-					align : 'center',
-		            formatter({value}) {
-		            	return `${value.substring(0,10)}`;
-		            	}
-				} ]
-			});
+            grid.hideColumn("matOrdEmp", "matOrdEmp");
+            grid.hideColumn("cpCode", "cpCode");
+            grid.hideColumn("matCode", "matCode");
             
-            /* -------------
-	    	주문 번호 그리드
-	      ---------------*/
-			    var infoInfo = new tui.Grid({
-					el : document.getElementById('infoInfo'),
-					scrollX : false,
-					scrollY : false,
-					//rowHeaders: ['checkbox'],
-					columns : [ {
-						header : '주문 번호',
-						name : 'orderNo',
-						align : 'center' // where로 값을 넘겨줌
-					}, {
-						header : '상품명',
-						name : 'prtName',
-						align : 'center'
-					}, {
-						header : '주문 수량',
-						name : 'orderQty',
-						align : 'center'
-					}, {
-						header : '납기일자',
-						name : 'dday',
-						align : 'center',
-			            formatter({value}) {
-			            	return `${value.substring(0,10)}`;
-			            	}
-					} ]
-				});
+      
             
             function matOrdList() {
                $.ajax({
@@ -316,65 +199,12 @@
                   dataType : "json",
                   success : function(data) {
                      grid.resetData(data);
-                     //grid.setFormatColProperty(col index, "size", 0);
-                     //grid.setFormatColProperty(8, "size", 0);
                   },
                   error : function(reject) {
                      console.log(reject);
                   }
                })
             };
-            
-			//주문 신청 목록 그리드
-			function showAll2() {
-			       fetch("prtOrdList")
-			       .then(res=>res.json())
-			       .then(obj=>{
-			           console.log(obj);
-			           orderNoGrid.resetData(obj);
-			       })
-			};
-			
-             function infoModal(orderNo){            	
-            	$.ajax({
-            		url : "/infoModal",
-            		method : "POST",
-            		dataType : "JSON",
-            		data : JSON.stringify({"orderNo" : orderNo}),
-            		contentType: 'application/json; charset=utf-8',
-					beforeSend : function(xhr){
-						xhr.setRequestHeader(header, token);
-					},
-            		success : function(data){
-            			infoInfo.resetData(data);
-            			
-            		},
-            		error : function(reject){
-            			console.log(reject);
-            		}
-            	})
-            };
-            
-             function matOrdModal(orderNo){
-            	
-            	$.ajax({
-            		url : "/matOrdModal",
-            		method : "POST",
-            		dataType : "JSON",
-            		data : JSON.stringify({"orderNo" : orderNo}),
-            		contentType: 'application/json; charset=utf-8',
-					beforeSend : function(xhr){
-						xhr.setRequestHeader(header, token);
-					},
-            		success : function(data){
-            			matGrid.resetData(data);
-            			
-            		},
-            		error : function(reject){
-            			console.log(reject);
-            		}
-            	})
-            }; 
             
             function emp() {
                $.ajax({
@@ -402,15 +232,6 @@
             	 empGrid2.refreshLayout();
                }, '.modal');
              
-             document.addEventListener('shown.bs.modal', function() {
-            	 matGrid.refreshLayout();
-            	 infoInfo.refreshLayout();            	 
-               }, '.modal');
-             
-             document.addEventListener('shown.bs.modal', function() {
-            	 orderNoGrid.refreshLayout();
-               }, '.modal');
-             
 
                   
             /*------------
@@ -430,124 +251,7 @@
                   name : 'empName'
                }]
             });
-            
-   		    var matGrid = new tui.Grid({
-				el : document.getElementById('matGrid'),
-				pagination:true,
-				pageOptions: {
-				    useClient: true,
-				    perPage: 5
-				  },
-				scrollX : false,
-				scrollY : false,
-				columns : [ {
-					header : '제품 코드',
-					name : 'prtCode',
-					align : 'center'
-				}, {
-					header : '제품명',
-					name : 'prtName',
-					align : 'center'
-				}, {
-					header : '자재 코드',
-					name : 'matCode',
-					align : 'center'
-				}, {
-					header : '자재명',
-					name : 'matName',
-					align : 'center'
-				}, {
-					header : '단가',
-					name : 'matUnitPrc',
-					align : 'center'
-				}, {
-					header : '주문수량',
-					name : 'matOrdQty',
-					align : 'center'
-				},  {
-					header : '총액',
-					name : 'matPrice',
-					align : 'center'
-				},  {
-					header : '거래처 코드',
-					name : 'cpCode',
-					align : 'center'
-				},  {
-					header : '거래처명',
-					name : 'cpName',
-					align : 'center'
-				},   {
-					header : '담당자',
-					name : 'matOrdEmp',
-					align : 'center'
-				} ]
-			});
-            
-   		 matGrid.hideColumn("prtCode");
-   		 matGrid.hideColumn("matCode", "matCode");
-   		 matGrid.hideColumn("cpCode", "cpCode");
-            /*------------
-            // 해당하는 header의 모달창 띄우기
-            ----------------*/
-            
-            
-            orderNoGrid.on('click',function(ev){
-					let orderNo = orderNoGrid.getRow(ev.rowKey).orderNo;
-					infoModal(orderNo);
-					matOrdModal(orderNo);
-					
-					$('#matModal').modal('show');
-					infoInfo.refreshLayout();
-					matGrid.refreshLayout();
-               });
-          
-          
-            matGrid.on('click',function(ev){
-         	   if (ev.columnName == 'matOrdEmp'){
-               $('#empModal2').modal('show');
-               empGrid2.refreshLayout();
-            }
-            });
-            
-            /*------------
-            // matCode 모달 데이터 가져오기
-            ----------------*/
-/*              matCodeGrid2.on('click', ev => {
-               let rowData = matCodeGrid2.getRow(ev.rowKey); // 거래처클릭한 그리드
-               
-               let mcVal = rowData['matCode'];
-               let mnVal = rowData['matName'];
-               
-               $('#matCode1').val(mcVal);
-               $('#matCode2').val(mnVal);
-               
-               $('#matCodeModal2').modal("hide");
-               
-            });
-             */
-             
-/*              	grid.on('click', function(){
-             		let orderNo = 
-             	}
-             	}) */
-               /*------------
-            // matCode 모달에서 가져온 데이터 행에 넣어주기
-            ----------------*/
-/*              matCodeGrid.on('click', ev => {
-               let val = matCodeGrid.getRow(ev.rowKey); // 거래처클릭한 그리드
-              
-               let val2 = insertGrid.getFocusedCell().rowKey; // 진짜 큰 그리드
-                
-                  console.log(matCodeGrid.getValue(ev.rowKey,ev.columnName));
-                const amg = matCodeGrid.getValue(ev.rowKey,ev.columnName);
-                insertGrid.setValue(val2, 'matCode', val.matCode);
-                insertGrid.setValue(val2, 'matName', val.matName);
-         
-                $('#matCodeModal').modal("hide");
-            }); */
-               
-               
-               
+           
             /*------------
             // 사원 모달에서 가져온 데이터 행에 넣어주기
             ----------------*/
@@ -564,187 +268,6 @@
 				//$('#empId').val(val.empId);          
                  $('#empModal2').modal("hide");
              });
-            
-           
-               
-               /*------------
-				// 등록
-				----------------*/
-			    function insertMatbuy() {
-            	   
-	       			let mat = matGrid.getData();
-	       			let ordNo1 = infoInfo.getData();
-	       			let orderNo = [];
-	       		
-        			//let ordNo1 = infoInfo.getData().orderNO;
-        			//console.log("ordNo1" + ordNo1);
-        			//let ordNo2 = infoInfo.getValue(orderNo);
-        			//console.log("ordNo2" + ordNo2);
-        			
-					for (key in ordNo1) {
-						orderNo.push(ordNo1[key].orderNo);
-                 }
-					console.log(orderNo);
-
-        			
-	            // debugger
-	            let header = $("meta[name='_csrf_header']").attr('content');
-	            let token = $("meta[name='_csrf']").attr('content');
-	            $.ajax({
-	               url : "/insertMatbuy",
-	               method : "POST",
-	               //data : { Qty : Qty, mc : mc,cd : cd, mp : mp, moe : moe },
-	               data: JSON.stringify(mat),
-	               dataType:'json',
-	               contentType: 'application/json; charset=utf-8',
-	               async: false,
-	               beforeSend : function(xhr) {
-	                  xhr.setRequestHeader(header, token);
-	               },
-	               success : function(data) {
-	            	   if(data > 0) {
-	                  	console.log(data);
-	                  	matOrdList();
-	            	   }else {
-	            		   alert("실패")
-	            	   }
-	               },
-	               error : function(request,status,error) {
-	            	   alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-	               }
-	            });
-	            
-	            $.ajax({
-	            	url : "/updateordYn",
-	            	method : "POST",
-	            	contentType : "application/json",
-		               data : JSON.stringify({"orderNo" : orderNo}),
-		               async: false,
-		               beforeSend : function(xhr) {
-		                  xhr.setRequestHeader(header, token);
-		               },
-		               success : function(data) {
-		            	   if(data > 0) {
-		            			alert("업데이트완료");
-		                  		console.log(data);
-		            	   }else {
-		            		   alert("실패")
-		            	   }
-		               },
-		               error : function(request,status,error) {
-		            	   alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-		               }
-		            });
-        		};
-        		
-        		/*------------
-				// 수정 ( 체크한 수 만큼 update )
-				----------------*/
-			    function update() {
-        			
- 
-					
-        			let mon = [];
-           			let Qty = [];
-           			let mc = [];
-           			let cd = [];
-           			let mp = [];
-           			let moe = [];
-           			let yn = [];
-           			let obj = grid.getCheckedRows();
-					console.log(obj);
-         		  	
-           			for (key of grid.getCheckedRows()) {
-           				mon.push(key.matOrdNo);
-           				Qty.push(key.matOrdQty);
-           				mc.push(key.matCode);
-         		  		cd.push(key.cpCode);
-         		  		mp.push(key.matPrice);
-         		  		moe.push(key.matOrdEmp);
-         		  		yn.push(key.matOrdYn);
-         			  		console.log(mon);
-         			  	}
-         			  	console.log(Qty);
-         			  	
-		            // debugger
-		            let header = $("meta[name='_csrf_header']").attr('content');
-		            let token = $("meta[name='_csrf']").attr('content');
-		            $.ajax({
-		               url : "/updateMatbuy",
-		               method : "POST",
-		               data : { mon : mon, Qty : Qty, mc : mc,cd : cd, mp : mp, moe : moe, yn : yn },
-		               dataType:'json',
-		               async: false,
-		               beforeSend : function(xhr) {
-		                  xhr.setRequestHeader(header, token);
-		               },
-		               success : function(data) {
-		            	   if(data > 0) {
-		                  	console.log(data);
-		                  	matOrdList();
-		            	   }else {
-		            		   alert("실패")
-		            	   }
-		               },
-		               error : function(reject) {
-		                  console.log(reject);
-		               }
-		            })
-	        		};
-	        		
-    		/*------------
-			// 삭제 ( 체크한 수 만큼 deleteMat )
-			----------------*/
-		    function deleteMat() {
-				
-    			let delno = [];
-       			let obj = grid.getCheckedRows();
-				console.log(obj);
-     		  	
-				/*for (key of grid.getCheckedRows()) {
-       				delno.push(key.matOrdNo);
-     			  	} */
-       			for (key in obj) {
-       				delno.push(obj[key].matOrdNo);
-                 }
-
-     			  	
-	            // debugger
-	            let header = $("meta[name='_csrf_header']").attr('content');
-	            let token = $("meta[name='_csrf']").attr('content');
-	            $.ajax({
-	               url : "/deleteMat",
-	               method : "POST",
-	               contentType : "application/json",
-	               data : JSON.stringify(  { "delno" : delno} ),
-	               async: false,
-	               beforeSend : function(xhr) {
-	                  xhr.setRequestHeader(header, token);
-	               },
-	               success : function(data) {
-	            	   if(data > 0) {
-	            			alert("삭제완료");
-	                  		console.log(data);
-	                  		matOrdList();
-	            	   }else {
-	            		   alert("실패")
-	            	   }
-	               },
-	               error : function(request,status,error) {
-	            	   alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-	                  console.log(reject);
-	               }
-	            })
-        		};
-         </script>
-			<script>
-/*             var datepicker = new tui.DatePicker('#wrapper', {
-               date : new Date(),
-               input : {
-                  element : '#datepicker-input',
-                  format : 'yyyy-MM-dd'
-               }
-            }); */
          </script>
 		</main>
 	</article>

@@ -56,6 +56,8 @@ public interface MatService {
 	public int updateChk(MatVO MatVO);
 	//미입고 => 발주Yn => 입고로 수정
 	public int updateMoy(MatVO MatVO);
+	//미입고 => 입고시 불량
+	public int insertErr(MatVO MatVO);
 	
 	
 	//출고 전체 조회
