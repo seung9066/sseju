@@ -51,19 +51,19 @@
 	
 		<!-- 등록된 작업 지시 내역 그리드에 띄우는 쿼리 -->
 	<select id="getWorkOrderList" resultType="woVO">
-		SELECT pe.order_no, pe.pre_no, pt.prt_name, pt.prt_code, pe.ins_qty,
-		        pe.pre_date, pe.pre_manager, ee.emp_name, ods.d_day
-		
-		FROM orders ods JOIN produce pe
-		    ON ods.order_no = pe.order_no
-		JOIN order_inf odi
-		    ON odi.order_no = ods.order_no
-		JOIN product pt
-		    ON pt.prt_code = odi.prt_code
-		JOIN employee ee
-			ON ee.emp_id = pe.pre_manager
-        JOIN order_inf odi
-            ON (odi.order_yn ='W') OR (odi.order_yn ='K')
+		      SELECT pe.order_no, pe.pre_no, pt.prt_name, pt.prt_code, pe.ins_qty,
+              pe.pre_date  + 9/24 as pre_date, pe.pre_manager, ee.emp_name, ods.d_day
+      
+      FROM orders ods JOIN produce pe
+          ON ods.order_no = pe.order_no
+      JOIN order_inf odi
+          ON odi.order_no = ods.order_no
+      JOIN product pt
+          ON pt.prt_code = odi.prt_code
+      JOIN employee ee
+          ON ee.emp_id = pe.pre_manager
+      WHERE  (odi.order_yn ='W') OR (odi.order_yn ='K')
+      ORDER BY ods.order_no ASC
 	</select>
 	
 	<!-- 직원 아이디, 이름 가져오기 -->

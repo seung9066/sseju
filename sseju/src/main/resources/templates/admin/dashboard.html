@@ -119,7 +119,7 @@
 												<div class="ps-3">
 													<h6>{{ prtOut }}</h6>
 													<span class="text-success small pt-1 fw-bold">{{
-														percent }}</span> <span class="text-muted small pt-2 ps-1"></span>
+														percentB }}</span> <span class="text-muted small pt-2 ps-1"></span>
 
 												</div>
 											</div>
@@ -135,7 +135,7 @@
 		el: '#sojuoutcard',
 		data : {
 			prtOut: 0,
-			percent: 0
+			percentB: 0
 		},
 		mounted () {
 			this.updateNow()
@@ -151,7 +151,7 @@
 						success:function(data){
 							if (data.count != '') {
 							vueObject.prtOut = data.count;
-							vueObject.percent = data.percent;
+							vueObject.percentB = data.percent;
 							}
 						},
 						error:function(request,status,error){
@@ -184,7 +184,7 @@
 												<div class="ps-3">
 													<h6>{{ error }}</h6>
 													<span class="text-danger small pt-1 fw-bold">{{
-														percent }}</span> <span class="text-muted small pt-2 ps-1"></span>
+														percentA }}</span> <span class="text-muted small pt-2 ps-1"></span>
 
 												</div>
 											</div>
@@ -200,7 +200,7 @@
 		el: '#errorcountcard',
 		data : {
 			error: 0,
-			percent: 0
+			percentA: 0
 		},
 		mounted () {
 			this.updateNow()
@@ -216,7 +216,7 @@
 						success:function(data){
 							if (data.count != '') {
 							vueObject.error = data.count;
-							vueObject.percent = data.percent;
+							vueObject.percentA = data.percent;
 							}
 						},
 						error:function(request,status,error){
@@ -807,6 +807,8 @@ $.ajax({
 }
 
 function startPr() {
+	$('#WLModal').modal('hide');
+	
 	$.ajax({
 	    url: 'startPr',
 	    type : "POST",

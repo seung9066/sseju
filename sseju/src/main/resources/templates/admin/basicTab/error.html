@@ -93,7 +93,7 @@ td {
 				const errGrid = new tui.Grid({
 					el : document.getElementById('errGrid'),
 					pagination : true,
-					pageOption : {
+					pageOptions : {
 						useClient : true,
 						perPage : 10
 					},
@@ -156,6 +156,24 @@ td {
 				})
 				
 				errGrid.on('check', ev => {
+					console.log(errGrid.getValue(ev.rowKey, 'errCode'));
+					deleteCode.push((errGrid.getValue(ev.rowKey, 'errCode')));
+					
+					console.log($('input[name=_checked]').val());
+					
+					$('#errCode').val(errGrid.getValue(ev.rowKey, 'errCode'));
+					$('#errCode').attr('readonly', true);
+					$('#errName').val(errGrid.getValue(ev.rowKey, 'errName'));
+					let type = errGrid.getValue(ev.rowKey, 'divName');
+					if (type == '자재') {
+						$('#errOption').val('MAT');						
+					} else if (type == '공정') {
+						$('#errOption').val('PRS');
+					}
+					$('#code').val(errGrid.getValue(ev.rowKey, 'code'));
+				});
+				
+				errGrid.on('click', ev => {
 					console.log(errGrid.getValue(ev.rowKey, 'errCode'));
 					deleteCode.push((errGrid.getValue(ev.rowKey, 'errCode')));
 					

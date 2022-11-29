@@ -47,7 +47,7 @@
 	<select id="getBomList" parameterType="CodeVO"
 		resultType="CodeVO">
 		SELECT p.prt_name, b.prt_code, b.capacity, b.mat_code,
-		m.mat_name FROM bom b, product p, material m WHERE p.prt_name =
+		m.mat_name, '삭제' AS dell FROM bom b, product p, material m WHERE p.prt_name =
 		#{prtName} AND p.prt_code = b.prt_code AND b.mat_code = m.mat_code
 		ORDER BY no
 	</select>
@@ -298,12 +298,11 @@
 
 	<select id="WhPrd" parameterType="CodeVO" resultType="CodeVO">
 		SELECT
-		p.prt_name, l.lot_qty FROM
+		p.prt_name, sum(l.lot_qty) AS lot_qty FROM
 		lot l, product p WHERE
-		l.mp_code
-		= p.prt_code
-		AND l.mp_code LIKE
-		'PRD_%' AND l.wh_code = #{whCode}
+		l.mp_code = p.prt_code
+		AND l.wh_code = #{whCode}
+		GROUP BY p.prt_name
 	</select>
 
 	<select id="updatePrttCount" resultType="CodeVO">
@@ -574,18 +573,17 @@
 		,#{matOrdEmp}
 		)
 	</insert>
-
-	<insert id="insertMatChk" parameterType="CodeVO">
-		<selectKey keyProperty="matChkCode" resultType="String"
-			order="BEFORE">
-			SELECT 'MAT_CK'||LPAD(NVL(MAX(SUBSTR(mat_chk_code,
-			-3)),0)+1,3,0) FROM
+	
+	<select id="getMatChkNo" resultType="CodeVO">
+		SELECT 'MAT_CK'||LPAD(NVL(MAX(SUBSTR(mat_chk_code,
+			-3)),0)+1,3,0) AS mat_chk_code FROM
 			mat_chk
-		</selectKey>
+	</select>
+	
+	<insert id="insertMatChk" parameterType="CodeVO">
 		INSERT INTO mat_chk
 		VALUES
 		(#{matChkCode}
-		, ''
 		,#{matInQty}
 		,#{matErrQty}
 		,#{matOrdNo}
@@ -593,6 +591,19 @@
 		,#{matPassQty}
 		,#{matCode})
 	</insert>
+	
+	<insert id="insertMatErr" parameterType="CodeVO">
+		<selectKey keyProperty="matNo" resultType="Integer"
+			order="BEFORE">
+			SELECT NVL(MAX(mat_no),0) + 1 FROM mat_err
+		</selectKey>
+		INSERT INTO mat_err
+		VALUES(#{matNo}, #{matChkCode}, '', #{errCode})
+	</insert>
+	
+	<select id="selectMatErr" resultType="CodeVO">
+		SELECT * FROM error WHERE code = #{matCode}
+	</select>
 
 	<update id="updateMatYN" parameterType="CodeVO">
 		UPDATE mat_buy SET
@@ -610,7 +621,8 @@
 	</select>
 
 	<select id="getLotNo" resultType="CodeVO">
-		SELECT 'LOT'||LPAD(NVL(MAX(SUBSTR(lot_no, -3)),0)+1,3,0) AS lot_no FROM lot
+		SELECT 'LOT'||to_char(sysdate,
+		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(lot_no, -3)),0)+1,3,0) AS lot_no FROM lot
 	</select>
 
 	<update id="updateLotQty" parameterType="CodeVO">

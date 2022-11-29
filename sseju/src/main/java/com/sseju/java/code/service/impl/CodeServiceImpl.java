@@ -297,6 +297,7 @@ public class CodeServiceImpl implements CodeService {
 		// TODO Auto-generated method stub
 		return mapper.updatePrtOutCount();
 	}
+	
 
 	@Override
 	public CodeVO updateErrCount() {
@@ -622,8 +623,6 @@ public class CodeServiceImpl implements CodeService {
 		CodeVO vo = new CodeVO();
 		vo.setPrtName(prtName.get(0));
 		vo = mapper.getPrtCode(vo);
-		System.out.println("aaaaaaaaaaaaaa");
-		System.out.println(vo.getPrtCode());
 		mapper.deleteBOM(vo);
 
 		for (int i = 0; i < mat.size(); i++) {
@@ -1043,7 +1042,7 @@ public class CodeServiceImpl implements CodeService {
 					mapper.insertLot(voLotI);
 					
 					prdOut = 3135;
-					j = prdOut / 3;
+					j = 0;
 					k = prdOut * 1 / 100;
 
 					// 완제품 공정
@@ -1096,7 +1095,7 @@ public class CodeServiceImpl implements CodeService {
 					mapper.updateEqm(voEqm);
 
 					prdOut = 3135;
-					j = prdOut / 3;
+					j = 0;
 					k = prdOut * 1 / 100;
 
 					// 완제품 이전 공정
@@ -1158,7 +1157,7 @@ public class CodeServiceImpl implements CodeService {
 					mapper.insertLot(voLotI);
 					
 					prdOut = prdOrder;
-					j = prdOut / 10;
+					j = 0;
 					k = prdOut * 1 / 100;
 
 					// 완제품 공정
@@ -1234,7 +1233,7 @@ public class CodeServiceImpl implements CodeService {
 					mapper.updateEqm(voEqm);
 
 					prdOut = prdOrder;
-					j = prdOut / 10;
+					j = 0;
 					k = prdOut * 1 / 100;
 
 					// 완제품 이전 공정
@@ -1324,6 +1323,7 @@ public class CodeServiceImpl implements CodeService {
 	public int orderNow(List<CodeVO> list) {
 		List<CodeVO> listBom = new ArrayList<>();
 		List<CodeVO> whList = new ArrayList<>();
+		List<CodeVO> errList = new ArrayList<>();
 		whList = mapper.WHListA();
 		System.out.println("ㅁAAA");
 		for (int i = 0; i < list.size(); i++) {
@@ -1344,11 +1344,20 @@ public class CodeServiceImpl implements CodeService {
 				mapper.insertMatBuy(vo);
 
 				System.out.println("ㅁ자재검수");
+				vo.setMatChkCode(mapper.getMatChkNo().getMatChkCode());
 				vo.setMatInQty(list.get(i).getOrderQty() * 110 / 100);
 				vo.setMatErrQty(vo.getMatInQty() * 5 / 100);
 				vo.setMatPassQty(vo.getMatInQty() - vo.getMatErrQty());
 				mapper.insertMatChk(vo);
-
+				
+				System.out.println("ㅁ자재불량코드 찾기");
+				errList = mapper.selectMatErr(vo);
+				
+				System.out.println("ㅁ자재불량 테이블 인서트");
+				int u = (int) Math.random() * errList.size();
+				vo.setErrCode(errList.get(u).getErrCode());
+				mapper.insertMatErr(vo);
+				
 				System.out.println("ㅁ자재진행여부");
 				mapper.updateMatYN(vo);
 

@@ -33,24 +33,19 @@ input {
 				<strong>BOM 관리</strong>
 			</h4>
 			<div></div>
-			<form action="insertBOM" method="POST">
+			<br>
+			<h3 id="title">전체</h3>
+			<div>
+				<div id="menuGrid"></div>
+				<br>
 				<div style="float: right; margin-bottom: 3%;">
 					<button type="button" class="button"
 						style="width: 100px; height: 30px;" onclick="put()">재료추가</button>
 					<button type="button" class="button"
-						style="width: 100px; height: 30px;" onclick="updateBOM()">수정</button>
-					<button type="button" class="button"
-						style="width: 100px; height: 30px;" onclick="input()">등록</button>
+						style="width: 100px; height: 30px;" onclick="updateBOM()">등록/수정</button>
 				</div>
 				<table>
 					<tr>
-						<th>제품명</th>
-						<td><select style="width: 150px;" id="name">
-								<option>---선택---</option>
-								<th:block th:each="p : ${prt}">
-									<option th:value="${p.prtName}" th:text="${p.prtName}"></option>
-								</th:block>
-						</select></td>
 						<th>재료</th>
 						<td><select style="width: 150px;" id="mat">
 								<option>선택</option>
@@ -62,12 +57,6 @@ input {
 						<td><input type="text" id="prc"></td>
 					</tr>
 				</table>
-				<div id="input"></div>
-			</form>
-			<br>
-			<h3 id="title">전체</h3>
-			<div>
-				<div id="menuGrid"></div>
 				<br>
 				<div id="bomGrid"></div>
 			</div>
@@ -82,9 +71,9 @@ input {
 			const menuGrid = new tui.Grid({
 				el : document.getElementById('menuGrid'),
 				pagination:true,
-				pageOption: {
+				pageOptions: {
 					useClient:true,
-					perPage:10
+					perPage:5
 				},
 				scrollX : false,
 				scrollY : false,
@@ -99,25 +88,28 @@ input {
 			const BOMGrid = new tui.Grid({
 				el : document.getElementById('bomGrid'),
 				pagination:true,
-				pageOption: {
+				pageOptions: {
 					useClient:true,
-					perPage:10
+					perPage:5
 				},
-				rowHeaders: ['checkbox'],
 				scrollX : false,
 				scrollY : false,
 				columns : [ {
 					header : '재료명',
 					name : 'matName',
 					align : 'center',
-					filter: 'select',
-					editor: 'text'
+					filter: 'select'
 				}, {
 					header : '용량',
 					name : 'capacity',
 					align : 'center',
 					filter: 'select',
 					editor:'text'
+				}, {
+					header : '삭제',
+					name : 'dell',
+					align : 'center',
+					width : 300
 				}]
 			});
 			
@@ -145,12 +137,17 @@ input {
 				})
 			});
 			
+			BOMGrid.on('click', (ev) => {
+				if (ev.nativeEvent.target.innerText == '삭제') {
+					BOMGrid.removeRow(ev.rowKey);
+				}
+			})
+			
 			function updateBOM() {
-				console.log(BOMGrid.getCheckedRows());
+				console.log(BOMGrid.getData());
 				let mat = [];
 				let cap = [];
-				for(co of BOMGrid.getCheckedRows()){
-					console.log(co.matName);
+				for(co of BOMGrid.getData()){
 					mat.push(co.matName);
 					cap.push(co.capacity);
 				}
@@ -212,59 +209,11 @@ input {
 				let prc = $('#prc').val();
 				let mat = $('#mat').val();
 				
-				$('#input').append('<span>제품명</span><input type="text" name="prtName" value="'+ name +'" readonly style="border:0px;"><span>재료</span><input type="text" name="matName" value="'+ mat +'" readonly style="border:0px;"><span>용량</span><input type="text" name="capacity" value="'+ prc +'" readonly style="border:0px;"><br>');
+				let insertRow = {matName : mat, capacity: prc, dell: '삭제'};
+				BOMGrid.appendRow(insertRow);
 			}
 			
-			function input() {
-				let nameList = [];
-				let matList = [];
-				let capList = [];
-				
-				let name = $('#input').find('input[name="prtName"]');
-				for (let i = 0; i < name.length; i++) {
-					nameList.push(name[i].value);
-				}
-
-				let cap = $('#input').find('input[name="capacity"]');
-				for (let i = 0; i < cap.length; i++) {
-					capList.push(cap[i].value);
-				}
-				
-				let mat = $('#input').find('input[name="matName"]');
-				for (let i = 0; i < mat.length; i++) {
-					matList.push(mat[i].value);
-				}
-				
-				var token = $("meta[name='_csrf']").attr("content");
-				var header = $("meta[name='_csrf_header']").attr("content");
-				
-				$.ajax({
-					url:'insertBOM',
-					type:'POST',
-					data:{nameList:nameList, capList:capList, matList:matList},
-					dataType:"json",
-					async:false,
-					beforeSend : function(xhr){
-						xhr.setRequestHeader(header, token);
-					},
-					success:function(data){
-						if(data > 0) {
-							alert("등록완료");
-							showAll();					
-						} else {
-							alert("등록실패");
-						}
-					},
-					error:function(request,status,error){
-						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-						console.log(code);
-						console.log(reject);
-					}
-				})
-				
-				menuAll();
-				$('#input').html('');
-			}
+			
 			</script>
 		</main>
 	</article>

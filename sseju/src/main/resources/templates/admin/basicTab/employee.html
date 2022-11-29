@@ -83,7 +83,7 @@ td {
 				const empGrid = new tui.Grid({
 					el : document.getElementById('empGrid'),
 					pagination : true,
-					pageOption : {
+					pageOptions : {
 						useClient : true,
 						perPage : 10
 					},
@@ -118,32 +118,21 @@ td {
 				
 				var deleteCode = [];
 				
-				empGrid.on('check', ev => {
-					console.log(empGrid.getValue(ev.rowKey, 'empId'));
-					deleteCode.push((empGrid.getValue(ev.rowKey, 'empId')));
-					
-					console.log($('input[name=_checked]').val());
-					
-					$('#empId').val(empGrid.getValue(ev.rowKey, 'empId'));
-					$('#empId').attr('readonly', true);
-					$('#empName').val(empGrid.getValue(ev.rowKey, 'empName'));
-					$('#empDept').val(empGrid.getValue(ev.rowKey, 'empDept'));
-					$('#empRank').val(empGrid.getValue(ev.rowKey, 'empRank'));
-				});
-				
-				empGrid.on('uncheck', ev => {
-					console.log(empGrid.getValue(ev.rowKey, 'empId'));
-					for(let i = 0; i < deleteCode.length; i++) {
-						if(deleteCode[i] == empGrid.getValue(ev.rowKey, 'empId')) {
-							deleteCode.splice(i, 1);
-						}
+				empGrid.on('click', ev => {
+					if ($('#empId').val() == empGrid.getValue(ev.rowKey, 'empId')){
+						$('#empId').val('');
+						$('#empId').attr('readonly', false);
+						$('#empName').val('');
+						$('#empDept').val('');
+						$('#empRank').val('');
+					} else {
+						$('#empId').val(empGrid.getValue(ev.rowKey, 'empId'));
+						$('#empId').attr('readonly', true);
+						$('#empName').val(empGrid.getValue(ev.rowKey, 'empName'));
+						$('#empDept').val(empGrid.getValue(ev.rowKey, 'empDept'));
+						$('#empRank').val(empGrid.getValue(ev.rowKey, 'empRank'));	
 					}
-					$('#empId').val('');
-					$('#empId').attr('readonly', false);
-					$('#empName').val('');
-					$('#empDept').val('');
-					$('#empRank').val('');
-					console.log(deleteCode);
+					
 				});
 				
 				function selectDeleteEmp() {
