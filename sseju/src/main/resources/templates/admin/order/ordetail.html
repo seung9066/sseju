@@ -217,7 +217,25 @@
 
 				}// suc
 			});
+			
+			console.log(b)
+			let list = b;
+			
+			$.ajax({
+       		 url: "/user/orderNow",
+       		 method: 'POST',
+       		 data: JSON.stringify(list),
+       		 dataType: 'JSON',
+       		 contentType: 'application/json; charset=utf-8',
+					beforeSend : function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(a) {
+						
+					}
+		})
 		}
+		
 		
 		</script>
 			<script>

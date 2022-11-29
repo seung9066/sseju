@@ -91,6 +91,18 @@ public class CodeVO {
 	private Date dDay;
 	private int orderOutQty;
 	
+	private int orderQty;
+	private int matOrdQty;
+	private String nowCode;
+	private String matOrdYn;
+	private int matPrice;
+	private String matOrdEmp;
+	
+	private int matInQty;
+	private int matErrQty;
+	private String matOrdNo;
+	private int matPassQty;
+	
 	// Thread
 	private String mpCode;
 	private String lotNo;
@@ -99,7 +111,7 @@ public class CodeVO {
 	private String outForm;
 	private String lotOption;
 	private String matChkCode;
-	
+	private String prfNo;
 	private int matOutQty;
 	private String outType;
 	private String outFrom;

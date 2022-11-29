@@ -1,8 +1,10 @@
 package com.sseju.java.code.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.sseju.java.employee.service.EmployeeVO;
 
@@ -67,6 +69,14 @@ public interface CodeService {
 	public int insertWM(CodeVO vo);
 	public int deleteWM(CodeVO vo);
 	
+	public List<CodeVO> MatBomList(CodeVO vo);
+	public int insertMatBuy(CodeVO vo);
+	public CodeVO matOrdNo();
+	public int insertMatChk(CodeVO vo);
+	public int orderInfYN(CodeVO vo);
+	public CodeVO getMatCompany(CodeVO vo);
+	public int updateMatYN(CodeVO vo);
+	
 	// main
 	public CodeVO updatePrtCount();
 	public CodeVO ydPrtCount();
@@ -85,6 +95,8 @@ public interface CodeService {
 	public List<CodeVO> prdCount();
 	
 	// Thread
+	public void startThread(CodeVO vo);
+	
 	public List<CodeVO> getBomListC(CodeVO vo);
 	public CodeVO getLotMat(CodeVO vo);
 	public int insertMatOut(CodeVO vo);
@@ -106,4 +118,25 @@ public interface CodeService {
 	public int insertLot(CodeVO vo);
 	public List<CodeVO> WHListA();
 	public int updateEqm(CodeVO vo);
+	public int updateLotQty(CodeVO vo);
+	public CodeVO getLotNo();
+	public int insertLotA(CodeVO vo);
+	public int updateProducePrePrg(CodeVO vo);
+	
+	public int selectDeleteCP(List<String> vo);
+	public int insertBOM(List<String> nameList, List<String> capList, List<String> matList);
+	public int updateBOM(List<String> mat, List<String> cap, List<String> prtName);
+	public String insertP(CodeVO vo);
+	public int selectDeletePM(List<String> prt, List<String> mat);
+	public String insertPrsA(CodeVO vo);
+	public int selectDeletePW(List<String> prt, List<String> mat);
+	public String insertWhA(CodeVO vo);
+	public String insertErrA(CodeVO vo);
+	public int updateErrA(CodeVO vo);
+	public Map<String, String> updateWorker(List<String> preNo, List<String> inputId, List<String> deleteId);
+	public Map<String, String> updatePrtCountA();
+	public Map<String, String> updatePrtOutCountA();
+	public Map<String, String> updateErrCountA();
+	
+	public int orderNow(List<CodeVO> list);
 }
