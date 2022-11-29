@@ -25,7 +25,7 @@ public class LotTrackController {
 	//ㄴ제품로트 페이지 그리드에 띄워주기
 	@GetMapping("/getLotTrackList")
 	@ResponseBody
-	public List<LotTrackVO> getLotTrackList(Model model){
+	public List<LotTrackVO> getLotTrackList(){
 		return ltService.getLotTrackList();
 	}
 	

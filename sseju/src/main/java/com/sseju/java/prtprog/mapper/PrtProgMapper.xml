@@ -9,7 +9,7 @@
 	<!-- R select 관련 쿼리 -->
 		<!-- 생산 진행 현황의 첫번째 그리드 -->
 	<select id="getPrtProgList" resultType="pprVO">
-		SELECT prr.pre_no, pt.prt_name, pe.pre_qty, pe.ins_qty, pe.pre_date, pe.pre_manager, ee.emp_name
+		SELECT prr.pre_no, pt.prt_name, prr.prt_qty, pe.ins_qty, pe.pre_date, pe.pre_manager, ee.emp_name
 		FROM product pt JOIN produce pe
 		    ON pt.prt_code = pe.prt_code
 		JOIN process_run prr

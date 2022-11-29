@@ -22,5 +22,6 @@ public class MatInputHistoryVO {
 	private String prsManager;	//담당자명(자재를 공정으로 출고시킨담당자의 이름
 		//ㄴ동명이인 가능성이 있기때문에 id로 emp테이블의 이름값을 가져와야한다
 	private String empId;		//ㄴemp테이블의 이름을 가져오기 위해서
+	private String preNo;		//작업 지시 번호
 	
 }

@@ -14,6 +14,7 @@ public class PrtProgVO {
 	private String preNo;	//작업지시번호 produce_inf테이블 1
 	private String prtName;	//제품명, product테이블에서 끌어와야함2
 	private int preQty;		//생산된 수량 produce 테이블3
+	private int prtQty; //생산수량
 	private int insQty;		//지시수량 "4
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date preDate;	//작업 지시 일자5

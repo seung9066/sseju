@@ -6,14 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>workOrderList</title>
-<!-- 제이쿼리 -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<!-- 토스트UI -->
-<link rel="stylesheet"
-	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
-
 <style type="text/css">
 .row {
 	margin: 15px;
@@ -40,11 +32,7 @@ input {
 			</h4>
 			<br>
 			<h6 style="display: inline-block;">주문 신청 내역</h6>
-			<!-- <div style="float: right">
-				<button class="button" onclick="selectDeleteOrder()">삭제</button>
-			</div> -->
 			<div id=orderNoGrid></div>
-
 
 			<!-- 작업 지시 등록 칸 -->
 			<br>
@@ -63,13 +51,6 @@ input {
 							<th>품목명</th>
 							<td><input type="text" id="prtName" name="prtName" readonly>
 								<input type="hidden" id="prtCode" name="prtCode"></td>
-
-							<!-- <select id="woPrt" name="woPrt">
-										<option>---선택---</option>
-										<th:block th:each="p : ${prt}">
-											<option th:value="${p.prtCode}" th:text="${p.prtName}"></option>
-										</th:block>
-									</select> -->
 							<th>담당자</th>
 							<td><select name="empId" id="empId">
 									<option>---선택---</option>
@@ -86,18 +67,13 @@ input {
 					</table>
 				</div>
 			</form>
-			<!-- DB에서 불러온 데이터 grid로 띄워줌
-			grid에 띄워진 list를 클릭하면 상세정보가 나오게 할 수 있는지 알아봐야함
-			 -->
 			<br>
 			<div>
 				<h6 style="display: inline-block;">등록된 작업 지시 내역</h6>
 				<div style="float: right">
 					<button class="button" onclick="updateWorkOrder()">수정</button>
-
 					<button class="button" onclick="selectDeleteWO()">삭제</button>
 				</div>
-
 			</div>
 			<div id="workorderGrid"></div>
 			<script type="text/javascript">
@@ -340,40 +316,6 @@ input {
 					      $('#prtName').val('');
 					      $('#insQty').val('');
 					    });
-				    
-		                
-		                /* 사용안함 */
-		                //주문 신청 내역 그리드의 선택 행 삭제
-			             function selectDeleteOrder(){
-						let deleteOrder = [];
-						
-						for(on of orderNoGrid.getCheckedRows()){
-							deleteOrder.push(on.orderNo);
-						}
-						   	$.ajax({
-						   		url : 'selectDeleteOrder',
-						   		type : 'POST',
-						   		data : {deleteOrder:deleteOrder},
-						   		dataType : "json",
-						   		async:false,
-						   		beforeSend : function(xhr){
-						   			xhr.setRequestHeader(header, token);
-						   		},
-						   		success : function(data){
-						   			if(data > 0){
-						   				alert("삭제완료")
-						   				showAll();
-						   				showAll2();
-						   			}else{
-						   				alert("삭제 실패")
-						   			}
-						   		},
-						   		error:function(reject){
-						   			console.log(reject);
-							   		}
-								});
-							}
-
 				    
 					//작업 지시 내역 그리드
 					function showAll() {

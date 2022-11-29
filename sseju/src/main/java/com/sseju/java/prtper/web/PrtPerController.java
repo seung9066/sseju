@@ -14,7 +14,7 @@ import com.sseju.java.prtper.service.PrtPerService;
 import com.sseju.java.prtper.service.PrtPerVO;
 //생산 실적 페이지 컨트롤러
 @Controller
-public class PrePerController {
+public class PrtPerController {
 	
 	@Autowired
 	PrtPerService ppService;
@@ -27,7 +27,7 @@ public class PrePerController {
 	}
 	//페이지 불러오기(리스트 출력 R)
 	@GetMapping("/prtPer")
-	public String prtPerList(Model model) {
+	public String prtPerList() {
 		return "/admin/produce/prtPer"; 
 	}
 //	ㄴ페이지에 지시 목록 가져오기

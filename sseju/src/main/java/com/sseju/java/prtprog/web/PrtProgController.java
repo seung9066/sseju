@@ -21,7 +21,7 @@ public class PrtProgController {
 	
 	//생산 진행 현황 페이지로 넘겨줌
 	@GetMapping("/prtProg")
-	public String prtProgList(Model model) {
+	public String prtProgList() {
 		return "/admin/produce/prtProg";
 	}
 	//생산 진행 현황 페이지의 그리드에 데이터 띄워주기

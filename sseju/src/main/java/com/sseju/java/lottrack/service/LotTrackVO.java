@@ -17,7 +17,8 @@ public class LotTrackVO {
 	private String outFrom;	//출고처 4
 	private String lotOption;//구분 5(아직 사용하는곳 X)
 	private int lotQty;		//생산수량(로트번호가 부여된 제품 단위의 총 개수) 6
-	private String prsManager; //로트 담당자 
+	private int prsOutPut;	//완제품 생산수량
+	private String prtQty; //로트 담당자 
 		//ㄴlot - process_run의 담당자를 가져와야함 
 	private String whManager; //로트 담당자 
 		//ㄴ로트 표기에 창고담당자를할지,prs_run의 담당자로 가져와야할지 몰라서 
