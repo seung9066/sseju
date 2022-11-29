@@ -16,6 +16,10 @@ public interface CodeMapper {
 	public int updateCode(CodeVO vo);
 	public int deleteCode(CodeVO vo);
 	public int selectDelete(List<String> list);
+	public List<CodeVO> msgUp();
+	public CodeVO msgCount();
+	public int insertMsg(CodeVO vo);
+	public int deleteMsg();
 	
 	// bom
 	public List<CodeVO> getBomList(CodeVO vo);

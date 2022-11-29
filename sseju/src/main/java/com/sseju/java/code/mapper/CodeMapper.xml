@@ -633,4 +633,24 @@
 	<update id="updateProducePrePrg" parameterType="CodeVO">
 		UPDATE produce SET pre_prg = '진행 완료' WHERE pre_no = #{preNo}
 	</update>
+	
+	<select id="msgCount" resultType="CodeVO">
+		SELECT COUNT(*) AS no FROM msg
+	</select>
+	
+	<select id="msgUp" resultType="CodeVO">
+		SELECT msg FROM msg ORDER BY no
+	</select>
+	
+	<insert id="insertMsg" parameterType="CodeVO">
+		<selectKey keyProperty="no" resultType="Integer"
+			order="BEFORE">
+			SELECT NVL(MAX(no),0) + 1 FROM msg
+		</selectKey>
+		INSERT INTO msg VALUES (#{no}, #{msg})
+	</insert>
+	
+	<delete id="deleteMsg">
+		DELETE FROM msg
+	</delete>
 </mapper>

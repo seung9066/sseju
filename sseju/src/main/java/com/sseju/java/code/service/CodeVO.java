@@ -12,6 +12,7 @@ import lombok.Data;
 public class CodeVO {
 	
 	private String dell;
+	private String msg;
 	private String CpName;
 	
 	// code
