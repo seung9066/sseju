@@ -158,7 +158,7 @@
 
     SELECT c.CHK_NO,
 	        c.CHK_DATE, c.CHK_NDATE, c.CHK_STATE, c.CHK_SOL,
-	        p.emp_id,q.EQM_CODE, q.EQM_NAME
+	        p.emp_id,q.EQM_CODE, q.EQM_NAME, q.eqm_check, q.eqm_check_term
       FROM EQM_CHK c
       JOIN EQM q ON c.eqm_code = q.eqm_code
       JOIN EMPLOYEE p ON c.chk_emp_no = p.emp_id	
