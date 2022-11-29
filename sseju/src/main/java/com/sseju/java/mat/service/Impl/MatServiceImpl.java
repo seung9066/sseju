@@ -263,4 +263,16 @@ public class MatServiceImpl implements MatService {
 		return matMapper.prtOrdList();
 	}
 
+	@Override
+	public List<MatVO> infoModal(MatVO MatVO) {
+		// TODO Auto-generated method stub
+		return matMapper.infoModal(MatVO);
+	}
+
+	@Override
+	public int updateordYn(MatVO MatVO) {
+		// TODO Auto-generated method stub
+		return matMapper.updateordYn(MatVO);
+	}
+
 }
