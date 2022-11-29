@@ -95,11 +95,11 @@ table, th, td {
 							<input type="date" class="form-control"
 								style="width: 200px; display: inline" id="chkNdateInput">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<label style="width: 100px">설비코드</label>
-							<select name="eqmDiv" id="eqmDivSearch">
+							<select name="eqmCode" id="eqmDivSearch">
 								<option selected>--전체--</option>
-								<option value="주입">bottle</option>
-								<option value="포장">inject</option>
-								<option value="병">package</option>
+								<th:block th:each="e : ${eqm}">
+									<option th:value="${e.eqmCode}" th:text="${e.eqmCode}"></option>
+								</th:block>
 							</select>
 							&nbsp;
 							<button type="button" class="button" id="chkSearch">검색</button>
@@ -140,9 +140,11 @@ table, th, td {
 								data-bs-toggle="modal" data-bs-target="#eqmModal" class="showModal" readonly>
 							</td>
 							<th class="col1">설비명</th>
-							<td><input type="text" name="eqmName" id="eqmName" data-bs-toggle="modal" data-bs-target="#eqmModal" class="showModal"></td>
+							<td><input type="text" name="eqmName" id="eqmName" readonly></td>
 							<th class="col1">점검일</th>
 							<td><input type="date" name="chkDate" id="chkDate"></td>
+							<th class="col1">점검주기</th>
+							<td><input type="number" name="eqmCheck" id="eqmCheck" readonly></td>
 							<th class="col1" rowspan="2">조치사항</th>
 							<td rowspan="2"><textarea placeholder="입력하시오." name="chkSol" id="chkSol"></textarea></td>
 							
@@ -154,11 +156,13 @@ table, th, td {
 								 value="불량" >불량 <input type="radio" id="pas"
 								name="chkState" value="합격">합격</td>
 							<th class="col1">담당자</th>
-							<td><input type="text" name="empName" id="empName"
+							<td><input type="text" name="chkEmpNo" id="chkEmpNo"
 								data-bs-toggle="modal" data-bs-target="#empModal" class="showModal" readonly>
 								<input type="hidden" name="chkEmpNo" id="chkEmpNo"></td>
 								<th class="col1">차기점검일</th>
 							<td><input type="date" name="chkNdate" id="chkNdate"></td>
+							<th class="col1">점검단위</th>
+							<td><input type="text" name="eqmCheckTerm" id="eqmCheckTerm" readonly></td>
 							
 						</tr>
 
@@ -302,7 +306,21 @@ table, th, td {
                   name : 'eqmName',
                   align : 'center',
                   filter: 'select'
-               },  {
+               },            	   
+        	   {
+                   header : '점검주기',
+                   name : 'eqmCheck',
+                   align : 'center'
+                 
+                },
+                          	   
+         	   {
+               header : '점검단위',
+               name : 'eqmCheckTerm',
+               align : 'center'
+               
+            },
+            	   {
                   header : '점검일',
                   name : 'chkDate',
                   align : 'center',
@@ -339,23 +357,62 @@ table, th, td {
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
             
+            function dateCal(sDate, nNum, type) {
+                var yy = parseInt(sDate.substr(0, 4), 10);
+                var mm = parseInt(sDate.substr(5, 2), 10);
+                var dd = parseInt(sDate.substr(8), 10);
+                
+                if (type == "d") {
+                    d = new Date(yy, mm - 1, dd + nNum);
+                }
+                else if (type == "m") {
+                    d = new Date(yy, mm - 1, dd + (nNum * 31));
+                }
+                else if (type == "y") {
+                    d = new Date(yy + nNum, mm - 1, dd);
+                }
+             
+                yy = d.getFullYear();
+                mm = d.getMonth() + 1; mm = (mm < 10) ? '0' + mm : mm;
+                dd = d.getDate(); dd = (dd < 10) ? '0' + dd : dd;
+             
+                return '' + yy + '-' +  mm  + '-' + dd;
+            }
+            
+            // 차기점검일 -> 점검일 
             var checked = [];
             
             chkGrid.on('check', ev => {
             	checked.push((chkGrid.getValue(ev.rowKey,'chkNo')));
             	
-            	$('#chkNo').val(chkGrid.getValue(ev.rowKey,'chkNo'));
-            	$('#chkNo').attr('readonly',true);
+            	
             	$('#eqmCode').val(chkGrid.getValue(ev.rowKey,'eqmCode'));
             	$('#eqmName').val(chkGrid.getValue(ev.rowKey,'eqmName'));
-            	$('#chkDate').val(chkGrid.getValue(ev.rowKey,'chkDate').substring(0,10));
-            	$('#chkNdate').val(chkGrid.getValue(ev.rowKey,'chkNdate').substring(0,10));
-            	$('#chkState').val([chkGrid.getValue(ev.rowKey,'chkState')]);
-            	$('#chkSol').val(chkGrid.getValue(ev.rowKey,'chkSol'));
-            	$('#chkEmpNo').val(chkGrid.getValue(ev.rowKey,'chkEmpNo')); 
+            	$('#chkDate').val(chkGrid.getValue(ev.rowKey,'chkNdate').substring(0,10));
+            	$('#eqmCheck').val(chkGrid.getValue(ev.rowKey,'eqmCheck'));
+            	$('#eqmCheckTerm').val(chkGrid.getValue(ev.rowKey,'eqmCheckTerm'));
+            	
+            	
+
+             // 점검주기 계산하기 : chkDate + 점검주기
+             	var date = $('#chkDate').val(); // date :string타입
+            	date = new Date(date); // string -> date타입으로
+            	/*var yyyy = date.getFullYear();
+            	var mm = date.getMonth();
+            	var dd = date.getDate();*/
+            	
+            	if($('#eqmCheckTerm').val() == '일'){
+            		var a = new Date(date.getFullYear() , date.getMonth(),date.getDate()+ parseInt($('#eqmCheck').val()));
+            		//a = new Date(date.getFullYear(),date.getMonth()+1,date.getDate()+parseInt($('#eqmCheck').val()));
+            		$('#chkNdate').val(toStringByFormatting(a));
+            	}
+            	
             });
             
            
+           
+           
+          
             
             chkGrid.on('uncheck', ev => {
                 for(let i=0; i<checked.length; i++){
@@ -369,9 +426,10 @@ table, th, td {
             	$('#eqmName').val('');
             	$('#chkDate').val('');
             	$('#chkNdate').val('');
-            	$('#chkState').val([]);
-            	$('#chkSol').val('');
             	$('#empName').val('');
+            	$('#eqmCheck').val('');
+            	$('#eqmCheckTerm').val('');
+
             });
             
             function deleteChk(){
@@ -598,7 +656,7 @@ table, th, td {
                   name : 'eqmCheck',
                   align : 'center'
                }, {
-                  header : '점검주기단위',
+                  header : '점검단위',
                   name : 'eqmCheckTerm',
                   align : 'center'
                } ]

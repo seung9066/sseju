@@ -80,10 +80,11 @@ public class EqmController {
 	//설비 리스트
 	@GetMapping("/getEqmList")
 	@ResponseBody
-	public List<EqmVO> getEqmList() {
-
+	public List<EqmVO> getEqmList(Model model) {
 		return eqmService.selectEqmList();
 	}
+	
+	
 	
 	//설비 단건조회
 	@GetMapping("eqmInfo")
