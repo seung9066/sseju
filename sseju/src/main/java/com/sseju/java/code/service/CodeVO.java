@@ -103,5 +103,12 @@ public class CodeVO {
 	private int matOutQty;
 	private String outType;
 	private String outFrom;
+	private String preManager;
 	
+	private String prsPfNo;
+	private int prsOutPut;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date prsStHour;
+	private Date prsSpHour;
+	private String prsErrNo;
 }

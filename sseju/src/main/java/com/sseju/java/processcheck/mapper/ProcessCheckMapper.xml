@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.sseju.java.processcheck.mapper.ProcessCheckMapper">
+	<!-- C -->
+	
+	<!-- R -->
+		<!-- 공정 검사 페이지의 그리드 데이터 불러오는 sql문 -->
+	<select id="getProcessCheck" resultType="pcVO">
+		SELECT prr.prs_date, 
+		       pr.prs_name, 
+		       pre.prs_err_qty, 
+		       pre.err_code, 
+		       er.err_name, 
+		        (SELECT ROUND((NVL(pre.prs_err_qty, 0)/ NVL(pri.prs_out_put,0)),2)
+		            FROM process_inf pri
+		            JOIN process_err pre 
+		              ON pri.prs_pf_no = pre.prs_pf_no
+		            JOIN error er
+		              ON pre.err_code = er.err_code
+		            JOIN process_run prr
+		              ON prr.prs_no = pri.prs_no) AS err_pct, 
+		       ee.emp_name
+		       
+		FROM process pr
+		    JOIN process_run prr
+		      ON pr.prs_code = prr.prs_code
+		    JOIN process_inf pri 
+		      ON pri.prs_no = prr.prs_no
+		    JOIN process_err pre
+		      ON pri.prs_pf_no = pre.prs_pf_no
+		    JOIN error er
+		      ON pre.err_code = er.err_code
+		    JOIN employee ee
+		      ON ee.emp_id = prr.prs_manager
+		    JOIN produce pe
+		      ON pe.pre_no = prr.pre_no
+		ORDER BY prr.prs_date DESC
+	</select>
+	
+	<select id="prschkSearch" resultType="pcVO">
+		SELECT TO_CHAR(prr.prs_date, 'YYYY-MM-DD') AS "prs_date"
+		FROM process_run
+	</select>
+	<!-- U -->
+	
+	<!-- D -->
+</mapper>

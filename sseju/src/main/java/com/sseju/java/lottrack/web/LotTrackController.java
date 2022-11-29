@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -24,7 +25,7 @@ public class LotTrackController {
 	//ㄴ제품로트 페이지 그리드에 띄워주기
 	@GetMapping("/getLotTrackList")
 	@ResponseBody
-	public List<LotTrackVO> getLotTrackList(){
+	public List<LotTrackVO> getLotTrackList(Model model){
 		return ltService.getLotTrackList();
 	}
 	

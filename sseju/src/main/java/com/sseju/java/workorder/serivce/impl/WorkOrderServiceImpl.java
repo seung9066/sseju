@@ -30,7 +30,8 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 	//등록
 	@Override
 	public int insertWorkOrder(WorkOrderVO woVO) {
-		return woMapper.insertWorkOrder(woVO);
+		 woMapper.insertWorkOrder(woVO);
+		 return woMapper.updateOrderYn(woVO);
 	}
 
 	//수정
@@ -39,11 +40,16 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 		return woMapper.updateWorkOrder(woVO);
 	}
 	
-	//삭제()
+	//삭제() 모든처리는 서비스에서, 리스트VO로
 	@Override
-	public int deleteWorkOrder(WorkOrderVO woVO) {
-		// TODO Auto-generated method stub
-		return woMapper.deleteWorkOrder(woVO);
+	public int deleteWorkOrder(List<WorkOrderVO> deleteWorkOrder) {
+		int res = 0;
+		for(int i=0; i<deleteWorkOrder.size(); i++) {
+			WorkOrderVO woVO = deleteWorkOrder.get(i);
+			res += woMapper.deleteWorkOrder(woVO);
+			woMapper.updateOrderYn(woVO);
+		}
+		return res;
 	}
 	
 	//단건조회 하게되면 작업지시 번호 기준으로 하기위해서 작업 지시 번호 불러오는 메소드
@@ -69,7 +75,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 		// TODO Auto-generated method stub
 		return woMapper.getOrderList();
 	}
-	//주문->작업지시 등록 시 주문 그리드에서 등록 처리된 행은 사라지게
+	//주문->작업지시 등록 시 주문 그리드에서 등록 처리된 행은 사라지게 업데이트
 	@Override
 	public int updateOrderYn(WorkOrderVO woVO) {
 		// TODO Auto-generated method stub

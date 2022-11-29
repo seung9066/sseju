@@ -18,12 +18,18 @@ public interface MatMapper {
 	public List<MatVO> matordList();
 	//발주 조건 조회
 	public List<MatVO> detailMatbuyInfo(MatVO MatVO);
+	//발주할 주문 조회
+	public List<MatVO> prtOrdList();
+	//발주할 주문 단건 조회
+	public List<MatVO> infoModal(MatVO MatVO);
 	//발주 자재량 조회
-	public List<MatVO> matOrdModal();
+	public List<MatVO> matOrdModal(MatVO MatVO);
 	//발주 등록
 	public int insertMatbuy(MatVO MatVO);
 	//발주 수정
 	public int updateMatbuy(MatVO MatVO);
+	//발주 수정
+	public int updateordYn(MatVO MatVO);
 	//발주 삭제
 	public int deleteMatbuy(String no);
 	public int selectDeleteMatbuy(List<String> list);

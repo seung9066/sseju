@@ -22,24 +22,6 @@
 	padding: 0px;
 }
 
-.ul-style li>label {
-	width: 100px;
-	text-align: center;
-}
-
-.ul-style li {
-	padding: 5px;
-}
-
-#od-title {
-	font-weight: bold;
-}
-
-#od-btn {
-	display: inline-block;
-	margin: 0 5px;
-	float: right;
-}
 </style>
 
 <link rel="stylesheet"
@@ -51,14 +33,16 @@
 	<article layout:fragment="content">
 		<main class="main" id="main">
 			<div id="od-title">
-				<h3>공정 검사 조회</h3>
+				<h3>공정 조회</h3>
 			</div>
 
 			<div id="od-content">
 				<div id="input-group">
+				<!-- 공정 검사 검색 기능 -->
 					<ul class="ul-style">
+				<!-- 
 						<li><label for="prtName">검색</label><input type="text">
-							<br></li>
+							<br></li> -->
 
 						<li><label>일자별 검색</label>
 							<div
@@ -73,13 +57,31 @@
 								<span class="tui-ico-date"></span>
 								<div id="endpicker-container" style="margin-left: -1px;"></div>
 							</div> <!-- 버튼 -->
-							<button class="button">조회</button>
-							<button class="button">초기화</button></li>
+							<button class="button" id="pcSearch">조회</button>
+							<button class="button" id="resetBtn">초기화</button></li>
 					</ul>
 				</div>
 			</div>
+			<!-- 공정 검사 내역 그리드 -->
+			<div id="GridTab">
+				<div id="prsChkGrid"></div>
+			</div>
 			<script>
+			//페이지 로딩시 그리드 데이터 가져옴
 			
+			showProcessCheck();
+			
+		//	gridRef(); //그리드 리프래쉬
+		//	pcSearch();//발주 신청일 조회 버튼 클릭 이벤트
+			
+		//	datePicker();	//데이트피커
+		//	resetDate();	//datepicker초기화 버튼
+			
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
+			//datepicker
 				var today = new Date();
 				var picker = tui.DatePicker.createRangePicker({
 					startpicker : {
@@ -97,49 +99,126 @@
 							new Date(today.getFullYear() + 1, today.getMonth(),
 									today.getDate()) ] ]
 				});
-
-				const grid11 = new tui.Grid({
-					el : document.getElementById('grid'),
-					data : [ {
-				    	orderNo: '00001',
-				    	orderDate: '2022-11-11',
-				    	cpName : '삼겹살맛집',
-				    	prtName: '참이슬',
-				    	prtUnit:'Ex',
-				    	orderOutQty : 100,
-				       
-				    }, ],
-					rowHeaders : [ 'rowNum' ],
-					scrollX : false,
-					scrollY : false,
-					columns : [
-				            {
-				              header: '작업번호',
-				              name: 'orderDate'
-				            },
-   				            {
-				            	header: '공정번호',
-				              name: 'orderNo'
-				            },
-				            {
-				              header: '공정명',
-				              name: 'cpName'
-				            },
-				            {
-				              header: '불량코드',
-				              name: 'prtName'
-				            },
-				            {
-				              header: '작업일자',
-				              name: 'prtUnit'
-				            },
-				            {
-				              header: '담당자',
-				              name: 'orderOutQty'
-				            }
-				           
-				          ]
-				});
+				//공정 검사 페이지 그리드
+				var prsChkGrid = new tui.Grid({
+					 el: document.getElementById('prsChkGrid'),
+						pagination:true,
+						pageOption: {
+							useClient:true,
+							perPage:5
+						},
+				        scrollX : false,
+				        scrollY : false,
+					    columns:
+					    	[{
+								header: '작업 일자',
+						    	name: 'prsDate',
+						    	filter : 'select',
+								align : 'center',
+								filter : 'select',
+								formatter({value}) {
+							      return `${value.substring(0,10)}`;
+							    } 
+							},
+							{
+								header: '공정명',
+							    name: 'prsName',
+								align : 'center',
+								filter : 'select'
+							},
+							{
+							 	header: '불량 코드',
+							    name: 'errCode',
+								align : 'center'
+							},
+							{
+							 	header: '불량명',
+							    name: 'prsErrQty',
+								align : 'center'
+							},
+							{
+								header: '불량 수',
+							    name: 'preDate',
+							    filter : 'select',
+								align : 'center',
+								formatter : function (ev){
+			                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+			                    }
+							},
+							{
+							    header : '불량률',
+							    name:'empName',
+							    filter : 'select',
+								align : 'center'
+							},
+							{
+							    header : '담당자',
+							    name:'empName',
+							    filter : 'select',
+								align : 'center'
+							},
+							{
+								header : '제품코드',
+							    name : 'prtCode',
+							    hidden : 1
+							}]
+					      });
+						//DB통신, 그리드 데이터 가져오기
+						function showProcessCheck(){
+							fetch("getProcessCheckList")
+							.then(res=>res.json())
+							.then(obj=>{
+								console.log(obj);
+								prsChkGrid.resetData(obj);
+							})
+						}
+					// 그리드 리프레쉬
+					function gridRef(){
+						const GridTab = document.getElementById('GridTab');
+						GridTab.addEventListener('click',function(){
+							grid.refreshLayout();
+						})
+					}
+						
+					/* date pricker */
+ 					function datePicker() {
+						rangeDatepickerInit('#startpicker-input', '#startpicker-container','#endpicker-input','#endpicker-container')
+						document.getElementById('startpicker-input').value = null;
+						document.getElementById('endpicker-input').value = null;	
+					}
+					/*------------------------
+					// DatePicker 초기화버튼 이벤트
+					--------------------------*/
+ 					function resetDate() {
+						document.getElementById('resetBtn').addEventListener('click',function(){
+							document.getElementById('startpicker-input').value = null;
+							document.getElementById('endpicker-input').value = null;
+						});	
+					} 
+					
+					// 공정조회 작업일자 조회버튼 클릭 이벤트 (조건 조회 탭)
+					function pcSearch() {
+						document.getElementById('pcSearch').addEventListener('click', function(){
+							let startDate = document.getElementById('startpicker-input').value;
+							let endDate = document.getElementById('endpicker-input').value;
+							let list = {endDate:endDate, matEdate:startDate};
+							
+							// startDate = 검색 기준 첫 지정 일,endDate : 끝나는 날 지정 
+							$.ajax({
+								url: '/prschkSearch',
+								method: 'POST',
+								contentType: 'application/json',					
+								data: JSON.stringify(list),
+								success: function(result){
+									console.log(result);
+									prsChkGrid.resetData(result);
+								},
+								error: function(reject){
+									console.log(reject);
+								}
+							})
+						})
+					}							
 			</script>
 
 		</main>

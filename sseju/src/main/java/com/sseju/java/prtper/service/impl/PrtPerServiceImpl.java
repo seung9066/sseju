@@ -43,4 +43,10 @@ public class PrtPerServiceImpl implements PrtPerService {
 		return ppMapper.deletePrtPer(ppVO);
 	}
 
+	@Override
+	public List<PrtPerVO> getErrList(String preNo) {
+		// TODO Auto-generated method stub
+		return ppMapper.getErrList(preNo);
+	}
+
 }

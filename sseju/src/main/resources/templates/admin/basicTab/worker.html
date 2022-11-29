@@ -27,7 +27,7 @@
 			</h4>
 			<button class="button" type="button" style="float: right;"
 				onclick="updateWorker()">추가/제거</button>
-			<div id="workGrid"></div>
+			<div id="workorderGrid"></div>
 			<br>
 			<h4>추가할 작업자</h4>
 			<div id="workerAGrid"></div>
@@ -37,42 +37,69 @@
 			<script type="text/javascript">
 	
 				showAll();
-				
-				$('.typeMat').hide();
-				$('.typePrs').hide();
 
-				const workGrid = new tui.Grid({
-					el : document.getElementById('workGrid'),
-					pagination : true,
-					pageOption : {
-						useClient : true,
-						perPage : 10
-					},
-					scrollX : false,
-					scrollY : false,
-					rowHeaders : [ 'checkbox' ],
-					columns : [ {
-						header : '작업번호',
-						name : 'prsNo',
-						align : 'center',
-						filter: 'select'
-					}, {
-						header : '공정명',
-						name : 'prsName',
-						align : 'center',
-						filter: 'select'
-					}, {
-						header : '담당자',
-						name : 'empName', //납기일자명 수정
-						align : 'center',
-						filter : 'select'
-					}, {
-						header : '작업일자',
-						name : 'prsDate',
-						align : 'center',
-						filter: 'select'
-					} ]
-				});
+				var workOrderGrid = new tui.Grid({
+					 el: document.getElementById('workorderGrid'),
+						pagination:true,
+						pageOption: {
+							useClient:true,
+							perPage:5
+						},
+				        scrollX : false,
+				        scrollY : false,
+					    rowHeaders: ['checkbox'],
+					    columns:
+					    	[{
+								header: '작업 지시 번호',
+						    	name: 'preNo',
+						    	filter : 'select',
+								align : 'center'							
+							},
+							{
+								header: '주문번호',
+							    name: 'orderNo',
+								align : 'center'
+							},
+							{
+							 	header: '품목명',
+							    name: 'prtName',
+								align : 'center'
+							},
+							{
+							 	header: '지시수량',
+							    name: 'insQty',
+								align : 'center'
+							},
+							{
+								header: '작업 시작일',
+							    name: 'preDate',
+							    filter : 'select',
+								align : 'center',
+						 		formatter({value}) {
+							      return `${value.substring(0,10)}`;
+							    } 
+							},
+							{
+							    header : '담당자',
+							    name:'empName',
+							    filter : 'select',
+								align : 'center'
+							},
+							{
+							    header : '납기일자',
+							    name:'dday',
+							    filter : 'select',
+								align : 'center',
+								formatter({value}) {
+							      return `${value.substring(0,10)}`;
+							    },
+							},
+							{
+								header : '제품코드',
+							    name : 'prtCode',
+							    hidden : 1
+							}]
+					      });
 				
 				const workerAGrid = new tui.Grid({
 					el : document.getElementById('workerAGrid'),
@@ -195,8 +222,8 @@
 					});
 				}
 				
-				workGrid.on('check', ev => {
-					let data = workGrid.getValue(ev.rowKey, 'prsNo')
+				workOrderGrid.on('check', ev => {
+					let data = workOrderGrid.getValue(ev.rowKey, 'preNo')
 					console.log(data);
 					
 					showA(data);
@@ -204,7 +231,7 @@
 					
 				});
 				
-				workGrid.on('uncheck', ev => {
+				workOrderGrid.on('uncheck', ev => {
 					workerAGrid.clear();
 					workerBGrid.clear();
 
@@ -213,24 +240,24 @@
 				
 				
 				function updateWorker() {
-					console.log(workGrid.getCheckedRows());
+					console.log(workOrderGrid.getCheckedRows());
 					let inputId = [];
 					let deleteId = [];
-					let prsNo = [];
+					let preNo = [];
 					for(co of workerAGrid.getCheckedRows()){
 						inputId.push(co.empId);
 					}
 					for(co of workerBGrid.getCheckedRows()){
 						deleteId.push(co.empId);
 					}
-					for (co of workGrid.getCheckedRows()) {
-						prsNo.push(co.prsNo);						
+					for (co of workOrderGrid.getCheckedRows()) {
+						preNo.push(co.preNo);						
 					}
 					
 					$.ajax({
 						url:'updateWorker',
 						type:'POST',
-						data:{prsNo:prsNo, inputId:inputId, deleteId:deleteId},
+						data:{preNo:preNo, inputId:inputId, deleteId:deleteId},
 						dataType:"json",
 						async:false,
 						beforeSend : function(xhr){
@@ -254,15 +281,12 @@
 				}
 				
 				function showAll() {
-					$('#title').text("전체");
-					
-					url="workerList"
-					       fetch(url) // 설비 단건조회 불러오는 아작스
-					       .then(res=>res.json())
-					       .then(obj=>{
-					           console.log(obj);
-					           workGrid.resetData(obj);
-					       })
+					fetch("getWorkOrderList") 
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           workOrderGrid.resetData(obj);
+				       })
 				}
 			</script>
 		</main>

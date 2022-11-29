@@ -80,34 +80,67 @@ public class MatController {
 	public List<MatVO> matordList() {
 		return service.matordList();
 	}
+	
+	@ResponseBody
+	@GetMapping("/prtOrdList")
+	public List<MatVO> prtOrdList(){
+		return service.prtOrdList();
+	}
+	
+	@ResponseBody
+	@PostMapping("/infoModal")
+	public List<MatVO> infoModal (@RequestBody MatVO MatVO) {
+		return service.infoModal(MatVO);
+	}
 
 	@ResponseBody
-	@GetMapping("/matOrdModal")
-	public List<MatVO> matOrdModal() {
-		return service.matOrdModal();
+	@PostMapping("/matOrdModal")
+	public List<MatVO> matOrdModal
+		(@RequestBody MatVO MatVO) {
+		
+		return service.matOrdModal(MatVO);
 	}
 	// 발주 등록
+	/*
+	 * @ResponseBody
+	 * 
+	 * @PostMapping("/insertMatbuy") public int insertMatbuy(@RequestParam(value =
+	 * "Qty[]", required = false) List<String> Qty,
+	 * 
+	 * @RequestParam(value = "mc[]", required = false) List<String> mc,
+	 * 
+	 * @RequestParam(value = "cd[]", required = false) List<String> cd,
+	 * 
+	 * @RequestParam(value = "mp[]", required = false) List<String> mp,
+	 * 
+	 * @RequestParam(value = "moe[]", required = false) List<String> moe) { int
+	 * result = 0;
+	 * 
+	 * for (int i = 0; i < mc.size(); i++) { MatVO vo = new MatVO();
+	 * vo.setMatOrdQty(Integer.valueOf(Qty.get(i))); vo.setMatCode(mc.get(i));
+	 * vo.setCpCode(cd.get(i)); vo.setMatPrice(mp.get(i));
+	 * vo.setMatOrdEmp(moe.get(i));
+	 * 
+	 * result += service.insertMatbuy(vo); } return result; }
+	 */
+	
 	@ResponseBody
 	@PostMapping("/insertMatbuy")
-	public int insertMatbuy(@RequestParam(value = "Qty[]", required = false) List<String> Qty,
-			@RequestParam(value = "mc[]", required = false) List<String> mc,
-			@RequestParam(value = "cd[]", required = false) List<String> cd,
-			@RequestParam(value = "mp[]", required = false) List<String> mp,
-			@RequestParam(value = "moe[]", required = false) List<String> moe) {
+	public int insertMatbuy(@RequestBody List<MatVO> vo) {
 		int result = 0;
-
-		for (int i = 0; i < mc.size(); i++) {
-			MatVO vo = new MatVO();
-			vo.setMatOrdQty(Integer.valueOf(Qty.get(i)));
-			vo.setMatCode(mc.get(i));
-			vo.setCpCode(cd.get(i));
-			vo.setMatPrice(mp.get(i));
-			vo.setMatOrdEmp(moe.get(i));
-
-			result += service.insertMatbuy(vo);
-		}
-		return result;
+		
+		for (int i = 0; i < vo.size(); i++) { 
+			result += service.insertMatbuy(vo.get(i)); 
+		 }
+		
+		return result; 
 	}
+	
+	@ResponseBody
+	@PostMapping("/updateordYn")
+	public int updateordYn(MatVO vo) {
+		return service.updateordYn(vo);
+		}
 
 	// 발주 수정
 	@ResponseBody

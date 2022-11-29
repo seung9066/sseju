@@ -636,25 +636,28 @@ function prsWrite() {
 	let b = '';
 
 	$('#prsRun').empty();
-	
+
 	for (let i = 0; i < prsRunName.length; i++) {
 		$('#prsRun').append(`<div class="activity-item d-flex">
 			<div class="activite-label">${prsRunName[i].prsName}</div>
 			<i
 				class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
-				<div class="activity-content" id="now">
+				<div class="activity-content" id="now${i}">
 				비가동중
 				</div>
 		</div>`);
 		
+		
+		}
+	for (let i = 0; i < prsRunName.length; i++) {
 		for (let j = 0; j < prsRunNow.length; i++) {
 			a = (prsRunName[i].prsCode);
 			b = (prsRunNow[j].prsCode);
 			if (a == b) {
 				run = prsRunNow[j].prsNo;
-				$('#now').last().html(`${run}`);
+				$('#now'+i).html(`${run}`);
 			}
-		}
+	}
 	}
 
 }
@@ -851,7 +854,7 @@ function startPr() {
 
 								<div id="prdCount"></div>
 
-<script>
+								<script>
 var CChart = [];
 
 function prdCount() {	

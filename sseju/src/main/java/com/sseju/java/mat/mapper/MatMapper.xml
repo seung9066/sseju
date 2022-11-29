@@ -5,21 +5,56 @@
 
 <mapper namespace="com.sseju.java.mat.mapper.MatMapper">
 	<select id="material" resultType="MatVO">
-		SELECT * FROM material
+		SELECT * 
+		  FROM material
+		order by mat_code  
 	</select>
+	<select id="prtOrdList" resultType="MatVo">
+		select o.order_no, o.d_day
+		  from orders o, 
+		       order_inf inf
+		 where o.order_no = inf.order_no
+		   and inf.order_yn = 'Y'
+	  group by o.order_no, o.d_day
+	</select>
+	<select id="infoModal" resultType="MatVO" parameterType="MatVO">
+		SELECT odi.order_no,
+			   pt.prt_code,
+			   pt.prt_name,
+			   odi.order_qty,
+			   ods.d_day
+		  FROM orders ods
+		  JOIN order_inf odi
+			ON ods.order_no = odi.order_no
+		  JOIN product pt
+			ON pt.prt_code= odi.prt_code
+		 WHERE odi.order_no = #{orderNo}
+	</select>
+	
 	<select id="matordList" resultType="MatVO">
-		SELECT b.mat_ord_no, b.mat_ord_qty, m.mat_code,
-		m.mat_name,TO_DATE(b.mat_ord_date,'rrrr/MM/dd') as MAT_ORD_DATE,
-		c.cp_code, c.cp_name, b.mat_price,
-		b.mat_ord_emp, e.emp_name, b.mat_ord_yn
+		SELECT b.mat_ord_no, 
+		       b.mat_ord_qty, 
+		       m.mat_code,
+				m.mat_name,
+				TO_DATE(b.mat_ord_date,'rrrr/MM/dd') as MAT_ORD_DATE,
+				c.cp_code, 
+				c.cp_name, 
+				b.mat_price,
+				b.mat_ord_emp, 
+				e.emp_name, 
+				b.mat_ord_yn				
 		FROM mat_buy b
-		JOIN material m ON m.mat_code = b.mat_code
-		JOIN company c ON c.cp_code =
-		m.cp_code
-		JOIN employee e on e.emp_id = b.mat_ord_emp
+		JOIN material m 
+		  ON m.mat_code = b.mat_code
+		JOIN company c 
+		  ON c.cp_code =	m.cp_code
+		JOIN employee e 
+		  on e.emp_id = b.mat_ord_emp		  
 		WHERE b.mat_ord_yn = '미확인'
 		order by mat_ord_no DESC
 	</select>
+	
+	
 	<select id="detailMatbuyInfo" resultType="MatVO"
 		parameterType="MatVO">
 		SELECT b.mat_ord_no, b.mat_ord_qty, m.mat_code,
@@ -45,7 +80,10 @@
 		order by mat_ord_no DESC
 	</select>
 	<select id="matOrdModal" resultType="MatVO" parameterType="MatVO">
-		select bom.prt_code, bom.mat_code, bom.capacity, m.mat_name, (i.order_qty * 110/100) as "mat_qty" , c.cp_code , c.cp_name
+		select ord.order_no, bom.prt_code, pd.prt_name, bom.mat_code, 
+                bom.capacity, m.mat_name, (i.order_qty * 110/100) as "mat_ord_qty", 
+                m.mat_unit_prc, (i.order_qty * 110/100 * m.mat_unit_prc) as "mat_price",
+                c.cp_code , c.cp_name
 		from 
 		    orders ord,
 		    order_inf i,
@@ -109,6 +147,9 @@
 			</if>
 		</set>
 		WHERE MAT_ORD_NO = #{matOrdNo}
+	</update>
+	<update id="updateordYn" parameterType="MatVO">
+		UPDATE order_inf SET order_yn = 'O' WHERE order_no = #{orderNo}
 	</update>
 	<delete id="deleteMatbuy" parameterType="MatVO">
 		DELETE FROM mat_buy

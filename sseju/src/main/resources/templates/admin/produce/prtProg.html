@@ -37,6 +37,10 @@
 					el : document.getElementById('prtProgGrid'),
 					scrollX : false,
 					scrollY : false,
+			        pageOptions: {
+			            useClient: true,
+			            perPage: 10
+			        },
 					columns : [ {
 						header : '작업 지시 번호',
 						name : 'preNo',
@@ -49,11 +53,17 @@
 					}, {
 						header : '생산량',
 						name : 'preQty',
-						align : 'center'
+						align : 'center',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+		                    }
 					}, {
 						header : '지시량',
 						name : 'insQty',
-						align : 'center'
+						align : 'center',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+		                    }
 					}, {
 						header : '지시일자',
 						name : 'preDate',
@@ -83,7 +93,7 @@
 				let preNo = ev.nativeEvent.target.innerText;
 				console.log(preNo);
 				$.ajax({
-					url:'progPrtCondition',
+					url:'/progPrtCondition',
 					data : {preNo:preNo},
 					dataType:"json",
 					async:false,

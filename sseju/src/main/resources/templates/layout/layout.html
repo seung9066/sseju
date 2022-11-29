@@ -45,7 +45,9 @@
 <!-- 페이징 -->
 <link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
 <script type="text/javascript" src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
-
+<!-- DatePicker -->
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
 <link href="bootstrap/css/tui-grid.css" rel="stylesheet">
 <script src="bootstrap/js/tui-grid.js"></script>
 <!-- Template Main CSS File -->
@@ -334,9 +336,6 @@
 						<li><a href="/prtProg"> <i class="bi bi-circle"></i><span>생산
 									진행 현황</span>
 						</a></li>
-						<li><a href="/lotTrack"> <i class="bi bi-circle"></i><span>제품
-									로트</span>
-						</a></li>
 						<li><a href="/matInputHistory"> <i class="bi bi-circle"></i><span>자재
 									투입 내역</span>
 						</a></li>
@@ -357,7 +356,7 @@
 				</a>
 					<ul id="tables-nav" class="nav-content collapse "
 						data-bs-parent="#sidebar-nav">
-						<li><a href="/matOrd"> <i class="bi bi-circle"></i><span>발주정보</span>
+						<li><a href="/matOrd"> <i class="bi bi-circle"></i><span>자재발주</span>
 						</a></li>
 						<li><a href="/matIn"> <i class="bi bi-circle"></i><span>입고내역</span>
 						</a></li>
@@ -366,8 +365,6 @@
 						<li><a href="/matOut"> <i class="bi bi-circle"></i><span>출고내역</span>
 						</a></li>
 						<li><a href="/matStock"> <i class="bi bi-circle"></i><span>재고조회</span>
-						</a></li>
-						<li><a href="/matCheck"> <i class="bi bi-circle"></i><span>검수내역</span>
 						</a></li>
 					</ul></li>
 				<!-- End Tables Nav -->
@@ -380,13 +377,15 @@
 					<ul id="charts-nav" class="nav-content collapse "
 						data-bs-parent="#sidebar-nav">
 						<li><a href="matRecChk"> <i
-								class="bi bi-circle"></i><span>수입검사</span>
+								class="bi bi-circle"></i><span>자재수입검사</span>
 						</a></li>
 						<li><a href="processCheckList"> <i
 								class="bi bi-circle"></i><span>공정검사</span>
 						</a></li>
 						<li><a href="shipmentCheckList"> <i
 								class="bi bi-circle"></i><span>출하검사</span>
+						</a></li>
+						<li><a href="/lotTrack"> <i class="bi bi-circle"></i><span>제품로트</span>
 						</a></li>
 					</ul></li>
 			</th:block>

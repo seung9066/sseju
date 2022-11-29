@@ -8,7 +8,7 @@
 <title>PrtPerList</title>
 <!-- 제이쿼리 -->
 <script
-	src="https://ajax.googleapis.완료com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <!-- 토스트UI -->
 <link rel="stylesheet"
 	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
@@ -22,7 +22,8 @@
 	<article layout:fragment="content">
 		<main id="main" class="main">
 			<h4>생산 실적</h4>
-<!-- 					<table style="margin-bottom:10px">
+<!--date picker 아직 기능구현 안했고 사용유무 판단후 만들거나 지울예정
+ 					<table style="margin-bottom:10px">
 						<tr>
 							<td>
 								<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
@@ -71,6 +72,10 @@
 					el : document.getElementById('prtperGrid'),
 					scrollX : false,
 					scrollY : false,
+			        pageOptions: {
+			            useClient: true,
+			            perPage: 10
+			        },
 					columns : [ {
 						header : '작업 지시 번호',
 						name : 'preNo',
@@ -82,20 +87,32 @@
 						align : 'center'
 					}, {
 						header : '생산량',
-						name : 'preQty',
-						align : 'center'
+						name : 'prtQty',
+						align : 'center',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+		                    }
 					}, {
 						header : '불량 발생 개수',
 						name : 'prsErrQty',
-						align : 'center'
+						align : 'center',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+		                    }
 					}, {
 						header : '담당자',
-						name : 'preManager',
+						name : 'empName',
 						filter : 'select',
 						align : 'center'
 					}, {
 						header : '작업일자',
 						name : 'prsDate',
+						filter: {
+				            type: 'date',
+				            options: {
+				              format: 'yyyy-MM-dd'
+				            }
+			            },
 						align : 'center',
 						 formatter({value}) {
 						      return `${value.substring(0,10)}`;
@@ -109,7 +126,26 @@
 				           console.log(obj);
 				           prtperGrid.resetData(obj);
 				       })
-			}
+				}
+				/* prtPerGrid 행 클릭 시 prrErrGrid그리드에 데이터를 가져오는 클릭이벤트 */
+				prtperGrid.on('click', (event)=>{
+ 					let preNo = ev.nativeEvent.target.innerText;
+					console.log(preNo);
+					$.ajax({
+						url:'/getErrList',
+						data : {preNo:preNo},
+						dataType:"json",
+						async:false,
+						success:function(data){
+							prrErrGrid.resetData(data);
+						},
+						error:function(reject){
+							console.log(reject);
+						}
+					}) 
+				});
+					
+				
 				/*------------------------
 				생산 실적 그리드 행 클릭 시, 불량갯수와 불량사유를 보여주는 그리드
 				--------------------------*/

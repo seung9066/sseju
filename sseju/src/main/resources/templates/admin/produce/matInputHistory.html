@@ -57,10 +57,10 @@
 					el : document.getElementById('mihGrid'),
 					scrollX : false,
 					scrollY : false,
-					minBodyHeight : 30,
-					pageOptions : {
-						perPage : 10
-					},
+			        pageOptions: {
+			            useClient: true,
+			            perPage: 10
+			        },
 					columns : [ {
 						header : '투입일자', //투입일자, sql에 투입일자 기준으로DESC 해두었음
 						name : 'matOutDate',
@@ -83,7 +83,10 @@
 					}, {
 						header : '투입수량', //각 공정에 몇개씩 투입되었는지=이거는 필요한가? 다똑같이 투입될건데
 						name : 'matOutQty',
-						align : 'center'
+						align : 'center',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+		                    }
 					}, {
 						header : '자재 출고 담당자',
 						name : 'empName',
@@ -96,7 +99,7 @@
 					fetch("getmihList")
 					.then(res=>res.json())
 					.then(obj=>{
-						consoel.log(obj);
+						console.log(obj);
 						mihGrid.resetData(obj);
 					})
 				}

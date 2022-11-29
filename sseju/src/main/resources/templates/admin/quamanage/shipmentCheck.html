@@ -58,8 +58,8 @@
 			<div id="od-content">
 				<div id="input-group">
 					<ul class="ul-style">
-						<li><label for="prtName">검색</label><input type="text">
-							<br></li>
+						<!-- <li><label for="prtName">검색</label><input type="text">
+							<br></li> -->
 
 						<li><label>일자별 검색</label>
 							<div
@@ -80,8 +80,15 @@
 				</div>
 
 			</div>
+			
+			<div id="ShipmentGrid"></div>
 
 			<script>
+			
+			//showShipment();
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
 			
 				var today = new Date();
 				var picker = tui.DatePicker.createRangePicker({
@@ -101,47 +108,31 @@
 									today.getDate()) ] ]
 				});
 
-				const grid11 = new tui.Grid({
-					el : document.getElementById('grid'),
-					data : [ {
-				    	orderNo: '00001',
-				    	orderDate: '2022-11-11',
-				    	cpName : '삼겹살맛집',
-				    	prtName: '참이슬',
-				    	prtUnit:'Ex',
-				    	orderOutQty : 100,
-				       
-				    }, ],
-					rowHeaders : [ 'rowNum' ],
+				var ShipmentGrid = new tui.Grid({
+					el : document.getElementById('ShipmentGrid'),
 					scrollX : false,
 					scrollY : false,
-					columns : [
-				            {
-				              header: '주문일자',
-				              name: 'orderDate'
-				            },
-   				            {
-				            	header: '주문번호',
-				              name: 'orderNo'
-				            },
-				            {
-				              header: '거래처명',
-				              name: 'cpName'
-				            },
-				            {
-				              header: '제품명',
-				              name: 'prtName'
-				            },
-				            {
-				              header: '단위',
-				              name: 'prtUnit'
-				            },
-				            {
-				              header: '출고량',
-				              name: 'orderOutQty'
-				            }
-				           
-				          ]
+					columns : [ {
+						header : '창고코드',
+						name : 'orderNo',
+						align : 'center'
+					}, {
+						header : '상품명',
+						name : 'prtName',
+						align : 'center'
+					}, {
+						header : '주문 수량',
+						name : 'orderQty',
+						align : 'center'
+					}, {
+						header : '납기일자',
+						name : 'dday',
+						filter : 'select',
+						align : 'center',
+				 		formatter({value}) {
+					      return `${value.substring(0,10)}`;
+						    }
+					} ]
 				});
 			</script>
 
