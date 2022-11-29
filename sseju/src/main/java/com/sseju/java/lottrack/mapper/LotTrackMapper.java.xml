@@ -12,7 +12,7 @@
 		    ON pti.prs_no = prr.prs_no
 		JOIN produce pe
 		    ON prr.pre_no = pe.pre_no
-		ORDER BY lo.lot_no
+		ORDER BY lo.lot_no DESC
 	</select>
 	
 </mapper>

@@ -17,7 +17,7 @@ public class WorkHistoryServiceImpl implements WorkHistoryService {
 	WorkHistoryMapper whMapper;
 	@Override
 	public List<WorkHistoryVO> getWorkHistoryList() {
-		return whMapper.getWrokHistoryList();
+		return whMapper.getWorkHistoryList();
 	}
 
 }

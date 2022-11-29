@@ -4,12 +4,24 @@
 	namespace="com.sseju.java.workhistory.mapper.WorkHistoryMapper">
 	
 	<select id="getWorkHistoryList" resultType="whVO">
-		SELECT prr.prs_date, pi.prs_st_hour, pi.prs_sp_hour, pr.prs_name, pr.prs_code, pi.prs_out_put, prr.prs_manager, ee.emp_name
-		FROM process_inf pi JOIN process_run prr
-		    ON pi.prs_no = prr.prs_no
-		JOIN process pr
-		    ON pr.prs_code = prr.prs_code
-		JOIN employee ee
-		    ON ee.emp_id = prr.prs_manager
+		SELECT prr.prs_date,
+			   pi.prs_st_hour, 
+			   pi.prs_sp_hour, 
+			   pr.prs_name, 
+			   prr.prs_code, 
+			   mo.mat_out_qty,
+			   prr.prs_manager, 
+			   ee.emp_name
+			   
+	    FROM process_inf pi
+	     JOIN process_run prr
+	       ON pi.prs_no = prr.prs_no
+	    JOIN process pr
+	      ON pr.prs_code = prr.prs_code
+        JOIN mat_out mo
+          ON mo.mat_out_no = prr.mat_out_no
+	    JOIN employee ee
+	      ON ee.emp_id = prr.prs_manager
+        ORDER BY  prr.prs_date DESC
 	</select>
 </mapper>

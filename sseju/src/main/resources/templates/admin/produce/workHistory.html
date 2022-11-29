@@ -6,35 +6,29 @@
 <head>
 <meta charset="UTF-8">
 <title>workHistory</title>
-<!-- 제이쿼리 -->
-<script	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<!-- 토스트UI -->
-<link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
 </head>
 <body>
 	<article layout:fragment="content">
 		<main id="main" class="main">
 		<h4>작업 이력 조회</h4>
+		
 			<!-- 그리드 -->
-			<div id="whGrid"></div>
+			<div id="workHistoryGrid"></div>
 
 			<script th:inline="javascript">
-			whAll();
+			showWhGrid();
 			
 			var token = $("meta[name='_csrf']").attr("content");
 			var header = $("meta[name='_csrf_header']").attr("content");
 			
-			function whAll(){
-				var whGrid = new tui.Grid({
-					el : document.getElementById('whGrid'),
+				var workHistoryGrid = new tui.Grid({
+					el : document.getElementById('workHistoryGrid'),
 					scrollX : false,
 					scrollY : false,
-			        pageOptions: {
-			            useClient: true,
-			            perPage: 10
-			        },
-					//data: [[${whList}]],
+	                 pageOptions: {
+	                     useClient: true,
+	                     perPage: 10
+	                 },
 					minBodyHeight : 30,
 					pageOptions : {
 						perPage : 5
@@ -43,21 +37,29 @@
 						header : '작업일자',
 						name : 'prsDate',
 						align : 'center',
-						filter : 'select',
-						formatter(ev) {
-	                     if(ev.value){
-                             return `${ev.value.substring(0,10)}`;
-	                     	}
-                      	} 
+						formatter({value}) {
+                        return `${value.substring(1,10)}`;
+                      } ,
+					    filter: {
+	                        type: 'date',
+	                        options: {
+	                          format: 'yyyy-MM-dd'
+	                        }
+	                     },
 					},{
 						header : '작업 시작 시간', //각 자재별로 어느 공정에 투입되었는지
 						name : 'prsStHour',
-						filter : 'select',
-						align : 'center'
+						align : 'center',
+						formatter({value}) {
+	                        return `${value.substring(11,19)}`;
+	                      } 
 					}, {
 						header : '작업 종료 시간', //각 공정에 몇개씩 투입되었는지=이거는 필요한가? 다똑같이 투입될건데
 						name : 'prsSpHour',
-						align : 'center'
+						align : 'center',
+						formatter({value}) {
+	                        return `${value.substring(11,19)}`;
+	                      } 
 					},{
 						header : '공정명', //각 자재별로 어느 공정에 투입되었는지
 						name : 'prsName',
@@ -70,34 +72,28 @@
 						align : 'center',
 						hidden : 1
 					}, {
-						header : '생산량',
-						name : 'prsOutput',
+						header : '투입량',
+						name : 'matOutQty',
 						align : 'center',
 						formatter : function (ev){
 	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
 	                    }
 					}, {
-						header : '불량 발생 개수',
-						name : 'prsErrQty',
-						align : 'center'
-					},{
 						header : '담당자',
 						name : 'empName',
 						align : 'center'
 					} ]
 				});
-				return 	whGrid;
-			}
 				
 				/* 작업 이력 조회 그리드에 데이터 가져오기 */
-		/* 		 function showWhGrid(){
+				function showWhGrid(){
 					fetch("getWorkHistoryList")
 					.then(res=>res.json())
 					.then(obj=>{
 						console.log(obj);
-						whGrid.resetData(obj);
+						workHistoryGrid.resetData(obj);
 					})
-				}  */
+				}
 			</script>
 		</main>
 	</article>

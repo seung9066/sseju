@@ -6,44 +6,14 @@
 <head>
 <meta charset="UTF-8">
 <title>MatInputHistory</title>
-<!-- 제이쿼리 -->
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<!-- 토스트UI -->
-<link rel="stylesheet"
-	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
-<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
 </head>
 <body>
 	<article layout:fragment="content">
 		<main id="main" class="main">
-			<h4>자재 투입 내역 조회 / 관리</h4>
-			<div style="float:right">
+			<h4>자재 투입 내역 조회</h4>
+			<!-- <div style="float:right">
 				<button type="button" class="button" onclick="location.href='/matOrd'">자재 발주 신청</button>
-			</div>
-			<!-- Button trigger modal -->
-			<!-- <button type="button" class="button" data-bs-toggle="modal"
-				data-bs-target="#exampleModal">자재 발주 신청</button>
- -->
-			<!-- Modal -->
-<!-- 			<div class="modal fade" id="exampleModal" tabindex="-1"
-				aria-labelledby="exampleModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">자재 발주 신청</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
-						</div>
-						<div class="modal-body">인풋태그, 셀렉트박스로 </div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-primary">확인</button>
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">닫기</button>
-						</div>
-					</div>
-				</div> 
-				-->
+			</div> -->
 			<!-- 그리드 -->
 			<div id="mihGrid"></div>
 
@@ -68,8 +38,18 @@
 						formatter({value}) {
 					      return `${value.substring(0,10)}`;
 					    },
+					    filter: {
+	                        type: 'date',
+	                        options: {
+	                          format: 'yyyy-MM-dd'
+	                        }
+	                     },
+					}, {
+						header : '작업 지시 번호',
+						name : 'preNo',
+						align : 'center',
 						filter : 'select'
-					},{
+					}, {
 						header : '자재명', //공정에 투입된 자재의 이름
 						name : 'matName',
 						filter : 'select',
@@ -87,12 +67,12 @@
 						formatter : function (ev){
 		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
 		                    }
-					}, {
+					}/* , {
 						header : '자재 출고 담당자',
 						name : 'empName',
 						align : 'center',
 						filter : 'select'
-					} ]
+					} */ ]
 				});
 				//자재 투입 이력 그리드의 데이터 가져오기
 				function showMihList(){

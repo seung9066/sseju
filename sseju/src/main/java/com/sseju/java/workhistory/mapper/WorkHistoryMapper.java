@@ -10,9 +10,5 @@ public interface WorkHistoryMapper {
 	//c 작업 이력 등록
 	public int insertWorkHistory(WorkHistoryVO whVO);
 	//R 작업 이력 띄우기
-	public List<WorkHistoryVO> getWrokHistoryList();
-	//u
-	
-	//d
-
+	public List<WorkHistoryVO> getWorkHistoryList();
 }

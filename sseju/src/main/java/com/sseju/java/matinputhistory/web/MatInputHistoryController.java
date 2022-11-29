@@ -17,7 +17,7 @@ public class MatInputHistoryController {
 	MatInputHistoryService mihService;
 	//생산관리 - 자재 투입 내역 페이지로 이동
 	@GetMapping("/matInputHistory")
-	public String matInputHistory(Model model) {
+	public String matInputHistory() {
 		return "/admin/produce/matInputHistory";
 	}
 	//ㄴ자재 투입 내역 그리드 가져오기위한 메소드

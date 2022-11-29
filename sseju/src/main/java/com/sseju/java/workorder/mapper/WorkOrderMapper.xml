@@ -26,8 +26,6 @@
 						   )
 	</insert>
 	
-	
-	
 	<!-- Read : workorder페이지에서 정보를 불러오는 쿼리문 모음 -->
 		<!-- 주문 번호, 주문한 상품명, 주문수량, 주문일자 불러오기(주문 신청 내역 그리드에 대한 쿼리) -->
 	<select id="getOrderList" resultType="woVO">
@@ -52,7 +50,7 @@
 		<!-- 등록된 작업 지시 내역 그리드에 띄우는 쿼리 -->
 	<select id="getWorkOrderList" resultType="woVO">
 		SELECT pe.order_no, pe.pre_no, pt.prt_name, pt.prt_code, pe.ins_qty,
-		        pe.pre_date, pe.pre_manager, ee.emp_name, ods.d_day
+		        pe.pre_date  + 9/24 as pre_date, pe.pre_manager, ee.emp_name, ods.d_day
 		
 		FROM orders ods JOIN produce pe
 		    ON ods.order_no = pe.order_no
