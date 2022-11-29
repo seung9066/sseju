@@ -33,6 +33,7 @@
 			<div id="workerAGrid"></div>
 			<br>
 			<h4>등록된 작업자</h4>
+			<input type="hidden" id="preNo">
 			<div id="workerBGrid"></div>
 			<script type="text/javascript">
 	
@@ -41,13 +42,12 @@
 				var workOrderGrid = new tui.Grid({
 					 el: document.getElementById('workorderGrid'),
 						pagination:true,
-						pageOption: {
+						pageOptions: {
 							useClient:true,
-							perPage:5
+							perPage:8
 						},
 				        scrollX : false,
 				        scrollY : false,
-					    rowHeaders: ['checkbox'],
 					    columns:
 					    	[{
 								header: '작업 지시 번호',
@@ -101,12 +101,13 @@
 							}]
 					      });
 				
+				
 				const workerAGrid = new tui.Grid({
 					el : document.getElementById('workerAGrid'),
 					pagination : true,
-					pageOption : {
+					pageOptions : {
 						useClient : true,
-						perPage : 10
+						perPage : 6
 					},
 					scrollX : false,
 					scrollY : false,
@@ -137,9 +138,9 @@
 				const workerBGrid = new tui.Grid({
 					el : document.getElementById('workerBGrid'),
 					pagination : true,
-					pageOption : {
+					pageOptions : {
 						useClient : true,
-						perPage : 10
+						perPage : 6
 					},
 					scrollX : false,
 					scrollY : false,
@@ -191,7 +192,6 @@
 							}
 						},
 						error:function(request,status,error){
-							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 							console.log(reject);
 						}						
 					});
@@ -216,16 +216,15 @@
 							}
 						},
 						error:function(request,status,error){
-							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 							console.log(reject);
 						}						
 					});
 				}
 				
-				workOrderGrid.on('check', ev => {
+				workOrderGrid.on('click', ev => {
 					let data = workOrderGrid.getValue(ev.rowKey, 'preNo')
 					console.log(data);
-					
+					$('#preNo').val(workOrderGrid.getValue(ev.rowKey, 'preNo'));
 					showA(data);
 					showB(data);
 					
@@ -246,12 +245,11 @@
 					let preNo = [];
 					for(co of workerAGrid.getCheckedRows()){
 						inputId.push(co.empId);
+						preNo.push($('#preNo').val());
 					}
 					for(co of workerBGrid.getCheckedRows()){
 						deleteId.push(co.empId);
-					}
-					for (co of workOrderGrid.getCheckedRows()) {
-						preNo.push(co.preNo);						
+						preNo.push($('#preNo').val());
 					}
 					
 					$.ajax({

@@ -71,7 +71,7 @@ td {
 				const cpGrid = new tui.Grid({
 					el : document.getElementById('cpGrid'),
 					pagination : true,
-					pageOption : {
+					pageOptions : {
 						useClient : true,
 						perPage : 10
 					},
@@ -121,40 +121,29 @@ td {
 				
 				var deleteCode = [];
 				
-				cpGrid.on('check', ev => {
-					console.log(cpGrid.getValue(ev.rowKey, 'id'));
-					deleteCode.push((cpGrid.getValue(ev.rowKey, 'id')));
-					
-					console.log($('input[name=_checked]').val());
-					
-					$('#cpCode').val(cpGrid.getValue(ev.rowKey, 'cpCode'));
-					$('#cpCode').attr('readonly', true);
-					$('#id').val(cpGrid.getValue(ev.rowKey, 'id'));
-					$('#id').attr('readonly', true);
-					$('#cpName').val(cpGrid.getValue(ev.rowKey, 'cpName'));
-					$('#cpCeo').val(cpGrid.getValue(ev.rowKey, 'cpCeo'));
-					$('#cpTel').val(cpGrid.getValue(ev.rowKey, 'cpTel'));
-					$('#cpNo').val(cpGrid.getValue(ev.rowKey, 'cpNo'));
-					$('#cpAddr').val(cpGrid.getValue(ev.rowKey, 'cpAddr'));
-				});
-				
-				cpGrid.on('uncheck', ev => {
-					console.log(cpGrid.getValue(ev.rowKey, 'id'));
-					for(let i = 0; i < deleteCode.length; i++) {
-						if(deleteCode[i] == cpGrid.getValue(ev.rowKey, 'id')) {
-							deleteCode.splice(i, 1);
-						}
+				cpGrid.on('click', ev => {
+					if ($('#cpCode').val() == cpGrid.getValue(ev.rowKey, 'cpCode')) {
+						$('#cpCode').val('');
+						$('#cpCode').attr('readonly', false);
+						$('#id').val('');
+						$('#id').attr('readonly', false);
+						$('#cpName').val('');
+						$('#cpCeo').val('');
+						$('#cpTel').val('');
+						$('#cpNo').val('');
+						$('#cpAddr').val('');
+					} else {
+						$('#cpCode').val(cpGrid.getValue(ev.rowKey, 'cpCode'));
+						$('#cpCode').attr('readonly', true);
+						$('#id').val(cpGrid.getValue(ev.rowKey, 'id'));
+						$('#id').attr('readonly', true);
+						$('#cpName').val(cpGrid.getValue(ev.rowKey, 'cpName'));
+						$('#cpCeo').val(cpGrid.getValue(ev.rowKey, 'cpCeo'));
+						$('#cpTel').val(cpGrid.getValue(ev.rowKey, 'cpTel'));
+						$('#cpNo').val(cpGrid.getValue(ev.rowKey, 'cpNo'));
+						$('#cpAddr').val(cpGrid.getValue(ev.rowKey, 'cpAddr'));
 					}
-					$('#cpCode').val('');
-					$('#cpCode').attr('readonly', false);
-					$('#id').val('');
-					$('#id').attr('readonly', false);
-					$('#cpName').val('');
-					$('#cpCeo').val('');
-					$('#cpTel').val('');
-					$('#cpNo').val('');
-					$('#cpAddr').val('');
-					console.log(deleteCode);
+					
 				});
 				
 				function selectDeletecp() {

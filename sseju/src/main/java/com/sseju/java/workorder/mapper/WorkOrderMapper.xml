@@ -43,7 +43,7 @@
 		  JOIN product pt
 		    ON pt.prt_code= odi.prt_code
 		
-		 WHERE odi.order_yn = 'Y'
+		 WHERE odi.order_yn = 'O'
 		 ORDER BY odi.order_no ASC
 	</select>
 	
@@ -113,7 +113,7 @@
 	<update id="updateOrderYn" parameterType="woVO">
 			UPDATE order_inf set
 			order_yn = CASE
-		                WHEN order_yn = 'Y' THEN 'W' ELSE 'Y'
+		                WHEN order_yn = 'O' THEN 'W' ELSE 'O'
 					   END
 			where
 			 order_no = #{orderNo}

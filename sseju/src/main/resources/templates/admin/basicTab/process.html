@@ -39,7 +39,8 @@ td {
 				<table>
 					<tr>
 						<th>공정코드</th>
-						<td><input type="text" id="prsCode" name="prsCode" value="PRS_"></td>
+						<td><input type="text" id="prsCode" name="prsCode"
+							value="PRS_"></td>
 						<th>공정명</th>
 						<td><input type="text" id="prsName" name="prsName"></td>
 						<th>공정순서</th>
@@ -77,14 +78,16 @@ td {
 					</tr>
 					<tr>
 						<th>담당자</th>
-						<td><select style="width: 150px;" id="whManager" name="whManager">
+						<td><select style="width: 150px;" id="whManager"
+							name="whManager">
 								<option>---선택---</option>
 								<th:block th:each="e : ${emp}">
 									<option th:value="${e.empId}" th:text="${e.empName}"></option>
 								</th:block>
 						</select></td>
 						<th>창고 주소</th>
-						<td><input type="text" id="whLocation" name="whLocation" style="width:240px;"></td>
+						<td><input type="text" id="whLocation" name="whLocation"
+							style="width: 240px;"></td>
 					</tr>
 				</table>
 				<button class="button" type="button" style="float: right;"
@@ -109,9 +112,9 @@ td {
 				const prGrid = new tui.Grid({
 					el : document.getElementById('prGrid'),
 					pagination : true,
-					pageOption : {
+					pageOptions : {
 						useClient : true,
-						perPage : 10
+						perPage : 5
 					},
 					scrollX : false,
 					scrollY : false,
@@ -147,9 +150,9 @@ td {
 				const whGrid = new tui.Grid({
 					el : document.getElementById('whGrid'),
 					pagination : true,
-					pageOption : {
+					pageOptions : {
 						useClient : true,
-						perPage : 10
+						perPage : 5
 					},
 					scrollX : false,
 					scrollY : false,
@@ -182,64 +185,47 @@ td {
 				
 				var deleteCode = [];
 				
-				prGrid.on('check', ev => {
-					console.log(prGrid.getValue(ev.rowKey, 'prsCode'));
-					deleteCode.push((prGrid.getValue(ev.rowKey, 'prsCode')));
-					
-					console.log($('input[name=_checked]').val());
-					
-					$('#prsCode').val(prGrid.getValue(ev.rowKey, 'prsCode'));
-					$('#prsCode').attr('readonly', true);
-					$('#prsName').val(prGrid.getValue(ev.rowKey, 'prsName'));
-					$('#eqmCode').val(prGrid.getValue(ev.rowKey, 'eqmCode'));
-					$('#prsDetail').val(prGrid.getValue(ev.rowKey, 'prsDetail'));
-				});
-				
-				prGrid.on('uncheck', ev => {
-					console.log(prGrid.getValue(ev.rowKey, 'prsCode'));
-					for(let i = 0; i < deleteCode.length; i++) {
-						if(deleteCode[i] == prGrid.getValue(ev.rowKey, 'prsCode')) {
-							deleteCode.splice(i, 1);
-						}
+				prGrid.on('click', ev => {
+
+					if ($('#prsCode').val() == prGrid.getValue(ev.rowKey, 'prsCode')) {
+						$('#prsCode').val('PRS_');
+						$('#prsCode').attr('readonly', false);
+						$('#prsName').val('');
+						$('#eqmCode').val('');
+						$('#prsDetail').val('');
+						$('#runNo').val('');
+					} else {
+						deleteCode.push((prGrid.getValue(ev.rowKey, 'prsCode')));
+						
+						$('#prsCode').val(prGrid.getValue(ev.rowKey, 'prsCode'));
+						$('#prsCode').attr('readonly', true);
+						$('#prsName').val(prGrid.getValue(ev.rowKey, 'prsName'));
+						$('#eqmCode').val(prGrid.getValue(ev.rowKey, 'eqmCode'));
+						$('#prsDetail').val(prGrid.getValue(ev.rowKey, 'prsDetail'));
+						$('#runNo').val(prGrid.getValue(ev.rowKey, 'runNo'));
 					}
-					$('#prsCode').val('PRS_');
-					$('#prsCode').attr('readonly', false);
-					$('#prsName').val('');
-					$('#eqmCode').val('');
-					$('#prsDetail').val('');
-					console.log(deleteCode);
 				});
 				
-				whGrid.on('check', ev => {
-					console.log(whGrid.getValue(ev.rowKey, 'whCode'));
+				whGrid.on('click', ev => {
+					if ($('#whCode').val() == whGrid.getValue(ev.rowKey, 'whCode')) {
+						$('#whCode').val('STO_');
+						$('#whCode').attr('readonly', false);
+						$('#whName').val('');
+						$('#whLocation').val('');
+						$('#whManager').val('');
+					} else {
 					deleteCode.push((whGrid.getValue(ev.rowKey, 'whCode')));
-					
-					console.log($('input[name=_checked]').val());
 					
 					$('#whCode').val(whGrid.getValue(ev.rowKey, 'whCode'));
 					$('#whCode').attr('readonly', true);
 					$('#whName').val(whGrid.getValue(ev.rowKey, 'whName'));
 					$('#whLocation').val(whGrid.getValue(ev.rowKey, 'whLocation'));
 					$('#whManager').val(whGrid.getValue(ev.rowKey, 'whManager'));
-				});
-				
-				whGrid.on('uncheck', ev => {
-					console.log(whGrid.getValue(ev.rowKey, 'whCode'));
-					for(let i = 0; i < deleteCode.length; i++) {
-						if(deleteCode[i] == prGrid.getValue(ev.rowKey, 'whCode')) {
-							deleteCode.splice(i, 1);
-						}
+						
 					}
-					$('#whCode').val('STO_');
-					$('#whCode').attr('readonly', false);
-					$('#whName').val('');
-					$('#whLocation').val('');
-					$('#whManager').val('');
-					console.log(deleteCode);
 				});
 				
 				function selectDeletePW() {
-					console.log(prGrid.getCheckedRows());
 					let prt = [];
 					let mat = [];
 					for(co of prGrid.getCheckedRows()){

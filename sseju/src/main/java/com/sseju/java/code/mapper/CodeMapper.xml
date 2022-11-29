@@ -47,7 +47,7 @@
 	<select id="getBomList" parameterType="CodeVO"
 		resultType="CodeVO">
 		SELECT p.prt_name, b.prt_code, b.capacity, b.mat_code,
-		m.mat_name FROM bom b, product p, material m WHERE p.prt_name =
+		m.mat_name, '삭제' AS dell FROM bom b, product p, material m WHERE p.prt_name =
 		#{prtName} AND p.prt_code = b.prt_code AND b.mat_code = m.mat_code
 		ORDER BY no
 	</select>
@@ -298,12 +298,11 @@
 
 	<select id="WhPrd" parameterType="CodeVO" resultType="CodeVO">
 		SELECT
-		p.prt_name, l.lot_qty FROM
+		p.prt_name, sum(l.lot_qty) AS lot_qty FROM
 		lot l, product p WHERE
-		l.mp_code
-		= p.prt_code
-		AND l.mp_code LIKE
-		'PRD_%' AND l.wh_code = #{whCode}
+		l.mp_code = p.prt_code
+		AND l.wh_code = #{whCode}
+		GROUP BY p.prt_name
 	</select>
 
 	<select id="updatePrttCount" resultType="CodeVO">
@@ -372,6 +371,7 @@
 		'rrrr/MM/dd') = (SELECT
 		TO_DATE(SYSDATE,
 		'rrrr/MM/dd') FROM dual)
+		AND pre_prg = '진행 전'
 	</select>
 
 	<select id="todayWLinf" parameterType="CodeVO"
@@ -406,12 +406,13 @@
 	<select id="getLotMat" parameterType="CodeVO"
 		resultType="CodeVO">
 		SELECT * FROM lot WHERE mp_code = #{mpCode} AND lot_qty =
-		#{lotQty} AND rownum = 1 ORDER BY lot_date
+		#{lotQty} AND rownum = 1 AND out_from = '대기' ORDER BY lot_date
 	</select>
 
 	<select id="matOutNo" resultType="CodeVO">
 		SELECT 'MO'||to_char(sysdate,
-		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0) AS mat_out_no
+		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0) AS
+		mat_out_no
 		FROM
 		mat_out
 	</select>
@@ -442,7 +443,7 @@
 
 	<select id="prsNo" resultType="CodeVO">
 		SELECT 'PRS'||to_char(sysdate,
-		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0) AS prs_no
+		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(prs_no, -3)),0)+1,3,0) AS prs_no
 		FROM
 		process_run
 	</select>
@@ -455,7 +456,7 @@
 
 	<select id="prfNo" resultType="CodeVO">
 		SELECT 'PRF'||to_char(sysdate,
-		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0) AS prf_no
+		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(prs_pf_no, -3)),0)+1,3,0) AS prf_no
 		FROM
 		process_inf
 	</select>
@@ -472,7 +473,7 @@
 
 	<select id="processErrNo" resultType="CodeVO">
 		SELECT
-		(NVL(MAX(prs_err_no),0)+1)
+		(NVL(MAX(prs_err_no),0)+1) AS prs_err_no
 		FROM
 		process_err
 	</select>
@@ -508,11 +509,14 @@
 	</update>
 
 	<insert id="insertLot" parameterType="CodeVO">
-		<selectKey keyProperty="lotNo" resultType="String"
-			order="BEFORE">
-			SELECT LPAD(NVL(MAX(SUBSTR(lot_no, -3)),0)+1,3,0) FROM lot
-		</selectKey>
-		INSERT INTO lot VALUES(#{lotNo}, sysdate, #{mpCode}, #{outFrom}, '',
+		INSERT INTO lot
+		VALUES(#{lotNo}, sysdate, #{mpCode}, #{outFrom}, '',
+		0, #{whCode}, '')
+	</insert>
+	
+	<insert id="insertLotA" parameterType="CodeVO">
+		INSERT INTO lot
+		VALUES(#{lotNo}, sysdate, #{mpCode}, #{outFrom}, '',
 		#{lotQty}, #{whCode}, '')
 	</insert>
 
@@ -522,7 +526,111 @@
 
 	<update id="updateEqm" parameterType="CodeVO">
 		UPDATE eqm SET eqm_yn =
-		CASE WHEN eqm_yn = 'Y' THAN 'N' WHEN eqm_yn = 'N' THAN 'Y' WHERE
-		eqm_code = #{eqmCode}
+		CASE WHEN eqm_yn = 'Y' THEN 'N' ELSE 'Y' END WHERE
+		eqm_code =
+		#{eqmCode}
+	</update>
+
+	<select id="MatBomList" parameterType="CodeVO"
+		resultType="CodeVO">
+		select bom.prt_code, bom.mat_code, i.order_qty, c.cp_code ,
+		m.mat_unit_prc
+		from
+		orders ord,
+		order_inf i,
+		product pd,
+		bom bom,
+		material m,
+		company c
+		where i.order_no = ord.order_no
+		and i.prt_code = pd.prt_code
+		and
+		pd.prt_code = bom.prt_code
+		and bom.mat_code = m.mat_code
+		and m.cp_code =
+		c.cp_code
+		and ord.order_no = #{orderNo}
+	</select>
+
+	<select id="matOrdNo" resultType="CodeVO">
+		SELECT
+		'MAT_ORD_'||LPAD(NVL(MAX(SUBSTR(mat_ord_no,
+		-3)),0)+1,3,0) AS mat_ord_no FROM
+		mat_buy
+	</select>
+
+	<insert id="insertMatBuy" parameterType="CodeVO">
+		INSERT INTO mat_buy
+		VALUES (
+		#{matOrdNo}
+		,(#{matOrdQty} * 110 / 100)
+		,'PRG_001'
+		,#{matCode}
+		,sysdate
+		,#{cpCode}
+		,'미확인'
+		,(#{matPrice} * 110/100)
+		,#{matOrdEmp}
+		)
+	</insert>
+	
+	<select id="getMatChkNo" resultType="CodeVO">
+		SELECT 'MAT_CK'||LPAD(NVL(MAX(SUBSTR(mat_chk_code,
+			-3)),0)+1,3,0) AS mat_chk_code FROM
+			mat_chk
+	</select>
+	
+	<insert id="insertMatChk" parameterType="CodeVO">
+		INSERT INTO mat_chk
+		VALUES
+		(#{matChkCode}
+		,#{matInQty}
+		,#{matErrQty}
+		,#{matOrdNo}
+		, sysdate
+		,#{matPassQty}
+		,#{matCode})
+	</insert>
+	
+	<insert id="insertMatErr" parameterType="CodeVO">
+		<selectKey keyProperty="matNo" resultType="Integer"
+			order="BEFORE">
+			SELECT NVL(MAX(mat_no),0) + 1 FROM mat_err
+		</selectKey>
+		INSERT INTO mat_err
+		VALUES(#{matNo}, #{matChkCode}, '', #{errCode})
+	</insert>
+	
+	<select id="selectMatErr" resultType="CodeVO">
+		SELECT * FROM error WHERE code = #{matCode}
+	</select>
+
+	<update id="updateMatYN" parameterType="CodeVO">
+		UPDATE mat_buy SET
+		mat_ord_yn = '확인' WHERE mat_ord_no = #{matOrdNo}
+	</update>
+
+	<update id="orderInfYN" parameterType="CodeVO">
+		UPDATE order_inf SET
+		order_yn = 'O' WHERE order_no = #{orderNo}
+	</update>
+
+	<select id="getMatCompany" resultType="CodeVO">
+		SELECT * FROM material
+		WHERE mat_code = #{matCode}
+	</select>
+
+	<select id="getLotNo" resultType="CodeVO">
+		SELECT 'LOT'||to_char(sysdate,
+		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(lot_no, -3)),0)+1,3,0) AS lot_no FROM lot
+	</select>
+
+	<update id="updateLotQty" parameterType="CodeVO">
+		UPDATE lot SET lot_qty =
+		#{lotQty} WHERE lot_no = #{lotNo}
+	</update>
+	
+	<update id="updateProducePrePrg" parameterType="CodeVO">
+		UPDATE produce SET pre_prg = '진행 완료' WHERE pre_no = #{preNo}
 	</update>
 </mapper>
