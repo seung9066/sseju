@@ -45,31 +45,24 @@
 		  JOIN product pt
 		    ON pt.prt_code= odi.prt_code
 		
-		 WHERE odi.order_yn = 'N'
+		 WHERE odi.order_yn = 'Y'
 		 ORDER BY odi.order_no ASC
 	</select>
 	
 		<!-- 등록된 작업 지시 내역 그리드에 띄우는 쿼리 -->
 	<select id="getWorkOrderList" resultType="woVO">
-		SELECT  pe.order_no,
-				pe.pre_no, pt.prt_name, 
-				pt.prt_code,
-				pe.pre_qty, 
-				pe.ins_qty,
-				pe.pre_date, 
-				pe.pre_manager,
-				ee.emp_name,
-				ods.d_day
-                
-
+		SELECT pe.order_no, pe.pre_no, pt.prt_name, pt.prt_code, pe.ins_qty,
+		        pe.pre_date, pe.pre_manager, ee.emp_name, ods.d_day
+		
 		FROM orders ods JOIN produce pe
 		    ON ods.order_no = pe.order_no
+		JOIN order_inf odi
+		    ON odi.order_no = ods.order_no
 		JOIN product pt
-		    ON pt.prt_code = pe.prt_code
+		    ON pt.prt_code = odi.prt_code
 		JOIN employee ee
-			ON ee.emp_id = pe.pre_manager
-        JOIN order_inf odi
-            ON (odi.order_yn ='N') OR (odi.order_yn ='K')
+		    ON ee.emp_id = pe.pre_manager
+		WHERE  (odi.order_yn ='W') OR (odi.order_yn ='K')
 		ORDER BY ods.order_no ASC
 	</select>
 	
@@ -108,7 +101,6 @@
 	</select>
 	
 	<!-- 사용안하는중
-		 단건 조회 시 작업 지시 번호로 조회할까싶어서 넣어뒀던것
 		작업 지시 번호 조회 -->
 	<select id="getWoNo" resultType="woVO">
 		SELECT 'PRE' || TO_CHAR(SYSDATE,'YYYYMMDD')||LPAD(NVL(MAX(SUBSTR(pre_no, -3)),0)+1,3,0) AS preNo
@@ -123,7 +115,7 @@
 	<update id="updateOrderYn" parameterType="woVO">
 			UPDATE order_inf set
 			order_yn = CASE
-		                WHEN order_yn = 'N' THEN 'W' ELSE 'N'
+		                WHEN order_yn = 'Y' THEN 'W' ELSE 'Y'
 					   END
 			where
 			 order_no = #{orderNo}
@@ -148,6 +140,7 @@
 		DELETE FROM produce
 		WHERE pre_no = #{preNo}
 	</delete>
+	
 	<!-- 주문 내역 삭제 -->
 	<delete id="deleteOrder" parameterType="woVO">
 		DELETE FROM order

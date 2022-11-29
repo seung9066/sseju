@@ -12,7 +12,7 @@
 	<select id="getPrtPerList" resultType="ppVO">
 		SELECT pe.pre_no,
 		       pt.prt_name,
-		       pe.pre_qty,
+		       prr.prt_qty,
 		       pri.prs_err_qty,
 		       pe.pre_manager,
 		       prr.prs_date,
@@ -46,6 +46,7 @@
 			ON pi.prs_no = prr.prs_no
 		JOIN produce pe
 			ON prr.pre_no = pe.pre_no
+		WHERE ppr.pre_no = #{preNo}
 	</select>
 	<!-- Update 쿼리 모음 -->
 	<!-- 수정 ㅡ 실적칸은 수정 필요없으므로 추가X -->

@@ -63,10 +63,20 @@
 				</div>
 			</div>
 			<!-- 공정 검사 내역 그리드 -->
-			<div id="prsChkGrid"></div>
+			<div id="GridTab">
+				<div id="prsChkGrid"></div>
+			</div>
 			<script>
 			//페이지 로딩시 그리드 데이터 가져옴
+			
 			showProcessCheck();
+			
+		//	gridRef(); //그리드 리프래쉬
+		//	pcSearch();//발주 신청일 조회 버튼 클릭 이벤트
+			
+		//	datePicker();	//데이트피커
+		//	resetDate();	//datepicker초기화 버튼
+			
 			
 			var token = $("meta[name='_csrf']").attr("content");
 			var header = $("meta[name='_csrf_header']").attr("content");
@@ -106,9 +116,9 @@
 						    	filter : 'select',
 								align : 'center',
 								filter : 'select',
-								/* formatter({value}) {
-								      return `${value.substring(0,10)}`;
-								    }  */
+								formatter({value}) {
+							      return `${value.substring(0,10)}`;
+							    } 
 							},
 							{
 								header: '공정명',
@@ -131,9 +141,9 @@
 							    name: 'preDate',
 							    filter : 'select',
 								align : 'center',
-						 		formatter({value}) {
-							      return `${value.substring(0,10)}`;
-							    } 
+								formatter : function (ev){
+			                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+			                    }
 							},
 							{
 							    header : '불량률',
@@ -162,32 +172,38 @@
 								prsChkGrid.resetData(obj);
 							})
 						}
+					// 그리드 리프레쉬
+					function gridRef(){
+						const GridTab = document.getElementById('GridTab');
+						GridTab.addEventListener('click',function(){
+							grid.refreshLayout();
+						})
+					}
 						
 					/* date pricker */
-					function datePicker() {
+ 					function datePicker() {
 						rangeDatepickerInit('#startpicker-input', '#startpicker-container','#endpicker-input','#endpicker-container')
 						document.getElementById('startpicker-input').value = null;
 						document.getElementById('endpicker-input').value = null;	
 					}
-					
 					/*------------------------
 					// DatePicker 초기화버튼 이벤트
 					--------------------------*/
-					function resetDate() {
-						document.getElementById('resetDpBtn').addEventListener('click',function(){
+ 					function resetDate() {
+						document.getElementById('resetBtn').addEventListener('click',function(){
 							document.getElementById('startpicker-input').value = null;
 							document.getElementById('endpicker-input').value = null;
 						});	
-					}
+					} 
 					
 					// 공정조회 작업일자 조회버튼 클릭 이벤트 (조건 조회 탭)
 					function pcSearch() {
 						document.getElementById('pcSearch').addEventListener('click', function(){
 							let startDate = document.getElementById('startpicker-input').value;
-							let matOdDd = document.getElementById('endpicker-input').value;
-							let list = {matOdDd:matOdDd, matEdate:startDate};
+							let endDate = document.getElementById('endpicker-input').value;
+							let list = {endDate:endDate, matEdate:startDate};
 							
-							// 시작 일 <= 검색 날짜 <= 마지막 일
+							// startDate = 검색 기준 첫 지정 일,endDate : 끝나는 날 지정 
 							$.ajax({
 								url: '/prschkSearch',
 								method: 'POST',
@@ -195,7 +211,7 @@
 								data: JSON.stringify(list),
 								success: function(result){
 									console.log(result);
-									grid2.resetData(result);
+									prsChkGrid.resetData(result);
 								},
 								error: function(reject){
 									console.log(reject);
