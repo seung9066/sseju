@@ -104,22 +104,41 @@
 					filter: 'select'
 				},
 				{
+					header : '업체명',
+					name : 'cpName',
+					align : 'center',
+					filter: 'select'
+				},
+				{
 					header : '주문일자',
 					name : 'orderDate',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter(ev) {
+						if(ev.value){
+	                    return `${ev.value.substring(0,10)}`;
+						}
+	                  }
 				},
 				{
 					header : '납기일자',
 					name : 'dday',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter(ev) {
+						if(ev.value){
+	                    return `${ev.value.substring(0,10)}`;
+						}
+	                  }
 				},
 				{
 					header : '총금액',
 					name : 'orderPrice',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+	                    }
 				},
 		          ]
 		});
@@ -143,14 +162,19 @@
 					header : '주문량',
 					name : 'orderQty',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'EA';
+                    }
 				},
 				
 				{
 					header : '금액',
 					name : 'orderPrice',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+	                    }
 				}
 		          ]
 		});
@@ -212,7 +236,7 @@
 						alls();
 						alls3();
 						 $('#orModal').modal('hide');
-						alert('수정완료');
+						alert('승인완료');
 					}								
 
 				}// suc
@@ -253,18 +277,22 @@
 					name : 'orderDate',
 					align : 'center',
 					filter: 'select',
-				    formatter({value}) {
-                        return `${value.substring(0,10)}`;
-                      }
+					formatter(ev) {
+						if(ev.value){
+	                    return `${ev.value.substring(0,10)}`;
+						}
+	                  }
 				},
 				{
 					header : '납기일자',
 					name : 'dday',
 					align : 'center',
 					filter: 'select',
-				    formatter({value}) {
-                        return `${value.substring(0,10)}`;
-                      }
+					formatter(ev) {
+						if(ev.value){
+	                    return `${ev.value.substring(0,10)}`;
+						}
+	                  }
 				},
 				{
 					header : '총금액',
@@ -272,7 +300,7 @@
 					align : 'center',
 					filter: 'select',
 					formatter : function (ev){
-	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
 	                    }
 				},
 				
@@ -300,7 +328,7 @@
 					align : 'center',
 					filter: 'select',
 					formatter : function (ev){
-	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'EA';
 	                    }
 				},
 				
@@ -310,7 +338,7 @@
 					align : 'center',
 					filter: 'select',
 					formatter : function (ev){
-	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
 	                    }
 				}
 		          ]

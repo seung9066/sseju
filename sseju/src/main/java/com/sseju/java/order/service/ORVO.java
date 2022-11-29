@@ -35,7 +35,19 @@ public class ORVO {
 
 	private int lotQty; // 생산수량(로트번호가 부여된 제품 단위의 총 개수)
 	private String prtCode;
-	private String lotNo;	//로트번호(시리얼번호) lot
+	private String lotNo; // 로트번호(시리얼번호) lot
 
-//	
+	//product_out
+	
+	private int prtOutNo;
+	private String whCode;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date ptOutDate;
+	private int ptOutQty;
+	private String del;
+	
+	
+	
+	
+	
 }

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
@@ -6,191 +5,356 @@
 	layout:decorate="~{/layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>주문납품 대비출고 조회</title>
-
-<style>
-.tui-datepicker {
-	z-index: 1001;
-}
-
-.tui-select-box {
-	z-index: 1001;
-}
-
-/* ul 스타일 */
-.ul-style {
-	list-style: none;
-	padding: 0px;
-}
-
-.ul-style li>label {
-	width: 100px;
-	text-align: center;
-}
-
-.ul-style li {
-	padding: 5px;
-}
-
-#od-title {
-	font-weight: bold;
-}
-
-#od-btn {
-	display: inline-block;
-	margin: 0 5px;
-	float: right;
-}
-</style>
-
-<link rel="stylesheet"
-	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<title>Insert title here</title>
+<!-- 제이쿼리 -->
 <script
-	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!-- 토스트UI -->
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<!-- 토스트 UI 그리드 페이징 cdn -->
 <script type="text/javascript"
 	src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
-
 </head>
 <body>
 	<article layout:fragment="content">
-		<main class="main" id="main">
-			<div id="od-title">
-				<h3>주문납품 대비출고 조회</h3>
+		<main id="main" class="main">
+
+			<div id="mat-od-title">
+				<h2>주문 배송조회</h2>
 			</div>
-			<br> <br>
-			<h4>진행중인 주문서 현황</h4>
-			<div id="allGrid"></div>
-			<br>
-			<h4>출고 등록 현황 리스트</h4>
-			<div id="ordGrid"></div>
-			<script>
+			<div>
+				<h3>배송 상태 조회</h3>
+				<!-- matModal -->
+				<div class="modal" id="orModal" tabindex="-1"
+					aria-labelledby="orModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">주문 배송상세조회</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div id="Agrid1"></div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="button" data-bs-dismiss="modal">닫기</button>
+								<button type="submit" class="button" onclick="updateOrderNy()">배송완료</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="grid1"></div>
+			</div>
+				<h4>출고 배송 현황 리스트</h4>
+				<div id="grid123"></div>
+
+				<script>
+			
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
 
-			all();
+			alls();
+			const grid1 = new tui.Grid({
+			el : document.getElementById('grid1'),
+			pagination:true,
+			pageOptions: {
+			    useClient: true,
+			    perPage: 5
+			  },
+			scrollX : false,
+			scrollY : false,
+			columns : [
+				{
+					header : '주문번호',
+					name : 'orderNo',
+					align : 'center',
+					filter: 'select'
+				}, 
+			    {
+				    header : '주문일자',
+					name : 'orderDate', //납기일자명 수정
+					align : 'center',
+					filter: 'select',
+					formatter(ev) {
+							if(ev.value){
+                        		return `${ev.value.substring(0,10)}`;
+								
+							}
+                      } 
+				},
+				{
+					header : '거래처명',
+					name : 'cpName',
+					align : 'center',
+					filter: 'select'
+				},
 			
-				const allGrid = new tui.Grid({
-					el : document.getElementById('allGrid'),
-					pagination:true,
-					pageOptions: {
-					    useClient: true,
-					    perPage: 5
-					  },
-					scrollX : false,
-					scrollY : false,
-/* 					rowHeaders: ['checkbox'],
- */					columns : [
-					    {
-						    header : '주문일자',
-							name : 'orderDate', //납기일자명 수정
-							align : 'center',
-							filter: 'select'
-						},
-						{
-							header : '주문번호',
-							name : 'orderNo',
-							align : 'center',
-							filter: 'select'
-						}, 
-						{
-							header : '거래처명',
-							name : 'cpName',
-							align : 'center',
-							filter: 'select'
-						},
-						{
-							header : '제품명',
-							name : 'prtName',
-							align : 'center',
-							filter: 'select'
-						},
-						{
-							header : '주문량',
-							name : 'orderQty',
-							align : 'center',
-							filter: 'select'
-						},
-						{
-							header : '출고량',
-							name : 'orderOutQty',
-							align : 'center',
-							filter: 'select'
-						}
-				           
-				           
-				          ]
-				});
-				
-				function all() {
-					url="selectOrdeIng"
-			        fetch(url) 
-			         .then(res=>res.json())
-			        .then(obj=>{
-			           console.log(obj);
-			           allGrid.resetData(obj);
-			        })
+				{
+					header : '주문량',
+					name : 'orderQty',
+					align : 'center',
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'EA';
+	                    }
+				},
+				{
+					header : '배송상태',
+					name : 'orderPrg',
+					align : 'center',
+					filter: 'select'
+					
 				}
-				</script>
+		          ]
+		});
+			
+			
+		const Agrid1 = new tui.Grid({
+			el : document.getElementById('Agrid1'),
+			pagination:true,
+			pageOptions: {
+			    useClient: true,
+			    perPage: 5
+			  },
+			scrollX : false,
+			scrollY : false,
+			columns : [
+				{
+					header : '제품명',
+					name : 'prtName',
+					align : 'center',
+					filter: 'select'
+				}, 
+				{
+					header : '주문량',
+					name : 'orderQty',
+					align : 'center',
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'EA';
+	                    }
+				},
+				{
+					header : '금액',
+					name : 'orderPrice',
+					align : 'center',
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+	                    }
+				}
+		          ]
+		});
+		
+		
+	  document.addEventListener('shown.bs.modal', function() {
+		  grid1.refreshLayout();
+      });
+	  
+	  grid1.on('click',function(ev){
+		  let a = grid1.getRow(ev.rowKey).orderNo;
+          alls1(a);
+           
+           $('#orModal').modal('show');
+           Agrid1.refreshLayout();
+       	
+       });
+		
+		function alls() {
+			url="selectOrdeIng"
+			fetch(url) 
+	        .then(res=>res.json())
+	        .then(obj=>{
+	           console.log(obj);
+	           grid1.resetData(obj);
+	        })
+		}
+		function alls1(a) {
+			let b = {'orderNo' : a}
+			 $.ajax({
+					url : "select2",
+					method : "POST",
+					data: JSON.stringify(b),
+					dataType : "JSON",
+					contentType: 'application/json; charset=utf-8',
+					beforeSend : function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(list) {
 
-			<script>
-				ordAll();
-				
-				const ordGrid = new tui.Grid({
-					el : document.getElementById('ordGrid'),
-					pagination:true,
-					pageOptions: {
-					    useClient: true,
-					    perPage: 5
-					  },
-					scrollX : false,
-					scrollY : false,
-/* 					rowHeaders: ['checkbox'],
- */					columns : [ {
-						header : '주문번호',
-						name : 'orderNo',
-						align : 'center',
-						filter: 'select'
-					}, {
-						header : '주문일자',
-						name : 'orderDate', //납기일자명 수정
-						align : 'center',
-						filter: 'select'
-					}, {
-						header : '품목',
-						name : 'prtName',
-						align : 'center',
-						filter: 'select'
-					}, 
-					{
-						header : '납기일자',
-						name : 'dday',
-						align : 'center',
-						filter: 'select'
-					},
-					{
-						header : '주문량',
-						name : 'orderQty',
-						align : 'center',
-						filter: 'select'
-					},
-					{
-						header : '진행상태',
-						name : 'orderPrg',
-						align : 'center',
-						filter: 'select'
-					}
-					 ]
+							Agrid1.resetData(list)								
+
+					}// suc
 				});
-				    function ordAll() {
-						url="selectOrderList"
-				        fetch(url) 
-				        .then(res=>res.json())
-				        .then(obj=>{
-				           console.log(obj);
-				           ordGrid.resetData(obj);
-				        })
+		}
+	   	
+		function updateOrderNy() {
+			console.log(Agrid1.getData())
+			let b = Agrid1.getData();
+			$.ajax({
+				url : "updateOrderWK",
+				method : "POST",
+				data: JSON.stringify(b),
+				dataType : "JSON",
+				contentType: 'application/json; charset=utf-8',
+				beforeSend : function(xhr){
+					xhr.setRequestHeader(header, token);
+				},
+				success : function(list) {
+					if (list > 0) {
+						alls();
+						alls3();
+						 $('#orModal').modal('hide');
+						alert('등록완료');
+					}								
+
+				}// suc
+			});
+		}
+		
+		
+			var token = $("meta[name='_csrf']").attr("content");
+			 var header = $("meta[name='_csrf_header']").attr("content");
+
+			 alls3();
+			const grid123 = new tui.Grid({
+			el : document.getElementById('grid123'),
+			pagination:true,
+			pageOptions: {
+			    useClient: true,
+			    perPage: 5
+			  },
+			scrollX : false,
+			scrollY : false,
+			columns : [ {
+				header : '주문번호',
+				name : 'orderNo',
+				align : 'center',
+				filter: 'select'
+			},
+			{
+				header : '주문일자',
+				name : 'orderDate', //납기일자명 수정
+				align : 'center',
+				filter: 'select',
+				formatter(ev) {
+					if(ev.value){
+                    return `${ev.value.substring(0,10)}`;
 					}
-	   	 </script>
+                  }
+			},
+			{
+				header : '품목',
+				name : 'prtName',
+				align : 'center',
+				filter: 'select',
+				
+			}, 
+			{
+				header : '거래처명',
+				name : 'cpName',
+				align : 'center',
+				filter: 'select',
+				
+			}, 
+			{
+				header : '납기일자',
+				name : 'dday',
+				align : 'center',
+				filter: 'select',
+                 formatter(ev) {
+ 					if(ev.value){
+                     return `${ev.value.substring(0,10)}`;
+ 					}
+                   }
+				
+			},
+			{
+				header : '주문량',
+				name : 'orderQty',
+				align : 'center',
+				filter: 'select',
+				formatter : function (ev){
+                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    }
+			},
+			{
+				header : '진행상태',
+				name : 'orderPrg',
+				align : 'center',
+				filter: 'select'
+			}
+			 ]
+		});
+			const Agrid123 = new tui.Grid({
+			el : document.getElementById('Agrid123'),
+			pagination:true,
+			pageOptions: {
+			    useClient: true,
+			    perPage: 5
+			  },
+			scrollX : false,
+			scrollY : false,
+			columns : [
+				{
+					header : '제품명',
+					name : 'prtName',
+					align : 'center',
+					filter: 'select'
+				}, 
+				{
+					header : '주문량',
+					name : 'orderQty',
+					align : 'center',
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'EA';
+	                    }
+				},
+				
+				{
+					header : '금액',
+					name : 'orderPrice',
+					align : 'center',
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+                    }
+				}
+		          ]
+		});
+		function alls3() {
+			url="selectOrderList"
+			fetch(url) 
+	        .then(res=>res.json())
+	        .then(obj=>{
+	           console.log(obj);
+	           grid123.resetData(obj);
+	        })
+		}
+		function alls4(a) {
+			let b = {'orderNo' : a}
+			 $.ajax({
+					url : "select2",
+					method : "POST",
+					data: JSON.stringify(b),
+					dataType : "JSON",
+					contentType: 'application/json; charset=utf-8',
+					beforeSend : function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+					success : function(list) {
+
+							Agrid123.resetData(list)								
+
+					}// suc
+				});
+		}
+		  
+		</script>
 		</main>
 	</article>
 </body>

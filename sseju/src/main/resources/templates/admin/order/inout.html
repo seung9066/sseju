@@ -32,7 +32,7 @@
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title" id="exampleModalLabel">주문승인상세정보</h5>
+								<h5 class="modal-title" id="exampleModalLabel">주문출고 상세</h5>
 								<button type="button" class="btn-close" data-bs-dismiss="modal"
 									aria-label="Close"></button>
 							</div>
@@ -41,7 +41,7 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="button" data-bs-dismiss="modal">닫기</button>
-								<button type="submit" class="button" onclick="updateOrderNy()">승인하기</button>
+								<button type="submit" class="button" onclick="updateOrderNy()">출고완료</button>
 							</div>
 						</div>
 					</div>
@@ -50,6 +50,7 @@
 			</div>
 			<div>
 				<h2>출고 승인 목록</h2>
+
 				<div id="grid123"></div>
 				<!-- empModal2 -->
 				<div class="modal" id="orModal2" tabindex="-1"
@@ -107,19 +108,32 @@
 					header : '주문일자',
 					name : 'orderDate',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter(ev) {
+						if(ev.value){
+	                    return `${ev.value.substring(0,10)}`;
+						}
+	                  }
 				},
 				{
 					header : '납기일자',
 					name : 'dday',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter(ev) {
+						if(ev.value){
+	                    return `${ev.value.substring(0,10)}`;
+						}
+	                  }
 				},
 				{
 					header : '총금액',
 					name : 'orderPrice',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+	                    }
 				},
 		          ]
 		});
@@ -143,14 +157,20 @@
 					header : '주문량',
 					name : 'orderQty',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'EA';
+	                    }
 				},
 				
 				{
 					header : '금액',
 					name : 'orderPrice',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+	                    }
 				}
 		          ]
 		});
@@ -212,7 +232,7 @@
 						alls();
 						alls3();
 						 $('#orModal').modal('hide');
-						alert('수정완료');
+						alert('출고완료');
 					}								
 
 				}// suc
@@ -246,25 +266,46 @@
 					header : '업체코드',
 					name : 'cpCode',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					
+				},
+				{
+					header : '업체명',
+					name : 'cpName',
+					align : 'center',
+					filter: 'select',
+					
 				},
 				{
 					header : '주문일자',
 					name : 'orderDate',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter(ev) {
+						if(ev.value){
+	                    return `${ev.value.substring(0,10)}`;
+						}
+	                  }
 				},
 				{
 					header : '납기일자',
 					name : 'dday',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter(ev) {
+						if(ev.value){
+	                    return `${ev.value.substring(0,10)}`;
+						}
+	                  }
 				},
 				{
 					header : '총금액',
 					name : 'orderPrice',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+	                    }
 				},
 		          ]
 		});
@@ -288,14 +329,20 @@
 					header : '주문량',
 					name : 'orderQty',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'EA';
+	                    }
 				},
 				
 				{
 					header : '금액',
 					name : 'orderPrice',
 					align : 'center',
-					filter: 'select'
+					filter: 'select',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+                    }
 				}
 		          ]
 		});
@@ -336,8 +383,8 @@
 			  $('#orModal2').modal('show');
                 Agrid123.refreshLayout();
           });
+		
 		</script>
-
 		</main>
 	</article>
 </body>

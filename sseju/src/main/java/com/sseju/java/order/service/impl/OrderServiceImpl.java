@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.sseju.java.order.mapper.ORMapper;
 import com.sseju.java.order.service.ORService;
@@ -104,5 +105,68 @@ public class OrderServiceImpl implements ORService {
 		// TODO Auto-generated method stub
 		return OMapper.updateLot(vo);
 	}
+
+	@Override
+	public int updateDel(ORVO vo) {
+		return OMapper.updateDel(vo);
+	}
+
+	public int insertOrder(List<ORVO> list) {
+		int a = 0;
+		a += OMapper.insertOrder(list.get(0));
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(list.get(i));
+			a += OMapper.insertOrderInfo(list.get(i));
+		}
+		return a;
+	}
+
+	public int updateOrderNy(List<ORVO> Ovo) {
+		int a = 0;
+		System.out.println("aaaaaaa");
+		System.out.println(Ovo);
+		ORVO vo = new ORVO();
+		for (int i = 0; i < Ovo.size(); i++) {
+			vo.setOrderNo(Ovo.get(i).getOrderNo());
+			vo.setPrtCode(Ovo.get(i).getPrtCode());
+			a += OMapper.updateOrderNy(vo);
+		}
+		return a;
+	}
+
+	@Override
+	public int updateOrderWK(List<ORVO> Ovo) {
+		int a = 0;
+		System.out.println("aaaaaaa");
+		System.out.println(Ovo);
+		ORVO vo = new ORVO();
+		for (int i = 0; i < Ovo.size(); i++) {
+			vo.setOrderNo(Ovo.get(i).getOrderNo());
+			vo.setPrtCode(Ovo.get(i).getPrtCode());
+			a += OMapper.updateOrderWK(vo);
+			OMapper.updateLot(vo);
+			OMapper.updateDel(vo);
+			OMapper.updateDelOut(vo);
+		}
+		return a;
+	}
+
+	@Override
+	public int updateDelOut(ORVO vo) {
+
+		return OMapper.updateDelOut(vo);
+	}
+	@Override
+	public int updateOut(ORVO vo) {
+		
+		return OMapper.updateOut(vo);
+	}
+
+//	@Override
+//	public int insertOut(ORVO ovo) {
+//		OMapper.insertOut(ovo);
+//		OMapper.updateOrderWK(ovo);
+//		return OMapper.updateLot(ovo);
+//	}
 
 }

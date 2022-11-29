@@ -54,7 +54,9 @@ body {
 							th:value="${session.user.cpCode}"></td>
 					</tr>
 				</table>
-
+				<div style="text-align: right;">
+					<button class="button" onclick="deleteA()" type="button">삭제하기</button>
+				</div>
 				<div id="prtGrid1"></div>
 			</form>
 			<script>
@@ -84,14 +86,14 @@ body {
 				{
 					header : '단위',
 					name : 'prtUnit', //납기일자명 수정
-					align : 'center',
+					align : 'center'
 				},
 				{
 					header : '가격',
 					name : 'prtPrice',
 					align : 'right',
 					formatter : function (ev){
-	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
 	                    }
 				},
 				]
@@ -114,7 +116,7 @@ body {
 					  },
 					scrollX : false,
 					scrollY : false,
-					//rowHeaders: ['checkbox'],
+					rowHeaders: ['checkbox'],
 					columns : [ 
 						{
 						header : '제품코드',
@@ -136,7 +138,7 @@ body {
 						name : 'unitPrice', 
 						align : 'right',
 						formatter : function (ev){
-		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
 		                    }
 					},
 					{
@@ -144,9 +146,6 @@ body {
 						name : 'orderQty1', 
 						editor: 'text',
 						align : 'right',
-						formatter : function (ev){
-		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-		                    },
 						onAfterChange : function(ev) {
 				            //console.log(ev.value,this)   
 				            let row = prtGrid1.getRow(ev.rowKey)
@@ -162,7 +161,7 @@ body {
 						name : 'orderQty', 
 						align : 'right',
 						formatter : function (ev){
-		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
 		                    }
 					},
 				
@@ -171,24 +170,30 @@ body {
 						name : 'orderPrice',
 						align : 'right',
 						formatter : function (ev){
-		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
 		                    }
 					}
 					]
 				}); 
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
+			 
+			 
 			
 			 prtGrid.on("click", event => {
-	        		var prt = {prtCode : prtGrid.getRow(event.rowKey).prtCode,prtName:prtGrid.getRow(event.rowKey).prtName, prtUnit: prtGrid.getRow(event.rowKey).prtUnit,
+	        		var prt = {prtCode : prtGrid.getRow(event.rowKey).prtCode,prtName:prtGrid.getRow(event.rowKey).prtName,
+	        				prtUnit: prtGrid.getRow(event.rowKey).prtUnit,
 	        			unitPrice:prtGrid.getRow(event.rowKey).prtPrice, orderQty1: '', orderQty:'', orderPrice:''}; //json 형태로 지정해도 됩니다.
-	        			
 	        			prtGrid1.appendRow(prt);
+	        			
 	                })
+	                
+	                
 	         function clearA() {
 				 console.log("aaa")
 				 prtGrid1.clear()
 			 }
+			 
 			 
 	         function orInsert() {
 	        	 let orderNo1 = '';
@@ -236,6 +241,10 @@ body {
 						}// suc
 					}); //ajax 
 		       }
+	         
+	         function deleteA(){
+	        	 prtGrid1.removeCheckedRows(false);
+	         }
 			</script>
 		</main>
 	</article>

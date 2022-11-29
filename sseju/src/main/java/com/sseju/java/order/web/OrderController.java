@@ -60,27 +60,31 @@ public class OrderController {
 	public List<ORVO> selectOrder() {
 		return oService.selectOrder();
 	}
-	
+
 	@GetMapping("/select")
 	@ResponseBody
 	public List<ORVO> select() {
 		return oService.select();
 	}
+
 	@GetMapping("/select1")
 	@ResponseBody
 	public List<ORVO> select1() {
 		return oService.select1();
 	}
+
 	@GetMapping("/selectA")
 	@ResponseBody
 	public List<ORVO> selectA() {
 		return oService.selectA();
 	}
+
 	@GetMapping("/selectB")
 	@ResponseBody
 	public List<ORVO> selectB() {
 		return oService.selectB();
 	}
+
 	@PostMapping("/select2")
 	@ResponseBody
 	public List<ORVO> select2(@RequestBody ORVO a) {
@@ -96,51 +100,30 @@ public class OrderController {
 	@PostMapping("/user/insertOrder")
 	@ResponseBody
 	public int insertOrder(@RequestBody List<ORVO> list) {
-		int a = 0;
-
-		a += oService.insertOrder(list.get(0));
-		for (int i = 0; i < list.size(); i++) {
-			System.out.println(list.get(i));
-			a += oService.insertOrderInfo(list.get(i));
-		}
-
-		return a;
+		return oService.insertOrder(list);
 	}
+
 	@PostMapping("updateOrderNy")
 	@ResponseBody
-	public int updateOrderNy(@RequestBody List<ORVO> Ovo) {
-		int a = 0;
-		System.out.println("aaaaaaa");
-		System.out.println(Ovo);
-		ORVO vo = new ORVO();
-		for (int i = 0; i < Ovo.size(); i++) {
-			vo.setOrderNo(Ovo.get(i).getOrderNo());
-			vo.setPrtCode(Ovo.get(i).getPrtCode());
-			a += oService.updateOrderNy(vo);
-		}
-		return a;
+	public int updateOrderNy(@RequestBody List<ORVO> ovo) {
+		return oService.updateOrderNy(ovo);
 	}
+
 	@PostMapping("updateOrderWK")
 	@ResponseBody
 	public int updateOrderWK(@RequestBody List<ORVO> Ovo) {
-		int a = 0;
-		System.out.println("aaaaaaa");
-		System.out.println(Ovo);
-		ORVO vo = new ORVO();
-		for (int i = 0; i < Ovo.size(); i++) {
-			vo.setOrderNo(Ovo.get(i).getOrderNo());
-			vo.setPrtCode(Ovo.get(i).getPrtCode());
-			a += oService.updateOrderWK(vo);
-			oService.updateLot(vo);
-		}
-		return a;
+
+		return oService.updateOrderWK(Ovo);
 	}
-//	@PostMapping("insertOrderAll")
-//	@ResponseBody
-//	public int insertOrderAll(@RequestBody List<ORVO> list) {
-//		return oService.insertOrderAll(getOrderNo()) ;
-//	}
-	//들어가는 주소 Controller
+
+	/*
+	 * @PostMapping("/insertOut")
+	 * @ResponseBody public String insertOut(ORVO vo) { 
+	 * oService.insertOut(vo);
+	 * return "redirect:ORVO "; }
+	 */
+
+	// 들어가는 주소 Controller
 	// 전체
 	@GetMapping("/orlist")
 	public String OrderList(Model model) {
@@ -156,6 +139,7 @@ public class OrderController {
 	public String selectrinout(Model model) {
 		return "/admin/order/inout";
 	}
+
 	@GetMapping("/ordetail")
 	public String ordetail(Model model) {
 		return "/admin/order/ordetail";
