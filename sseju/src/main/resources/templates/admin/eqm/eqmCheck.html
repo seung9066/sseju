@@ -89,17 +89,19 @@ table, th, td {
 			<div id="input-group">
 				<ul class="ul-style">
 					<li><div>
-							<label for="chkDate" style="width: 100px">해당일자</label> <input
+							<label for="chkDate" style="width: 100px">차기점검일</label> <input
 								type="date" class="form-control"
 								style="width: 200px; display: inline" id="chkDateInput">&nbsp;~
 							<input type="date" class="form-control"
-								style="width: 200px; display: inline" id="chkNdateInput">
+								style="width: 200px; display: inline" id="chkNdateInput">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<label style="width: 100px">설비코드</label>
 							<select name="eqmDiv" id="eqmDivSearch">
 								<option selected>--전체--</option>
 								<option value="주입">bottle</option>
 								<option value="포장">inject</option>
 								<option value="병">package</option>
 							</select>
+							&nbsp;
 							<button type="button" class="button" id="chkSearch">검색</button>
 							&nbsp;
 							<button type="button" class="button" id="chkReset">초기화</button>
@@ -127,6 +129,7 @@ table, th, td {
 			<div id='dis' style="display: none;" class="row">
 				<div>
 					<div style="float: right;">
+						<button type="button" class="button"  data-bs-toggle="modal" data-bs-target="#chkModal">불러오기</button>
 						<button type="button" class="button" onclick="insertChk()">추가</button>
 					</div>
 					<table>
@@ -140,20 +143,23 @@ table, th, td {
 							<td><input type="text" name="eqmName" id="eqmName" data-bs-toggle="modal" data-bs-target="#eqmModal" class="showModal"></td>
 							<th class="col1">점검일</th>
 							<td><input type="date" name="chkDate" id="chkDate"></td>
-							<th class="col1">차기점검일</th>
-							<td><input type="date" name="chkNdate" id="chkNdate"></td>
+							<th class="col1" rowspan="2">조치사항</th>
+							<td rowspan="2"><textarea placeholder="입력하시오." name="chkSol" id="chkSol"></textarea></td>
+							
 
 						</tr>
 						<tr>
 							<th  class="col1">판정</th>
-							<td><input type="radio" name="chkState"
-								 value="불량" >불량 <input type="radio"
+							<td><input type="radio" name="chkState" id="err"
+								 value="불량" >불량 <input type="radio" id="pas"
 								name="chkState" value="합격">합격</td>
 							<th class="col1">담당자</th>
-							<td><input type="text" name="chkEmpNo" id="chkEmpNo"
-								data-bs-toggle="modal" data-bs-target="#empModal" class="showModal" readonly></td>
-							<th class="col1">조치사항</th>
-							<td><textarea placeholder="입력하시오." name="chkSol" id="chkSol"></textarea></td>
+							<td><input type="text" name="empName" id="empName"
+								data-bs-toggle="modal" data-bs-target="#empModal" class="showModal" readonly>
+								<input type="hidden" name="chkEmpNo" id="chkEmpNo"></td>
+								<th class="col1">차기점검일</th>
+							<td><input type="date" name="chkNdate" id="chkNdate"></td>
+							
 						</tr>
 
 					</table>
@@ -214,6 +220,27 @@ table, th, td {
 					</div>
 				</div>
 			</div>
+			<!-- 점검 불러오기 모달 -->
+			<div class="modal" tabindex="-1" role="dialog" id="chkModal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">
+								<b>설비점검</b>
+							</h5>
+							<button type="button" class="close" data-bs-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div id="chkTermGrid"></div>
+						
+				 </div>
+
+					</div>
+				</div>
+			</div>
 
 
 
@@ -233,18 +260,25 @@ table, th, td {
                 eqmGrid.refreshLayout();
                 }, '.modal');
          
+         document.addEventListener('shown.bs.modal', function (){
+        	 chkTermGrid.refreshLayout();
+             }, '.modal');
+         
          // 모달 사이즈에 맞게 바로 출력해줌
          const myModalEl = document.getElementById('empModal')
 		    myModalEl.addEventListener('shown.bs.modal', event => {
 		     empGrid.refreshLayout();
 		    })
+		    
+		   
             
          
             
      </script>
 
-			<script>
+	<script>
 			chkList();
+			chk();
 			eqm();
 			emp();
 		
@@ -296,7 +330,7 @@ table, th, td {
                   filter: 'select'
                }, {
                   header : '점검 담당자',
-                  name : 'empName',
+                  name : 'chkEmpNo',
                   align : 'center',
                   filter: 'select'
                } ]
@@ -314,12 +348,14 @@ table, th, td {
             	$('#chkNo').attr('readonly',true);
             	$('#eqmCode').val(chkGrid.getValue(ev.rowKey,'eqmCode'));
             	$('#eqmName').val(chkGrid.getValue(ev.rowKey,'eqmName'));
-            	$('#chkDate').val(chkGrid.getValue(ev.rowKey,'chkDate'));
-            	$('#chkNdate').val(chkGrid.getValue(ev.rowKey,'chkNdate'));
+            	$('#chkDate').val(chkGrid.getValue(ev.rowKey,'chkDate').substring(0,10));
+            	$('#chkNdate').val(chkGrid.getValue(ev.rowKey,'chkNdate').substring(0,10));
             	$('#chkState').val([chkGrid.getValue(ev.rowKey,'chkState')]);
             	$('#chkSol').val(chkGrid.getValue(ev.rowKey,'chkSol'));
-            	$('#chkEmpNo').val(chkGrid.getValue(ev.rowKey,'chkEmpNo'));
+            	$('#chkEmpNo').val(chkGrid.getValue(ev.rowKey,'chkEmpNo')); 
             });
+            
+           
             
             chkGrid.on('uncheck', ev => {
                 for(let i=0; i<checked.length; i++){
@@ -335,7 +371,7 @@ table, th, td {
             	$('#chkNdate').val('');
             	$('#chkState').val([]);
             	$('#chkSol').val('');
-            	$('#chkEmpNo').val('');
+            	$('#empName').val('');
             });
             
             function deleteChk(){
@@ -383,8 +419,7 @@ table, th, td {
             
             
             function updateChk(){
-                let eqmCode = $('#eqmCode').val();
-                let eqmName = $('#eqmName').val();
+                let chkNo = $('#chkNo').val();
                 let chkDate = $('#chkDate').val();
                 let chkNdate = $('#chkNdate').val();
                 let chkState = $('#chkState').val([]);
@@ -392,7 +427,7 @@ table, th, td {
                 let chkEmpNo = $('#chkEmpNo').val();
                
                 
-                let updChk={'eqmCode':eqmCode, 'eqmName':eqmName, 'chkDate':chkDate, 'chkNdate':chkNdate, 'chkState':chkState, 'chkSol':chkSol, 'chkEmpNo':chkEmpNo};
+                let updChk={'chkNo':chkNo, 'chkDate':chkDate, 'chkNdate':chkNdate, 'chkState':chkState, 'chkSol':chkSol, 'chkEmpNo':chkEmpNo};
                 
                 $.ajax({
                    url : 'updateChk',
@@ -555,6 +590,10 @@ table, th, td {
                   align : 'center',
                   filter: 'select'
                },  {
+                   header : '라인',
+                   name : 'lineNo',
+                   align : 'center'
+                },  {
                   header : '점검주기',
                   name : 'eqmCheck',
                   align : 'center'
@@ -638,11 +677,80 @@ table, th, td {
 				  let rowData=empGrid.getRow(ev.rowKey);
 				  
 				  let a = rowData['empName'];
+				  let b = rowData['empId'];
+
 				  
-				  $('#chkEmpNo').val(a);
+				  $('#chkEmpNo').val(b);
+				  $('#empName').val(a);
+
 				  
 				  $('#empModal').modal("hide");
 			   }); 
+			   
+			   
+			 // 점검 불러오기
+			var chkTermGrid = new tui.Grid({
+               el : document.getElementById('chkTermGrid'),
+               scrollX : false,
+               scrollY : true,
+               columns : [{
+                  header : '설비코드',
+                  name : 'eqmCode',
+                  align : 'center'
+                  
+               }, {
+                  header : '설비명',
+                  name : 'eqmName',
+                  align : 'center',
+                  filter: 'select'
+               },  {
+                  header : '점검주기',
+                  name : 'eqmCheck',
+                  align : 'center'
+               }, {
+                  header : '점검주기단위',
+                  name : 'eqmCheckTerm',
+                  align : 'center'
+               }, {
+                   header : '점검일',
+                   name : 'chkDate',
+                   align : 'center',
+                   formatter({value}) {
+					      return `${value.substring(0,10)}`;
+						    }
+                }, {
+                    header : '차기점검일',
+                    name : 'chkNdate',
+                    align : 'center',
+                    formatter({value}) {
+					      return `${value.substring(0,10)}`;
+						    }
+                 } ]
+            });
+			 
+			function chk(){
+				   
+				 fetch("chkList") 
+	                .then(res=>res.json())
+	                .then(obj=>{
+	                	chkTermGrid.resetData(obj);
+				       })
+			   } 
+			
+			
+			// 점검 그리드 클릭하면 input 태그에 뿌려주기
+		    chkTermGrid.on('click',ev => {
+			  let rowData=chkTermGrid.getRow(ev.rowKey);
+			  
+			  let a = rowData['empName'];
+			  
+			  $('#eqmCode').val(rowData['eqmCode']);
+			  $('#eqmName').val(rowData['eqmName']);
+			  $('#chkDate').val(rowData['chkDate'].substring(0,10));
+			  $('#chkNdate').val(rowData['chkNdate'].substring(0,10));
+			  
+			  $('#chkModal').modal("hide");
+		   }); 
 		
 		   
 		   

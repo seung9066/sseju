@@ -24,8 +24,9 @@ public class WorkHistoryController {
 	//ㄴ작업 이력 페이지의 그리드에 값 가져오는 컨트롤러
 	@GetMapping("/getWorkHistoryList")
 	@ResponseBody
-	public List<WorkHistoryVO> getWorkHistoryList(){
-		return whService.getWrokHistoryList();
+	public List<WorkHistoryVO> getWorkHistoryList(Model model){
+		model.addAttribute("whList", whService.getWorkHistoryList());
+		return whService.getWorkHistoryList();
 	}
 	
 }

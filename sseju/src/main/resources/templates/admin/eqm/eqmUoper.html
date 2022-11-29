@@ -45,6 +45,7 @@ img {
 .table  td  input {
 	width: 150px;
 }
+
 </style>
 <!-- 제이쿼리 -->
 <script
@@ -68,9 +69,10 @@ img {
 					<hr>
 					<div>
 						<label style="padding-right: 15px;">설비현황</label> <input
-							type="radio" name="eqmState" class="form-check-input"
-							value="uoper">비가동 내역 <input type="radio" name="eqmState"
-							class="form-check-input" value="eqm"> 설비전체
+							type="radio" name="eqmTab" id="eqmLi" class="form-check-input"
+							value="eqm"  checked="checked"> 설비전체 <input
+							type="radio" name="eqmTab" id="uoperLi" class="form-check-input"
+							value="uoper">비가동 내역
 					</div>
 					<div>
 						<label style="padding-right: 15px;">설비구분</label> <select name="">
@@ -81,69 +83,74 @@ img {
 						</select>
 					</div>
 					<hr>
-					<br> <div>비가동내역</div>
-					<div id="uoperGrid"></div>
+					<br>
 
-					<div>설비전체</div>
-					<div id="eqmGrid"></div>
+					<div id="eqmGrid" class="eqmClass"></div>
+
+					<div id="uoperGrid" class="uoperClass"></div>
+
+
 				</div>
-				<div class="col-6" id="regForm" style="display:none;">
-						<input type="hidden" th:name="${_csrf.parameterName}"
-							th:value="${_csrf.token}" /> <span style="font-size: 18px;"><b>비가동
-								등록</b></span>
-						<div style="float: right;">
-						    <input type="hidden" name="auth" value="ROLE_ADMIN">
-							<button class="button" type="button" onclick="insertUoper()">등록</button>
-							<button class="button" type="button" onclick="deleteUoper()">삭제</button>
-							<button class="button" type="reset">초기화</button>
-						</div>
-						<br>
-						<hr>
-						<table class="table">
-							<tr>
-								<th class="col1">설비코드</th>
-								<td><input type="text" name="eqmCode" id="eqmCode" ></td>
-								<th class="col1">설비명</th>
-								<td><input type="text" name="eqmName" id="eqmName" ></td>
-							</tr>
-							<tr>
-								
-								<th class="col1">비가동사유</th>
-								<td><select name="uoperRsn">
-									<option value='' selected>--선택--</option>
-									<option value='chk'>점검</option>
-									<option value='fix'>수리</option>
-									<option value='matQty'>자재부족</option>
-								</select></td>
-							</tr>
-							<tr>
-								
-								<th class="col1">작업자</th>
-								<td><input type="text" name="empId" id="empId" data-bs-toggle="modal" data-bs-target="#empModal" readonly></td>
-							</tr>
+				<div class="col-6" id="regForm" style="display: none;">
+					<input type="hidden" th:name="${_csrf.parameterName}"
+						th:value="${_csrf.token}" /> <span style="font-size: 18px;"><b>비가동
+							등록</b></span>
+					<div style="float: right;">
+						<input type="hidden" name="auth" value="ROLE_ADMIN">
+						<button class="button eqmClass" type="button" onclick="insertUpr()" >등록</button>
+						<button class="button uoperClass" type="button" onclick="updateUoper()" >수정</button>
+						<button class="button uoperClass" type="button" onclick="deleteUoper()">삭제</button>
+						<button class="button eqmClass" type="button" onclick="reset()">초기화</button>
+					</div>
+					<br>
+					<hr>
+					<table class="table">
+						<tr>
+							<th class="col1">설비코드</th>
+							<td><input type="text" name="eqmCode" id="eqmCode" readonly></td>
+							<th class="col1">설비명</th>
+							<td><input type="text" name="eqmName" id="eqmName" readonly></td>
+						</tr>
+						<tr>
 
-							<tr>
-								<th>
+							<th class="col1">비가동사유</th>
+							<td><select name="uoperRsn" id="uoperRsn">
+									<option value='' selected>--선택--</option>
+									<option value='점검'>점검</option>
+									<option value='수리'>수리</option>
+									<option value='자재부족'>자재부족</option>
+							</select></td>
+						</tr>
+						<tr>
+
+							<th class="col1">작업자</th>
+							<td><input type="text" name="empId" id="empId"
+								data-bs-toggle="modal" data-bs-target="#empModal" readonly></td>
+						</tr>
+
+						<tr>
+							<th>
 								<button type="button" id="endBtn">
-										<img src="assets/img/stop.png" alt="stop이미지">
-										<p>비가동</p>
+									<img src="assets/img/stop.png" alt="stop이미지">
+									<p>비가동</p>
 								</button>
-								</th>
-								<td><input type="text" id="uoperEndTime" name="uoperEndTime"></td>
-								
-								<th><button type="button" id="strBtn" disabled>
-										<img src="assets/img/play-button.png" alt="play이미지">
-										<p>재가동</p>
-									</button></th>
-								<td><input type="text" id="uoperStartTime" name="uoperStartTime"></td>
-							</tr>
-							<tr id="work" style="display:none;">
-								<th class="col1">작업내용</th>
-								<td><textarea placeholder="종료 누른 후에 입력가능.." id="uoperWork"
-										name="uoperWork" style="width:250px;"></textarea></td>
-							</tr>
-							<tr>
-						</table>
+							</th>
+							<td><input type="text" id="uoperStartTime"
+								name="uoperStartTime"></td>
+
+							<th><button type="button" id="strBtn" disabled>
+									<img src="assets/img/play-button.png" alt="play이미지">
+									<p>재가동</p>
+								</button></th>
+							<td><input type="text" id="uoperEndTime" name="uoperEndTime"></td>
+						</tr>
+						<tr id="work" style="display: none;">
+							<th class="col1">작업내용</th>
+							<td><textarea placeholder="종료 누른 후에 입력가능.." id="uoperWork"
+									name="uoperWork" style="width: 250px;"></textarea></td>
+						</tr>
+						<tr>
+					</table>
 
 				</div>
 
@@ -168,8 +175,58 @@ img {
 					</div>
 				</div>
 			</div>
+
+
+
 			<br> <br>
 			<script type="text/javascript">
+			
+			
+			showEqm();
+			emp();
+			uoperShow();
+			
+			
+			
+			 // <설비현황>에서 checked 된 애만 화면에 보여주기
+	/* 	 function tab(){
+
+			 var check = $('input[type=radio][name="eqmTab"]:checked').val();
+
+			 if(check == 'eqm'){
+			 				  $('#eqmGrid').css('display', 'block');
+			 				  $('#uoperGrid').css('display', 'none');
+			 				  
+			 			  }else if(check == 'uoper'){
+			 				  $('#eqmGrid').css('display', 'none');
+			 				  $('#uoperGrid').css('display', 'block');
+			 			  }
+		}  */
+
+		/* /* radio버튼 누를때 */
+		$('input[type=radio][name="eqmTab"]').on(
+				'click',
+				function() {
+					var chkValue = $(
+							'input[type=radio][name="eqmTab"]:checked')
+							.val();
+
+					if (chkValue == 'eqm') {
+						$('.eqmClass').show();
+						$('.uoperClass').hide();
+					} else if (chkValue == 'uoper') {
+						$('.eqmClass').hide();
+						$('.uoperClass').show();
+						uoperGrid.refreshLayout();
+					}
+				});  
+			 
+		
+						
+				  
+			
+				   
+
 			 	  // 사원 모달-그리드
 				   var empgrid = new tui.Grid({
 		               el : document.getElementById('empgrid'),
@@ -223,39 +280,28 @@ img {
 				    })
 			
 			$('#endBtn').on('click', function(){
-				var date = new Date();         //오늘 날짜
-				let yyyy = date.getFullYear();  // 년
-				let mm = date.getMonth() + 1 ;  // 월 0부터 시작 +1 해줌.
-				let dd = date.getDate();
-				let hh = date.getHours();
-				let mn = date.getMinutes();  //분
-				
-				let se = date.getSeconds();  //초
-				
-				$('#uoperEndTime').val(yyyy +"-"+mm+"-"+dd+" "+hh+":"+mn+":"+se);
+				var now = timeFormat(new Date());
+				$('#uoperStartTime').val(now);
 				
 				
-				// let hh = (date.getHours()<10?'0':'') + date.getMinutes();;
 			});
+				    
+				 
 			$('#strBtn').on('click', function(){
-				var date = new Date();         //오늘 날짜
-				let yyyy = date.getFullYear();  // 년
+				var now = timeFormat(new Date());         //오늘 날짜
+			
+				/* let yyyy = date.getFullYear();  // 년
 				let mm = date.getMonth() + 1 ;  // 월 0부터 시작 +1 해줌.
 				let dd = date.getDate();
 				let hh = date.getHours();
 				let mn = date.getMinutes();  //분
-				let se = date.getSeconds();  //초
+				let se = date.getSeconds();  //초 */
 				
-				$('#uoperStartTime').val(hh+":"+mn+":"+se);
+				$('#uoperEndTime').val(now);
 				
 			});
 			
-				// 타이머
-				/* function displayDate1(){
-				  var now = new Date();
-					document.getElementById('hour1').value = now.getHours();
-					document.getElementById('min1').value = now.getMinutes();
-				} */
+				
 				
 			// 재가동(strBtn)버튼이 선택되어야만 => 작업내용(uoperWork) placeholder 가 선택된다
 			
@@ -263,7 +309,6 @@ img {
 			function show(){
 				$('#work').css("display","block");
 			}
-			//sBtn.addEventListener("click",show);
 			
 			// 비가동 버튼을 선택하지 않고 재가동버튼을 선택했다면 경고창 뜨게 => <button disabled>사용하기
 			$('#endBtn').on('click',function() {
@@ -275,39 +320,13 @@ img {
 							alert("이미 비가동중입니다.");
 						}));
 					}else{
-						$('#endDate').val('');
+						$('#uoperStartTime').val('');
 					}	
 			});
 			
 			$('#strBtn').click(function(){
-				show();
+				show(); // '작업내용' 보여주기
 			})
-				
-
-			</script>
-
-	<script type="text/javascript">
-			uoperShow();
-			showEqm();
-			emp();
-			
-			
-				/* radio버튼 누를때 */
-				$('input[type=radio][name=eqmState]').on(
-						'click',
-						function() {
-							var chkValue = $(
-									'input[type=radio][name=eqmState]:checked')
-									.val();
-
-							if (chkValue == 'eqm') {
-								$('#eqmGrid').css('display', 'block');
-								$('#uoperGrid').css('display', 'none');
-							} else if (chkValue == 'uoper') {
-								$('#eqmGrid').css('display', 'none');
-								$('#uoperGrid').css('display', 'block');
-							}
-						});
 
 	            /* 설비(eqm) 그리드  */
 	            
@@ -316,7 +335,6 @@ img {
 	               el : document.getElementById('eqmGrid'),      
 	               scrollX : false,
 	               scrollY : false,
-	               rowHeaders : [ 'checkbox' ],
 	               columns : [ {
 	                  header : '설비코드',
 	                  name : 'eqmCode',
@@ -356,8 +374,6 @@ img {
 	            	}
 	            });
 	            }
-	          //console.log(event.nativeEvent.target.innerText);  td값. 셀값
-                //rowKey : 인덱스 번호
                 
                 
 	            eqmGrid.on("click", event => {
@@ -367,25 +383,19 @@ img {
 	                	$('#eqmCode').val(eqmGrid.getRow(event.rowKey).eqmCode);
 	 	                $('#eqmName').val(eqmGrid.getRow(event.rowKey)['eqmName']);
 	                }
-	                
+	             });
+	             
 	               
-	                
-	             })
-	          
-	            
-	           
-	            
-	                  
-	           
-	            
+	               
+	               
 	            var token = $("meta[name='_csrf']").attr("content");
 	            var header = $("meta[name='_csrf_header']").attr("content");
 	            
 	            // 비가동 등록
-	            function insertUoper(){
+	            function insertUpr(){
+	            	let uoperCode = $('#uoperCode').val();
 	            	let eqmCode = $('#eqmCode').val();
 	            	let eqmName = $('#eqmName').val();
-	            	//let uoperCode = $('#uoperCode').val();
 	            	let uoperRsn = $('#uoperRsn').val(); // 비가동사유
 	            	let empId = $('#empId').val();
 	            	let uoperStartTime = $('#uoperStartTime').val();
@@ -393,13 +403,13 @@ img {
 	            	let uoperWork = $('#uoperWork').val(); // 작업내용
 	            	
 	            	console.log(eqmCode);
-	            	
+	            	var data = {'uoperCode':uoperCode, 'eqmCode':eqmCode, 'eqmName' : eqmName , 'uoperRsn':uoperRsn,'empId':empId,'uoperStartTime':uoperStartTime,'uoperEndTime':uoperEndTime,'uoperWork':uoperWork}
+	            	console.log("====",data);
 	            	$.ajax({
 	            		url:'insertUoper',
 	            		type : 'POST',
-	            		data : {'eqmCode':eqmCode, 'eqmName' : eqmName , 'uoperRsn':uoperRsn,'empId':empId,'uoperStartTime':uoperStartTime,'uoperEndTime':uoperEndTime,'uoperWork':uoperWork},
+	            		data : data,
 	            		dataType : "json",
-	                    
 	                    async : false,
 	                    beforeSend : function(xhr){
 	                       xhr.setRequestHeader(header, token);
@@ -407,8 +417,8 @@ img {
 	                    success:function(data){
 	                       if(data > 0) {
 	                          alert("입력완료");
-	                          uoperGrid.resetData(data); 
-	                         
+		                      reset();
+
 	                       } else {
 	                          alert("입력실패");
 	                          
@@ -426,7 +436,7 @@ img {
 				/* 비가동(uoper)내역 그리드 */
 				var uoperGrid = new tui.Grid({
 					el : document.getElementById('uoperGrid'),
-		            rowHeaders : [ 'checkbox' ],
+					rowHeaders : [ 'checkbox' ],
 					scrollX : false,
 					scrollY : false,
 					columns : [ {
@@ -442,23 +452,17 @@ img {
 						align : 'center'
 					}, {
 						header : '시작시간',
-						name : 'uoperStartTime',
-		                  formatter({value}){
-		                	  return `${value.substring(0,10)}`;
-		                  }
+						name : 'uoperStartTime'
 					}, {
 						header : '종료시간',
-						name : 'uoperEndTime',
-		                  formatter({value}){
-		                	  return `${value.substring(0,10)}`;
-		                  }
+						name : 'uoperEndTime'
 					}, {
-						header : '상태',
+						header : '비가동사유',
 						name: 'uoperRsn',
 						align : 'center'
 					}, {
 						header : '담당자',
-						name : 'empName',
+						name : 'empId',
 						align : 'center'
 					}, {
 						header : '작업내용',
@@ -476,17 +480,139 @@ img {
 	                   .then(obj=>{
 	                	   console.log(obj);
 	                       uoperGrid.resetData(obj);
-	                       
 	
 	                   })
 	            }
 			     
-			     
-				     
-				     
+			     // 비가동내역 상세보기 (수정, 삭제)
+			     	// '비가동' 버튼 눌리지 않게 o
+			     	// 작업내역 바로 나오게 o
+			     	// 수정=> {비가동사유, 작업자, 작업내용}만 되게
+			     	// '재가동'까지 끝내고 & 비가동 종료시간이 한달 지난애들만 삭제가능하도록
+			     var chkUoper = []; 
+		            
+		            uoperGrid.on('check', ev => {
+		            	$('#regForm').css("display","block");
+			            show();
+			            $('#endBtn').prop("disabled",true); 
 			            
-				     
-				    
+			           
+			            
+		            	chkUoper.push((uoperGrid.getValue(ev.rowKey,'uoperCode')));
+		               
+		               $('#eqmCode').val(uoperGrid.getValue(ev.rowKey,'eqmCode'));
+		               $('#eqmName').val(uoperGrid.getValue(ev.rowKey,'eqmName'));
+		               $('#uoperStartTime').val(uoperGrid.getValue(ev.rowKey,'uoperStartTime'));
+		               $('#uoperEndTime').val(uoperGrid.getValue(ev.rowKey,'uoperEndTime')); 
+		               $('#uoperRsn').val(uoperGrid.getValue(ev.rowKey,'uoperRsn'));
+		               $('#empId').val(uoperGrid.getValue(ev.rowKey,'empId'));
+		               $('#uoperWork').val(uoperGrid.getValue(ev.rowKey,'uoperWork')); 
+		               
+		               // 재가동 내역이 있다면 버튼 비활성화 || 재가동 내역 없다면 버튼 활성화
+			            if($('#uoperStartTime').val() != '' && $('#uoperEndTime').val() == ''){
+			            	$('#strBtn').removeAttr("disabled");
+			            }else{
+			            	$('#strBtn').attr("disabled","disabled");
+			            }
+		            });
+		            
+		            
+		            
+		            uoperGrid.on('uncheck', ev => {
+		               for(let i=0; i<chkUoper.length; i++){
+		                  if(chkUoper[i] == uoperGrid.getValue(ev.rowKey,'uoperCode')){
+		                	  chkUoper.splice(i,1);
+		               }
+		            }
+		               
+		               $('#eqmCode').val('');
+		               $('#eqmName').val('');
+		               $('#uoperStartTime').val('');
+		               $('#uoperEndTime').val('');
+		               $('#uoperRsn').val('');
+		               $('#empId').val('');
+		               $('#uoperWork').val('');
+		             
+		            });
+		            
+		            function deleteUoper(){
+		                
+		                let deleteUoper = [];
+		                for(eq of uoperGrid.getCheckedRows()){
+		                	deleteUoper.push(eq.uoperCode);
+		                }
+		                $.ajax({
+		                   url:'deleteUoper',
+		                   type:'POST',
+		                   data : {deleteUoper:deleteUoper},
+		                   dataType:"json",
+		                   async:false,
+		                   beforeSend : function(xhr){
+		                      xhr.setRequestHeader(header, token);
+		                   },
+		                   success:function(data){
+		                      if(data > 0) {
+		                         alert("삭제완료");
+		                         uoperShow();
+		                         reset();
+		                      } else {
+		                         alert("삭제실패");
+		                      }
+		                   },
+		                   error:function(reject){
+		                      console.log(reject);
+		                   }
+		                });
+		             }
+		            
+		            function updateUoper(){
+		            	let eqmCode = $('#eqmCode').val();
+		            	let uoperRsn = $('#uoperRsn').val();
+		    			let uoperWork = $('#uoperWork').val();
+		    			let uoperEndTime =$('#uoperEndTime').val();
+		    			let empId = $('#empId').val();
+		               
+		               let updateUoper = {'eqmCode':eqmCode, 'uoperRsn':uoperRsn, 'uoperWork':uoperWork, 'uoperEndTime':uoperEndTime, 'empId':empId};
+		               
+		               $.ajax({
+		                  url :'updateUoper',
+		                  type:'POST',
+		                  data : JSON.stringify(updateUoper),
+		                  dataType : "json",
+		                  contentType:'application/json',
+		                  async:false,
+		                  beforeSend : function(xhr){
+		                     xhr.setRequestHeader(header, token);
+		                  },
+		                  success:function(data){
+		                     if(data > 0) {
+		                        alert("수정완료");
+		                        uoperShow();
+		                        reset();
+
+		                      } else {
+		                        alert("수정실패");
+		                     }
+		                  },
+		                  error:function(reject){
+		                     console.log(reject);
+		                  }
+		      
+		               });
+		               
+		            }
+		            
+		           function reset(){
+		        	       $('#eqmCode').val('');
+			               $('#eqmName').val('');
+			               $('#uoperStartTime').val('');
+			               $('#uoperEndTime').val('');
+			               $('#uoperRsn').val('');
+			               $('#empId').val('');
+			               $('#uoperWork').val('');
+		           }
+			     
+		           $('.uoperClass').hide();    
 			</script>
 
 		</main>

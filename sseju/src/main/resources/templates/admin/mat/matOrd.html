@@ -87,7 +87,6 @@
 						</div> -->
 						<!-- <button class="button" id="searchBtn" onclick="searchBtnHandler()">조회</button> -->
 						<input type="hidden" id="empId"> 
-						<button class="button" id="insertBtn" onclick="insertMatOrd()">등록</button>
 						<button class="button" id="updateBtn" onclick="updateMatOrd()">수정</button>
 						<button class="button" id="deletetBtn" onclick="deleteMat()">삭제</button>
 				<!-- </ul> -->
@@ -97,19 +96,17 @@
 					th:value="${_csrf.token}" />
 				<div>
 					<div id="orderNoGrid"></div>
-					<button type="submit" class="button" onclick="insertMatbuy()">등록</button>
 				</div>
 			<!-- </form>-->
 			<hr>
-			<div class="row">
+			<div>
 				<div id="grid" class="col"></div>
-
 			</div>
 
 			<!-- matModal -->
 			<div class="modal" id="matModal" tabindex="-1"
 				aria-labelledby="matModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
+				<div class="modal-dialog modal-xl">
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
@@ -118,13 +115,15 @@
 						</div>
 						<div class="modal-body">
 							<div>
+								<div id="infoInfo"></div>
+								<hr>
 								<div id="matGrid"></div>
 							</div>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
-							<button type="button" class="btn btn-primary">Save
+							<button type="button" class="btn btn-primary" onclick="insertMatbuy()">Save
 								changes</button>
 						</div>
 					</div>
@@ -281,6 +280,35 @@
 				} ]
 			});
             
+            /* -------------
+	    	주문 번호 그리드
+	      ---------------*/
+			    var infoInfo = new tui.Grid({
+					el : document.getElementById('infoInfo'),
+					scrollX : false,
+					scrollY : false,
+					//rowHeaders: ['checkbox'],
+					columns : [ {
+						header : '주문 번호',
+						name : 'orderNo',
+						align : 'center' // where로 값을 넘겨줌
+					}, {
+						header : '상품명',
+						name : 'prtName',
+						align : 'center'
+					}, {
+						header : '주문 수량',
+						name : 'orderQty',
+						align : 'center'
+					}, {
+						header : '납기일자',
+						name : 'dday',
+						align : 'center',
+			            formatter({value}) {
+			            	return `${value.substring(0,10)}`;
+			            	}
+					} ]
+				});
             
             function matOrdList() {
                $.ajax({
@@ -306,14 +334,41 @@
 			           orderNoGrid.resetData(obj);
 			       })
 			};
-            
-             function matOrdModal(){
+			
+             function infoModal(orderNo){            	
             	$.ajax({
-            		url : '/matOrdModal',
-            		dataType : "json",
-            		data : {"orderNo" : orderNo},
+            		url : "/infoModal",
+            		method : "POST",
+            		dataType : "JSON",
+            		data : JSON.stringify({"orderNo" : orderNo}),
+            		contentType: 'application/json; charset=utf-8',
+					beforeSend : function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+            		success : function(data){
+            			infoInfo.resetData(data);
+            			
+            		},
+            		error : function(reject){
+            			console.log(reject);
+            		}
+            	})
+            };
+            
+             function matOrdModal(orderNo){
+            	
+            	$.ajax({
+            		url : "/matOrdModal",
+            		method : "POST",
+            		dataType : "JSON",
+            		data : JSON.stringify({"orderNo" : orderNo}),
+            		contentType: 'application/json; charset=utf-8',
+					beforeSend : function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
             		success : function(data){
             			matGrid.resetData(data);
+            			
             		},
             		error : function(reject){
             			console.log(reject);
@@ -349,38 +404,14 @@
              
              document.addEventListener('shown.bs.modal', function() {
             	 matGrid.refreshLayout();
+            	 infoInfo.refreshLayout();            	 
                }, '.modal');
              
-             /*------------
-               // 해당하는 header의 모달창 띄우기
-               ----------------*/
-               grid.on('click',function(ev){
-                   
-            	   if (ev.columnName == 'matOrdEmp'){
-                  $('#empModal2').modal('show');
-                  empGrid2.refreshLayout();
-               }
-               });
-               
-               
-               orderNoGrid.on('click',function(ev){
-                      /*if(!ev.rowKey) {
-                       return;
-                    } */
-                     if(ev.columnName =='orderNo'){
-                  		  let orderNo = ev.nativeEvent.target.innerText;
-                  		  console.log(orderNo);
-                  		  
-                        $('#matModal').modal('show');
-                      matOrdModal();
-                  }
-                    
-                    
-                    
-                    
-                  });
+             document.addEventListener('shown.bs.modal', function() {
+            	 orderNoGrid.refreshLayout();
+               }, '.modal');
              
-             
+
                   
             /*------------
             // empModal2 모달 데이터 가져오기
@@ -402,9 +433,13 @@
             
    		    var matGrid = new tui.Grid({
 				el : document.getElementById('matGrid'),
+				pagination:true,
+				pageOptions: {
+				    useClient: true,
+				    perPage: 5
+				  },
 				scrollX : false,
 				scrollY : false,
-				rowHeaders: ['checkbox'],
 				columns : [ {
 					header : '제품 코드',
 					name : 'prtCode',
@@ -422,8 +457,16 @@
 					name : 'matName',
 					align : 'center'
 				}, {
+					header : '단가',
+					name : 'matUnitPrc',
+					align : 'center'
+				}, {
 					header : '주문수량',
 					name : 'matOrdQty',
+					align : 'center'
+				},  {
+					header : '총액',
+					name : 'matPrice',
 					align : 'center'
 				},  {
 					header : '거래처 코드',
@@ -433,9 +476,38 @@
 					header : '거래처명',
 					name : 'cpName',
 					align : 'center'
+				},   {
+					header : '담당자',
+					name : 'matOrdEmp',
+					align : 'center'
 				} ]
 			});
             
+   		 matGrid.hideColumn("prtCode");
+   		 matGrid.hideColumn("matCode", "matCode");
+   		 matGrid.hideColumn("cpCode", "cpCode");
+            /*------------
+            // 해당하는 header의 모달창 띄우기
+            ----------------*/
+            
+            
+            orderNoGrid.on('click',function(ev){
+					let orderNo = orderNoGrid.getRow(ev.rowKey).orderNo;
+					infoModal(orderNo);
+					matOrdModal(orderNo);
+					
+					$('#matModal').modal('show');
+					infoInfo.refreshLayout();
+					matGrid.refreshLayout();
+               });
+          
+          
+            matGrid.on('click',function(ev){
+         	   if (ev.columnName == 'matOrdEmp'){
+               $('#empModal2').modal('show');
+               empGrid2.refreshLayout();
+            }
+            });
             
             /*------------
             // matCode 모달 데이터 가져오기
@@ -483,107 +555,48 @@
             empGrid2.on('click', ev => {
                 let val = empGrid2.getRow(ev.rowKey); // 사원 클릭한 그리드
                
-                let val2 = grid.getFocusedCell().rowKey; // 진짜 큰 그리드
+                let val2 = matGrid.getFocusedCell().rowKey; // 진짜 큰 그리드
                  
                    console.log(empGrid2.getValue(ev.rowKey,ev.columnName));
                  const cmg = empGrid2.getValue(ev.rowKey,ev.columnName);
-                 grid.setValue(val2, 'matOrdEmp', val.empId);
-                 grid.setValue(val2, 'empName', val.empName);
+                 matGrid.setValue(val2, 'matOrdEmp', val.empId);
+                 matGrid.setValue(val2, 'empName', val.empName);
 				//$('#empId').val(val.empId);          
                  $('#empModal2').modal("hide");
              });
             
-            /*------------
-			// 조회
-			----------------*/
-			function searchBtnHandler(){
-			      $('#searchBtn').on('click',function(){
-			         //let getOdSts = $("input[name=flexRadioDefault]:checked").val();
-			         let getmatCd = $("#actCd").val();
-			         let getcpCd = $("#prdCd").val();
-			         let getStartDate = $("#datepicker-input").val();
-			         //let getEndDate = $("#endpicker-input").val();
-/* 			         if(getOdSts == '전체') {
-			            $.ajax({
-			                url : '/ordList',
-			                contentType: 'application/json',
-			                   dataType : "json",
-			                   method: "GET",
-			                   success : function(data) {
-			                      grid.resetData(data);
-			                   },
-			                   error : function(reject) {
-			                      console.log(reject);
-			                   }
-			            })
-			         }else if(getOdSts != '전체') {
-			            $.ajax({
-			               url:'/detailList',
-			               contentType: 'application/json',
-			               dataType: "json",
-			               method: "GET",
-			               data : {
-			                  "odSts" : getOdSts, "actCd" : getActCd, "prdCd" : getPrdCd,
-			                  "startDate" : getStartDate, "endDate" : getEndDate
-			               },
-			               success : function(data) {
-			                  grid.resetData(data);
-			               },
-			               error : function(reject) {
-			                  console.log(reject);
-			               }
-			            })
-			         } */
-			         $.ajax({
-			               url:'/detailList',
-			               contentType: 'application/json',
-			               dataType: "json",
-			               method: "GET",
-			               data : {
-			                  "odSts" : getOdSts, "actCd" : getActCd, "prdCd" : getPrdCd,
-			                  "startDate" : getStartDate, "endDate" : getEndDate
-			               },
-			               success : function(data) {
-			                  grid.resetData(data);
-			               },
-			               error : function(reject) {
-			                  console.log(reject);
-			               }
-			            })
-			         
-			      });
-			   }
-             
+           
                
                /*------------
 				// 등록
 				----------------*/
 			    function insertMatbuy() {
+            	   
+	       			let mat = matGrid.getData();
+	       			let ordNo1 = infoInfo.getData();
+	       			let orderNo = [];
+	       		
+        			//let ordNo1 = infoInfo.getData().orderNO;
+        			//console.log("ordNo1" + ordNo1);
+        			//let ordNo2 = infoInfo.getValue(orderNo);
+        			//console.log("ordNo2" + ordNo2);
+        			
+					for (key in ordNo1) {
+						orderNo.push(ordNo1[key].orderNo);
+                 }
+					console.log(orderNo);
 
-           	let Qty = [];
-           	let mc = [];
-           	let cd = [];
-           	let mp = [];
-           	let moe = [];
-           	let obj = insertGrid.getCheckedRows()
-					console.log(obj);
-           	for (key of insertGrid.getCheckedRows()) {
-           		Qty.push(key.matOrdQty);
-           		mc.push(key.matCode);
-           		cd.push(key.cpCode);
-           		mp.push(key.matPrice);
-           		moe.push(key.matOrdEmp);
-           		console.log(obj[0].matOrdEmp);
-         	  	}
-           	console.log(Qty);            	
+        			
 	            // debugger
 	            let header = $("meta[name='_csrf_header']").attr('content');
 	            let token = $("meta[name='_csrf']").attr('content');
 	            $.ajax({
 	               url : "/insertMatbuy",
 	               method : "POST",
-	               data : { Qty : Qty, mc : mc,cd : cd, mp : mp, moe : moe },
+	               //data : { Qty : Qty, mc : mc,cd : cd, mp : mp, moe : moe },
+	               data: JSON.stringify(mat),
 	               dataType:'json',
+	               contentType: 'application/json; charset=utf-8',
 	               async: false,
 	               beforeSend : function(xhr) {
 	                  xhr.setRequestHeader(header, token);
@@ -592,21 +605,44 @@
 	            	   if(data > 0) {
 	                  	console.log(data);
 	                  	matOrdList();
-	                  	insertGrid.clear();
 	            	   }else {
 	            		   alert("실패")
 	            	   }
 	               },
-	               error : function(reject) {
-	                  console.log(reject);
+	               error : function(request,status,error) {
+	            	   alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 	               }
-	            })
+	            });
+	            
+	            $.ajax({
+	            	url : "/updateordYn",
+	            	method : "POST",
+	            	contentType : "application/json",
+		               data : JSON.stringify({"orderNo" : orderNo}),
+		               async: false,
+		               beforeSend : function(xhr) {
+		                  xhr.setRequestHeader(header, token);
+		               },
+		               success : function(data) {
+		            	   if(data > 0) {
+		            			alert("업데이트완료");
+		                  		console.log(data);
+		            	   }else {
+		            		   alert("실패")
+		            	   }
+		               },
+		               error : function(request,status,error) {
+		            	   alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+		               }
+		            });
         		};
         		
         		/*------------
 				// 수정 ( 체크한 수 만큼 update )
 				----------------*/
 			    function update() {
+        			
+ 
 					
         			let mon = [];
            			let Qty = [];
@@ -615,7 +651,7 @@
            			let mp = [];
            			let moe = [];
            			let yn = [];
-           			let obj = grid.getCheckedRows()
+           			let obj = grid.getCheckedRows();
 					console.log(obj);
          		  	
            			for (key of grid.getCheckedRows()) {
@@ -662,7 +698,7 @@
 		    function deleteMat() {
 				
     			let delno = [];
-       			let obj = grid.getCheckedRows()
+       			let obj = grid.getCheckedRows();
 				console.log(obj);
      		  	
 				/*for (key of grid.getCheckedRows()) {
@@ -694,7 +730,7 @@
 	            		   alert("실패")
 	            	   }
 	               },
-	               error : function(reject) {
+	               error : function(request,status,error) {
 	            	   alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 	                  console.log(reject);
 	               }

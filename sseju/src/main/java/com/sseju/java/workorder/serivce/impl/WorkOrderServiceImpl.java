@@ -47,9 +47,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 		for(int i=0; i<deleteWorkOrder.size(); i++) {
 			WorkOrderVO woVO = deleteWorkOrder.get(i);
 			res += woMapper.deleteWorkOrder(woVO);
-			//지시 칸에서 삭제되어 반환값이 들어오면 updateorderyn이 실행되면서 주문칸에 다시 값이 들어가게
 			woMapper.updateOrderYn(woVO);
-			
 		}
 		return res;
 	}
@@ -77,7 +75,7 @@ public class WorkOrderServiceImpl implements WorkOrderService {
 		// TODO Auto-generated method stub
 		return woMapper.getOrderList();
 	}
-	//주문->작업지시 등록 시 주문 그리드에서 등록 처리된 행은 사라지게
+	//주문->작업지시 등록 시 주문 그리드에서 등록 처리된 행은 사라지게 업데이트
 	@Override
 	public int updateOrderYn(WorkOrderVO woVO) {
 		// TODO Auto-generated method stub

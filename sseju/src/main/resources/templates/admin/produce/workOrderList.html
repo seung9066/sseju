@@ -45,20 +45,7 @@ input {
 			</div> -->
 			<div id=orderNoGrid></div>
 
-			<!-- DB에서 불러온 데이터 grid로 띄워줌
-			grid에 띄워진 list를 클릭하면 상세정보가 나오게 할 수 있는지 알아봐야함
-			 -->
-			<br>
-			<div>
-				<h6 style="display: inline-block;">등록된 작업 지시 내역</h6>
-				<div style="float: right">
-					<button class="button" onclick="updateWorkOrder()">수정</button>
 
-					<button class="button" onclick="selectDeleteWO()">삭제</button>
-				</div>
-
-			</div>
-			<div id="workorderGrid"></div>
 			<!-- 작업 지시 등록 칸 -->
 			<br>
 			<div style="float: right;"></div>
@@ -99,7 +86,20 @@ input {
 					</table>
 				</div>
 			</form>
+			<!-- DB에서 불러온 데이터 grid로 띄워줌
+			grid에 띄워진 list를 클릭하면 상세정보가 나오게 할 수 있는지 알아봐야함
+			 -->
+			<br>
+			<div>
+				<h6 style="display: inline-block;">등록된 작업 지시 내역</h6>
+				<div style="float: right">
+					<button class="button" onclick="updateWorkOrder()">수정</button>
 
+					<button class="button" onclick="selectDeleteWO()">삭제</button>
+				</div>
+
+			</div>
+			<div id="workorderGrid"></div>
 			<script type="text/javascript">
 			
 			showAll();
@@ -111,13 +111,12 @@ input {
 			/* 주문 정보 출력 그리드 */
 			var workOrderGrid = new tui.Grid({
 				 el: document.getElementById('workorderGrid'),
-					pagination:true,
-					pageOption: {
-						useClient:true,
-						perPage:5
-					},
 			        scrollX : false,
 			        scrollY : false,
+			        pageOptions: {
+			            useClient: true,
+			            perPage: 10
+			        },
 				    rowHeaders: ['checkbox'],
 				    columns:
 				    	[{
@@ -139,7 +138,10 @@ input {
 						{
 						 	header: '지시수량',
 						    name: 'insQty',
-							align : 'center'
+							align : 'center',
+							formatter : function (ev){
+			                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+			                    }
 						},
 						{
 							header: '작업 시작일',
@@ -219,15 +221,12 @@ input {
 				    	workOrderVO.orderNo= wo.orderNo
 				    	workOrderVO.prtCode = wo.prtCode
 						deleteWorkOrder.push(workOrderVO);
-						//deleteOrder.push(wo.orderNo);
-						//deleteCode.push(wo.prtCode);
 					}
 				   	$.ajax({
 				   		url : 'selectDeleteWO',
 				   		type : 'POST',
 				   		contentType : "application/json", 
 				   		data :JSON.stringify(deleteWorkOrder), 
-				   			//{deleteWorkOrder:deleteWorkOrder, deleteOrder:deleteOrder, deleteCode : deleteCode},
 				   		dataType : "json",
 				   		async:false,
 				   		beforeSend : function(xhr){
@@ -288,6 +287,10 @@ input {
 						el : document.getElementById('orderNoGrid'),
 						scrollX : false,
 						scrollY : false,
+				        pageOptions: {
+				            useClient: true,
+				            perPage: 10
+				        },
 						rowHeaders: ['checkbox'],
 						columns : [ {
 							header : '주문 번호',

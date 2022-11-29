@@ -2,6 +2,8 @@ package com.sseju.java.eqm.service;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 public interface EqmService {
    // 설비 전체조회
     public List<EqmVO> selectEqmList();
@@ -41,12 +43,11 @@ public interface EqmService {
     // 라인정보 삭제
     public int deleteEqmLine(EqmVO eqmVO);
     
-    
     // 정기점검 전체조회
     public List<EqmVO> getEqmChkList();
     
-    //정기점검 단건조회
-    public EqmVO getEqmChkInfo(EqmVO eqmVO);
+    //정기점검 모달 가져오기
+    public List<EqmVO> getChkList();
     
     // 정기점검 등록
     public int insertEqmChk(EqmVO eqmVO);
@@ -67,4 +68,18 @@ public interface EqmService {
     
     //비가동 수정
     public int updateUoper(EqmVO eqmVO);
+    
+    public int deleteEqm(List<String> deleteEqm);
+
+	public int insertEqm(EqmVO eqmVO);
+	
+	public int deleteLine(List<String> line);
+	
+	public int deleteChk(List<String> deleteChk);
+	
+	public int deleteUoper(List<String> deleteUoper);
+	
+	//비가동시 설비상태 yn
+	public int updateEqmYn(EqmVO eqmVO);
+	
 }
