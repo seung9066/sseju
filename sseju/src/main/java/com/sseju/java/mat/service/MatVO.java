@@ -37,7 +37,7 @@ public class MatVO {
 //	MAT_OUT_QTY	NUMBER
 //	MAT_LOT_NO	VARCHAR2(50 BYTE)
 	
-	private int matOutNo;
+	private String matOutNo;
 	private String WhCode;
 	@DateTimeFormat (pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
@@ -145,5 +145,11 @@ public class MatVO {
 	private Date dDay;
 	private String prtName;
 	private String capacity;
+	
+	//errVO
+	private String code; //에러 테이블의 mat_code
+	private String errName;
+	private String errOption;
+	private String errPct;
 
 }

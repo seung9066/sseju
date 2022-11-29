@@ -138,8 +138,12 @@ public class MatController {
 	
 	@ResponseBody
 	@PostMapping("/updateordYn")
-	public int updateordYn(MatVO vo) {
-		return service.updateordYn(vo);
+	public int updateordYn(@RequestBody List<MatVO> vo) {
+		int result = 0;
+		
+		result += service.updateordYn(vo.get(0));
+		
+		return result;
 		}
 
 	// 발주 수정
@@ -319,6 +323,7 @@ public class MatController {
 			a += service.insertLot(vo.get(i));
 			a += service.updateMoy(vo.get(i));
 			a += service.updateChk(vo.get(i));
+			a += service.insertErr(vo.get(i));
 		}		
 		return a;
 	}
@@ -340,19 +345,35 @@ public class MatController {
 	public String matOut() {
 		return "/admin/mat/matOut";
 	}
+	
+	//출고 종합 리스트
+	@ResponseBody
+	@GetMapping("/matOutList")
+	public List<MatVO> matOutList(){
+		return service.matOutList();
+	}
 
 	@RequestMapping("/matStock")
 	public String matt() {
 		return "/admin/mat/matStock";
 	}
-
+	
+	//재고 종합 리스트
+	@ResponseBody
+	@GetMapping("/matStockList")
+	public List<MatVO> matStockList(){
+		return service.matStockList();
+	}
+	
 	@RequestMapping("/matCheck")
 	public String hh() {
 		return "/admin/mat/matCheck";
 	}
-
-	@RequestMapping("/exex")
-	public String exex() {
-		return "/admin/mat/exex";
+	
+	//검수 내역 리스트
+	@ResponseBody
+	@GetMapping("/matCheckList")
+	public List<MatVO> matCheckList(){
+		return service.matCheckList();
 	}
 }

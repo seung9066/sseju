@@ -98,7 +98,7 @@ public class MatServiceImpl implements MatService {
 	@Override
 	public List<MatVO> matOutList() {
 		// TODO Auto-generated method stub
-		return null;
+		return matMapper.matOutList();
 	}
 
 	@Override
@@ -134,7 +134,7 @@ public class MatServiceImpl implements MatService {
 	@Override
 	public List<MatVO> matStockList() {
 		// TODO Auto-generated method stub
-		return null;
+		return matMapper.matStockList();
 	}
 
 	@Override
@@ -170,7 +170,7 @@ public class MatServiceImpl implements MatService {
 	@Override
 	public List<MatVO> matCheckList() {
 		// TODO Auto-generated method stub
-		return null;
+		return matMapper.matCheckList();
 	}
 
 	@Override
@@ -273,6 +273,12 @@ public class MatServiceImpl implements MatService {
 	public int updateordYn(MatVO MatVO) {
 		// TODO Auto-generated method stub
 		return matMapper.updateordYn(MatVO);
+	}
+
+	@Override
+	public int insertErr(MatVO MatVO) {
+		// TODO Auto-generated method stub
+		return matMapper.insertErr(MatVO);
 	}
 
 }

@@ -9,7 +9,7 @@
 		  FROM material
 		order by mat_code  
 	</select>
-	<select id="prtOrdList" resultType="MatVo">
+	<select id="prtOrdList" resultType="MatVO">
 		select o.order_no, o.d_day
 		  from orders o, 
 		       order_inf inf
@@ -205,9 +205,27 @@
 		where b.mat_ord_yn = '확인'
 		order by b.mat_ord_no DESC 
 	</select>
-	<update id="updateMoy" parameterType="MatVo">
+	<update id="updateMoy" parameterType="MatVO">
 		update mat_buy set mat_ord_yn = '입고' where mat_ord_no = #{matOrdNo}
 	</update>
+	<insert id="insertErr" parameterType="MatVO">
+		<selectKey keyProperty="matNo" resultType="int"
+			order="BEFORE">
+			SELECT CASE
+			WHEN MAX(mat_no) IS NULL THEN 1 ELSE
+			MAX(mat_no) + 1 END AS NUM FROM
+			mat_err
+		</selectKey>
+		insert into mat_err (mat_no,
+							 mat_chk_code,
+							 err_code)
+    		         values ( #{matNo}
+    		         		,#{matChkCode}
+    		         		,(select err_code
+                                 from error
+                                where code = #{matCode}))
+	</insert>
+	
 	<select id="selectMatIn" resultType="MatVO">
 	</select>
 	<select id="selectMatordno" resultType="MatVO">
@@ -302,14 +320,18 @@
 
 	<!--출고 Mapper -->
 	<select id="matOutList" resultType="MatVO">
-		SELECT o.mat_out_no,
-		o.mat_code, m.mat_name, o.mat_out_qty, TO_CHAR(o.mat_out_date,
-		'yyyy-MM-dd')
-		,o.wh_code , w.wh_name, o.mat_lot_no
-		FROM mat_out o
-		JOIN material m ON m.mat_code
-		= o.mat_code
-		JOIN warehouse w ON w.wh_code = o.wh_code
+		SELECT o.mat_out_no , o.mat_out_date , 
+		        o.mat_out_qty, o.mat_lot_no , 
+		        l.mp_code, m.mat_name, l.wh_code ,
+		                (select w.wh_name 
+		                   from warehouse w 
+		                  WHERE l.wh_code = w.wh_code) as "wh_name"
+		FROM mat_out o,
+		    lot l,
+		    material m
+		WHERE o.mat_lot_no = l.lot_no
+		AND l.mp_code = m.mat_code
+		order by mat_out_no
 	</select>
 	<select id="selectMatOut" resultType="MatVO">
 	</select>
@@ -331,12 +353,14 @@
 
 	<!--재고 Mapper -->
 	<select id="matStockList" resultType="MatVO">
-		SELECT l.lot_no, l.lot_qty, l.wh_code, w.wh_name, l.mp_code ,
-		(SELECT m.mat_name
-		FROM material m
-		WHERE l.mp_code=m.mat_code) AS mat_name
-		FROM lot l
-		JOIN warehouse w ON w.wh_code = l.wh_code
+		SELECT l.lot_no, l.lot_date, l.mp_code, m.mat_name, l.lot_qty, l.wh_code, w.wh_name
+		FROM material m,
+		    lot l,
+		    warehouse w
+		WHERE m.mat_code = l.mp_code
+		and l.wh_code = w.wh_code
+		and l.out_from IS NOT NULL
+		ORDER BY lot_no
 	</select>
 	<select id="selectMatStock" resultType="MatVO">
 	</select>
@@ -354,15 +378,37 @@
 
 	<!-- 검수내역 Mapper -->
 	<select id="matCheckList" resultType="MatVO">
-		SELECT c.mat_chk_name, c.mat_chk_date
-		,c.mat_in_qty, c.mat_err_qty, c.mat_pass_qty,m.mat_code,m.mat_name
-		FROM mat_chk c,(select * FROM material) m
+		SELECT c.mat_chk_code , c.mat_in_qty, c.mat_err_qty, 
+		       c.mat_pass_qty , c.mat_chk_date , c.mat_ord_no,
+		       me.err_code , me.mat_err_doc, er.err_name,
+		       l.mp_code, m.mat_name
+		  FROM mat_chk c,
+		      mat_err me,
+		      error er,
+		      lot l,
+		      material m
+		WHERE m.mat_code = l.mp_code
+		  AND l.mat_chk_code = c.mat_chk_code
+		  AND c.mat_chk_code = me.mat_chk_code
+		  AND me.err_code = er.err_code
+     group by c.mat_chk_code , c.mat_in_qty, c.mat_err_qty, 
+		       c.mat_pass_qty , c.mat_chk_date , c.mat_ord_no,
+		       me.err_code, me.mat_err_doc, er.err_name,
+		       l.mp_code, m.mat_name    
+    ORDER BY mat_chk_code
 	</select>
 	<select id="selectMatCheck" resultType="MatVO">
 	</select>
 	<insert id="insertMatCheck" parameterType="MatVO">
 	</insert>
 	<update id="updateMatCheck" parameterType="MatVO">
+		UPDATE mat_err
+			<set>
+				<if test="matErrDoc != null and !matErrDoc.equals('')">
+				mat_err_doc = #{matErrDoc}
+				</if>
+			</set>
+			WHERE mat		
 	</update>
 	<delete id="deleteMatCheck" parameterType="MatVO">
 	</delete>
