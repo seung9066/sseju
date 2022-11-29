@@ -69,6 +69,14 @@ public interface CodeMapper {
 	public int insertWM(CodeVO vo);
 	public int deleteWM(CodeVO vo);
 	
+	public List<CodeVO> MatBomList(CodeVO vo);
+	public int insertMatBuy(CodeVO vo);
+	public CodeVO matOrdNo();
+	public int insertMatChk(CodeVO vo);
+	public int orderInfYN(CodeVO vo);
+	public CodeVO getMatCompany(CodeVO vo);
+	public int updateMatYN(CodeVO vo);
+	
 	public CodeVO updatePrtCount();
 	public CodeVO updatePrtOutCount();
 	public CodeVO updateErrCount();
@@ -84,6 +92,7 @@ public interface CodeMapper {
 	public List<CodeVO> todayWL();
 	public List<CodeVO> todayWLinf(CodeVO vo);
 	public List<CodeVO> prdCount();
+	public int insertLotA(CodeVO vo);
 	
 	// Thread
 	public List<CodeVO> getBomListC(CodeVO vo);
@@ -107,4 +116,7 @@ public interface CodeMapper {
 	public int insertLot(CodeVO vo);
 	public List<CodeVO> WHListA();
 	public int updateEqm(CodeVO vo);
+	public int updateLotQty(CodeVO vo);
+	public CodeVO getLotNo();
+	public int updateProducePrePrg(CodeVO vo);
 }
