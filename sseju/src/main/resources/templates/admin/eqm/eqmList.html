@@ -120,7 +120,7 @@ table, th, td {
 				<div style="float: right">
 					<button class="button" type="button" onclick="insertEqm()">추가</button>
 					<button class="button" onclick="updateEqm()">수정</button>
-					<button class="button" type="button" id="resetVal">초기화</button>
+					<button class="button" type="button" onclick="resetVal()">초기화</button>
 				</div>
 				<br> <br> <input type="hidden"
 					th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -151,9 +151,9 @@ table, th, td {
 								<th class="col1">설치장소</th>
 								<td><select id="eqmLoc" name="eqmLoc">
 										<option value=''>--선택--</option>
-										<option value="team1">생산1팀</option>
-										<option value="team2">생산2팀</option>
-										<option value="team3">생산3팀</option>
+										<option value="생산1팀">생산1팀</option>
+										<option value="생산2팀">생산2팀</option>
+										<option value="생산3팀">생산3팀</option>
 								</select></td>
 								<th class="col1">최고온도</th>
 								<td><input type="number" name="eqmMaxTemp" id="eqmMaxTemp"></td>
@@ -178,16 +178,16 @@ table, th, td {
 							<tr>
 								<th class="col1">점검주기</th>
 								<td><input type="number" name="eqmCheck" id="eqmCheck">
-									<select id="eqmCheckTerm">
+									<select id="eqmCheckTerm" name="eqmCheckTerm">
 										<option value='' selected>--선택--</option>
+										<option value="일">일</option>
 										<option value="주">주</option>
 										<option value="달">달</option>
-										<option value="년">년</option>
 								</select></td>
 								<th class="col1">사용여부</th>
-								<td><input type="radio" class="form-check-input" id="eqmYn"
+								<td><input type="radio" class="form-check-input" id="eqmY"
 									name="eqmYn" value="Y">Y <input type="radio"
-									class="form-check-input" name="eqmYn" value="N">N</td>
+									class="form-check-input" name="eqmYn" value="N" id="eqmN">N</td>
 							</tr>
 						</table>
 					</div>
@@ -253,6 +253,7 @@ table, th, td {
    
             showAll();
             cp(); 
+            resetVal();
             //imgTagReset();
             
            
@@ -296,7 +297,7 @@ table, th, td {
             
             
           //이미지 관련 js
-          function inputImgInteract() {
+      function inputImgInteract() {
             img.addEventListener('change', function (event) {
                // 파일명 가져오기
                let index = document.getElementById('img').value.lastIndexOf('\\');
@@ -316,10 +317,10 @@ table, th, td {
                   
                   // 새 파일을 고른 경우
                   if (fileStr != '') {
-                     newImgTag.setAttribute('src', 'images/' + fileStr);
+                     newImgTag.setAttribute('src', '/assets/img/' + fileStr);
                   }
                } else {
-                  newImgTag.setAttribute('src', 'images/' + fileStr);
+                  newImgTag.setAttribute('src', '/assets/img/' + fileStr);
                }
                
                // document에 삽입
@@ -327,6 +328,7 @@ table, th, td {
             });
             
          }
+
           
           /**파일 미리보기*/
             function previewImg(){
@@ -458,6 +460,7 @@ table, th, td {
                $('#eqmYn').val([eqmGrid.getValue(ev.rowKey,'eqmYn')]); 
                $('#eqmSize').val(eqmGrid.getValue(ev.rowKey,'eqmSize'));
                
+               
 
                
             });
@@ -504,12 +507,13 @@ table, th, td {
             	let eqmImg = $('#eqmImg').val();
             	let eqmPurcName = $('#eqmPurcName').val();
             	let eqmPurcTel = $('#eqmPurcTel').val();
-            	let eqmYn = $('#eqmYn').val();
+            	let eqmYn = $('input[name="eqmYn"]:checked').val();
             	let lineNo = $('#lineNo').val();
             	
             	console.log(eqmCode);
             	console.log(eqmImg);
             	console.log(eqmName);
+            	console.log(eqmYn);
             	
             	$.ajax({
             		url:'insertEqm',
@@ -523,9 +527,9 @@ table, th, td {
                     success:function(data){
                        if(data > 0) {
                           alert("입력완료");
-                        reset();
+                       
                           showAll(); 
-                         
+                          resetVal();
                          
                        } else {
                           alert("입력실패");
@@ -558,7 +562,7 @@ table, th, td {
                      if(data > 0) {
                         alert("삭제완료");
                         showAll();
-                        reset();
+                        resetVal();
                      } else {
                         alert("삭제실패");
                         resetVal();
@@ -571,9 +575,9 @@ table, th, td {
             }
             
             //등록, 수정, 삭제 후 input 태그 값들 초기화
-           function reset(){
-        	   $('#resetVal').on('click',function(){
-               	$('#eqmCode').val('');
+            
+           function resetVal(){
+            		$('#eqmCode').val('');
                 	$('#eqmName').val('');
                 	$('#eqmModel').val('');
                 	$('#lineNo').val('');
@@ -590,15 +594,8 @@ table, th, td {
                 	  // 초기화 시 이미지도 초기화
                 	$('#img').val('');
 
-                })
-            }
-             
-            	
-                  
-              
-              
-            	
-            
+                }
+       
             
             function updateEqm(){
             	let eqmCode = $('#eqmCode').val();
@@ -614,7 +611,7 @@ table, th, td {
             	let eqmImg = $('#eqmImg').val();
             	let eqmPurcName = $('#eqmPurcName').val();
             	let eqmPurcTel = $('#eqmPurcTel').val();
-            	let eqmYn = $('#eqmYn').val();
+            	let eqmYn = $('#eqmYn').val([]);
             	let lineNo = $('#lineNo').val();
                
                let updateEqm = {'eqmCode':eqmCode, 'eqmName' : eqmName , 'eqmModel':eqmModel, 'eqmSize':eqmSize,'eqmLoc':eqmLoc,'eqmMaxTemp':eqmMaxTemp,'eqmMinTemp':eqmMinTemp,'eqmCheck':eqmCheck,'eqmCheckTerm':eqmCheckTerm,'eqmPurcDate':eqmPurcDate,'eqmImg':eqmImg,'eqmPurcName':eqmPurcName ,'eqmPurcTel' : eqmPurcTel,'eqmYn':eqmYn,'lineNo':lineNo};
@@ -622,8 +619,8 @@ table, th, td {
                $.ajax({
                   url :'updateEqm',
                   type:'POST',
-                  data : updateEqm,
-                  dataType : "josn",
+                  data : JSON.stringify(updateEqm),
+                  dataType : "json",
                   contentType:'application/json',
                   async:false,
                   beforeSend : function(xhr){
@@ -643,7 +640,7 @@ table, th, td {
                   }
       
                });
-               
+                                                                           
             }
             
             function showAll() {

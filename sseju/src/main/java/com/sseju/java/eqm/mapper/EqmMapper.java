@@ -45,8 +45,8 @@ public interface EqmMapper {
       // 정기점검 전체조회
       public List<EqmVO> getEqmChkList();
       
-      //정기점검 단건조회
-      public EqmVO getEqmChkInfo(EqmVO eqmVO);
+      //정기점검 모달 가져오기
+      public List<EqmVO> getChkList();
       
       // 정기점검 등록
       public int insertEqmChk(EqmVO eqmVO);
@@ -67,5 +67,8 @@ public interface EqmMapper {
       
       //비가동 수정
       public int updateUoper(EqmVO eqmVO);
+      
+    //비가동시 설비상태 yn
+  	public int updateEqmYn(EqmVO eqmVO);
   
 }

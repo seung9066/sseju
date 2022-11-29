@@ -9,6 +9,8 @@ import java.util.Date;
 import org.apache.ibatis.type.Alias;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
@@ -66,10 +68,8 @@ public class EqmVO {
    private String uoperEmpNo; //담당자
    private String uoperRsn; // 비가동사유
    private String uoperWork; //작업내용
-   @DateTimeFormat(pattern = "yyyy-MM-dd")
-   private Date uoperStartTime; //비가동 시작시간
-   @DateTimeFormat(pattern = "yyyy-MM-dd")
-   private Date uoperEndTime; // 재가동 시간
+   private String uoperStartTime; //비가동 시작시간
+   private String uoperEndTime; // 재가동 시간
    
    
 
