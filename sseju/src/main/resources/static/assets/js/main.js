@@ -318,3 +318,31 @@
   }
 
 })();
+
+function toStringByFormatting(source, delimiter = '-') {
+				        const year = source.getFullYear();
+				        const month = leftPad(source.getMonth() + 1);
+				        const day = leftPad(source.getDate());
+
+				        return [year, month, day].join(delimiter);
+}
+
+function timeFormat(source,delimiter = ':') {
+						const year = source.getFullYear();
+				        const month = leftPad(source.getMonth() + 1);
+				        const day = leftPad(source.getDate());
+				        const hh = source.getHours();
+				        const mm = source.getMinutes();
+				        const se = source.getSeconds();
+
+				        return [year,month,day].join('-') + ' ' +[hh,mm,se].join(delimiter);
+}
+
+
+function leftPad(value) {
+    if (value >= 10) {
+        return value;
+    }
+
+    return `0${value}`;
+}

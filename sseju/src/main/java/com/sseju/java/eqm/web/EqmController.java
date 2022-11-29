@@ -41,7 +41,13 @@ public class EqmController {
 		return cService.getCompanyList();
 	}
 	
-	
+	// 직원 정보
+	  @GetMapping("eList")
+	   @ResponseBody
+	   public List<EqmVO> getEmpList(){
+	      return eqmService.getEmpList();
+	   }
+
 
 	@GetMapping("/eqmList")
 	public String eqmList(Model model) {
@@ -59,15 +65,16 @@ public class EqmController {
 		return "/admin/eqm/eqmCheck";
 	}
 	
-	@GetMapping("eList")
-	@ResponseBody
-	public List<EqmVO> getEmpList(){
-		return eqmService.getEmpList();
-	}
+	
 
 	@GetMapping("/eqmUoper")
 	public String eqmUoper() {
 		return "/admin/eqm/eqmUoper";
+	}
+	
+	@GetMapping("/eqmState")
+	public String eqmState() {
+		return "/admin/eqm/eqmState";
 	}
 
 	//설비 리스트
@@ -91,6 +98,14 @@ public class EqmController {
 	public List<EqmVO> eqmChkList() {
 		return eqmService.getEqmChkList();
 	}
+	
+	@GetMapping("/chkList")
+	@ResponseBody
+	public List<EqmVO> chkList(){
+		return eqmService.getChkList();
+	}
+	
+	
 
 	@GetMapping("/uoperList")
 	@ResponseBody
@@ -101,61 +116,33 @@ public class EqmController {
 	@PostMapping("/deleteEqm")
 	@ResponseBody
 	public int deleteEqm(@RequestParam(value = "deleteEqm[]", required = false) List<String> deleteEqm) {
-		int a = 0;
-		for (int i = 0; i < deleteEqm.size(); i++) {
-			String line1 = deleteEqm.get(i);
-
-			EqmVO vo = new EqmVO();
-			vo.setEqmCode(line1);
-			a += eqmService.deleteEqmInfo(vo);
-			
-			//공통코드에서도 삭제해주기
-			CodeVO cvo = new CodeVO();
-			cvo.setCode(line1);
-			cdService.deleteCode(cvo);
-		}
-		return a;
+		return eqmService.deleteEqm(deleteEqm);
+	}
+	
+	@PostMapping("/deleteUoper")
+	@ResponseBody
+	public int deleteUoper(@RequestParam(value = "deleteUoper[]", required = false) List<String> deleteUoper) {
+		return eqmService.deleteUoper(deleteUoper);
 	}
 
 	@PostMapping("/deleteChk")
 	@ResponseBody
 	public int deleteChk(@RequestParam(value = "chk[]", required = false) List<String> deleteChk) {
-		int a = 0;
-		for (int i = 0; i < deleteChk.size(); i++) {
-			String line1 = deleteChk.get(i);
-
-			EqmVO vo = new EqmVO();
-			vo.setChkNo(line1);
-			System.out.println(vo.getChkNo());
-			a += eqmService.deleteEqmChk(vo);
-		}
-
-		return a;
+	
+		return eqmService.deleteChk(deleteChk);
 	}
 
 	@PostMapping("insertEqm")
 	@ResponseBody
 	public int insertEqm(EqmVO eqmVO) {
 		
+		return eqmService.insertEqmInfo(eqmVO);
 		
-		int a = eqmService.insertEqmInfo(eqmVO);
-		// 설비등록하는 동시에 공통코드에도 값 넣어주기
-		CodeVO vo = new CodeVO();
-		vo.setCode(eqmVO.getEqmCode());
-		vo.setDivName("설비");
-		vo.setDivCode("EQM");
-		vo.setCodeName(eqmVO.getEqmName());
-		
-		cdService.insertCode(vo);
-		
-		return a;
 	}
-	
-	
 
 	@PostMapping("/updateEqm")
 	@ResponseBody
-	public int updateEqm(EqmVO eqmVO) {
+	public int updateEqm(@RequestBody EqmVO eqmVO) {
 		return eqmService.updateEqmInfo(eqmVO);
 	}
 
@@ -185,23 +172,17 @@ public class EqmController {
 
 	@PostMapping("insertUoper")
 	@ResponseBody
-	public int insertUoper(EqmVO eqmVO) {
-		return  eqmService.insertUoper(eqmVO);
+	public String insertUoper(EqmVO eqmVO,Model model) {
+		eqmService.insertUoper(eqmVO);
+		eqmService.updateEqmYn(eqmVO);
+		return "redirect:eqmUoper";
 	}
 
 	@PostMapping("/deleteLine")
 	@ResponseBody
-	public int deleteLine(@RequestParam(value = "line[]", required = false) List<String> line) {
-		int a = 0;
-		for (int i = 0; i < line.size(); i++) {
-			String line1 = line.get(i);
-
-			EqmVO vo = new EqmVO();
-			vo.setLineNo(line1);
-
-			a += eqmService.deleteEqmLine(vo);
-		}
-		return a;
+	public int deleteLine(@RequestParam(value = "line[]"
+			+ "", required = false) List<String> line) {
+		return eqmService.deleteLine(line);
 	}
 
 	@RequestMapping("/updateLine")
@@ -217,8 +198,11 @@ public class EqmController {
 	}
 	@RequestMapping("/updateUoper")
 	@ResponseBody
-	public int updateUoper(@RequestBody EqmVO eqmVO) {
-		return eqmService.updateUoper(eqmVO);
+	public String updateUoper(@RequestBody EqmVO eqmVO) {
+		 	eqmService.updateUoper(eqmVO);
+			eqmService.updateEqmYn(eqmVO);
+		return "redirect:eqmUoper";
 	}
+	
 
 }
