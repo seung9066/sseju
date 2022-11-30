@@ -36,77 +36,23 @@
 				<h3>공정 조회</h3>
 			</div>
 
-			<div id="od-content">
-				<div id="input-group">
-				<!-- 공정 검사 검색 기능 -->
-					<ul class="ul-style">
-				<!-- 
-						<li><label for="prtName">검색</label><input type="text">
-							<br></li> -->
-
-						<li><label>일자별 검색</label>
-							<div
-								class="tui-datepicker-input tui-datetime-input tui-has-focus">
-								<input id="startpicker-input" type="text" aria-label="Date">
-								<span class="tui-ico-date"></span>
-								<div id="startpicker-container" style="margin-left: -1px;"></div>
-							</div> <span>-</span>
-							<div
-								class="tui-datepicker-input tui-datetime-input tui-has-focus">
-								<input id="endpicker-input" type="text" aria-label="Date">
-								<span class="tui-ico-date"></span>
-								<div id="endpicker-container" style="margin-left: -1px;"></div>
-							</div> <!-- 버튼 -->
-							<button class="button" id="pcSearch">조회</button>
-							<button class="button" id="resetBtn">초기화</button></li>
-					</ul>
-				</div>
-			</div>
 			<!-- 공정 검사 내역 그리드 -->
 			<div id="GridTab">
 				<div id="prsChkGrid"></div>
 			</div>
 			<script>
-			//페이지 로딩시 그리드 데이터 가져옴
-			
 			showProcessCheck();
-			
-		//	gridRef(); //그리드 리프래쉬
-		//	pcSearch();//발주 신청일 조회 버튼 클릭 이벤트
-			
-		//	datePicker();	//데이트피커
-		//	resetDate();	//datepicker초기화 버튼
-			
 			
 			var token = $("meta[name='_csrf']").attr("content");
 			var header = $("meta[name='_csrf_header']").attr("content");
 			
-			//datepicker
-				var today = new Date();
-				var picker = tui.DatePicker.createRangePicker({
-					startpicker : {
-						date : today,
-						input : '#startpicker-input',
-						container : '#startpicker-container'
-					},
-					endpicker : {
-						date : today,
-						input : '#endpicker-input',
-						container : '#endpicker-container'
-					},
-					selectableRanges : [ [
-							today,
-							new Date(today.getFullYear() + 1, today.getMonth(),
-									today.getDate()) ] ]
-				});
 				//공정 검사 페이지 그리드
 				var prsChkGrid = new tui.Grid({
 					 el: document.getElementById('prsChkGrid'),
-						pagination:true,
-						pageOption: {
-							useClient:true,
-							perPage:5
-						},
+		                 pageOptions: {
+		                     useClient: true,
+		                     perPage: 10
+		                 },
 				        scrollX : false,
 				        scrollY : false,
 					    columns:
@@ -116,9 +62,9 @@
 						    	filter : 'select',
 								align : 'center',
 								filter : 'select',
-								formatter({value}) {
+ 								formatter({value}) {
 							      return `${value.substring(0,10)}`;
-							    } 
+							    }
 							},
 							{
 								header: '공정명',
@@ -133,24 +79,24 @@
 							},
 							{
 							 	header: '불량명',
-							    name: 'prsErrQty',
+							    name: 'errName',
 								align : 'center'
 							},
 							{
 								header: '불량 수',
-							    name: 'preDate',
+							    name: 'prsErrQty',
 							    filter : 'select',
 								align : 'center',
 								formatter : function (ev){
 			                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
 			                    }
 							},
-							{
+						/* 	{
 							    header : '불량률',
 							    name:'empName',
 							    filter : 'select',
 								align : 'center'
-							},
+							}, */
 							{
 							    header : '담당자',
 							    name:'empName',
@@ -172,53 +118,6 @@
 								prsChkGrid.resetData(obj);
 							})
 						}
-					// 그리드 리프레쉬
-					function gridRef(){
-						const GridTab = document.getElementById('GridTab');
-						GridTab.addEventListener('click',function(){
-							grid.refreshLayout();
-						})
-					}
-						
-					/* date pricker */
- 					function datePicker() {
-						rangeDatepickerInit('#startpicker-input', '#startpicker-container','#endpicker-input','#endpicker-container')
-						document.getElementById('startpicker-input').value = null;
-						document.getElementById('endpicker-input').value = null;	
-					}
-					/*------------------------
-					// DatePicker 초기화버튼 이벤트
-					--------------------------*/
- 					function resetDate() {
-						document.getElementById('resetBtn').addEventListener('click',function(){
-							document.getElementById('startpicker-input').value = null;
-							document.getElementById('endpicker-input').value = null;
-						});	
-					} 
-					
-					// 공정조회 작업일자 조회버튼 클릭 이벤트 (조건 조회 탭)
-					function pcSearch() {
-						document.getElementById('pcSearch').addEventListener('click', function(){
-							let startDate = document.getElementById('startpicker-input').value;
-							let endDate = document.getElementById('endpicker-input').value;
-							let list = {endDate:endDate, matEdate:startDate};
-							
-							// startDate = 검색 기준 첫 지정 일,endDate : 끝나는 날 지정 
-							$.ajax({
-								url: '/prschkSearch',
-								method: 'POST',
-								contentType: 'application/json',					
-								data: JSON.stringify(list),
-								success: function(result){
-									console.log(result);
-									prsChkGrid.resetData(result);
-								},
-								error: function(reject){
-									console.log(reject);
-								}
-							})
-						})
-					}							
 			</script>
 
 		</main>

@@ -16,13 +16,12 @@
 			<br>
 			<h6 style="display:inline-block">생산 공정별 자재 상황</h6>
 			<div style="float:right">
-				<button type="button" class="button" onclick="location.href='/matOrd'">자재 발주 신청</button>
+				<button type="button" class="button" onclick="location.href='/matOrd'">자재 발주 현황</button>
 			</div>
 			<div id="matConditionGrid"></div>
 			
 			<script type="text/javascript">
 			showAll();
-			showMat();
 			
 			var token = $("meta[name='_csrf']").attr("content");
 			var header = $("meta[name='_csrf_header']").attr("content");
@@ -84,7 +83,7 @@
 			}
 			/* 생산 진행 현황 그리드 행 클릭 시 아래 자재 상황 그리드에 맞는 데이터 불러오는 자리 */
 			//자재 상황 그리드에 띄워줄 데이터 가져오는 함수
-			prtProgGrid.on('click', (event)=>{
+			prtProgGrid.on('click', (ev)=>{
 				let preNo = ev.nativeEvent.target.innerText;
 				console.log(preNo);
 				$.ajax({
@@ -118,19 +117,10 @@
 						align : 'center'
 					}, {
 						header : '재고량',
-						name : 'lotQty',
+						name : 'matOutQty',
 						align : 'center'
 					} ]
 				});
-
-			function showMat(){
-				fetch("progPrtCondition")
-				.then(res=>res.json())
-				.then(obj=>{
-					console.log(obj);
-					matConditionGrid.resetData(obj);
-				})
-			}
 			</script>
 		</main>
 	</article>
