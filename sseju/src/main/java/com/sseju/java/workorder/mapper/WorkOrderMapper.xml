@@ -60,7 +60,7 @@
 		    ON pt.prt_code = odi.prt_code
 		JOIN employee ee
 		    ON ee.emp_id = pe.pre_manager
-		WHERE  (odi.order_yn ='W') OR (odi.order_yn ='K')
+		WHERE  odi.order_yn ='W'
 		ORDER BY ods.order_no ASC
 	</select>
 	

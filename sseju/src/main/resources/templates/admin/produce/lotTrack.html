@@ -52,8 +52,11 @@
 						align : 'center'
 					}, {
 						header : '생산수량',
-						name : 'lotQty',
-						align : 'center'
+						name : 'prtQty',
+						align : 'center',
+						formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+	                    }
 					},  {
 						header : '담당자',
 						name : 'empName',

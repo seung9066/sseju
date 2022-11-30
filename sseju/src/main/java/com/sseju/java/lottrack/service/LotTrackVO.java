@@ -29,5 +29,7 @@ public class LotTrackVO {
 	private String matChkCode;//검수코드, FK, matChk테이블의 외래키
 	private String whCode;		//창고코드, FK,warehouse 테이블의 외래키
 	private String prtName;		//제품명
+	private String orderNo;		//주문번호
+	
 
 }
