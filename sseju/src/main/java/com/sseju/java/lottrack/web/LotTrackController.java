@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -19,7 +18,7 @@ public class LotTrackController {
 	
 	//생산관리/제품 로트 페이지로 연결
 	@GetMapping("/lotTrack")
-	public String lotTrackList() {
+	public String lotTrack() {
 		return "/admin/produce/lotTrack";
 	}
 	//ㄴ제품로트 페이지 그리드에 띄워주기

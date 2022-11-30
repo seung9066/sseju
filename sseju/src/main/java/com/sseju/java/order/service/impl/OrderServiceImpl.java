@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sseju.java.code.mapper.CodeMapper;
 import com.sseju.java.code.service.CodeVO;
 import com.sseju.java.order.mapper.ORMapper;
 import com.sseju.java.order.service.ORService;
@@ -15,7 +16,10 @@ public class OrderServiceImpl implements ORService {
 
 	@Autowired
 	ORMapper OMapper;
-
+	
+	@Autowired
+	CodeMapper CMapper;
+	
 	@Override
 	public List<ORVO> selectOrderList() {
 		return OMapper.selectOrderList();
@@ -110,6 +114,10 @@ public class OrderServiceImpl implements ORService {
 	}
 
 	public int insertOrder(List<ORVO> list) {
+		CodeVO voMsg = new CodeVO();
+		voMsg.setMsg("새로운 주문이 있습니다");
+		CMapper.insertMsg(voMsg);
+		
 		int a = 0;
 		a += OMapper.insertOrder(list.get(0));
 		for (int i = 0; i < list.size(); i++) {

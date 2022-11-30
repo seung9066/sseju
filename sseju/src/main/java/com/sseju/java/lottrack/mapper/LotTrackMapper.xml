@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.sseju.java.lottrack.mapper.LotTrackMapper">
+	<!-- Read 매퍼 -->
+		<!-- 로트 내역 리스트 출력 그리드에 쓰임 -->	
+	<select id="getLotTrackList" resultType="ltVO">
+		SELECT lo.lot_no, 
+			   pt.prt_name, 
+			   lo.lot_qty, 
+			   ee.emp_name, 
+			   lo.lot_date
+		
+		FROM lot lo 
+		 JOIN order_inf odi
+		   ON lo.out_from = odi.order_no
+		 JOIN product pt
+		   ON odi.prt_code = pt.prt_code
+		 JOIN produce pe
+		   ON pt.prt_code = pe.prt_code
+		 JOIN process_run prr
+		   ON pe.pre_no = prr.pre_no
+		 JOIN employee ee
+		   ON ee.emp_id = prr.prs_manager
+		   
+		 WHERE mp_code LIKE 'PRD%'
+		  AND lo.lot_qty<![CDATA[>]]> 0
+		  
+		ORDER BY lo.lot_no DESC
+	</select>
+	
+</mapper>

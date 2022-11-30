@@ -394,4 +394,22 @@ public class CodeController {
 		thread.start();
 		return a;
 	}
+	
+	@GetMapping("/msgUp")
+	@ResponseBody
+	public List<CodeVO> msgUp() {
+		return service.msgUp();
+	}
+	
+	@GetMapping("/msgCount")
+	@ResponseBody
+	public CodeVO msgCount() {
+		return service.msgCount();
+	}
+	
+	@GetMapping("/deleteMsg")
+	@ResponseBody
+	public int deleteMsg() {
+		return service.deleteMsg();
+	}
 }

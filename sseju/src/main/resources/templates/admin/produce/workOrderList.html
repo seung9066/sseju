@@ -10,15 +10,12 @@
 .row {
 	margin: 15px;
 }
-
 h4 {
 	display: inline-block;
 }
-
 td {
 	padding: 0;
 }
-
 input {
 	padding: 0;
 }
@@ -153,7 +150,7 @@ input {
 				
 				var chkWorkOrder = [];
 				
-			   	workOrderGrid.on('check', ev => {
+			   	workOrderGrid.on('click', ev => {
 			   		chkWorkOrder.push((workOrderGrid.getValue(ev.rowKey, 'preNo')));
 				      console.log($('input[name=_checked]').val());
 				      
@@ -267,7 +264,6 @@ input {
 				            useClient: true,
 				            perPage: 10
 				        },
-						rowHeaders: ['checkbox'],
 						columns : [ {
 							header : '주문 번호',
 							name : 'orderNo',
@@ -294,7 +290,7 @@ input {
 					
 				    	var chkOrderNo2 = [];
 		            
-				    	orderNoGrid.on('check', ev => {
+				    	orderNoGrid.on('click', ev => {
 			            	chkOrderNo2.push((orderNoGrid.getValue(ev.rowKey,'orderNo')));
 		                   
 		                   $('#orderNo').val(orderNoGrid.getRow(ev.rowKey).orderNo);

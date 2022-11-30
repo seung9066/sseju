@@ -297,7 +297,6 @@ public class CodeServiceImpl implements CodeService {
 		// TODO Auto-generated method stub
 		return mapper.updatePrtOutCount();
 	}
-	
 
 	@Override
 	public CodeVO updateErrCount() {
@@ -909,6 +908,8 @@ public class CodeServiceImpl implements CodeService {
 		// 자재량
 		int prdOrder = prdOrderA - (prdOrderA * 5 / 100);
 
+		// msg 테이블
+		CodeVO voMsg = new CodeVO();
 		// 주문제품 bom 리스트
 		System.out.println("ㅁBOM리스");
 		List<CodeVO> bomList = new ArrayList<>();
@@ -943,6 +944,8 @@ public class CodeServiceImpl implements CodeService {
 			System.out.println("ㅁmatoutno");
 			matOutList.add(voMout);
 			mapper.insertMatOut(voMout);
+			voMsg.setMsg("자재 출고 완료 : " + bomList.get(i).getMatCode());
+			mapper.insertMsg(voMsg);
 
 			// lot 테이블 out_from 출고처용 공정코드 찾기
 			System.out.println("ㅁlot테이블 공정코드 찾");
@@ -980,6 +983,8 @@ public class CodeServiceImpl implements CodeService {
 			voPR.setPrsManager(vo.getPreManager());
 			voPR.setMatOutNo(matOutList.get(i / 2).getMatOutNo());
 			mapper.insertProcessRun(voPR);
+			voMsg.setMsg("공정 시작 : " + voPR.getPrsCode());
+			mapper.insertMsg(voMsg);
 
 			// process_inf insert
 			System.out.println("ㅁprocess_inf");
@@ -1040,7 +1045,7 @@ public class CodeServiceImpl implements CodeService {
 					voLotI.setMpCode(vo.getPrtCode());
 					voLotI.setOutFrom(vo.getOrderNo());
 					mapper.insertLot(voLotI);
-					
+
 					prdOut = 3135;
 					j = 0;
 					k = prdOut * 1 / 100;
@@ -1080,6 +1085,10 @@ public class CodeServiceImpl implements CodeService {
 							mapper.updateEqm(voEqm);
 							System.out.println("produce 업데이트 prePrg");
 							mapper.updateProducePrePrg(vo);
+							voMsg.setMsg("제품 생산 완료 : " + vo.getPrtCode());
+							mapper.insertMsg(voMsg);
+							voMsg.setMsg("제품 창고 입고 완료 : " + vo.getPrtCode());
+							mapper.insertMsg(voMsg);
 						}
 
 						try {
@@ -1126,6 +1135,8 @@ public class CodeServiceImpl implements CodeService {
 							mapper.endProcessInf(voPI);
 							System.out.println("ㅁ설비중지");
 							mapper.updateEqm(voEqm);
+							voMsg.setMsg("공정 완료 : " + voPR.getPrsCode());
+							mapper.insertMsg(voMsg);
 						}
 
 						try {
@@ -1155,7 +1166,7 @@ public class CodeServiceImpl implements CodeService {
 					voLotI.setMpCode(vo.getPrtCode());
 					voLotI.setOutFrom(vo.getOrderNo());
 					mapper.insertLot(voLotI);
-					
+
 					prdOut = prdOrder;
 					j = 0;
 					k = prdOut * 1 / 100;
@@ -1178,7 +1189,7 @@ public class CodeServiceImpl implements CodeService {
 								k += prdOut % 100;
 							}
 						}
-						
+
 						if (j + (j % 10) == prdOrder) {
 							j += (j % 10);
 							String z = Integer.toString(prdOut % 100);
@@ -1218,6 +1229,10 @@ public class CodeServiceImpl implements CodeService {
 							mapper.updateEqm(voEqm);
 							System.out.println("produce 업데이트 prePrg");
 							mapper.updateProducePrePrg(vo);
+							voMsg.setMsg("제품 생산 완료 : " + vo.getPrtCode());
+							mapper.insertMsg(voMsg);
+							voMsg.setMsg("제품 창고 입고 완료 : " + vo.getPrtCode());
+							mapper.insertMsg(voMsg);
 						}
 
 						try {
@@ -1252,7 +1267,7 @@ public class CodeServiceImpl implements CodeService {
 							System.out.println("ㅁprocessInfErr up");
 							voPI.setPrsErrQty(k);
 							mapper.upCountPIErr(voPI);
-							
+
 							if (j == prdOrder) {
 								String z = Integer.toString(prdOut % 100);
 								if (z.length() == 2) {
@@ -1265,7 +1280,7 @@ public class CodeServiceImpl implements CodeService {
 									k += prdOut % 100;
 								}
 							}
-							
+
 							if (j + (j % 10) == prdOrder) {
 								j += (j % 10);
 								String z = Integer.toString(prdOut % 100);
@@ -1294,6 +1309,8 @@ public class CodeServiceImpl implements CodeService {
 							mapper.endProcessInf(voPI);
 							System.out.println("ㅁ설비중지");
 							mapper.updateEqm(voEqm);
+							voMsg.setMsg("공정 완료 : " + voPR.getPrsCode());
+							mapper.insertMsg(voMsg);
 						}
 
 						try {
@@ -1334,6 +1351,8 @@ public class CodeServiceImpl implements CodeService {
 			listBom = mapper.MatBomList(vo);
 
 			for (int j = 0; j < listBom.size(); j++) {
+				CodeVO voMsg = new CodeVO();
+
 				System.out.println("ㅁ자재발주");
 				vo.setMatOrdNo(mapper.matOrdNo().getMatOrdNo());
 				vo.setMatOrdQty(list.get(i).getOrderQty());
@@ -1342,6 +1361,8 @@ public class CodeServiceImpl implements CodeService {
 				vo.setMatPrice(listBom.get(j).getMatUnitPrc() * list.get(i).getOrderQty());
 				vo.setMatOrdEmp("admin");
 				mapper.insertMatBuy(vo);
+				voMsg.setMsg("자재발주 완료 : " + vo.getMatCode());
+				mapper.insertMsg(voMsg);
 
 				System.out.println("ㅁ자재검수");
 				vo.setMatChkCode(mapper.getMatChkNo().getMatChkCode());
@@ -1349,15 +1370,19 @@ public class CodeServiceImpl implements CodeService {
 				vo.setMatErrQty(vo.getMatInQty() * 5 / 100);
 				vo.setMatPassQty(vo.getMatInQty() - vo.getMatErrQty());
 				mapper.insertMatChk(vo);
-				
+				voMsg.setMsg("자재검수 완료 : " + vo.getMatCode());
+				mapper.insertMsg(voMsg);
+
 				System.out.println("ㅁ자재불량코드 찾기");
 				errList = mapper.selectMatErr(vo);
-				
+
 				System.out.println("ㅁ자재불량 테이블 인서트");
 				int u = (int) Math.random() * errList.size();
 				vo.setErrCode(errList.get(u).getErrCode());
 				mapper.insertMatErr(vo);
-				
+				voMsg.setMsg("자재불량 등록 완료 : " + vo.getMatCode());
+				mapper.insertMsg(voMsg);
+
 				System.out.println("ㅁ자재진행여부");
 				mapper.updateMatYN(vo);
 
@@ -1369,6 +1394,8 @@ public class CodeServiceImpl implements CodeService {
 				int q = (int) Math.random() * whList.size();
 				vo.setWhCode(whList.get(q).getWhCode());
 				mapper.insertLotA(vo);
+				voMsg.setMsg("자재창고 입고 완료 : " + vo.getMatCode());
+				mapper.insertMsg(voMsg);
 
 				System.out.println("ㅁ주문YN");
 				vo.setOrderNo(list.get(i).getOrderNo());
@@ -1419,6 +1446,23 @@ public class CodeServiceImpl implements CodeService {
 	public int updateProducePrePrg(CodeVO vo) {
 		// TODO Auto-generated method stub
 		return mapper.updateProducePrePrg(vo);
+	}
+
+	@Override
+	public List<CodeVO> msgUp() {
+		return mapper.msgUp();
+	}
+
+	@Override
+	public CodeVO msgCount() {
+		// TODO Auto-generated method stub
+		return mapper.msgCount();
+	}
+
+	@Override
+	public int deleteMsg() {
+		// TODO Auto-generated method stub
+		return mapper.deleteMsg();
 	}
 
 }

@@ -21,4 +21,8 @@ public class PrtProgVO {
 	private String preManager;//작업 지시 담당자6 = 실제로는 emp_id값이 담겨있음
 	private String empId;	//회원 아이디, 아래에empId있으므로 조인사용 필요 <-안쓸것같음
 	private String empName;	//회원 이름 가져오기, 담긴 empid값으로 가져와야함
+	private String lotQty;	
+	private String matCode;	//자재코드
+	private String matName;	//자재명
+	private String matOutQty;//재고량(출고수량(자재수량))
 }

@@ -5,7 +5,7 @@
 	
 	<select id="getWorkHistoryList" resultType="whVO">
 		SELECT prr.prs_date,
-			   pi.prs_st_hour, 
+			   pi.prs_st_hour,
 			   pi.prs_sp_hour, 
 			   pr.prs_name, 
 			   prr.prs_code, 

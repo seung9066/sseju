@@ -18,16 +18,13 @@ public class WorkHistoryController {
 	
 	//작업 이력 페이지 이동
 	@GetMapping("/workHistory")
-	public String workHistoryList(Model model) {
+	public String workHistoryList() {
 		return "/admin/produce/workHistory";
 	}
 	//ㄴ작업 이력 페이지의 그리드에 값 가져오는 컨트롤러
 	@GetMapping("/getWorkHistoryList")
 	@ResponseBody
 	public List<WorkHistoryVO> getWorkHistoryList(){
-		/*
-		 * Model model model.addAttribute("whList", whService.getWorkHistoryList());
-		 */
 		return whService.getWorkHistoryList();
 	}
 	
