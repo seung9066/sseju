@@ -201,7 +201,6 @@
 	<!-- 정기점검일 update하기 -->
 	
 
-
 	<!-- 직원 아이디, 이름 가져오기 -->
 	<select id="getEmpList" resultType="EqmVO">
 		SELECT *
