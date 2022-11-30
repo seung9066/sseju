@@ -4,10 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sseju.java.prtper.service.PrtPerService;
@@ -37,9 +36,12 @@ public class PrtPerController {
 		return ppService.getPrtPerList();
 	}
 	//ㄴ행클릭시 불량코드, 불량명, 상세조회 가져오기
-	@PostMapping("/getErrList")
+	@GetMapping("/getErrList")
 	@ResponseBody
-	public List<PrtPerVO> getErrList(@RequestBody String preNo){
+	public List<PrtPerVO> getErrList(@RequestParam(value="preNo", required=false) String preNo){
+		PrtPerVO ppVO = new PrtPerVO();
+		ppVO.setPreNo(preNo);
+		
 		return ppService.getErrList(preNo);
 	}
 	//생산 실적 삭제 D

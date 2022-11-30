@@ -24,15 +24,18 @@
 					el : document.getElementById('lotGrid'),
 					scrollX : false,
 					scrollY : false,
-					pageOptions : {
-						perPage : 10
-					},
+	                 pageOptions: {
+	                     useClient: true,
+	                     perPage: 10
+	                 },
 					columns : [ {
 						header : '로트번호',
-						name : 'lotNo'
+						name : 'lotNo',
+						align : 'center'
 					}, {
 						header : '로트 등록 일자',
 						name : 'lotDate',
+						align : 'center',
 						formatter({value}) {
 	                        return `${value.substring(0,10)}`;
 	                      } ,
@@ -45,14 +48,17 @@
 					}, {
 						header : '제품명',
 						name : 'prtName',
-						filter : 'select'
+						filter : 'select',
+						align : 'center'
 					}, {
 						header : '생산수량',
-						name : 'lotQty'
+						name : 'lotQty',
+						align : 'center'
 					},  {
 						header : '담당자',
 						name : 'empName',
-						filter : 'select'
+						filter : 'select',
+						align : 'center'
 					}]
 				});
 				//lotGrid의 정보 가져오기
