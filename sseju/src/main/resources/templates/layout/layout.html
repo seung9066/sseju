@@ -262,7 +262,7 @@
 		<script>
 		
 		// toastr
-        toastr.options = {
+        toastrA.options = {
                "closeButton": false,
                "newestOnTop": true,
                "positionClass": "toast-top-right",
@@ -395,7 +395,7 @@ msgTime = msgListB.length;
 }
 
 for (let i = 0; i < msgListB.length; i++) {
-	setTimeout(() => {toastr.info(msgListB[i])}, (i + 1) * 2000);
+	setTimeout(() => {toastrA.info(msgListB[i])}, (i + 1) * 2000);
 	let msgg = {'no':msgListC[i]};
 	setTimeout(() => {
 		$.ajax({
