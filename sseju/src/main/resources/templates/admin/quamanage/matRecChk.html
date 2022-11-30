@@ -64,7 +64,8 @@
 			</div>
 			
 			<!-- Modal -->
-			<form id="docUpdate" action="docUpdate" method="post">
+			<form id="docUpdate"> 
+			<!-- action="/docUpdate" method="post"-->
 				<input type="hidden" th:name="${_csrf.parameterName}"
 						th:value="${_csrf.token}" />
 				<div class="modal fade" id="docModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -191,7 +192,8 @@
 	            ----------------*/
 				
 				function textIn(){	            	
-					$('#docUpdate').submit();
+					//$('#docUpdate').submit();
+					let 
 					$('#docModal').modal("hide");
 					matCheckList();
 	            }

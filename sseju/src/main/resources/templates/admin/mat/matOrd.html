@@ -174,19 +174,7 @@
                    header : '담당자',
                    name : 'empName',
                    align : 'center'
-                }, {
-                  header : '진행 상황',
-                  name : 'matOrdYn',
-                  align : 'center',
-                  validation: {
-                 	 regExp:/진[가-힣]/ ,
-                 	 validatorFn: (value, row, columnName) => value !== '미확인'
-                     }
-               /* ,
-                 validation: {
-                	 regExp:/진[가-힣]/
-                    } */
-               } ]
+                }]
             });
             
             grid.hideColumn("matOrdEmp", "matOrdEmp");
