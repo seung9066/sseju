@@ -5,28 +5,29 @@
 	<!-- Read 매퍼 -->
 		<!-- 로트 내역 리스트 출력 그리드에 쓰임 -->	
 	<select id="getLotTrackList" resultType="ltVO">
-		SELECT lo.lot_no, 
-			   pt.prt_name, 
-			   lo.lot_qty, 
-			   ee.emp_name, 
-			   lo.lot_date
-		
-		FROM lot lo 
-		 JOIN order_inf odi
-		   ON lo.out_from = odi.order_no
-		 JOIN product pt
-		   ON odi.prt_code = pt.prt_code
-		 JOIN produce pe
-		   ON pt.prt_code = pe.prt_code
-		 JOIN process_run prr
-		   ON pe.pre_no = prr.pre_no
-		 JOIN employee ee
-		   ON ee.emp_id = prr.prs_manager
-		   
-		 WHERE mp_code LIKE 'PRD%'
-		  AND lo.lot_qty<![CDATA[>]]> 0
-		  
-		ORDER BY lo.lot_no DESC
+			SELECT ods.order_no,
+               lo.lot_no,
+               lo.lot_date,
+               pt.prt_name,
+               lo.out_from, 
+			   prr.prt_qty,
+               ee.emp_name 
+               
+        FROM lot lo
+         JOIN orders ods
+           ON lo.out_from = ods.order_no
+         JOIN produce pe
+           ON pe.order_no = ods.order_no
+         JOIN product pt
+           ON pt.prt_code = pe.prt_code
+         JOIN process_run prr
+           ON pe.pre_no = prr.pre_no
+         JOIN employee ee
+           ON ee.emp_id = prs_manager
+         WHERE prr.prt_qty IS NOT NULL
+           AND mp_code LIKE 'PRD%'
+        ORDER BY lo.lot_no DESC
+		  <!-- <![CDATA[>]]> -->
 	</select>
 	
 </mapper>
