@@ -5,28 +5,33 @@
 
 <mapper namespace="com.sseju.java.code.mapper.CodeMapper">
 	<select id="getCodeList" resultType="CodeVO">
-		SELECT * FROM code ORDER BY
-		code
+		SELECT * FROM code
+		ORDER BY code
 	</select>
 
 	<select id="getCodeInfo" parameterType="CodeVO"
 		resultType="CodeVO">
-		SELECT * FROM code WHERE code = #{code}
+		SELECT * FROM code 
+		WHERE code = #{code}
 	</select>
 
 	<update id="updateCode" parameterType="CodeVO">
-		UPDATE code SET code_name
-		= #{codeName} WHERE code = #{code}
+		UPDATE code
+		SET code_name = #{codeName}
+		WHERE code = #{code}
 	</update>
 
 	<insert id="insertCode" parameterType="CodeVO">
 		INSERT INTO code
-		values(#{code}, #{divName}, #{codeName}, #{divCode})
+		values(#{code}, 
+				#{divName}, 
+				#{codeName}, 
+				#{divCode})
 	</insert>
 
 	<delete id="deleteCode" parameterType="CodeVO">
-		DELETE FROM code WHERE
-		code = #{code}
+		DELETE FROM code 
+		WHERE code = #{code}
 	</delete>
 
 	<delete id="selectDeleteP" parameterType="CodeVO">
@@ -40,21 +45,31 @@
 	</delete>
 
 	<delete id="deleteBOM" parameterType="CodeVO">
-		DELETE FROM bom WHERE
-		prt_code = #{prtCode}
+		DELETE FROM bom 
+		WHERE prt_code = #{prtCode}
 	</delete>
 
 	<select id="getBomList" parameterType="CodeVO"
 		resultType="CodeVO">
-		SELECT p.prt_name, b.prt_code, b.capacity, b.mat_code,
-		m.mat_name, '삭제' AS dell FROM bom b, product p, material m WHERE p.prt_name =
-		#{prtName} AND p.prt_code = b.prt_code AND b.mat_code = m.mat_code
+		SELECT p.prt_name, 
+				b.prt_code, 
+				b.capacity, 
+				b.mat_code,
+				m.mat_name, '삭제' AS dell 
+		FROM bom b, 
+			product p, 
+			material m 
+		WHERE p.prt_name = #{prtName} 
+		AND p.prt_code = b.prt_code 
+		AND b.mat_code = m.mat_code
 		ORDER BY no
 	</select>
 
 	<select id="getBomMenu" resultType="CodeVO">
-		SELECT prt_code, prt_name
-		FROM product ORDER BY prt_code
+		SELECT prt_code, 
+				prt_name
+		FROM product 
+		ORDER BY prt_code
 	</select>
 
 	<select id="getBOMMatList" resultType="CodeVO">
@@ -64,12 +79,16 @@
 
 	<select id="getMatCode" parameterType="CodeVO"
 		resultType="CodeVO">
-		SELECT mat_code FROM material WHERE mat_name = #{matName}
+		SELECT mat_code 
+		FROM material 
+		WHERE mat_name = #{matName}
 	</select>
 
 	<select id="getPrtCode" parameterType="CodeVO"
 		resultType="CodeVO">
-		SELECT prt_code FROM product WHERE prt_name = #{prtName}
+		SELECT prt_code 
+		FROM product 
+		WHERE prt_name = #{prtName}
 	</select>
 
 	<insert id="insertBOM" parameterType="CodeVO">
@@ -77,7 +96,11 @@
 			order="BEFORE">
 			SELECT NVL(MAX(no),0) + 1 FROM bom
 		</selectKey>
-		INSERT INTO bom VALUES (#{no}, #{prtCode}, #{capacity}, #{matCode})
+		INSERT INTO bom 
+		VALUES (#{no}, 
+				#{prtCode}, 
+				#{capacity}, 
+				#{matCode})
 	</insert>
 
 	<select id="getBOMPrtList" resultType="CodeVO">
@@ -86,76 +109,100 @@
 	</select>
 
 	<select id="getDept" resultType="EmployeeVO">
-		SELECT DISTINCT emp_dept FROM
-		employee
+		SELECT DISTINCT emp_dept 
+		FROM employee
 	</select>
 
 	<delete id="deleteWh" parameterType="CodeVO">
-		DELETE FROM warehouse WHERE
-		wh_code = #{whCode}
+		DELETE FROM warehouse 
+		WHERE wh_code = #{whCode}
 	</delete>
 
 	<insert id="insertMat" parameterType="CodeVO">
 		<selectKey keyProperty="code" resultType="String"
 			order="BEFORE">
-			SELECT LPAD(NVL(MAX(SUBSTR(mat_code, -3)),0)+1,3,0) FROM
-			material WHERE mat_code LIKE #{matoption}||'%'
+			SELECT LPAD(NVL(MAX(SUBSTR(mat_code, -3)),0)+1,3,0) 
+			FROM material 
+			WHERE mat_code LIKE #{matoption}||'%'
 		</selectKey>
-		INSERT INTO material VALUES((#{matoption}||#{code}), #{name}, #{size},
-		#{price}, #{cpCode}, #{prsCode})
+		INSERT INTO material 
+		VALUES((#{matoption}||#{code}), 
+				#{name}, 
+				#{size},
+				#{price}, 
+				#{cpCode}, 
+				#{prsCode})
 	</insert>
 
 	<insert id="insertPrd" parameterType="CodeVO">
 		<selectKey keyProperty="code" resultType="String"
 			order="BEFORE">
 			SELECT 'PRD_'||LPAD(NVL(MAX(SUBSTR(prt_code, -3)),0)+1,3,0)
-			FROM
-			product
+			FROM product
 		</selectKey>
-		INSERT INTO product VALUES(#{code}, #{name}, #{size}, #{prtUnit},
-		#{price}, 'a')
+		INSERT INTO product 
+		VALUES(#{code}, 
+				#{name}, 
+				#{size}, 
+				#{prtUnit},
+				#{price}, 
+				'a')
 	</insert>
 
 	<select id="getPrtList" resultType="CodeVO">
-		SELECT * FROM product ORDER
-		BY prt_code
+		SELECT * FROM product 
+		ORDER BY prt_code
 	</select>
 
 	<select id="getMatList" resultType="CodeVO">
-		SELECT * FROM material ORDER
-		BY mat_code
+		SELECT * FROM material 
+		ORDER BY mat_code
 	</select>
 
 	<select id="getMatList1" resultType="CodeVO">
 		select m.mat_code,
-		m.mat_name, m.mat_size, m.mat_unit_prc, c.cp_name, p.prs_name from
-		material m, company c, process p where m.prs_code = p.prs_code and
-		m.cp_code = c.cp_code ORDER BY m.mat_code
+				m.mat_name, 
+				m.mat_size, 
+				m.mat_unit_prc, 
+				c.cp_name, 
+				p.prs_name 
+		from material m, 
+			company c, 
+			process p 
+		where m.prs_code = p.prs_code 
+		and m.cp_code = c.cp_code 
+		ORDER BY m.mat_code
 	</select>
 
 	<select id="prList" resultType="CodeVO">
-		SELECT p.prs_code, p.prs_name,
-		p.run_no,
-		p.prs_detail, p.eqm_code, e.eqm_name FROM process p, eqm e
-		WHERE
-		p.eqm_code = e.eqm_code ORDER BY p.run_no
+		SELECT p.prs_code, 
+				p.prs_name,
+				p.run_no,
+				p.prs_detail, 
+				p.eqm_code, 
+				e.eqm_name 
+		FROM process p, eqm e
+		WHERE p.eqm_code = e.eqm_code 
+		ORDER BY p.run_no
 	</select>
 
 	<insert id="insertPrs" parameterType="CodeVO">
 		<selectKey keyProperty="runNo" resultType="Integer"
 			order="BEFORE">
 			SELECT (NVL(MAX(run_no),0)+1)
-			FROM
-			process
+			FROM process
 		</selectKey>
-		INSERT INTO process VALUES
-		(#{prsCode}, #{prsName}, #{prsDetail},
-		#{eqmCode}, #{runNo})
+		INSERT INTO process 
+		VALUES (#{prsCode}, 
+				#{prsName}, 
+				#{prsDetail},
+				#{eqmCode}, 
+				#{runNo})
 	</insert>
 
 	<delete id="deletePrs" parameterType="CodeVO">
-		DELETE FROM process WHERE
-		prs_code = #{prsCode}
+		DELETE FROM process 
+		WHERE prs_code = #{prsCode}
 	</delete>
 
 	<select id="eqmList" resultType="CodeVO">
@@ -163,74 +210,121 @@
 	</select>
 
 	<select id="whList" resultType="CodeVO">
-		SELECT w.wh_code, w.wh_name,
-		w.wh_location, w.wh_manager, e.emp_id, e.emp_name FROM warehouse w,
-		employee e WHERE w.wh_manager = e.emp_id ORDER BY w.wh_code
+		SELECT w.wh_code, 
+				w.wh_name,
+				w.wh_location, 
+				w.wh_manager, 
+				e.emp_id, 
+				e.emp_name 
+		FROM warehouse w,
+			employee e 
+		WHERE w.wh_manager = e.emp_id 
+		ORDER BY w.wh_code
 	</select>
 
 	<insert id="insertWh" parameterType="CodeVO">
 		INSERT INTO warehouse
-		VALUES(#{whCode}, #{whName}, #{whLocation}, #{whManager})
+		VALUES(#{whCode}, 
+				#{whName}, 
+				#{whLocation}, 
+				#{whManager})
 	</insert>
 
 	<update id="updatePrs" parameterType="CodeVO">
-		UPDATE process SET prs_name
-		= #{prsName}, prs_detail = #{prsDetail}, eqm_code = #{eqmCode} WHERE
-		prs_code = #{prsCode}
+		UPDATE process 
+		SET prs_name = #{prsName}, 
+			prs_detail = #{prsDetail}, 
+			eqm_code = #{eqmCode} 
+		WHERE prs_code = #{prsCode}
 	</update>
 
 	<update id="updateWh" parameterType="CodeVO">
-		UPDATE warehouse SET wh_name
-		= #{whName}, wh_location = #{whLocation}, wh_manager = #{whManager}
+		UPDATE warehouse 
+		SET wh_name = #{whName}, 
+			wh_location = #{whLocation}, 
+			wh_manager = #{whManager}
 		WHERE wh_code = #{whCode}
 	</update>
 
 	<select id="errList" resultType="CodeVO">
-		SELECT e.err_code, e.err_name,
-		e.err_option, e.code as errs_code, e.err_pct, c.code, c.code_name,
-		c.div_name, c.div_code FROM error e, code c WHERE e.code = c.code
+		SELECT e.err_code, 
+				e.err_name,
+				e.err_option, 
+				e.code as errs_code, 
+				e.err_pct, 
+				c.code, 
+				c.code_name,
+				c.div_name, 
+				c.div_code 
+		FROM error e, 
+			code c 
+		WHERE e.code = c.code
 	</select>
 
 	<select id="matprsList" resultType="CodeVO">
 		SELECT m.mat_code,
-		m.mat_name, p.prs_code, p.prs_name FROM material m, process p
+				m.mat_name, 
+				p.prs_code, 
+				p.prs_name 
+		FROM material m, 
+			process p
 	</select>
 
 	<insert id="insertErr" parameterType="CodeVO">
 		INSERT INTO error
-		VALUES(#{errCode}, #{errName}, #{errOption}, #{code}, '')
+		VALUES(#{errCode}, 
+				#{errName}, 
+				#{errOption}, 
+				#{code}, 
+				'')
 	</insert>
 
 	<delete id="deleteErr" parameterType="CodeVO">
-		DELETE FROM error WHERE
-		err_code = #{errCode}
+		DELETE FROM error 
+		WHERE err_code = #{errCode}
 	</delete>
 
 	<update id="updateErr" parameterType="CodeVO">
-		UPDATE error SET err_name =
-		#{errName}, err_option = #{errOption}, code = #{code} WHERE err_code =
-		#{errCode}
+		UPDATE error 
+		SET err_name = #{errName}, 
+			err_option = #{errOption}, 
+			code = #{code} 
+		WHERE err_code = #{errCode}
 	</update>
 
 	<delete id="deleteEqm" parameterType="CodeVO">
-		DELETE FROM eqm WHERE
-		eqm_code = #{eqmCode}
+		DELETE FROM eqm 
+		WHERE eqm_code = #{eqmCode}
 	</delete>
 
 	<select id="workerAList" parameterType="CodeVO"
 		resultType="CodeVO">
-		SELECT e.emp_id, e.emp_name, e.emp_dept, e.emp_rank FROM
-		employee e, emp_mng ee WHERE e.emp_id = ee.emp_id AND emp_rank = '사원'
-		AND emp_dept = '생산부' AND
-		NOT ee.pre_no = #{preNo} AND e.emp_id =
-		ee.emp_id
+		SELECT e.emp_id, 
+				e.emp_name, 
+				e.emp_dept, 
+				e.emp_rank 
+		FROM employee e, 
+			emp_mng ee 
+		WHERE e.emp_id = ee.emp_id 
+		AND emp_rank = '사원'
+		AND emp_dept = '생산부' 
+		AND NOT ee.pre_no = #{preNo} 
+		AND e.emp_id = ee.emp_id
 	</select>
 
 	<select id="workerBList" parameterType="CodeVO"
 		resultType="CodeVO">
-		SELECT e.emp_name, e.emp_id, p.pre_no, e.emp_dept,
-		e.emp_rank FROM employee e, emp_mng ee, produce p WHERE e.emp_id =
-		ee.emp_id AND ee.pre_no = p.pre_no AND ee.pre_no = #{preNo}
+		SELECT e.emp_name, 
+				e.emp_id, 
+				p.pre_no, 
+				e.emp_dept,
+				e.emp_rank 
+		FROM employee e, 
+			emp_mng ee, 
+			produce p 
+		WHERE e.emp_id = ee.emp_id 
+		AND ee.pre_no = p.pre_no 
+		AND ee.pre_no = #{preNo}
 	</select>
 
 	<insert id="insertEmpMng" parameterType="CodeVO">
@@ -238,108 +332,113 @@
 			order="BEFORE">
 			SELECT NVL(MAX(no),0) + 1 FROM emp_mng
 		</selectKey>
-		INSERT INTO emp_mng VALUES(#{no}, #{empId}, '')
+		INSERT INTO emp_mng 
+		VALUES(#{no}, 
+				#{empId}, 
+				'')
 	</insert>
 
 	<update id="insertWM" parameterType="CodeVO">
-		UPDATE emp_mng SET pre_no =
-		#{preNo} WHERE emp_id = #{empId}
+		UPDATE emp_mng 
+		SET pre_no = #{preNo} 
+		WHERE emp_id = #{empId}
 	</update>
 
 	<update id="deleteWM" parameterType="CodeVO">
-		UPDATE emp_mng SET pre_no =
-		'0' WHERE emp_id = #{empId}
+		UPDATE emp_mng 
+		SET pre_no = '0' 
+		WHERE emp_id = #{empId}
 	</update>
 
 	<select id="updatePrtCount" resultType="CodeVO">
-		SELECT
-		NVL(SUM(prt_qty),0) AS prt_qty FROM process_run WHERE
-		TO_DATE(prs_date,'rrrr/MM/dd') =
-		(SELECT TO_DATE(SYSDATE,'rrrr/MM/dd')
-		FROM dual)
+		SELECT NVL(SUM(prt_qty),0) AS prt_qty 
+		FROM process_run 
+		WHERE TO_DATE(prs_date,'rrrr/MM/dd') = (SELECT TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
 	</select>
 
 	<select id="ydPrtCount" resultType="CodeVO">
-		SELECT
-		NVL(SUM(prt_qty),0) AS
-		prt_qty FROM process_run WHERE TO_DATE(prs_date,'rrrr/MM/dd') =
-		(SELECT TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
+		SELECT NVL(SUM(prt_qty),0) AS prt_qty 
+		FROM process_run 
+		WHERE TO_DATE(prs_date,'rrrr/MM/dd') = (SELECT TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
 	</select>
 
 	<select id="updatePrtOutCount" resultType="CodeVO">
-		SELECT
-		NVL(SUM(prt_out_qty),0) AS prt_qty FROM product_out WHERE
-		TO_DATE(prt_out_date,'rrrr/MM/dd') = (SELECT
-		TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
+		SELECT NVL(SUM(prt_out_qty),0) AS prt_qty 
+		FROM product_out 
+		WHERE TO_DATE(prt_out_date,'rrrr/MM/dd') = (SELECT TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
 	</select>
 
 	<select id="ydPrtOutCount" resultType="CodeVO">
-		SELECT
-		NVL(SUM(prt_out_qty),0) AS prt_qty FROM product_out WHERE
-		TO_DATE(prt_out_date,'rrrr/MM/dd') = (SELECT
-		TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
+		SELECT NVL(SUM(prt_out_qty),0) AS prt_qty 
+		FROM product_out 
+		WHERE TO_DATE(prt_out_date,'rrrr/MM/dd') = (SELECT TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
 	</select>
 
 	<select id="updateErrCount" resultType="CodeVO">
-		SELECT
-		NVL(SUM(pi.prs_err_qty),0) AS prt_qty FROM
-		process_inf pi, process_run
-		pr WHERE pr.prs_no = pi.prs_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
-		(SELECT TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
+		SELECT NVL(SUM(pi.prs_err_qty),0) AS prt_qty 
+		FROM process_inf pi, 
+			process_run pr 
+		WHERE pr.prs_no = pi.prs_no 
+		AND TO_DATE(pr.prs_date,'rrrr/MM/dd') = (SELECT TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual)
 	</select>
 
 	<select id="ydErrCount" resultType="CodeVO">
-		SELECT
-		NVL(SUM(pi.prs_err_qty),0) AS prt_qty FROM
-		process_inf pi, process_run
-		pr WHERE pr.prs_no = pi.prs_no AND TO_DATE(pr.prs_date,'rrrr/MM/dd') =
-		(SELECT TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
+		SELECT NVL(SUM(pi.prs_err_qty),0) AS prt_qty 
+		FROM process_inf pi, 
+			process_run pr 
+		WHERE pr.prs_no = pi.prs_no 
+		AND TO_DATE(pr.prs_date,'rrrr/MM/dd') = (SELECT TO_DATE(SYSDATE-1,'rrrr/MM/dd') FROM dual)
 	</select>
 
 	<select id="WhPrd" parameterType="CodeVO" resultType="CodeVO">
-		SELECT
-		p.prt_name, sum(l.lot_qty) AS lot_qty FROM
-		lot l, product p WHERE
-		l.mp_code = p.prt_code
+		SELECT p.prt_name, 
+				sum(l.lot_qty) AS lot_qty 
+		FROM lot l, 
+			product p 
+		WHERE l.mp_code = p.prt_code
 		AND l.wh_code = #{whCode}
 		GROUP BY p.prt_name
 	</select>
 
 	<select id="updatePrttCount" resultType="CodeVO">
-		SELECT
-		NVL(SUM(pr.prt_qty),0) AS prt_qty,
-		pt.prt_code FROM process_run pr,
-		produce pd, product pt
-		WHERE pd.pre_no
-		= pr.pre_no AND pd.prt_code =
-		pt.prt_code
-		AND
-		TO_DATE(pr.prs_date,'rrrr/MM/dd') = (SELECT
-		TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual) GROUP BY pt.prt_code ORDER BY
-		pt.prt_code
+		SELECT NVL(SUM(pr.prt_qty),0) AS prt_qty,
+				pt.prt_code 
+		FROM process_run pr,
+			produce pd, 
+			product pt
+		WHERE pd.pre_no = pr.pre_no 
+		AND pd.prt_code = pt.prt_code
+		AND TO_DATE(pr.prs_date,'rrrr/MM/dd') = (SELECT TO_DATE(SYSDATE,'rrrr/MM/dd') FROM dual) 
+		GROUP BY pt.prt_code 
+		ORDER BY pt.prt_code
 	</select>
 
 	<select id="selectPrtNameOut" resultType="CodeVO">
 		SELECT p.prt_code,
-		NVL(SUM(po.prt_out_qty),0) AS prt_qty FROM product p, product_out po,
-		order_inf
-		oi WHERE p.prt_code = oi.prt_code AND po.order_no =
-		oi.order_no AND
-		TO_DATE(po.prt_out_date, 'rrrr/MM/dd') = (SELECT
-		TO_DATE(SYSDATE,
-		'rrrr/MM/dd') FROM dual) GROUP BY p.prt_code ORDER BY
-		p.prt_code
+				NVL(SUM(po.prt_out_qty),0) AS prt_qty 
+		FROM product p, 
+			product_out po,
+			order_inf oi 
+		WHERE p.prt_code = oi.prt_code 
+		AND po.order_no = oi.order_no 
+		AND TO_DATE(po.prt_out_date, 'rrrr/MM/dd') = (SELECT TO_DATE(SYSDATE, 'rrrr/MM/dd') FROM dual) 
+		GROUP BY p.prt_code 
+		ORDER BY p.prt_code
 	</select>
 
 	<select id="selectErrOut" resultType="CodeVO">
-		SELECT p.prt_code,
-		NVL(SUM(pi.prs_err_qty),0) AS prt_qty FROM process_inf pi, process_run
-		pr, product p, produce pd WHERE pd.pre_no = pr.pre_no AND pd.prt_code
-		= p.prt_code AND pi.prs_no = pr.prs_no AND TO_DATE(pr.prs_date,
-		'rrrr/MM/dd') = (SELECT
-		TO_DATE(SYSDATE,
-		'rrrr/MM/dd') FROM dual) GROUP
-		BY p.prt_code ORDER BY p.prt_code
+		SELECT p.prt_code, 
+				NVL(SUM(pi.prs_err_qty),0) AS prt_qty 
+		FROM process_inf pi, 
+			process_run pr, 
+			product p, 
+			produce pd 
+		WHERE pd.pre_no = pr.pre_no 
+		AND pd.prt_code = p.prt_code 
+		AND pi.prs_no = pr.prs_no 
+		AND TO_DATE(pr.prs_date, 'rrrr/MM/dd') = (SELECT TO_DATE(SYSDATE, 'rrrr/MM/dd') FROM dual) 
+		GROUP BY p.prt_code 
+		ORDER BY p.prt_code
 	</select>
 
 	<select id="selectPrsName" resultType="CodeVO">
@@ -348,176 +447,206 @@
 	</select>
 
 	<select id="selectPrsRunNow" resultType="CodeVO">
-		SELECT pr.prs_no,
-		pr.prs_code FROM process_run pr, process_inf pi, process p
-		WHERE
-		pr.prs_no = pi.prs_no AND p.prs_code = pr.prs_code AND pi.prs_sp_hour
-		is null AND pi.prs_st_hour is not null ORDER BY p.run_no
+		SELECT pr.prs_no, 
+				pr.prs_code 
+		FROM process_run pr, 
+			process_inf pi, 
+			process p
+		WHERE pr.prs_no = pi.prs_no 
+		AND p.prs_code = pr.prs_code 
+		AND pi.prs_sp_hour is null 
+		AND pi.prs_st_hour is not null 
+		ORDER BY p.run_no
 	</select>
 
 	<select id="todayWL" resultType="CodeVO">
-		SELECT p.pre_no, pr.prt_name,
-		p.ins_qty
-		FROM produce p, order_inf oi, orders o, product pr
-		WHERE
-		p.order_no = o.order_no
+		SELECT p.pre_no, 
+				pr.prt_name,
+				p.ins_qty
+		FROM produce p, 
+			order_inf oi, 
+			orders o, 
+			product pr
+		WHERE p.order_no = o.order_no
 		AND o.order_no = oi.order_no
-		AND p.order_no =
-		oi.order_no
-		AND oi.prt_code =
-		pr.prt_code
+		AND p.order_no = oi.order_no
+		AND oi.prt_code = pr.prt_code
 		AND p.prt_code = pr.prt_code
-		AND TO_DATE(p.pre_date,
-		'rrrr/MM/dd') = (SELECT
-		TO_DATE(SYSDATE,
-		'rrrr/MM/dd') FROM dual)
+		AND TO_DATE(p.pre_date, 'rrrr/MM/dd') = (SELECT TO_DATE(SYSDATE, 'rrrr/MM/dd') FROM dual)
 		AND pre_prg = '진행 전'
 	</select>
 
 	<select id="todayWLinf" parameterType="CodeVO"
 		resultType="CodeVO">
-		SELECT ods.order_no, ods.d_day, e.emp_name, pe.ins_qty,
-		pe.pre_manager, pe.prt_code, pe.pre_no
+		SELECT ods.order_no, 
+				ods.d_day, 
+				e.emp_name, 
+				pe.ins_qty,
+				pe.pre_manager, 
+				pe.prt_code, 
+				pe.pre_no
 		FROM orders ods
 		JOIN produce pe
-		ON
-		ods.order_no = pe.order_no
+		ON ods.order_no = pe.order_no
 		JOIN product pt
-		ON pt.prt_code =
-		pe.prt_code
-		JOIN employee e ON e.emp_id = pe.pre_manager WHERE
-		pe.pre_no =
-		#{preNo}
+		ON pt.prt_code = pe.prt_code
+		JOIN employee e 
+		ON e.emp_id = pe.pre_manager 
+		WHERE pe.pre_no = #{preNo}
 	</select>
 
 	<select id="prdCount" resultType="CodeVO">
 		SELECT p.prt_name,
-		SUM(oi.order_out_qty) AS order_out_qty
-		FROM product p, order_inf oi
+				SUM(oi.order_out_qty) AS order_out_qty
+		FROM product p, 
+			order_inf oi
 		WHERE p.prt_code = oi.prt_code
 		GROUP BY p.prt_name
 	</select>
 
 	<select id="getBomListC" parameterType="CodeVO"
 		resultType="CodeVO">
-		SELECT mat_code FROM bom WHERE prt_code = #{prtCode}
+		SELECT mat_code FROM bom 
+		WHERE prt_code = #{prtCode}
 	</select>
 
 	<select id="getLotMat" parameterType="CodeVO"
 		resultType="CodeVO">
-		SELECT * FROM lot WHERE mp_code = #{mpCode} AND lot_qty =
-		#{lotQty} AND rownum = 1 AND out_from = '대기' ORDER BY lot_date
+		SELECT * FROM lot 
+		WHERE mp_code = #{mpCode} 
+		AND lot_qty = #{lotQty} 
+		AND rownum = 1 
+		AND out_from = '대기' 
+		ORDER BY lot_date
 	</select>
 
 	<select id="matOutNo" resultType="CodeVO">
-		SELECT 'MO'||to_char(sysdate,
-		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0) AS
-		mat_out_no
-		FROM
-		mat_out
+		SELECT 'MO'||to_char(sysdate, 'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(mat_out_no, -3)),0)+1,3,0) AS mat_out_no
+		FROM mat_out
 	</select>
 
 	<insert id="insertMatOut" parameterType="CodeVO">
 		INSERT INTO mat_out
-		VALUES(#{matOutNo}, sysdate, #{matOutQty},
-		#{lotNo})
+		VALUES(#{matOutNo}, 
+				sysdate, 
+				#{matOutQty},
+				#{lotNo})
 	</insert>
 
 	<update id="useLotQty" parameterType="CodeVO">
-		UPDATE lot SET lot_qty = 0,
-		out_from = #{prsCode} WHERE lot_no = #{lotNo}
+		UPDATE lot 
+		SET lot_qty = 0,
+			out_from = #{prsCode} 
+		WHERE lot_no = #{lotNo}
 	</update>
 
 	<select id="getMatPrs" parameterType="CodeVO"
 		resultType="CodeVO">
-		SELECT prs_code FROM material WHERE mat_code = #{mpCode}
+		SELECT prs_code FROM material 
+		WHERE mat_code = #{mpCode}
 	</select>
 
-	<insert id="insertprr" parameterType="CodeVO">
-		<selectKey keyProperty="prsNo" resultType="Integer"
-			order="BEFORE">
-			SELECT NVL(MAX(no),0) + 1 FROM emp_mng
-		</selectKey>
-		INSERT INTO process_run VALUES()
-	</insert>
-
 	<select id="prsNo" resultType="CodeVO">
-		SELECT 'PRS'||to_char(sysdate,
-		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(prs_no, -3)),0)+1,3,0) AS prs_no
-		FROM
-		process_run
+		SELECT 'PRS'||to_char(sysdate, 'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(prs_no, -3)),0)+1,3,0) AS prs_no
+		FROM process_run
 	</select>
 
 	<insert id="insertProcessRun" parameterType="CodeVO">
-		INSERT INTO
-		process_run VALUES(#{prsNo}, #{prsCode}, #{preNo}, #{prsManager},
-		sysdate, #{matOutNo}, '')
+		INSERT INTO process_run 
+		VALUES(#{prsNo}, 
+				#{prsCode}, 
+				#{preNo}, 
+				#{prsManager},
+				sysdate, 
+				#{matOutNo}, 
+				'')
 	</insert>
 
 	<select id="prfNo" resultType="CodeVO">
-		SELECT 'PRF'||to_char(sysdate,
-		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(prs_pf_no, -3)),0)+1,3,0) AS prf_no
-		FROM
-		process_inf
+		SELECT 'PRF'||to_char(sysdate, 'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(prs_pf_no, -3)),0)+1,3,0) AS prf_no
+		FROM process_inf
 	</select>
 
 	<insert id="insertProcessInf" parameterType="CodeVO">
-		INSERT INTO
-		process_inf VALUES(#{prsPfNo}, #{prsNo}, '', '', sysdate, '')
+		INSERT INTO process_inf 
+		VALUES(#{prsPfNo}, 
+				#{prsNo}, 
+				'', 
+				'', 
+				sysdate, 
+				'')
 	</insert>
 
 	<select id="getError" parameterType="CodeVO" resultType="CodeVO">
-		SELECT *
-		FROM error WHERE code = #{prsCode}
+		SELECT * FROM error 
+		WHERE code = #{prsCode}
 	</select>
 
 	<select id="processErrNo" resultType="CodeVO">
-		SELECT
-		(NVL(MAX(prs_err_no),0)+1) AS prs_err_no
-		FROM
-		process_err
+		SELECT (NVL(MAX(prs_err_no),0)+1) AS prs_err_no
+		FROM process_err
 	</select>
 
 	<insert id="insertProcessErr" parameterType="CodeVO">
-		INSERT INTO
-		process_err VALUES(#{prsErrNo}, '', #{prsPfNo}, #{errCode})
+		INSERT INTO process_err 
+		VALUES(#{prsErrNo}, 
+				'', 
+				#{prsPfNo}, 
+				#{errCode})
 	</insert>
 
 	<update id="upCountProcessInf" parameterType="CodeVO">
 		UPDATE process_inf
-		SET prs_out_put = #{prsOutPut} WHERE prs_pf_no = #{prsPfNo}
+		SET prs_out_put = #{prsOutPut} 
+		WHERE prs_pf_no = #{prsPfNo}
 	</update>
 
 	<update id="upCountProcessErr" parameterType="CodeVO">
 		UPDATE process_err
-		SET prs_err_qty = #{prsErrQty} WHERE prs_err_no = #{prsErrNo}
+		SET prs_err_qty = #{prsErrQty} 
+		WHERE prs_err_no = #{prsErrNo}
 	</update>
 
 	<update id="upCountPIErr" parameterType="CodeVO">
-		UPDATE process_inf SET
-		prs_err_qty = #{prsErrQty} WHERE prs_pf_no = #{prsPfNo}
+		UPDATE process_inf 
+		SET prs_err_qty = #{prsErrQty} 
+		WHERE prs_pf_no = #{prsPfNo}
 	</update>
 
 	<update id="endProcessInf" parameterType="CodeVO">
-		UPDATE process_inf SET
-		prs_sp_hour = sysdate WHERE prs_pf_no = #{prsPfNo}
+		UPDATE process_inf 
+		SET prs_sp_hour = sysdate 
+		WHERE prs_pf_no = #{prsPfNo}
 	</update>
 
 	<update id="endProcessRun" parameterType="CodeVO">
-		UPDATE process_run SET
-		prt_qty = #{prtQty} WHERE prs_no = #{prsNo}
+		UPDATE process_run 
+		SET prt_qty = #{prtQty} 
+		WHERE prs_no = #{prsNo}
 	</update>
 
 	<insert id="insertLot" parameterType="CodeVO">
 		INSERT INTO lot
-		VALUES(#{lotNo}, sysdate, #{mpCode}, #{outFrom}, '',
-		0, #{whCode}, '')
+		VALUES(#{lotNo}, 
+				sysdate, 
+				#{mpCode}, 
+				#{outFrom}, 
+				'',
+				0, 
+				#{whCode}, 
+				'')
 	</insert>
 	
 	<insert id="insertLotA" parameterType="CodeVO">
 		INSERT INTO lot
-		VALUES(#{lotNo}, sysdate, #{mpCode}, #{outFrom}, '',
-		#{lotQty}, #{whCode}, #{orderNo})
+		VALUES(#{lotNo}, 
+				sysdate, 
+				#{mpCode}, 
+				#{outFrom}, 
+				'',
+				#{lotQty}, 
+				#{whCode}, 
+				#{matChkCode})
 	</insert>
 
 	<select id="WHListA" resultType="CodeVO">
@@ -525,71 +654,64 @@
 	</select>
 
 	<update id="updateEqm" parameterType="CodeVO">
-		UPDATE eqm SET eqm_yn =
-		CASE WHEN eqm_yn = 'Y' THEN 'N' ELSE 'Y' END WHERE
-		eqm_code =
-		#{eqmCode}
+		UPDATE eqm 
+		SET eqm_yn = CASE WHEN eqm_yn = 'Y' THEN 'N' ELSE 'Y' END 
+		WHERE eqm_code = #{eqmCode}
 	</update>
 
 	<select id="MatBomList" parameterType="CodeVO"
 		resultType="CodeVO">
-		select bom.prt_code, bom.mat_code, i.order_qty, c.cp_code ,
-		m.mat_unit_prc
-		from
-		orders ord,
-		order_inf i,
-		product pd,
-		bom bom,
-		material m,
-		company c
+		select bom.prt_code, 
+				bom.mat_code, 
+				i.order_qty, 
+				c.cp_code ,
+				m.mat_unit_prc
+		from orders ord,
+			order_inf i,
+			product pd,
+			bom bom,
+			material m,
+			company c
 		where i.order_no = ord.order_no
 		and i.prt_code = pd.prt_code
-		and
-		pd.prt_code = bom.prt_code
+		and pd.prt_code = bom.prt_code
 		and bom.mat_code = m.mat_code
-		and m.cp_code =
-		c.cp_code
+		and m.cp_code = c.cp_code
 		and ord.order_no = #{orderNo}
 	</select>
 
 	<select id="matOrdNo" resultType="CodeVO">
-		SELECT
-		'MAT_ORD_'||LPAD(NVL(MAX(SUBSTR(mat_ord_no,
-		-3)),0)+1,3,0) AS mat_ord_no FROM
-		mat_buy
+		SELECT 'MAT_ORD_'||LPAD(NVL(MAX(SUBSTR(mat_ord_no, -3)),0)+1,3,0) AS mat_ord_no 
+		FROM mat_buy
 	</select>
 
 	<insert id="insertMatBuy" parameterType="CodeVO">
 		INSERT INTO mat_buy
-		VALUES (
-		#{matOrdNo}
-		,(#{matOrdQty} * 110 / 100)
-		,'PRG_001'
-		,#{matCode}
-		,sysdate
-		,#{cpCode}
-		,'미확인'
-		,(#{matPrice} * 110/100)
-		,#{matOrdEmp}
-		)
+		VALUES (#{matOrdNo}
+				,(#{matOrdQty} * 110 / 100)
+				,'PRG_001'
+				,#{matCode}
+				,sysdate
+				,#{cpCode}
+				,'미확인'
+				,(#{matPrice} * 110/100)
+				,#{matOrdEmp})
 	</insert>
 	
 	<select id="getMatChkNo" resultType="CodeVO">
-		SELECT 'MAT_CK'||LPAD(NVL(MAX(SUBSTR(mat_chk_code,
-			-3)),0)+1,3,0) AS mat_chk_code FROM
-			mat_chk
+		SELECT 'MAT_CK'||LPAD(NVL(MAX(SUBSTR(mat_chk_code, -3)),0)+1,3,0) AS mat_chk_code 
+		FROM mat_chk
 	</select>
 	
 	<insert id="insertMatChk" parameterType="CodeVO">
 		INSERT INTO mat_chk
-		VALUES
-		(#{matChkCode}
-		,#{matInQty}
-		,#{matErrQty}
-		,#{matOrdNo}
-		, sysdate
-		,#{matPassQty}
-		,#{matCode})
+		VALUES(#{matChkCode}
+				,#{matInQty}
+				,#{matErrQty}
+				,#{matOrdNo}
+				,sysdate
+				,#{matPassQty}
+				,#{matCode})
 	</insert>
 	
 	<insert id="insertMatErr" parameterType="CodeVO">
@@ -598,21 +720,27 @@
 			SELECT NVL(MAX(mat_no),0) + 1 FROM mat_err
 		</selectKey>
 		INSERT INTO mat_err
-		VALUES(#{matNo}, #{matChkCode}, '', #{errCode})
+		VALUES(#{matNo}, 
+				#{matChkCode}, 
+				'', 
+				#{errCode})
 	</insert>
 	
 	<select id="selectMatErr" resultType="CodeVO">
-		SELECT * FROM error WHERE code = #{matCode}
+		SELECT * FROM error 
+		WHERE code = #{matCode}
 	</select>
 
 	<update id="updateMatYN" parameterType="CodeVO">
-		UPDATE mat_buy SET
-		mat_ord_yn = '확인' WHERE mat_ord_no = #{matOrdNo}
+		UPDATE mat_buy 
+		SET mat_ord_yn = '확인' 
+		WHERE mat_ord_no = #{matOrdNo}
 	</update>
 
 	<update id="orderInfYN" parameterType="CodeVO">
-		UPDATE order_inf SET
-		order_yn = 'O' WHERE order_no = #{orderNo}
+		UPDATE order_inf 
+		SET order_yn = 'O' 
+		WHERE order_no = #{orderNo}
 	</update>
 
 	<select id="getMatCompany" resultType="CodeVO">
@@ -621,25 +749,38 @@
 	</select>
 
 	<select id="getLotNo" resultType="CodeVO">
-		SELECT 'LOT'||to_char(sysdate,
-		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(lot_no, -3)),0)+1,3,0) AS lot_no FROM lot
+		SELECT 'LOT'||to_char(sysdate, 'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(lot_no, -3)),0)+1,3,0) AS lot_no 
+		FROM lot
 	</select>
 
 	<update id="updateLotQty" parameterType="CodeVO">
-		UPDATE lot SET lot_qty =
-		#{lotQty} WHERE lot_no = #{lotNo}
+		UPDATE lot 
+		SET lot_qty = #{lotQty} 
+		WHERE lot_no = #{lotNo}
 	</update>
 	
 	<update id="updateProducePrePrg" parameterType="CodeVO">
-		UPDATE produce SET pre_prg = '진행 완료' WHERE pre_no = #{preNo}
+		UPDATE produce 
+		SET pre_prg = '진행 완료' 
+		WHERE pre_no = #{preNo}
 	</update>
 	
 	<select id="msgCount" resultType="CodeVO">
-		SELECT COUNT(*) AS no FROM msg
+		SELECT COUNT(*) AS no 
+		FROM msg
 	</select>
 	
 	<select id="msgUp" resultType="CodeVO">
-		SELECT msg FROM msg ORDER BY no
+		SELECT msg 
+		FROM msg 
+		ORDER BY no
+	</select>
+	
+	<select id="msgUpA" resultType="CodeVO">
+		SELECT msg, no 
+		FROM msg 
+		WHERE yn = 'N' 
+		ORDER BY no
 	</select>
 	
 	<insert id="insertMsg" parameterType="CodeVO">
@@ -647,8 +788,17 @@
 			order="BEFORE">
 			SELECT NVL(MAX(no),0) + 1 FROM msg
 		</selectKey>
-		INSERT INTO msg VALUES (#{no}, #{msg})
+		INSERT INTO msg 
+		VALUES (#{no}, 
+				#{msg}, 
+				'N')
 	</insert>
+	
+	<update id="readMsg" parameterType="CodeVO">
+		UPDATE msg 
+		SET yn = 'Y' 
+		WHERE no = #{no}
+	</update>
 	
 	<delete id="deleteMsg">
 		DELETE FROM msg

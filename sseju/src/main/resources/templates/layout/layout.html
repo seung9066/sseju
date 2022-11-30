@@ -64,17 +64,17 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.min.css">
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
-	
+
 <!-- toastr -->
 <link rel="stylesheet"
-   href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
-   integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
-   crossorigin="anonymous" referrerpolicy="no-referrer" />
+	href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
+	integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script
-   src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
-   integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
-   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-   
+	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+	integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <!-- TUI -->
 <link rel="stylesheet"
 	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
@@ -260,6 +260,18 @@
 			</th:block>
 		</div>
 		<script>
+		
+		// toastr
+        toastr.options = {
+               "closeButton": false,
+               "newestOnTop": true,
+               "positionClass": "toast-top-right",
+               "preventDuplicates": true,
+               "extendedTimeOut" : 1500, 
+               "timeOut" : 2500
+        }
+		
+		
 new Vue({
 	el: '#msg',
 	data : {
@@ -291,6 +303,8 @@ new Vue({
 })
 
 let msgList = [];
+
+
 
 function showMsg() {
 	msgList = [];
@@ -345,6 +359,69 @@ function deleteMsg() {
 	showMsg();
 	$('#msgA').empty();
 }
+
+let msgListB = [];
+let msgListC = [];
+let msgTime = 1;
+showMsgB();
+
+function showMsgB() {
+	msgListB = [];
+	msgListC = [];
+	msgTime = 1;
+
+	$.ajax({
+	url:'msgUpA',
+	type:'GET',
+	dataType:'json',
+	async:false,
+	success:function(data){
+		for (let i = 0; i < data.length; i++) {
+			msgListB.push(data[i].msg);
+			msgListC.push(data[i].no);
+		}
+	},
+	error:function(request,status,error){
+		alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+		console.log(code);
+		console.log(reject);
+	}
+})
+
+if (msgListB.length == 0) {
+	msgTime = 1;
+} else {
+msgTime = msgListB.length;
+}
+
+for (let i = 0; i < msgListB.length; i++) {
+	setTimeout(() => {toastr.info(msgListB[i])}, (i + 1) * 2000);
+	let msgg = {'no':msgListC[i]};
+	setTimeout(() => {
+		$.ajax({
+			url:'readMsg',
+			type:'POST',
+			data:JSON.stringify(msgg),
+			dataType:"json",
+			contentType: 'application/json; charset=utf-8',
+			async:false,
+			beforeSend : function(xhr){
+				xhr.setRequestHeader(header, token);
+			},
+			success:function(data){
+				
+			},
+			error:function(request,status,error){
+				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				console.log(reject);
+			}
+		})
+	}, (i + 1) * 2000);
+}
+	
+}
+setInterval(() => showMsgB(), 100000 * msgTime);
+
 </script>
 	</header>
 	<!-- End Header -->
@@ -454,26 +531,26 @@ function deleteMsg() {
 						<li><a href="/lotTrack"> <i class="bi bi-circle"></i><span>제품로트</span>
 						</a></li>
 					</ul></li>
-			<!-- End Charts Nav -->
+				<!-- End Charts Nav -->
 
-			<li class="nav-item"><a class="nav-link collapsed"
-				data-bs-target="#product-nav" data-bs-toggle="collapse" href="#">
-					<i class="bi bi-layout-text-window-reverse"></i><span>주문관리</span><i
-					class="bi bi-chevron-down ms-auto"></i>
-			</a>
-				<ul id="product-nav" class="nav-content collapse "
-					data-bs-parent="#sidebar-nav">
+				<li class="nav-item"><a class="nav-link collapsed"
+					data-bs-target="#product-nav" data-bs-toggle="collapse" href="#">
+						<i class="bi bi-layout-text-window-reverse"></i><span>주문관리</span><i
+						class="bi bi-chevron-down ms-auto"></i>
+				</a>
+					<ul id="product-nav" class="nav-content collapse "
+						data-bs-parent="#sidebar-nav">
 
 
-					<li><a href="ordetail"> <i class="bi bi-circle"></i><span>주문승인</span>
-					</a></li>
+						<li><a href="ordetail"> <i class="bi bi-circle"></i><span>주문승인</span>
+						</a></li>
 						<li><a href="prtlist"> <i class="bi bi-circle"></i><span>배송조회</span>
 						</a></li>
 
 						<li><a href="inout"> <i class="bi bi-circle"></i><span>제품출고관리</span>
 						</a></li>
-				</ul></li>
-			<!-- End Tables Nav -->
+					</ul></li>
+				<!-- End Tables Nav -->
 				<li class="nav-item"><a class="nav-link collapsed"
 					data-bs-target="#abc-nav" data-bs-toggle="collapse" href="#"> <i
 						class="bi bi-layout-text-window-reverse"></i><span>설비관리</span><i

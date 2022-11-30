@@ -401,6 +401,12 @@ public class CodeController {
 		return service.msgUp();
 	}
 	
+	@GetMapping("/msgUpA")
+	@ResponseBody
+	public List<CodeVO> msgUpA() {
+		return service.msgUpA();
+	}
+	
 	@GetMapping("/msgCount")
 	@ResponseBody
 	public CodeVO msgCount() {
@@ -411,5 +417,11 @@ public class CodeController {
 	@ResponseBody
 	public int deleteMsg() {
 		return service.deleteMsg();
+	}
+	
+	@PostMapping("/readMsg")
+	@ResponseBody
+	public int readMsg(@RequestBody CodeVO vo) {
+		return service.readMsg(vo);
 	}
 }
