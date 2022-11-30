@@ -23,22 +23,20 @@
          <hr>
 
          <div class="row">
-               <div>
+               <div class="col-6">	
                   <h5 style="width: 200px">
                      <b>라인정보 관리</b>
                   </h5>
                   <div style="float:right;">
                   
-                     <button class="button" style="width: 30px"
-                        onclick="dis()">+</button>
-                     <button type="button" class="button" id="deleteBt"
-                              onclick="deleteLine()">삭제</button>
+                     
+                     
                   </div>
                   
                   <div id="lineGrid"></div>
                </div>
                <!-- 라인 등록 폼 : show/hidden  -->
-               <div id='dis' style="display:none">
+               <div  class="col-6">
                   <br>
                  
                      <input type="hidden" th:name="${_csrf.parameterName}"
@@ -48,6 +46,8 @@
                         <div style="float:right;">
                         <button type="button" class="button" onclick="insertLine()" id="ins">등록</button>
                         <button type="button" class="button" onclick="updateLine()" id="upd">수정</button>
+                        <button type="button" class="button" id="deleteBt"
+                              onclick="deleteLine()">삭제</button>
                         <button type="reset" class="button" >초기화</button>   
                         </div>
                         
@@ -75,6 +75,7 @@
                      </form>
                  
                </div>
+             </div>
                <!-- 등록 폼 end  -->
                <!-- 라인정보관리 등록 폼 : show/hide -->
          <script type="text/javascript">
