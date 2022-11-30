@@ -163,7 +163,9 @@
                   header : '금액',
                   align : 'right',
                   name : 'matPrice',
-                  editor: 'text'
+                  formatter : function (ev){
+                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    }
                }, {
                   header : '담당자Id',
                   name : 'matOrdEmp',

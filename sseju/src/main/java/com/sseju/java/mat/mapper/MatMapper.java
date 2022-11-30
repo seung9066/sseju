@@ -104,6 +104,8 @@ public interface MatMapper {
 
 
 	public MatVO selectMatbuyInfo(MatVO matVO);
+	//내역 내용 등록
+	public int docUpdate(MatVO MatVO);
 }
 
 

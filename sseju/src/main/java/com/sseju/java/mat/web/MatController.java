@@ -100,29 +100,6 @@ public class MatController {
 		
 		return service.matOrdModal(MatVO);
 	}
-	// 발주 등록
-	/*
-	 * @ResponseBody
-	 * 
-	 * @PostMapping("/insertMatbuy") public int insertMatbuy(@RequestParam(value =
-	 * "Qty[]", required = false) List<String> Qty,
-	 * 
-	 * @RequestParam(value = "mc[]", required = false) List<String> mc,
-	 * 
-	 * @RequestParam(value = "cd[]", required = false) List<String> cd,
-	 * 
-	 * @RequestParam(value = "mp[]", required = false) List<String> mp,
-	 * 
-	 * @RequestParam(value = "moe[]", required = false) List<String> moe) { int
-	 * result = 0;
-	 * 
-	 * for (int i = 0; i < mc.size(); i++) { MatVO vo = new MatVO();
-	 * vo.setMatOrdQty(Integer.valueOf(Qty.get(i))); vo.setMatCode(mc.get(i));
-	 * vo.setCpCode(cd.get(i)); vo.setMatPrice(mp.get(i));
-	 * vo.setMatOrdEmp(moe.get(i));
-	 * 
-	 * result += service.insertMatbuy(vo); } return result; }
-	 */
 	
 	@ResponseBody
 	@PostMapping("/insertMatbuy")
@@ -375,5 +352,10 @@ public class MatController {
 	@GetMapping("/matCheckList")
 	public List<MatVO> matCheckList(){
 		return service.matCheckList();
+	}
+	
+	@PostMapping("/docUpdate")
+	public int docUpdate(MatVO MatVO) {
+		return service.docUpdate(MatVO);
 	}
 }

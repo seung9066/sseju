@@ -281,4 +281,10 @@ public class MatServiceImpl implements MatService {
 		return matMapper.insertErr(MatVO);
 	}
 
+	@Override
+	public int docUpdate(MatVO MatVO) {
+		// TODO Auto-generated method stub
+		return matMapper.docUpdate(MatVO);
+	}
+
 }
