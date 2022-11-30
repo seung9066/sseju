@@ -16,6 +16,9 @@
 <meta content="" name="description">
 <meta content="" name="keywords">
 
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
 <!-- Favicons -->
 <link href="assets/img/favicon.png" rel="icon">
 <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
@@ -56,7 +59,22 @@
 <script src="bootstrap/js/tui-grid.js"></script>
 <!-- Template Main CSS File -->
 <link href="assets/css/style.css" rel="stylesheet">
-
+<!-- SweetAlert2 -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.min.css">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
+	
+<!-- toastr -->
+<link rel="stylesheet"
+   href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
+   integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
+   crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script
+   src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+   integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   
 <!-- TUI -->
 <link rel="stylesheet"
 	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
@@ -73,8 +91,7 @@
   ======================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
 </head>
 
 <body>
@@ -106,14 +123,15 @@
 
 						<th:block sec:authorize="hasRole('ROLE_ADMIN')">
 							<li class="nav-item dropdown"><a class="nav-link nav-icon"
-								href="#" data-bs-toggle="dropdown"> <i class="bi bi-bell"></i>
-									<span class="badge bg-primary badge-number">{{ msgCount
-										}}</span></a> <!-- End Notification Icon -->
+								href="#" data-bs-toggle="dropdown" onclick="showMsg()"> <i
+									class="bi bi-bell" onclick="showMsg()"></i> <span
+									class="badge bg-primary badge-number" onclick="showMsg()">{{
+										msgCount }}</span></a> <!-- End Notification Icon -->
 
 								<ul
 									class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-									<li class="dropdown-header">You have {{ msgCount }} new
-										notifications <a href="#"><span
+									<li class="dropdown-header">새로운 알림이 {{ msgCount }} 개 있습니다<a
+										href="#"><span
 											class="badge rounded-pill bg-primary p-2 ms-2"
 											onclick="deleteMsg()">전체삭제</span></a>
 									</li>
@@ -274,12 +292,11 @@ new Vue({
 
 let msgList = [];
 
-showMsg();
-
 function showMsg() {
+	msgList = [];
 	$('#msgA').empty();
-	
-$.ajax({
+
+	$.ajax({
 	url:'msgUp',
 	type:'GET',
 	dataType:'json',
@@ -296,6 +313,7 @@ $.ajax({
 	}
 })
 
+
 for (let i = 0; i < msgList.length; i++) {
 $('#msgA').prepend(`<li>
 		<hr class="dropdown-divider">
@@ -307,8 +325,6 @@ $('#msgA').prepend(`<li>
 		</div></li>`);
 }
 }
-
-setInterval(() => showMsg(), 100000);
 
 function deleteMsg() {
 	$.ajax({

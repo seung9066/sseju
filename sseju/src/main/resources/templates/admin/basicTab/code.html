@@ -68,6 +68,14 @@ th {
 			<div id="codeGrid"></div>
 
 			<script>
+			toastr.options = {
+	                "closeButton": false,
+	                "newestOnTop": true,
+	                "positionClass": "toast-top-center",
+	                "preventDuplicates": true,
+	                "extendedTimeOut" : 1500, 
+	                "timeOut" : 2500
+	         }
 			
 			showAll();
 			       
@@ -151,7 +159,7 @@ th {
 					},
 					success:function(data){
 						if(data > 0) {
-							alert("삭제완료");
+							toastr.success("삭제완료");
 							showAll();					
 						} else {
 							alert("삭제실패");
