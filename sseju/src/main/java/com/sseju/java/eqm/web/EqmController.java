@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sseju.java.code.service.CodeService;
-import com.sseju.java.code.service.CodeVO;
 import com.sseju.java.company.service.CompanyService;
 import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.employee.service.EmployeeService;
@@ -61,7 +60,8 @@ public class EqmController {
 	}
 
 	@GetMapping("/eqmCheck")
-	public String eqmCheck() {
+	public String eqmCheck(Model model) {
+		model.addAttribute("eqmm", eqmService.selectEqmList());
 		return "/admin/eqm/eqmCheck";
 	}
 	
@@ -81,18 +81,13 @@ public class EqmController {
 	@GetMapping("/getEqmList")
 	@ResponseBody
 	public List<EqmVO> getEqmList(Model model) {
-		return eqmService.selectEqmList();
+
+		 return eqmService.selectEqmList();
+		 
 	}
 	
 	
-	
-	//설비 단건조회
-	@GetMapping("eqmInfo")
-	@ResponseBody
-	public String selectEqmInfo(EqmVO eqmVO,Model model) {
-		 model.addAttribute("eqm", eqmService.getEqmInfo(eqmVO));
-		 return "/admin/eqm/eqmList";
-	}
+
 
 	@GetMapping("/eqmChkList")
 	@ResponseBody
@@ -137,7 +132,7 @@ public class EqmController {
 	@ResponseBody
 	public int insertEqm(EqmVO eqmVO) {
 		
-		return eqmService.insertEqmInfo(eqmVO);
+		return eqmService.insertEqm(eqmVO);
 		
 	}
 
@@ -197,6 +192,8 @@ public class EqmController {
 	public int updateChk(@RequestBody EqmVO eqmVO) {
 		return eqmService.updateEqmChk(eqmVO);
 	}
+	
+	
 	@RequestMapping("/updateUoper")
 	@ResponseBody
 	public String updateUoper(@RequestBody EqmVO eqmVO) {

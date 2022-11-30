@@ -84,12 +84,15 @@ table, th, td {
 						<label for="eqmCodeInput" style="width: 100px">설비코드</label> <input
 							type="text" class="form-control"
 							style="width: 200px; display: inline" id="eqmCodeInput">&nbsp;
-						<label for="eqmNameSearch">설비구분</label> <select name="eqmName"
-							id="eqmNameSearch">
-							<option value=''>--전체--</option>
-							<th:block th:each="e : ${eqm}">
-								<option th:value="${e.eqmName}" th:text="${e.eqmName}"></option>
+						<label >라인명</label> 
+						<select name="lineNo" id="lineNo"
+							>
+							<option value='' >--전체--</option>
+							<th:block th:each="li : ${line}">
+								<option th:value="${li.lineNo}" th:text="${li.lineNo}"></option>
 							</th:block>
+							
+							
 						</select>
 						<button type="button" class="button" id="eqmSearch">검색</button>
 						&nbsp;
@@ -673,7 +676,7 @@ table, th, td {
             // filter기능
             eqmSearch.addEventListener('click', () => {
                 eqmGrid.filter('eqmCode' , [{code:'contain', value:$('#eqmCodeInput').val()}])
-                eqmGrid.filter('eqmDiv' , [{code:'eq', value:$('#eqmDivSearch').val()}])
+                eqmGrid.filter('lineNo' , [{code:'eq', value:$('#lineNo').val()}])
                
              });
 
@@ -681,8 +684,8 @@ table, th, td {
             eqmReset.addEventListener('click', () => {
                 document.getElementById('eqmCodeInput').value = '';
                 eqmGrid.unfilter('eqmCode');
-                document.getElementById('eqmDivSearch').value = '';
-                eqmGrid.unfilter('eqmDiv');
+                document.getElementById('lineNo').value = '';
+                eqmGrid.unfilter('lineNo');
                
              })   
             

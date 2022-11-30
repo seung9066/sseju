@@ -71,6 +71,14 @@ table, th, td {
 	/* 커서 손모양 */
 	cursor: pointer;
 }
+
+.tui-grid-cell.red{
+	background-color : red;
+}
+
+.tui-grid-cell.blue{
+	background-color : blue;
+}
 </style>
 
 
@@ -95,9 +103,9 @@ table, th, td {
 							<input type="date" class="form-control"
 								style="width: 200px; display: inline" id="chkNdateInput">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 							<label style="width: 100px">설비코드</label>
-							<select name="eqmCode" id="eqmDivSearch">
+							<select name="eqmCode" id="eqmCode">
 								<option selected>--전체--</option>
-								<th:block th:each="e : ${eqm}">
+								<th:block th:each="e:${eqmm}">
 									<option th:value="${e.eqmCode}" th:text="${e.eqmCode}"></option>
 								</th:block>
 							</select>
@@ -142,9 +150,9 @@ table, th, td {
 							<th class="col1">설비명</th>
 							<td><input type="text" name="eqmName" id="eqmName" readonly></td>
 							<th class="col1">점검일</th>
-							<td><input type="date" name="chkDate" id="chkDate"></td>
+							<td><input type="date" name="chkDate" id="chkDate" data-bs-target="#chkModal" class="showModal" ></td>
 							<th class="col1">점검주기</th>
-							<td><input type="number" name="eqmCheck" id="eqmCheck" readonly></td>
+							<td><input type="number" name="eqmCheck" id="eqmCheck"></td>
 							<th class="col1" rowspan="2">조치사항</th>
 							<td rowspan="2"><textarea placeholder="입력하시오." name="chkSol" id="chkSol"></textarea></td>
 							
@@ -173,11 +181,7 @@ table, th, td {
 		
 			<div id="insertGrid"></div>
 
-			<div style="float: right;">
-				<button class="button" onclick="add()">행 추가</button>
-				<button type="button" class="button" onclick="insertChk()">등록</button>
-				<button type="reset" class="button">초기화</button>
-			</div>
+			
 			<br> <br>
 			
 		
@@ -274,6 +278,27 @@ table, th, td {
 		     empGrid.refreshLayout();
 		    })
 		    
+		    //filter 기능
+            chkSearch.addEventListener('click', () => {
+      		chkGrid.filter('eqmCode' , [{code:'contain', value:$('#eqmSearch').val()}])
+      		if($('#chkNdateInput').val() != '' && $('#chkDateInput').val() != ''){
+      			chkGrid.filter('chkDate' , [{code:'afterEq', value:$('#chkDateInput').val()}])
+      			chkGrid.filter('chkNdate' , [{code:'beforeEq', value:$('#chkNdateInput').val()}])
+         
+     		 }
+  			 });
+		
+      
+		   chkReset.addEventListener('click', () => {
+		      document.getElementById('chkDateInput').value = '';
+		      chkGrid.unfilter('chkDate');
+		      document.getElementById('chkNdateInput').value = '';
+		      chkGrid.unfilter('chkNdate');
+		      document.getElementById('eqmSearch').value = '';
+		      chkGrid.unfilter('eqmCode');
+		   })   
+		   
+		    
 		   
             
          
@@ -334,13 +359,20 @@ table, th, td {
                   align : 'center',
                   formatter({value}){
                 	  return `${value.substring(0,10)}`;
-                  }
+                  },renderer : {
+                      styles: {
+                          fontWeight: 'bold',
+                          color: (props) => props.value == (dateGap < 3 ) ? 'red' : 'black'
+                      }
+                }
+                  
                  
                }, {
                   header : '판정',
                   name : 'chkState',
                   align : 'center',
                   filter: 'select'
+                 
                }, {
                   header : '조치사항',
                   name : 'chkSol',
@@ -348,7 +380,7 @@ table, th, td {
                   filter: 'select'
                }, {
                   header : '점검 담당자',
-                  name : 'chkEmpNo',
+                  name : 'empId',
                   align : 'center',
                   filter: 'select'
                } ]
@@ -385,7 +417,7 @@ table, th, td {
             chkGrid.on('check', ev => {
             	checked.push((chkGrid.getValue(ev.rowKey,'chkNo')));
             	
-            	
+            	$('#chkNo').val(chkGrid.getValue(ev.rowKey,'chkNo'));
             	$('#eqmCode').val(chkGrid.getValue(ev.rowKey,'eqmCode'));
             	$('#eqmName').val(chkGrid.getValue(ev.rowKey,'eqmName'));
             	$('#chkDate').val(chkGrid.getValue(ev.rowKey,'chkNdate').substring(0,10));
@@ -394,20 +426,71 @@ table, th, td {
             	
             	
 
-             // 점검주기 계산하기 : chkDate + 점검주기
              	var date = $('#chkDate').val(); // date :string타입
             	date = new Date(date); // string -> date타입으로
-            	/*var yyyy = date.getFullYear();
-            	var mm = date.getMonth();
-            	var dd = date.getDate();*/
             	
             	if($('#eqmCheckTerm').val() == '일'){
             		var a = new Date(date.getFullYear() , date.getMonth(),date.getDate()+ parseInt($('#eqmCheck').val()));
             		//a = new Date(date.getFullYear(),date.getMonth()+1,date.getDate()+parseInt($('#eqmCheck').val()));
             		$('#chkNdate').val(toStringByFormatting(a));
+            	}else if($('#eqmCheckTerm').val() == '달'){
+            		var b = new Date(date.getFullYear() , date.getMonth()+ parseInt($('#eqmCheck').val()),date.getDate());
+            		$('#chkNdate').val(toStringByFormatting(b));
+            	}else if($('#eqmCheckTerm').val() == '년'){
+            		var c = new Date(date.getFullYear()+ parseInt($('#eqmCheck').val()) , date.getMonth(),date.getDate());
+            		$('#chkNdate').val(toStringByFormatting(c));
             	}
             	
+            	
+       
             });
+            
+         // 현재날짜와 차기점검일 사이의 날짜차이에 따라 행 색깔 넣어주기
+         
+         /*
+            var date1 = new Date(chkGrid.getValue(ev.rowKey,'chkNdate').substring(0,10)); //=> 차기점검일
+            var date2 = new Date(date2.getFullYear(),date2.getMonth(),date2.getDate());
+            var today = toStringByFormatting(date2); // 현재날짜 
+            
+            var dateGap = Math.ceil((date1.getTime() - today.getTime()) / (1000*60*60*24)  ); // 두 사이 날짜 수
+            
+            if(dateGap < 3 ){
+            	// 행 색깔 빨갛게
+            	
+            }   */      
+            
+            // 차기점검일과 현재날짜 차이 구해서 행에 색깔 주기 (for-if문)
+  			  
+              
+              function diffDate(today,chkDate){
+            	
+            	var today = new Date();
+                var chkDate = new Date($('#chkNdate').val());
+                
+                var dateGap = Math.ceil((today.getTime() - chkDate.getTime()) / (1000*60*60*24));
+                
+                return dateGap;
+            
+            }
+  		  
+  		 for(let i = 0; i<chkGrid.getRowCount(); i++){ // chkGrid의 모든 행 리스트 개수만큼 돌려(getRowCount())
+  			
+  			var today = new Date();
+  			var chkDate = new Date($('#chkNdate').val());
+  			var dateGap = Math.ceil((today.getTime() - chkDate.getTime()) / (1000*60*60*24));
+  			
+  			if (dateGap < 3 ){
+    			  // 색 = red
+				chkGrid.addRowClassName(i,'red');
+    			
+    			  
+  			} else if (dateGap < 7 ){
+    			  // 색 blue
+				chkGrid.addRowClassName(i,'blue');
+				
+    		  }
+  		 }
+  		  
             
            
            
@@ -529,26 +612,7 @@ table, th, td {
             
            
             
-            //filter 기능
-            chkSearch.addEventListener('click', () => {
-      		chkGrid.filter('eqmDiv' , [{code:'contain', value:$('#eqmDivSearch').val()}])
-      		if($('#chkNdateInput').val() != '' && $('#chkDateInput').val() != ''){
-      			chkGrid.filter('chkDate' , [{code:'afterEq', value:$('#chkDateInput').val()}])
-      			chkGrid.filter('chkNdate' , [{code:'beforeEq', value:$('#chkNdateInput').val()}])
-         
-     		 }
-  			 });
-		
-      
-		   chkReset.addEventListener('click', () => {
-		      document.getElementById('chkDateInput').value = '';
-		      chkGrid.unfilter('chkDate');
-		      document.getElementById('chkNdateInput').value = '';
-		      chkGrid.unfilter('chkNdate');
-		      document.getElementById('eqmDivSearch').value = '';
-		      chkGrid.unfilter('eqmDiv');
-		   })   
-		   
+            
 		   
 		   
 		   // 등록 
@@ -614,23 +678,7 @@ table, th, td {
 			   
 		  });
 		  
-		  // 차기점검일과 현재날짜 차이 구해서 행에 색깔 주기 (for-if문)
-		  const getDateDiff = (d1,d2) => {
-			  const date1 = new Date(d1);
-			  const date2 = new Date(d2);
-			  
-			  const diffDate = date1.getTime() - date2.getTime();
-			  
-			  return diffDate/(1000*60*60*24); // 하루(1일)
-		  }
-		  
-		  /*if getDateDiff(sysdate, $('#chkNdate')) < 0){
-			  // 색 = red
-		  }else if(getDateDiff(sysdate, $('#chkNdate')) < 3)){
-			  // 색 = 주황
-		  }else if(getDateDiff(sysdate, $('#chkNdate')) < 7)){
-			  // 색 = 초록
-		  }*/
+		 
 		   
 		   // 설비코드 모달-그리드
 		   var eqmGrid = new tui.Grid({
@@ -679,9 +727,16 @@ table, th, td {
 	            	
 	            	let ec = rowData['eqmCode'];
 	            	let en = rowData['eqmName'];
+	            	let ech = rowData['eqmCheck'];
+	            	let ect = rowData['eqmCheckTerm'];
+	            	
 	            	
 	            	$('#eqmCode').val(ec);
 	            	$('#eqmName').val(en);
+	            	$('#eqmCheck').val(ech);
+	            	$('#eqmCheckTerm').val(ect);
+	            	
+	            	
 	            	
 	            	$('#eqmModal').modal("hide");
 	            });
@@ -772,17 +827,13 @@ table, th, td {
                }, {
                    header : '점검일',
                    name : 'chkDate',
-                   align : 'center',
-                   formatter({value}) {
-					      return `${value.substring(0,10)}`;
-						    }
+                   align : 'center'
+                  
                 }, {
                     header : '차기점검일',
                     name : 'chkNdate',
-                    align : 'center',
-                    formatter({value}) {
-					      return `${value.substring(0,10)}`;
-						    }
+                    align : 'center'
+                   
                  } ]
             });
 			 
