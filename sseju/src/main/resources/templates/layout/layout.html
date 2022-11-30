@@ -454,7 +454,6 @@ function deleteMsg() {
 						<li><a href="/lotTrack"> <i class="bi bi-circle"></i><span>제품로트</span>
 						</a></li>
 					</ul></li>
-			</th:block>
 			<!-- End Charts Nav -->
 
 			<li class="nav-item"><a class="nav-link collapsed"
@@ -465,18 +464,16 @@ function deleteMsg() {
 				<ul id="product-nav" class="nav-content collapse "
 					data-bs-parent="#sidebar-nav">
 
+
 					<li><a href="ordetail"> <i class="bi bi-circle"></i><span>주문승인</span>
 					</a></li>
-					<th:block sec:authorize="hasRole('ROLE_ADMIN')">
 						<li><a href="prtlist"> <i class="bi bi-circle"></i><span>배송조회</span>
 						</a></li>
 
 						<li><a href="inout"> <i class="bi bi-circle"></i><span>제품출고관리</span>
 						</a></li>
-					</th:block>
 				</ul></li>
 			<!-- End Tables Nav -->
-			<th:block sec:authorize="hasRole('ROLE_ADMIN')">
 				<li class="nav-item"><a class="nav-link collapsed"
 					data-bs-target="#abc-nav" data-bs-toggle="collapse" href="#"> <i
 						class="bi bi-layout-text-window-reverse"></i><span>설비관리</span><i
@@ -496,24 +493,6 @@ function deleteMsg() {
 						</a></li>
 					</ul></li>
 				<!-- End Tables Nav -->
-
-				<li class="nav-item"><a class="nav-link collapsed"
-					data-bs-target="#tabl-nav" data-bs-toggle="collapse" href="#">
-						<i class="bi bi-layout-text-window-reverse"></i><span>현황모니터링</span><i
-						class="bi bi-chevron-down ms-auto"></i>
-				</a>
-					<ul id="tabl-nav" class="nav-content collapse "
-						data-bs-parent="#sidebar-nav">
-						<li><a href="prduce"> <i class="bi bi-circle"></i><span>생산현황</span>
-						</a></li>
-						<li><a href="shipment"> <i class="bi bi-circle"></i><span>출하현황</span>
-						</a></li>
-						<li><a href="Stock"> <i class="bi bi-circle"></i><span>창고별재고현황</span>
-						</a></li>
-
-						<li><a href="plans"> <i class="bi bi-circle"></i><span>계획대비실적현황</span>
-						</a></li>
-					</ul></li>
 			</th:block>
 			<!-- End Tables Nav -->
 		</ul>
