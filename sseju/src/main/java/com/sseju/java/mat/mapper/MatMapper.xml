@@ -49,8 +49,7 @@
 		JOIN company c 
 		  ON c.cp_code =	m.cp_code
 		JOIN employee e 
-		  on e.emp_id = b.mat_ord_emp		  
-		WHERE b.mat_ord_yn = '미확인'
+		  on e.emp_id = b.mat_ord_emp
 		order by mat_ord_no DESC
 	</select>
 	
@@ -168,10 +167,9 @@
 		mat_buy b,
 		mat_chk c
 		WHERE l.wh_code = w.wh_code
-		and c.mat_chk_code = l.mat_chk_code
+		and c.mat_code = l.mp_cdoe
 		and c.mat_ord_no = b.mat_ord_no
 		and b.mat_code = m.mat_code
-		and b.mat_ord_yn = '입고'
 <!-- 
 		SELECT c.mat_ord_no,
 		c.mat_chk_code, m.mat_code, m.mat_name, b.mat_ord_yn,
@@ -359,7 +357,7 @@
 		    warehouse w
 		WHERE m.mat_code = l.mp_code
 		and l.wh_code = w.wh_code
-		and l.out_from IS NOT NULL
+		and l.lot_qty != 0
 		ORDER BY lot_no
 	</select>
 	<select id="selectMatStock" resultType="MatVO">
@@ -408,7 +406,7 @@
 				mat_err_doc = #{matErrDoc}
 				</if>
 			</set>
-			WHERE mat_chk_code=#{matChkCode}	
+		WHERE mat_chk_code=#{matChkCode}	
 	</update>
 	<delete id="deleteMatCheck" parameterType="MatVO">
 	</delete>
