@@ -61,6 +61,15 @@ input {
 				<div id="bomGrid"></div>
 			</div>
 			<script>
+			// toastr
+	         toastr.options = {
+	                "closeButton": false,
+	                "newestOnTop": true,
+	                "positionClass": "toast-top-center",
+	                "preventDuplicates": true,
+	                "extendedTimeOut" : 1500, 
+	                "timeOut" : 2500
+	         }
 			
 			var token = $("meta[name='_csrf']").attr("content");
 			var header = $("meta[name='_csrf_header']").attr("content");
@@ -168,7 +177,7 @@ input {
 					},
 					success:function(data){
 						if(data > 0) {
-							alert("업데이트완료");
+							toastr.success('업데이트완료')
 							showAll();			
 						} else {
 							alert("업데이트실패");

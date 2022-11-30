@@ -77,6 +77,15 @@ td {
 			<div id="empGrid"></div>
 
 			<script type="text/javascript">
+			// toastr
+	         toastr.options = {
+	                "closeButton": false,
+	                "newestOnTop": true,
+	                "positionClass": "toast-top-center",
+	                "preventDuplicates": true,
+	                "extendedTimeOut" : 1500, 
+	                "timeOut" : 2500
+	         }
 	
 				showAll();
 
@@ -155,7 +164,7 @@ td {
 						},
 						success:function(data){
 							if(data > 0) {
-								alert("삭제완료");
+								toastr.success('삭제완료')
 								showAll();					
 							} else {
 								alert("삭제실패");
@@ -189,7 +198,7 @@ td {
 						},
 						success:function(data){
 							if(data > 0) {
-								alert("수정완료");
+								toastr.success('수정완료')
 								showAll();					
 							} else {
 								alert("수정실패");
