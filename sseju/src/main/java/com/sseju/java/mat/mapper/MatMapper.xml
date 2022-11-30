@@ -401,14 +401,14 @@
 	</select>
 	<insert id="insertMatCheck" parameterType="MatVO">
 	</insert>
-	<update id="updateMatCheck" parameterType="MatVO">
+	<update id="docUpdate" parameterType="MatVO">
 		UPDATE mat_err
 			<set>
 				<if test="matErrDoc != null and !matErrDoc.equals('')">
 				mat_err_doc = #{matErrDoc}
 				</if>
 			</set>
-			WHERE mat		
+			WHERE mat_chk_code=#{matChkCode}	
 	</update>
 	<delete id="deleteMatCheck" parameterType="MatVO">
 	</delete>

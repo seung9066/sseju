@@ -95,4 +95,7 @@ public interface MatService {
 	//검수 삭제
 	public int deleteMatCheck(MatVO MatVO);
 	public int selectDeleteMatCheck(List<String> list);
+	
+	//내역 내용 등록
+	public int docUpdate(MatVO MatVO);
 }
