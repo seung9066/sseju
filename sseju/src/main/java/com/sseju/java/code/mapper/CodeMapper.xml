@@ -517,7 +517,7 @@
 	<insert id="insertLotA" parameterType="CodeVO">
 		INSERT INTO lot
 		VALUES(#{lotNo}, sysdate, #{mpCode}, #{outFrom}, '',
-		#{lotQty}, #{whCode}, '')
+		#{lotQty}, #{whCode}, #{orderNo})
 	</insert>
 
 	<select id="WHListA" resultType="CodeVO">
