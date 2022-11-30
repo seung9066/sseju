@@ -77,7 +77,15 @@
 
 
 			<script>
-			
+			// toastr
+	        /*  toastr.options = {
+	                "closeButton": false,
+	                "newestOnTop": true,
+	                "positionClass": "toast-top-center",
+	                "preventDuplicates": true,
+	                "extendedTimeOut" : 1500, 
+	                "timeOut" : 2500
+	         } */
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
 
@@ -105,6 +113,13 @@
 					filter: 'select'
 				},
 				{
+					header : '상품코드',
+					name : 'prtCode',
+					align : 'center',
+					filter: 'select',
+					hidden:1
+				},
+				{
 					header : '주문일자',
 					name : 'orderDate',
 					align : 'center',
@@ -119,7 +134,12 @@
 					header : '납기일자',
 					name : 'dday',
 					align : 'center',
-					filter: 'select',
+					filter: {
+                        type: 'date',
+                        options: {
+                          format: 'yyyy-MM-dd'
+                        }
+                     },
 					formatter(ev) {
 						if(ev.value){
 	                    return `${ev.value.substring(0,10)}`;
@@ -162,7 +182,6 @@
 	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'EA';
 	                    }
 				},
-				
 				{
 					header : '금액',
 					name : 'orderPrice',
@@ -234,11 +253,9 @@
 						 $('#orModal').modal('hide');
 						alert('출고완료');
 					}								
-
 				}// suc
 			});
 		}
-		
 		</script>
 			<script>
 			
@@ -291,7 +308,12 @@
 					header : '납기일자',
 					name : 'dday',
 					align : 'center',
-					filter: 'select',
+					filter: {
+                        type: 'date',
+                        options: {
+                          format: 'yyyy-MM-dd'
+                        }
+                     },
 					formatter(ev) {
 						if(ev.value){
 	                    return `${ev.value.substring(0,10)}`;

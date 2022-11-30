@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.sseju.java.code.service.CodeVO;
 import com.sseju.java.order.service.ORVO;
 
 @Mapper
@@ -18,11 +19,12 @@ public interface ORMapper {
 	public List<ORVO> select2(ORVO vo);
 	public List<ORVO> selectA();
 	public List<ORVO> selectB();
+	public List<ORVO> selectC();
 	// 단건
 	public ORVO selectOrderInfo(ORVO Ovo);
 	// 등록
 	public int insertOrder(ORVO Ovo);
-//	public int insertOut(ORVO vo);
+	public int insertOut(CodeVO vo);
 	public int insertOrderAll(ORVO Ovo);
 	public int insertOrderInfo(ORVO vo);
 	
@@ -35,6 +37,8 @@ public interface ORMapper {
 	public int updateDel(ORVO vo);
 	public int updateOut(ORVO vo);
 	public int updateDelOut(ORVO vo);
+	
+	public CodeVO getLotWh(ORVO vo);
 	
 	
 	public ORVO getOrderNo();

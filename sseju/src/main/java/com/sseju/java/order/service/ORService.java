@@ -26,6 +26,7 @@ public interface ORService {
 	public List<ORVO> selectA();
 
 	public List<ORVO> selectB();
+	public List<ORVO> selectC();
 
 	// 단건
 	public ORVO selectOrderInfo(ORVO Ovo);
@@ -37,7 +38,7 @@ public interface ORService {
 
 	public int insertOrderInfo(ORVO vo);
 
-//	public int insertOut(ORVO vo);
+	public int insertOut(ORVO vo);
 	public int insertOrder(List<ORVO> list);
 
 	// 수정
@@ -50,12 +51,11 @@ public interface ORService {
 	public int updateOrderWK(ORVO vo);
 
 	public int updateLot(ORVO vo);
-	public int updateOut(ORVO vo);
 
 	public int updateDel(ORVO vo);
 
 	public int updateDelOut(ORVO vo);
-
+	public int updateOut(ORVO vo);
 	public ORVO getOrderNo();
 
 }
