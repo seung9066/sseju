@@ -20,39 +20,47 @@
 <body>
 	<article layout:fragment="content">
 		<main id="main" class="main">
-
-			<div id="mat-od-title">
-				<h2>주문 배송조회</h2>
-			</div>
 			<div>
-				<h3>배송 상태 조회</h3>
-				<!-- matModal -->
-				<div class="modal" id="orModal" tabindex="-1"
-					aria-labelledby="orModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="exampleModalLabel">주문 배송상세조회</h5>
-								<button type="button" class="btn-close" data-bs-dismiss="modal"
-									aria-label="Close"></button>
-							</div>
-							<div class="modal-body">
-								<div id="Agrid1"></div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="button" data-bs-dismiss="modal">닫기</button>
-								<button type="submit" class="button" onclick="updateOrderNy()">배송완료</button>
+				<div id="mat-od-title">
+					<h2>주문 배송조회</h2>
+				</div>
+				<div>
+					<h3>배송 상태 조회</h3>
+					<!-- matModal -->
+					<div class="modal" id="orModal" tabindex="-1"
+						aria-labelledby="orModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">주문 배송상세조회</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<div id="Agrid1"></div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="button" data-bs-dismiss="modal">닫기</button>
+									<button type="submit" class="button" onclick="updateOrderNy()">배송완료</button>
+								</div>
 							</div>
 						</div>
 					</div>
+					<div id="grid1"></div>
 				</div>
-				<div id="grid1"></div>
-			</div>
 				<h4>출고 배송 현황 리스트</h4>
 				<div id="grid123"></div>
-
-				<script>
-			
+			</div>
+			<script>
+			// toastr
+	         /* toastr.options = {
+	                "closeButton": false,
+	                "newestOnTop": true,
+	                "positionClass": "toast-top-center",
+	                "preventDuplicates": true,
+	                "extendedTimeOut" : 1500, 
+	                "timeOut" : 2500
+	         } */
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
 
@@ -184,7 +192,7 @@
 						xhr.setRequestHeader(header, token);
 					},
 					success : function(list) {
-
+							
 							Agrid1.resetData(list)								
 
 					}// suc
@@ -264,13 +272,17 @@
 				header : '납기일자',
 				name : 'dday',
 				align : 'center',
-				filter: 'select',
+				filter: {
+                    type: 'date',
+                    options: {
+                      format: 'yyyy-MM-dd'
+                    }
+                 },
                  formatter(ev) {
  					if(ev.value){
                      return `${ev.value.substring(0,10)}`;
  					}
                    }
-				
 			},
 			{
 				header : '주문량',
@@ -349,11 +361,9 @@
 					success : function(list) {
 
 							Agrid123.resetData(list)								
-
 					}// suc
 				});
 		}
-		  
 		</script>
 		</main>
 	</article>

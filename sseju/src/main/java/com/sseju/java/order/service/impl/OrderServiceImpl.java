@@ -82,7 +82,6 @@ public class OrderServiceImpl implements ORService {
 
 	@Override
 	public List<ORVO> select2(ORVO vo) {
-		// TODO Auto-generated method stub
 		return OMapper.select2(vo);
 	}
 
@@ -100,7 +99,6 @@ public class OrderServiceImpl implements ORService {
 
 	@Override
 	public List<ORVO> selectB() {
-		// TODO Auto-generated method stub
 		return OMapper.selectB();
 	}
 
@@ -147,14 +145,23 @@ public class OrderServiceImpl implements ORService {
 		int a = 0;
 		System.out.println("aaaaaaa");
 		System.out.println(Ovo);
+		CodeVO vo1 = new CodeVO();
 		ORVO vo = new ORVO();
 		for (int i = 0; i < Ovo.size(); i++) {
 			vo.setOrderNo(Ovo.get(i).getOrderNo());
+			vo1 = OMapper.getLotWh(vo);
+			vo1.setWhCode(vo1.getWhCode());
+			vo1.setOrderNo(vo1.getOutFrom());
+			vo1.setPrtQty(Ovo.get(i).getOrderQty());
+			OMapper.insertOut(vo1);
 			vo.setPrtCode(Ovo.get(i).getPrtCode());
 			a += OMapper.updateOrderWK(vo);
 			OMapper.updateLot(vo);
 			OMapper.updateDel(vo);
 			OMapper.updateDelOut(vo);
+			OMapper.updateOut(vo);
+			
+
 		}
 		return a;
 	}
@@ -164,17 +171,29 @@ public class OrderServiceImpl implements ORService {
 
 		return OMapper.updateDelOut(vo);
 	}
+
 	@Override
 	public int updateOut(ORVO vo) {
-		
+
 		return OMapper.updateOut(vo);
 	}
 
-//	@Override
-//	public int insertOut(ORVO ovo) {
-//		OMapper.insertOut(ovo);
-//		OMapper.updateOrderWK(ovo);
-//		return OMapper.updateLot(ovo);
-//	}
+	@Override
+	public int insertOut(ORVO ovo) {
+		CodeVO vo1 = new CodeVO();
+		vo1 = OMapper.getLotWh(ovo);
+		vo1.setWhCode(vo1.getWhCode());
+		vo1.setOrderNo(vo1.getOutFrom());
+		vo1.setPrtQty(vo1.getLotQty());
+		OMapper.insertOut(vo1);
+		OMapper.updateOrderWK(ovo);
+		return OMapper.updateLot(ovo);
+	}
+
+	@Override
+	public List<ORVO> selectC() {
+
+		return OMapper.selectC();
+	}
 
 }

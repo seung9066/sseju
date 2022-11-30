@@ -7,29 +7,22 @@
 <meta charset="UTF-8">
 <title>OrderList</title>
 
-<style>
-body {
-	margin-top: 60px;
-	padding: 20px 30px;
-	transition: all 0.3s;
-}
-</style>
+<!-- 제이쿼리 -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!-- 토스트UI -->
 <link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<!-- 토스트 UI 그리드 페이징 cdn -->
 <script type="text/javascript"
 	src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
-
 </head>
 <body>
 
-	<article class="container" layout:fragment="content">
+	<article layout:fragment="content">
 		<main id="main" class="main">
+
 			<div id="mat-od-title">
 				<h2>제품 주문</h2>
 			</div>
@@ -60,7 +53,15 @@ body {
 				<div id="prtGrid1"></div>
 			</form>
 			<script>
-		
+			// toastr
+	        /*  toastr.options = {
+	                "closeButton": false,
+	                "newestOnTop": true,
+	                "positionClass": "toast-top-center",
+	                "preventDuplicates": true,
+	                "extendedTimeOut" : 1500, 
+	                "timeOut" : 2500
+	         } */
 			prtl();
 			const prtGrid = new tui.Grid({
 				el : document.getElementById('prtGrid'),

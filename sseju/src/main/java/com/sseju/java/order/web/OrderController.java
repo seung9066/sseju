@@ -84,6 +84,11 @@ public class OrderController {
 	public List<ORVO> selectB() {
 		return oService.selectB();
 	}
+	@GetMapping("/selectC")
+	@ResponseBody
+	public List<ORVO> selectC() {
+		return oService.selectC();
+	}
 
 	@PostMapping("/select2")
 	@ResponseBody

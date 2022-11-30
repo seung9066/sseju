@@ -108,6 +108,7 @@ public class CodeVO {
 	private int matNo;
 	private String matErrRs;
 	private String matErrDoc;
+	private String prtOutNo;
 	
 	// Thread
 	private String mpCode;
