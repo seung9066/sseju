@@ -27,7 +27,7 @@
 		   ON prr.prs_no = pri.prs_no
 		 JOIN employee ee
 		   ON ee.emp_id = pe.pre_manager
-		   
+		WHERE prr.prt_qty IS NOT NULL
 		ORDER BY pe.pre_no DESC
 	</select>
 	

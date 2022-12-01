@@ -1465,4 +1465,16 @@ public class CodeServiceImpl implements CodeService {
 		return mapper.deleteMsg();
 	}
 
+	@Override
+	public int readMsg(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.readMsg(vo);
+	}
+
+	@Override
+	public List<CodeVO> msgUpA() {
+		// TODO Auto-generated method stub
+		return mapper.msgUpA();
+	}
+
 }

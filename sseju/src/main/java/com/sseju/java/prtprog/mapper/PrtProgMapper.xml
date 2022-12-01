@@ -9,41 +9,50 @@
 	<!-- R select 관련 쿼리 -->
 		<!-- 생산 진행 현황의 첫번째 그리드 -->
 	<select id="getPrtProgList" resultType="pprVO">
-		SELECT prr.pre_no, pt.prt_name, prr.prt_qty, pe.ins_qty, pe.pre_date, pe.pre_manager, ee.emp_name
-		FROM product pt JOIN produce pe
-		    ON pt.prt_code = pe.prt_code
-		JOIN process_run prr
-		    ON prr.pre_no = pe.pre_no
-		JOIN employee ee
-		    ON ee.emp_id = pe.pre_manager
+        SELECT prr.pre_no,
+               pt.prt_name, 
+               prr.prt_qty, 
+               pe.ins_qty, 
+               pe.pre_date, 
+               pe.pre_manager,
+               ee.emp_name
+               
+		FROM product pt
+         JOIN produce pe
+		   ON pt.prt_code = pe.prt_code
+		 JOIN process_run prr
+		   ON prr.pre_no = pe.pre_no
+         JOIN process_inf pri
+           ON pri.prs_no = prr.prs_no
+		 JOIN employee ee
+		   ON ee.emp_id = pe.pre_manager
+		WHERE prr.prt_qty <![CDATA[ > ]]>0    
+         AND pri.prs_st_hour IS NOT NULL
+         AND pri.prs_sp_hour IS NULL
 		ORDER BY prr.pre_no DESC
 	</select>
 	
 		<!-- 생산 공정별 자재 상황 그리드용 쿼리 -->
 	<select id="progPrtCondition" resultType="pprVO">
-		SELECT ma.mat_code, ma.mat_name, lo.lot_qty, mo.mat_out_qty
-		FROM material ma JOIN process pr
-		    ON ma.prs_code = pr.prs_code
-		JOIN process_run prr
-		    ON pr.prs_code = prr.prs_code
-		JOIN mat_out mo
-		    ON mo.mat_out_no = prr.mat_out_no
-		JOIN lot lo
-		    ON mo.mat_lot_no = lo.lot_no
-		JOIN produce pe
-		    ON pe.pre_no = #{preNo}
+		SELECT ma.mat_code, 
+			   ma.mat_name, 
+			   lo.lot_qty, 
+			   mo.mat_out_qty
+			   
+		FROM material ma
+		 JOIN process pr
+		   ON ma.prs_code = pr.prs_code
+		 JOIN process_run prr
+		   ON pr.prs_code = prr.prs_code
+		 JOIN mat_out mo
+		   ON mo.mat_out_no = prr.mat_out_no
+		 JOIN lot lo
+		   ON mo.mat_lot_no = lo.lot_no
+		 JOIN produce pe
+		   ON pe.pre_no = #{preNo}
 	</select>
 	
-	<!-- U update 관련 쿼리 -->
-		<!-- 작업 진행이 완료된(생산이 끝난) 공정은 pre_yn을 'E'으로 업데이트 해줘야함 -->
-	<update id="updateProgYtoE">
-		UPDATE produce_inf
-		SET pre_yn = 'E'
-		WHERE pre_no = (SELECT pre_no
-		                FROM produce
-		                WHERE pre_qty = ins_qty)
-	</update>
-	<!-- D delete관련 쿼리 -->
+	<!-- Delete-->
 	<delete id="deletePrtProg" parameterType="pprVO">
 	
 	</delete>

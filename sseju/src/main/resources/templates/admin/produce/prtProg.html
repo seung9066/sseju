@@ -15,9 +15,9 @@
 					<div id="prtProgGrid"></div>
 			<br>
 			<h6 style="display:inline-block">생산 공정별 자재 상황</h6>
-			<div style="float:right">
+<!-- 			<div style="float:right">
 				<button type="button" class="button" onclick="location.href='/matOrd'">자재 발주 현황</button>
-			</div>
+			</div> -->
 			<div id="matConditionGrid"></div>
 			
 			<script type="text/javascript">
@@ -105,6 +105,10 @@
 					el : document.getElementById('matConditionGrid'),
 					scrollX : false,
 					scrollY : false,
+			        pageOptions: {
+			            useClient: true,
+			            perPage: 10
+			        },
 					columns : [ {
 						header : '자재 코드',
 						name : 'matCode',
