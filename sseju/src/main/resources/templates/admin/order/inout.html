@@ -147,6 +147,12 @@
 	                  }
 				},
 				{
+					header : '제품명',
+					name : 'prtName',
+					align : 'center',
+					filter: 'select'
+				},
+				{
 					header : '총금액',
 					name : 'orderPrice',
 					align : 'center',
@@ -211,7 +217,6 @@
 			fetch(url) 
 	        .then(res=>res.json())
 	        .then(obj=>{
-	           console.log(obj);
 	           grid1.resetData(obj);
 	        })
 		}
@@ -235,7 +240,6 @@
 		}
 	   	
 		function updateOrderNy() {
-			console.log(Agrid1.getData())
 			let b = Agrid1.getData();
 			$.ajax({
 				url : "updateOrderWK",
@@ -324,6 +328,12 @@
 	                  }
 				},
 				{
+					header : '제품명',
+					name : 'prtName',
+					align : 'center',
+					filter: 'select'
+				},
+				{
 					header : '총금액',
 					name : 'orderPrice',
 					align : 'center',
@@ -376,7 +386,6 @@
 			fetch(url) 
 	        .then(res=>res.json())
 	        .then(obj=>{
-	           console.log(obj);
 	           grid123.resetData(obj);
 	        })
 		}
