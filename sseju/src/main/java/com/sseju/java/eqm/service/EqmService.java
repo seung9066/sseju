@@ -8,11 +8,8 @@ public interface EqmService {
    // 설비 전체조회
     public List<EqmVO> selectEqmList();
     
-    // 설비 단건조회
-    public EqmVO getEqmInfo(EqmVO eqmVO);
-    
     // 설비 등록
-    public int insertEqmInfo(EqmVO eqmVO);
+    public int insertEqm(EqmVO eqmVO);
     
     // 설비 수정
     public int updateEqmInfo(EqmVO eqmVO);
@@ -21,7 +18,7 @@ public interface EqmService {
     public int deleteEqmInfo(EqmVO eqmVO);
     
    /*
-    * // 거래처 company public List<CompanyVO> getCompanyList();
+    * // 거래처 company public List<CompanyVㄴO> getCompanyList();
     */
     
     // 직원 가져오기
@@ -71,7 +68,6 @@ public interface EqmService {
     
     public int deleteEqm(List<String> deleteEqm);
 
-	public int insertEqm(EqmVO eqmVO);
 	
 	public int deleteLine(List<String> line);
 	

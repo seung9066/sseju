@@ -54,6 +54,9 @@ img {
 <link rel="stylesheet"
 	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+
+
+
 </head>
 <body>
 	<article layout:fragment="content">
@@ -74,13 +77,14 @@ img {
 							type="radio" name="eqmTab" id="uoperLi" class="form-check-input"
 							value="uoper">비가동 내역
 					</div>
-					<div>
-						<label style="padding-right: 15px;">설비구분</label> <select name="">
-							<option selected>전체</option>
-							<option value="">설.구1</option>
-							<option value="">2</option>
-							<option value="">3</option>
-						</select>
+					<div><br>
+						<label style="padding-right: 15px;">라인명</label> 
+						<select name="lineNo" id="lineNo">
+								<option selected>--전체--</option>
+								<th:block th:each="li:${line}">
+									<option th:value="${li.lineNo}" th:text="${li.lineNo}" id="lineSearch"></option>
+								</th:block>
+							</select>
 					</div>
 					<hr>
 					<br>
@@ -148,6 +152,7 @@ img {
 							<th class="col1">작업내용</th>
 							<td><textarea placeholder="종료 누른 후에 입력가능.." id="uoperWork"
 									name="uoperWork" style="width: 250px;"></textarea></td>
+							<td><input type="hidden" id="uoperCode" name="uoperCode"></td>
 						</tr>
 						<tr>
 					</table>
@@ -280,8 +285,7 @@ img {
 				    })
 			
 			$('#endBtn').on('click', function(){
-				var now = timeFormat(new Date());
-				$('#uoperStartTime').val(now);
+				
 				
 				
 			});
@@ -312,21 +316,50 @@ img {
 			
 			// 비가동 버튼을 선택하지 않고 재가동버튼을 선택했다면 경고창 뜨게 => <button disabled>사용하기
 			$('#endBtn').on('click',function() {
-				var result = confirm("가동을 중지하시겠어요???");
-					if(result){
-						$('#strBtn').attr("disabled",false); //활성화
-						$('#endBtn').attr("disabled",true); //비활성화
-						if($('#endBtn').on('click',function(){
-							alert("이미 비가동중입니다.");
-						}));
-					}else{
-						$('#uoperStartTime').val('');
-					}	
-			});
+				
+				Swal.fire({
+					  title: '가동을 중지하시겠습니까?',
+					  icon: 'warning',
+					  showCancelButton: true,
+					  confirmButtonColor: '#3085d6',
+					  cancelButtonColor: '#d33',
+					  confirmButtonText: 'Yes'
+					}).then((result) => {
+					  if (result.isConfirmed) {
+						  var now = timeFormat(new Date());
+							$('#uoperStartTime').val(now);
+						  $('#strBtn').attr("disabled",false); //활성화
+							$('#endBtn').attr("disabled",true); //비활성화
+							if($('#endBtn').on('click',function(){
+								alert("이미 비가동중입니다.");
+							}));
+						}else{
+							$('#uoperStartTime').val('');
+						}	
+					  })
+					});
+					
+				
 			
 			$('#strBtn').click(function(){
-				show(); // '작업내용' 보여주기
-			})
+				Swal.fire({
+				  title: '재가동 하시겠습니까?',
+				  icon: 'warning',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: '재가동',
+				  cancelButtonText: '취소'
+				}).then((result) => {
+				  if (result.isConfirmed) {
+				    
+				    	Swal.fire('재가동 시작!','','success');
+				    	show(); // '작업내용' 보여주기
+				  }
+				})
+				
+				
+			});
 
 	            /* 설비(eqm) 그리드  */
 	            
@@ -408,15 +441,16 @@ img {
 	            	$.ajax({
 	            		url:'insertUoper',
 	            		type : 'POST',
-	            		data : data,
-	            		dataType : "json",
+	            		data : JSON.stringify(data),
+	            		dataType :"json",
+	            		contentType: 'application/json',
 	                    async : false,
 	                    beforeSend : function(xhr){
 	                       xhr.setRequestHeader(header, token);
 	                    },
 	                    success:function(data){
 	                       if(data > 0) {
-	                          alert("입력완료");
+	                    	  Swal.fire('비가동 시작','', 'success');
 		                      reset();
 
 	                       } else {
@@ -441,15 +475,18 @@ img {
 					scrollY : false,
 					columns : [ {
 						header : '비가동',
-						name : 'uoperCode'
+						name : 'uoperCode',
+						width : 70
 					}, {
 						header : '설비코드',
 						name : 'eqmCode',
-						align : 'center'
+						align : 'center',
+						width : 80
 					}, {
 						header : '설비명',
 						name : 'eqmName',
-						align : 'center'
+						align : 'center',
+						width : 80
 					}, {
 						header : '시작시간',
 						name : 'uoperStartTime'
@@ -459,15 +496,18 @@ img {
 					}, {
 						header : '비가동사유',
 						name: 'uoperRsn',
-						align : 'center'
+						align : 'center',
+						width : 80
 					}, {
 						header : '담당자',
 						name : 'empId',
-						align : 'center'
+						align : 'center',
+						width : 30
 					}, {
 						header : '작업내용',
 						name : 'uoperWork',
-						align : 'center'
+						align : 'center',
+						width : 100
 					} ]
 				});
 				
@@ -499,7 +539,7 @@ img {
 			           
 			            
 		            	chkUoper.push((uoperGrid.getValue(ev.rowKey,'uoperCode')));
-		               
+			           $('#uoperCode').val(uoperGrid.getValue(ev.rowKey,'uoperCode'));
 		               $('#eqmCode').val(uoperGrid.getValue(ev.rowKey,'eqmCode'));
 		               $('#eqmName').val(uoperGrid.getValue(ev.rowKey,'eqmName'));
 		               $('#uoperStartTime').val(uoperGrid.getValue(ev.rowKey,'uoperStartTime'));
@@ -552,7 +592,7 @@ img {
 		                   },
 		                   success:function(data){
 		                      if(data > 0) {
-		                         alert("삭제완료");
+		                         toastr.success("삭제성공")
 		                         uoperShow();
 		                         reset();
 		                      } else {
@@ -586,7 +626,7 @@ img {
 		                  },
 		                  success:function(data){
 		                     if(data > 0) {
-		                        alert("수정완료");
+		                        tostr.success("수정완료")
 		                        uoperShow();
 		                        reset();
 

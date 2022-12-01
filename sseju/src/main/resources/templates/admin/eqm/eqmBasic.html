@@ -11,6 +11,14 @@
 <!-- 토스트UI -->
 <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<style>
+.showModal {
+	/* 커서 손모양 */
+	cursor: pointer;
+}
+
+
+</style>
 </head>
 <body>
    <article layout:fragment="content">
@@ -53,22 +61,24 @@
                         
                      	<table class="table">
                         <tr>
-                           <th>라인명</th>
+                           <th>*라인명</th>
                            <td><input type="text" name="lineNo" id="lineNo"></td>
-                           <th>담당자</th>
-                           <td><input type="text" name="empNo" id="empNo"></td>
+                           <th>*담당자</th>
+                           <td><input type="text" name="empNo" id="empNo" data-bs-toggle="modal" data-bs-target="#empModal" class="showModal" readonly></td>
                         </tr>
                         <tr>
-                           <th>총생산량</th>
+                           <th>*총생산량</th>
                            <td><input type="number" name="totPrc" id="totPrc" min="1"></td>
-                           <th>UPH</th>
-                           <td><input type="number" name="uph" id="uph" min="1"></td>
+                           <th>*UPH</th>
+                           <td><input type="number" name="uph" id="uph" min="1"> </td>
+                           
+                           
                         </tr>
                         <tr>
-                           <th>사용여부</th>
+                           <th>*사용여부</th>
                            <td><input type="radio" name="lineYn" id="lineYn"
                               value="Y" style="vertical-align: 0px;">Y <input
-                              type="radio"  name="lineYn" value="N" 
+                              type="radio"  name="lineYn" value="N" id="lineYn"
                               style="vertical-align: 1px;">N</td>
                         </tr>
                      </table>
@@ -76,9 +86,44 @@
                  
                </div>
              </div>
+             
+             <!--사원 모달 : 그리드  -->
+			<div class="modal" tabindex="-1" role="dialog" id="empModal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">
+								<b>사원 리스트</b>
+							</h5>
+						</div>
+						<div class="modal-body">
+							<!-- 거래처 리스트  -->
+							<div id="empGrid"></div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">취소</button>
+						</div>
+					</div>
+				</div>
+			</div>
                <!-- 등록 폼 end  -->
                <!-- 라인정보관리 등록 폼 : show/hide -->
          <script type="text/javascript">
+         
+         
+         // toastr
+         toastr.options = {
+                "closeButton": false,
+                "newestOnTop": true,
+                "positionClass": "toast-top-center",
+                "preventDuplicates": true,
+                "extendedTimeOut" : 1500, 
+                "timeOut" : 2500
+         }
+         
+         
+         
             function dis() {
                if ($('#dis').css('display') == 'none') {
                   $('#dis').show();
@@ -87,12 +132,22 @@
                }
             };
             
+            //모달클릭
+            document.addEventListener('shown.bs.modal', function() {
+                empGrid.refreshLayout();
+               }, '.modal');
+            
+            // 유효성 체크(uph,totPrc에 숫자가 아닌 값이 들어가면 )
+           
                
          </script>
 
          <script type="text/javascript">
          
+        
             showAll();
+            emp();
+            
 
             var lineGrid = new tui.Grid({
                el : document.getElementById('lineGrid'),
@@ -135,9 +190,8 @@
                $('#lineNo').attr('readonly',true);
                $('#totPrc').val(lineGrid.getValue(ev.rowKey,'totPrc'));
                $('#uph').val(lineGrid.getValue(ev.rowKey,'uph'));
-               $('#lineYn').val([lineGrid.getValue(ev.rowKey,'lineYn')]);  // select/option, radio, checkbox는 배열로 묶어준다.
+               $("input[name='lineYn']").val([lineGrid.getValue(ev.rowKey,'lineYn')]);  // select/option, radio, checkbox는 배열로 묶어준다.
                $('#empNo').val(lineGrid.getValue(ev.rowKey,'empNo'));
-               
             });
             
             lineGrid.on('uncheck', ev => {
@@ -150,7 +204,7 @@
                $('#lineNo').attr('readonly',false);
                $('#totPrc').val('');
                $('#uph').val('');
-               $('#lineYn').val([]);
+               $("input[name='lineYn']").val([]);
                $('#empNo').val('');   
             });
             
@@ -158,7 +212,7 @@
             	let lineNo = $('#lineNo').val();
             	let totPrc = $('#totPrc').val();
             	let uph = $('#uph').val();
-            	let lineYn = $('#lineYn').val();
+            	let lineYn = $("input[name='lineYn']:checked").val();
             	let empNo = $('#empNo').val();
             	
             	
@@ -174,11 +228,12 @@
                     },
                     success:function(data){
                        if(data > 0) {
-                          alert("입력완료");
-                          showAll();   
+                    	  toastr.success("등록 성공하였습니다!")
+                          showAll();
+                    	  reset();
                          
                        } else {
-                          alert("입력실패");
+                          toastr.error("등록 실패하였습니다.")
                           
                        }
                     },error : function(reject){
@@ -206,11 +261,13 @@
                   },
                   success:function(data){
                      if(data > 0) {
-                        alert("삭제완료");
+                    	toastr.success("삭제에 성공하였습니다!");
                         showAll();
+                        reset();
                         
                      } else {
-                        alert("삭제실패");
+                    	 toastr.success("삭제에 실패하였습니다!");
+                    	 reset();
                      }
                   },
                   error : function(reject){
@@ -222,11 +279,10 @@
             function updateLine(){
                let lineNo = $('#lineNo').val();
                let totPrc = $('#totPrc').val();
-               let UPH = $('#UPH').val();
-               let lineYn = $('#lineYn').val();
+               let uph = $('#uph').val();
+               let lineYn = $("input[name='lineYn']:checked").val();;
                let empNo = $('#empNo').val();
-               
-               let updLine={'lineNo':lineNo, 'totPrc':totPrc, 'UPH':UPH, 'lineYn':lineYn, 'empNo':empNo}
+               let updLine={'lineNo':lineNo, 'totPrc':totPrc, 'uph':uph, 'lineYn':lineYn, 'empNo':empNo}
                
                $.ajax({
                   url : 'updateLine',
@@ -240,12 +296,12 @@
                   },
                   success:function(data){
                      if(data > 0) {
-                        alert("수정완료");
+                        toastr.success("수정에 성공하였습니다.")
                         showAll();   
-                        console.log(UPH);
+                        reset();
                         
                      } else {
-                        alert("수정실패");
+                         toastr.error("수정에 실패하였습니다.");
                         
                      }
                   },
@@ -266,31 +322,68 @@
                })
             }
             
+            
+            // 사원 모달-그리드
+			   var empGrid = new tui.Grid({
+	               el : document.getElementById('empGrid'),
+	               scrollX : false,
+	               scrollY : true,
+	               pageOptions: {
+	            	    useClient: true, // front에서만 페이징하는 속성(서버x)
+	            	    perPage: 5
+	            	  },
+	               columns : [{
+	                  header : '아이디',
+	                  name : 'empId',
+	                  align : 'center'
+	                  
+	               }, {
+	                  header : '이름',
+	                  name : 'empName',
+	                  align : 'center'
+	               }, {
+		               header : '부서',
+		               name : 'empDept',
+		               align : 'center'
+		               }]
+	            }); 
+			   
+			    function emp(){
+				   
+				   url="eList"
+				       fetch(url) 
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           empGrid.resetData(obj);
+				       })
+			   } 
+			   
+			   // 사원 그리드 클릭하면 input 태그에 뿌려주기
+			    empGrid.on('click',ev => {
+				  let rowData=empGrid.getRow(ev.rowKey);
+				  
+				  let a = rowData['empName'];
+
+				  
+				  $('#empNo').val(a);
+
+				  
+				  $('#empModal').modal("hide");
+			   }); 
+			   
+            
            
         	   
           
-            $('#ins').on('click',function(){
-        	  document.getElementById('lineNo').value=''; 
-        	  document.getElementById('totPrc').value='';
-        	  document.getElementById('uph').value='';
-        	  document.getElementById('empNo').value='';
-        	  document.getElementById('lineYn').value='';
-           });
-            $('#upd').on('click',function(){
-          	  document.getElementById('lineNo').value=''; 
+            function reset(){
+              document.getElementById('lineNo').value=''; 
           	  document.getElementById('totPrc').value='';
           	  document.getElementById('uph').value='';
           	  document.getElementById('empNo').value='';
-          	  document.getElementById('lineYn').value='';
-             });
-            $('#deleteBt').on('click',function(){
-            	  document.getElementById('lineNo').value=''; 
-            	  document.getElementById('totPrc').value='';
-            	  document.getElementById('uph').value='';
-            	  document.getElementById('empNo').value='';
-            	  document.getElementById('lineYn').value='';
-               });
-             
+          	  $("input[name='lineYn']").val()='';
+              
+            }
+        	  
            
 
          </script>

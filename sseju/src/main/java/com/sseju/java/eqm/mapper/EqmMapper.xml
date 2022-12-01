@@ -21,18 +21,18 @@
 			e.eqm_img, 
 			e.eqm_purc_name,
 			e.eqm_purc_tel,
-			 e.eqm_yn,l.line_no
+			 e.eqm_yn,e.line_no
 		FROM EQM e
 		JOIN EQM_LINE l 
 		  ON e.line_no = l.line_no
 	</select>
 
 
-	<insert id="insertEqmInfo" parameterType="EqmVO">
+	<insert id="insertEqm" parameterType="EqmVO">
 
 		INSERT INTO EQM
-		(eqm_code,eqm_name,eqm_model,eqm_size,eqm_loc,eqm_max_temp,eqm_min_temp
-		,eqm_check,eqm_check_term,eqm_purc_date,eqm_img,eqm_purc_name,eqm_purc_tel,eqm_yn,line_no)
+		(eqm_code,eqm_name,eqm_model,eqm_size,eqm_loc,eqm_max_temp,eqm_min_temp,
+		eqm_check,eqm_check_term,eqm_purc_date,eqm_img,eqm_purc_name,eqm_purc_tel,eqm_yn,line_no)
 		VALUES(
 		#{eqmCode},
 		#{eqmName},
@@ -119,17 +119,17 @@
 
 	<!-- 라인정보 전체조회 -->
 	<select id="getEqmLineList" resultType="EqmVO">
-		SELECT * FROM eqm_line
-		ORDER BY LINE_NO ASC
+	SELECT * FROM EQM_LINE
+	ORDER BY 1 DESC
 	</select>
 
 	<!-- 라인정보 등록 -->
 	<insert id="insertEqmLine" parameterType="EqmVO">
-		INSERT INTO eqm_line
+		INSERT INTO eqm_line (line_no,tot_prc,uph,emp_no,line_yn)
 		VALUES (
 		#{lineNo},
-		#{totPrc},
-		#{uph},
+		#{totPrc,jdbcType=INTEGER},
+		#{uph,jdbcType=INTEGER},
 		#{empNo},
 		#{lineYn}
 		)
@@ -158,7 +158,7 @@
 
     SELECT c.CHK_NO,
 	        c.CHK_DATE, c.CHK_NDATE, c.CHK_STATE, c.CHK_SOL,
-	        p.emp_id,q.EQM_CODE, q.EQM_NAME, q.eqm_check, q.eqm_check_term
+	        p.emp_id,q.EQM_CODE, q.EQM_NAME, q.eqm_check, q.eqm_check_term,q.line_no
       FROM EQM_CHK c
       JOIN EQM q ON c.eqm_code = q.eqm_code
       JOIN EMPLOYEE p ON c.chk_emp_no = p.emp_id	
@@ -243,16 +243,18 @@
 
 	<!-- 비가동 전체조회 -->
 	<select id="getUoperList" resultType="EqmVO">
-	select * from eqm_uoper
-	ORDER BY UOPER_CODE DESC
+	SELECT u.UOPER_CODE,u.UOPER_RSN,u.UOPER_WORK,u.UOPER_START_TIME,u.UOPER_END_TIME,u.EQM_CODE,u.EMP_ID,u.EQM_NAME
+	FROM EQM_UOPER u
+	JOIN EQM q
+	ON u.eqm_code = q.eqm_code
+	ORDER BY 1 DESC
       </select>
 
 	<!-- 비가동 등록 -->
 	<insert id="insertUoper" parameterType="EqmVO">
 		<selectKey keyProperty="uoperCode" resultType="String"
 			order="BEFORE">
-			SELECT 'UOPR_' ||
-					TO_CHAR(SYSDATE,'YYYYMMDD')||'_'||
+			SELECT 'UOPR' ||
 					LPAD(NVL(MAX(SUBSTR(uoper_code,	-3)),0)+1,3,0) 
 			  FROM EQM_UOPER
 		</selectKey>
@@ -264,7 +266,7 @@
 								uoper_end_time,
 								eqm_code,
 								eqm_name)
-		VALUES (#{uoperCode,jdbcType=VARCHAR}, 
+		VALUES (#{uoperCode}, 
 				#{empId}, 
 				#{uoperRsn},
 				#{uoperWork,jdbcType=VARCHAR},
@@ -287,7 +289,7 @@
         <set>
          EQM_YN = CASE WHEN EQM_YN = 'Y' THEN 'N' ELSE 'Y' END
         </set>
-        WHERE EQM_CODE = #{eqmCode}
+        WHERE EQM_CODE = #{eqmCode} 
      </update>
 
 	<!-- 비가동 수정 -->
@@ -308,6 +310,7 @@
 		</if>			
 		</set>
 		WHERE eqm_code = #{eqmCode}
+		AND uoper_code = #{uoperCode}
 
 	</update>
 

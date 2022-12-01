@@ -12,7 +12,7 @@ public interface EqmMapper {
       public EqmVO getEqmInfo(EqmVO eqmVO);
       
       // 설비 등록
-      public int insertEqmInfo(EqmVO eqmVO);
+      public int insertEqm(EqmVO eqmVO);
       
       // 설비 수정
       public int updateEqmInfo(EqmVO eqmVO);

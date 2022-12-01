@@ -28,15 +28,22 @@ public class EqmServiceImpl implements EqmService {
       return eqmMapper.selectEqmList();
    }
    
-   @Override
-   public EqmVO getEqmInfo(EqmVO eqmVO) {
-      return eqmMapper.getEqmInfo(eqmVO);
-   }
+	 @Override
+	 public int insertEqm(EqmVO eqmVO) {
+	 	
+	 int a = eqmMapper.insertEqm(eqmVO);
+	 // 설비등록하는 동시에 공통코드에도 값 넣어주기
+	 CodeVO vo = new CodeVO();
+	 vo.setCode(eqmVO.getEqmCode());
+	 vo.setDivName("설비");
+	 vo.setDivCode("EQM");
+	 vo.setCodeName(eqmVO.getEqmName());
 
-   @Override
-   public int insertEqmInfo(EqmVO eqmVO) {
-      return eqmMapper.insertEqmInfo(eqmVO);
-   }
+	 cdMapper.insertCode(vo);
+
+	 return a;
+	 }
+	 
 
    @Override
    public int updateEqmInfo(EqmVO eqmVO) {
@@ -149,21 +156,7 @@ public int deleteEqm(List<String> deleteEqm) {
 	return a;
 }
 
-@Override
-public int insertEqm(EqmVO eqmVO) {
-	
-int a = eqmMapper.insertEqmInfo(eqmVO);
-// 설비등록하는 동시에 공통코드에도 값 넣어주기
-CodeVO vo = new CodeVO();
-vo.setCode(eqmVO.getEqmCode());
-vo.setDivName("설비");
-vo.setDivCode("EQM");
-vo.setCodeName(eqmVO.getEqmName());
 
-cdMapper.insertCode(vo);
-
-return a;
-}
 
 @Override
 public int deleteLine(List<String> line) {
@@ -221,6 +214,10 @@ public List<EqmVO> getChkList() {
 	// TODO Auto-generated method stub
 	return eqmMapper.getChkList();
 }
+
+
+
+
 
    
 
