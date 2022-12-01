@@ -33,7 +33,7 @@
 		 JOIN employee ee
 		   ON ee.emp_id = prr.prs_manager
 		   
-		WHERE pr.prs_name = #{prsCode}
+		WHERE pr.prs_code = #{prsCode}
 		ORDER BY prr.prs_date DESC
 	</select>
 	

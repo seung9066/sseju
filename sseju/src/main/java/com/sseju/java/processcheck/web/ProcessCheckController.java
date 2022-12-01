@@ -22,7 +22,7 @@ public class ProcessCheckController {
 	ProcessCheckService pcService;
 	//페이지 불러옴
 	@GetMapping("/processCheckList")
-	public String processCheckList(Model model) {
+	public String processCheckList() {
 		return "/admin/quamanage/processCheck";
 	}
 	//ㄴ공정 리스트 출력
@@ -34,7 +34,8 @@ public class ProcessCheckController {
 	//ㄴ리스트 목록 클릭 시 데이터 출력
 	@GetMapping("/getPrsList")
 	@ResponseBody
-	public List<ProcessCheckVO> getPrsList(@RequestParam ProcessCheckVO pcVO){
+	public List<ProcessCheckVO> getPrsList(ProcessCheckVO pcVO){
+		System.out.println("*************************************************************************");
 		
 		return pcService.getPrsList(pcVO);
 	}

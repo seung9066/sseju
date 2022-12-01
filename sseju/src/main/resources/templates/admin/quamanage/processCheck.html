@@ -69,7 +69,7 @@
 				    	name: 'prsCode',
 				    	filter : 'select',
 						align : 'center',
-						/* hidden : 1 */
+						hidden : 1
 					}, {
 						header: '공정명',
 					    name: 'prsName',
@@ -103,9 +103,8 @@
 					
 					$.ajax({
 						url : 'getPrsList',
-						data : JSON.stringify(data),
+						data : data,
 						dataType : "json",
-						contentType : "application/json",
 						async:false,
 						success:function(data){
 							prsChkGrid.resetData(data);
