@@ -1343,6 +1343,7 @@ public class CodeServiceImpl implements CodeService {
 		List<CodeVO> errList = new ArrayList<>();
 		whList = mapper.WHListA();
 		System.out.println("ㅁAAA");
+		CodeVO voMsg = new CodeVO();
 		for (int i = 0; i < list.size(); i++) {
 			System.out.println("ㅁbom 리스트 가져오기");
 			CodeVO vo = new CodeVO();
@@ -1351,7 +1352,6 @@ public class CodeServiceImpl implements CodeService {
 			listBom = mapper.MatBomList(vo);
 
 			for (int j = 0; j < listBom.size(); j++) {
-				CodeVO voMsg = new CodeVO();
 
 				System.out.println("ㅁ자재발주");
 				vo.setMatOrdNo(mapper.matOrdNo().getMatOrdNo());
@@ -1361,8 +1361,6 @@ public class CodeServiceImpl implements CodeService {
 				vo.setMatPrice(listBom.get(j).getMatUnitPrc() * list.get(i).getOrderQty());
 				vo.setMatOrdEmp("admin");
 				mapper.insertMatBuy(vo);
-				voMsg.setMsg("자재발주 완료 : " + vo.getMatCode());
-				mapper.insertMsg(voMsg);
 
 				System.out.println("ㅁ자재검수");
 				vo.setMatChkCode(mapper.getMatChkNo().getMatChkCode());
@@ -1370,8 +1368,6 @@ public class CodeServiceImpl implements CodeService {
 				vo.setMatErrQty(vo.getMatInQty() * 5 / 100);
 				vo.setMatPassQty(vo.getMatInQty() - vo.getMatErrQty());
 				mapper.insertMatChk(vo);
-				voMsg.setMsg("자재검수 완료 : " + vo.getMatCode());
-				mapper.insertMsg(voMsg);
 
 				System.out.println("ㅁ자재불량코드 찾기");
 				errList = mapper.selectMatErr(vo);
@@ -1380,8 +1376,6 @@ public class CodeServiceImpl implements CodeService {
 				int u = (int) Math.random() * errList.size();
 				vo.setErrCode(errList.get(u).getErrCode());
 				mapper.insertMatErr(vo);
-				voMsg.setMsg("자재불량 등록 완료 : " + vo.getMatCode());
-				mapper.insertMsg(voMsg);
 
 				System.out.println("ㅁ자재진행여부");
 				mapper.updateMatYN(vo);
@@ -1394,12 +1388,30 @@ public class CodeServiceImpl implements CodeService {
 				int q = (int) Math.random() * whList.size();
 				vo.setWhCode(whList.get(q).getWhCode());
 				mapper.insertLotA(vo);
-				voMsg.setMsg("자재창고 입고 완료 : " + vo.getMatCode());
-				mapper.insertMsg(voMsg);
 
 				System.out.println("ㅁ주문YN");
 				vo.setOrderNo(list.get(i).getOrderNo());
 				mapper.orderInfYN(vo);
+			}
+			for (int j = 0; j < listBom.size(); j++) {
+				vo.setMatCode(listBom.get(j).getMatCode());
+				voMsg.setMsg("자재발주 완료 : " + vo.getMatCode());
+				mapper.insertMsg(voMsg);
+			}
+			for (int j = 0; j < listBom.size(); j++) {
+				vo.setMatCode(listBom.get(j).getMatCode());
+				voMsg.setMsg("자재검수 완료 : " + vo.getMatCode());
+				mapper.insertMsg(voMsg);
+			}
+			for (int j = 0; j < listBom.size(); j++) {
+				vo.setMatCode(listBom.get(j).getMatCode());
+				voMsg.setMsg("자재불량 등록 완료 : " + vo.getMatCode());
+				mapper.insertMsg(voMsg);
+			}
+			for (int j = 0; j < listBom.size(); j++) {
+				vo.setMatCode(listBom.get(j).getMatCode());
+				voMsg.setMsg("자재창고 입고 완료 : " + vo.getMatCode());
+				mapper.insertMsg(voMsg);
 			}
 		}
 
@@ -1475,6 +1487,18 @@ public class CodeServiceImpl implements CodeService {
 	public List<CodeVO> msgUpA() {
 		// TODO Auto-generated method stub
 		return mapper.msgUpA();
+	}
+
+	@Override
+	public int deleteOneMsg(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.deleteOneMsg(vo);
+	}
+
+	@Override
+	public CodeVO selectMPCode(CodeVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.selectMPCode(vo);
 	}
 
 }
