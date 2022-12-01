@@ -78,22 +78,21 @@ table, th, td {
 
 				<h5 style="width: 200px">
 					<b>설비 전체조회</b>
+					<br>
+					<br>
 				</h5>
 				<div>
 					<div>
-						<label for="eqmCodeInput" style="width: 100px">설비코드</label> <input
-							type="text" class="form-control"
-							style="width: 200px; display: inline" id="eqmCodeInput">&nbsp;
-						<label >라인명</label> 
-						<select name="lineNo" id="lineNo"
-							>
+						<label for="eqmCodeInput" style="width: 100px">설비코드</label> 
+						<input type="text" class="form-control"
+							style="width: 200px; display: inline" id="eqmCodeInput">&nbsp;<br><br> 
+						<label >라인명</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<select name="lineNo" id="lineNo">
 							<option value='' >--전체--</option>
 							<th:block th:each="li : ${line}">
 								<option th:value="${li.lineNo}" th:text="${li.lineNo}"></option>
 							</th:block>
-							
-							
-						</select>
+						</select>&nbsp;&nbsp;&nbsp;&nbsp;
 						<button type="button" class="button" id="eqmSearch">검색</button>
 						&nbsp;
 						<button type="button" class="button" id="eqmReset">초기화</button>
@@ -105,7 +104,6 @@ table, th, td {
 				</div>
 				<div style="float: right">
 
-					<button class="button" type="button" onclick="dis()">등록</button>
 					<button class="button" onclick="deleteEqm()">삭제</button>
 					<button type="button" class="button download" id="excelDownload">Excel</button>
 				</div>
@@ -114,14 +112,14 @@ table, th, td {
 				<div id="eqmGrid"></div>
 			</div>
 
-			<div id="dis" style="display: none">
+			<div>
 				<br>
 				<h5 style="width: 200px">
 					<b>설비정보 상세보기</b>
 				</h5>
 				<input type="hidden" name="auth" value="ROLE_ADMIN">
 				<div style="float: right">
-					<button class="button" type="button" onclick="insertEqm()">추가</button>
+					<button class="button" type="button" onclick="insertEqm()">등록</button>
 					<button class="button" onclick="updateEqm()">수정</button>
 					<button class="button" type="button" onclick="resetVal()">초기화</button>
 				</div>
@@ -134,17 +132,17 @@ table, th, td {
 						<table id="regEqm">
 							<tr>
 								<th class="col1">설비코드</th>
-								<td><input type="text" name="eqmCode" id="eqmCode"
-									value="EQM_"></td>
+								<td><input type="text" value="EQM_" name="eqmCode" id="eqmCode" ></td>
 								<th class="col1">설비명</th>
-								<td><input type="text" name="eqmName" id="eqmName"></td>
+								<td><input 
+								type="text" name="eqmName" id="eqmName"></td>
 								<th class="col1">모델명</th>
 								<td><input type="text" name="eqmModel" id="eqmModel"></td>
 								<th class="col1">라인</th>
 								<td><select id="lineNo" name="lineNo">
-										<option>--선택--</option>
+										<option value="">-----선택----</option>
 										<th:block th:each="li : ${line}">
-											<option th:value="${li.lineNo}" th:text="${li.lineNo}"></option>
+											<option th:value="${li.lineNo}" th:text="${li.lineNo}" ></option>
 										</th:block>
 
 								</select></td>
@@ -172,7 +170,7 @@ table, th, td {
 									data-bs-toggle="modal" class="showModal"
 									data-bs-target="#eqmPurcModal"></td>
 								<th class="col1">비상연락망</th>
-								<td><input type="tel" name="eqmPurcTel" id="eqmPurcTel"></td>
+								<td><input type="tel" name="eqmPurcTel" id="eqmPurcTel" readonly></td>
 								<th class="col1">입고일</th>
 								<td><input type="date" name="eqmPurcDate" id="eqmPurcDate"></td>
 
@@ -218,10 +216,6 @@ table, th, td {
 							<h5 class="modal-title">
 								<b>거래처 리스트</b>
 							</h5>
-							<button type="button" class="close" data-bs-dismiss="modal"
-								aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
 						</div>
 						<div class="modal-body">
 							<!-- 거래처 리스트  -->
@@ -270,17 +264,17 @@ table, th, td {
                scrollY : false,
                columns : [{
                   header : '거래처 코드',
-                  name : 'cpCode'
+                  name : 'cpCode',
+                  align: 'center'
                },{
                   header : '거래처명',
-                  name : 'cpName'
+                  name : 'cpName',
+                  align: 'center'
                },{
                    header : '연락처',
-                   name : 'cpTel'
-                },{
-                    header : '비고',
-                    name : '' //'설비거래처'만 뜨게
-                 }]
+                   name : 'cpTel',
+                   align: 'center'
+                }]
             
             });            
             
@@ -296,6 +290,8 @@ table, th, td {
             	
             	$('#eqmPurcModal').modal("hide");
             });
+            
+            
             
             
             
@@ -450,7 +446,7 @@ table, th, td {
                $('#eqmCode').attr('readonly',true);
                $('#eqmName').val(eqmGrid.getValue(ev.rowKey,'eqmName'));
                $('#eqmModel').val(eqmGrid.getValue(ev.rowKey,'eqmModel'));
-               $('#lineNo').val(eqmGrid.getValue(ev.rowKey,'lineNo'));
+               $('#lineNo').val([eqmGrid.getValue(ev.rowKey,'lineNo')]);
                $('#eqmLoc').val(eqmGrid.getValue(ev.rowKey,'eqmLoc')); 
                $('#eqmMaxTemp').val(eqmGrid.getValue(ev.rowKey,'eqmMaxTemp'));
                $('#eqmMinTemp').val(eqmGrid.getValue(ev.rowKey,'eqmMinTemp'));
@@ -460,7 +456,7 @@ table, th, td {
                $('#eqmImg').val(eqmGrid.getValue(ev.rowKey,'eqmImg')); 
                $('#eqmPurcName').val(eqmGrid.getValue(ev.rowKey,'eqmPurcName')); 
                $('#eqmPurcTel').val(eqmGrid.getValue(ev.rowKey,'eqmPurcTel'));
-               $('#eqmYn').val([eqmGrid.getValue(ev.rowKey,'eqmYn')]); 
+               $('input[name="eqmYn"]').val([eqmGrid.getValue(ev.rowKey,'eqmYn')]); 
                $('#eqmSize').val(eqmGrid.getValue(ev.rowKey,'eqmSize'));
                
                
@@ -479,7 +475,7 @@ table, th, td {
                $('#eqmCode').attr('readonly',false);
                $('#eqmName').val('');
                $('#eqmModel').val('');
-               $('#lineNo').val('');
+               $('#lineNo').val([]);
                $('#eqmLoc').val('');
                $('#eqmMaxTemp').val('');
                $('#eqmMinTemp').val('');
@@ -489,7 +485,7 @@ table, th, td {
                $('#eqmImg').val('');
                $('#eqmPurcName').val('');
                $('#eqmPurcTel').val('');
-               $('#eqmYn').val([]);
+               $('input[name="eqmYn"]').val([]);
                $('#eqmSize').val('');
 
                
@@ -511,12 +507,12 @@ table, th, td {
             	let eqmPurcName = $('#eqmPurcName').val();
             	let eqmPurcTel = $('#eqmPurcTel').val();
             	let eqmYn = $('input[name="eqmYn"]:checked').val();
-            	let lineNo = $('#lineNo').val();
+            	let lineNo = $('#lineNo option:selected').val();
             	
             	console.log(eqmCode);
             	console.log(eqmImg);
             	console.log(eqmName);
-            	console.log(eqmYn);
+            	console.log(lineNo);
             	
             	$.ajax({
             		url:'insertEqm',
@@ -529,18 +525,16 @@ table, th, td {
                     },
                     success:function(data){
                        if(data > 0) {
-                          alert("입력완료");
-                       
+                         toastr.success("등록에 성공하였습니다!")
                           showAll(); 
                           resetVal();
                          
                        } else {
-                          alert("입력실패");
+                         toastr.error("등록에 실패하였습니다.")
                           
                        }
                     },error : function(reject){
-                    	console.log(reject);
-                    }
+                    	console.log(reject);                    }
             		
             		
             	});

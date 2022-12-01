@@ -102,11 +102,11 @@ table, th, td {
 								style="width: 200px; display: inline" id="chkDateInput">&nbsp;~
 							<input type="date" class="form-control"
 								style="width: 200px; display: inline" id="chkNdateInput">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<label style="width: 100px">설비코드</label>
-							<select name="eqmCode" id="eqmCode">
+							<label style="width: 100px">라인명</label>
+							<select name="lineNo" id="lineNo">
 								<option selected>--전체--</option>
-								<th:block th:each="e:${eqmm}">
-									<option th:value="${e.eqmCode}" th:text="${e.eqmCode}"></option>
+								<th:block th:each="li:${line}">
+									<option th:value="${li.lineNo}" th:text="${li.lineNo}" id="lineSearch"></option>
 								</th:block>
 							</select>
 							&nbsp;
@@ -280,7 +280,7 @@ table, th, td {
 		    
 		    //filter 기능
             chkSearch.addEventListener('click', () => {
-      		chkGrid.filter('eqmCode' , [{code:'contain', value:$('#eqmSearch').val()}])
+      		chkGrid.filter('lineNo' , [{code:'contain', value:$('#lineNo').val()}])
       		if($('#chkNdateInput').val() != '' && $('#chkDateInput').val() != ''){
       			chkGrid.filter('chkDate' , [{code:'afterEq', value:$('#chkDateInput').val()}])
       			chkGrid.filter('chkNdate' , [{code:'beforeEq', value:$('#chkNdateInput').val()}])
@@ -294,8 +294,8 @@ table, th, td {
 		      chkGrid.unfilter('chkDate');
 		      document.getElementById('chkNdateInput').value = '';
 		      chkGrid.unfilter('chkNdate');
-		      document.getElementById('eqmSearch').value = '';
-		      chkGrid.unfilter('eqmCode');
+		      document.getElementById('lineSearch').value = '';
+		      chkGrid.unfilter('lineNo');
 		   })   
 		   
 		    
@@ -351,7 +351,8 @@ table, th, td {
                   align : 'center',
                   formatter({value}){
                 	  return `${value.substring(0,10)}`;
-                  }
+                  },
+                  filter:'text'
                   
                }, {
                   header : '차기점검일',
@@ -359,12 +360,9 @@ table, th, td {
                   align : 'center',
                   formatter({value}){
                 	  return `${value.substring(0,10)}`;
-                  },renderer : {
-                      styles: {
-                          fontWeight: 'bold',
-                          color: (props) => props.value == (dateGap < 3 ) ? 'red' : 'black'
-                      }
-                }
+                  },
+                
+                filter:'text'
                   
                  
                }, {
@@ -380,10 +378,16 @@ table, th, td {
                   filter: 'select'
                }, {
                   header : '점검 담당자',
-                  name : 'empId',
+                  name : 'empName',
                   align : 'center',
                   filter: 'select'
-               } ]
+               }, {
+                   header : '라인',
+                   name : 'lineNo',
+                   align : 'center',
+                   filter: 'text',
+                   hidden : 1
+                } ]
             });
             
             var token = $("meta[name='_csrf']").attr("content");
@@ -491,12 +495,6 @@ table, th, td {
     		  }
   		 }
   		  
-            
-           
-           
-           
-          
-            
             chkGrid.on('uncheck', ev => {
                 for(let i=0; i<checked.length; i++){
                    if(checked[i] == chkGrid.getValue(ev.rowKey,'chkNo')){
@@ -533,11 +531,26 @@ table, th, td {
                    },
                    success:function(data){
                       if(data > 0) {
-                         alert("삭제완료");
-                         chkList();    
-                         reset();
+                    	  Swal.fire({
+                    		  title: '정말 삭제하시겠습니까?',
+                    		  icon: 'warning',
+                    		  showCancelButton: true,
+                    		  confirmButtonColor: '#3085d6',
+                    		  cancelButtonColor: '#d33',
+                    		  confirmButtonText: '네!',
+                    		  cancelButtonText :'아니오'
+                    		}).then((result) => {
+                    		  if (result.isConfirmed) {
+                    		    Swal.fire(
+                    		      '삭제성공','','success'
+                    		    )
+                    		    chkList();    
+                                reset();
+                    		  }
+                    		})
+                         
                       } else {
-                         alert("삭제실패");
+                         toastr.warning("삭제 실패");
                       }
                    },
                    error : function(reject){
@@ -552,9 +565,14 @@ table, th, td {
             	$('#eqmName').val("");
             	$('#chkDate').val("");
             	$('#chkNdate').val("");
-            	$('#chkState').val("");
+            	$('input[name="chkState"]').val([]);
             	$('#chkSol').val("");
             	$('#chkEmpNo').val("");
+            	$('#eqmCheck').val("");
+            	$('#eqmCheckTerm').val("");
+
+            	
+            	
             	
             } 
             
@@ -582,7 +600,7 @@ table, th, td {
                    },
                    success:function(data){
                       if(data > 0) {
-                         alert("수정완료");
+                         toastr.success("수정성공!");
                          chkList();  
                       } else {
                          alert("수정실패");
@@ -622,7 +640,7 @@ table, th, td {
                let eqmName = $('#eqmName').val();
                let chkDate = $('#chkDate').val();
                let chkNdate = $('#chkNdate').val();
-               let chkState = $("input[name='chkState']:checked").val();
+               let chkState = $('input[name="chkState"]:checked').val();
                let chkSol = $('#chkSol').val();
                let chkEmpNo = $('#chkEmpNo').val();
 			   
@@ -649,10 +667,9 @@ table, th, td {
               },
               success : function(data) {
             	  if(data > 0) {
-            		  alert("입력완료");
+            		  toastr.success("등록 되었습니다!")
             		  chkList();
-                      
-                      console.log(data);
+                      reset();
                    } else {
                       alert("입력실패!");
                    }
@@ -696,10 +713,6 @@ table, th, td {
                   align : 'center',
                   filter: 'select'
                },  {
-                   header : '라인',
-                   name : 'lineNo',
-                   align : 'center'
-                },  {
                   header : '점검주기',
                   name : 'eqmCheck',
                   align : 'center'
@@ -790,11 +803,9 @@ table, th, td {
 				  let rowData=empGrid.getRow(ev.rowKey);
 				  
 				  let a = rowData['empName'];
-				  let b = rowData['empId'];
 
 				  
-				  $('#chkEmpNo').val(b);
-				  $('#empName').val(a);
+				  $('#chkEmpNo').val(a);
 
 				  
 				  $('#empModal').modal("hide");

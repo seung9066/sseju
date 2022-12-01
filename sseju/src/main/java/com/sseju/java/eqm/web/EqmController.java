@@ -61,6 +61,7 @@ public class EqmController {
 
 	@GetMapping("/eqmCheck")
 	public String eqmCheck(Model model) {
+		model.addAttribute("line", eqmService.getEqmLineList());
 		model.addAttribute("eqmm", eqmService.selectEqmList());
 		return "/admin/eqm/eqmCheck";
 	}
@@ -68,7 +69,8 @@ public class EqmController {
 	
 
 	@GetMapping("/eqmUoper")
-	public String eqmUoper() {
+	public String eqmUoper(Model model) {
+		model.addAttribute("line", eqmService.getEqmLineList());
 		return "/admin/eqm/eqmUoper";
 	}
 	
@@ -153,7 +155,6 @@ public class EqmController {
 	public int insertLine(EqmVO eqmVO) {
 
 		int result = eqmService.insertEqmLine(eqmVO);
-		System.out.println(eqmVO.getLineNo());
 		return result;
 
 	}
@@ -166,12 +167,23 @@ public class EqmController {
 		return a;
 	}
 
+	//비가동 등록
+	
 	@PostMapping("insertUoper")
 	@ResponseBody
-	public String insertUoper(EqmVO eqmVO,Model model) {
+	public String insertUoper(@RequestBody EqmVO eqmVO,Model mode) {
 		eqmService.insertUoper(eqmVO);
 		eqmService.updateEqmYn(eqmVO);
-		return "redirect:eqmUoper";
+		return "/admin/eqm/eqmUoper";
+	}
+	//비가동 수정
+	
+	@RequestMapping("/updateUoper")
+	@ResponseBody
+	public String updateUoper(@RequestBody EqmVO eqmVO) {
+		 	eqmService.updateUoper(eqmVO);
+			eqmService.updateEqmYn(eqmVO);
+		return "/admin/eqm/eqmUoper";
 	}
 
 	@PostMapping("/deleteLine")
@@ -194,13 +206,7 @@ public class EqmController {
 	}
 	
 	
-	@RequestMapping("/updateUoper")
-	@ResponseBody
-	public String updateUoper(@RequestBody EqmVO eqmVO) {
-		 	eqmService.updateUoper(eqmVO);
-			eqmService.updateEqmYn(eqmVO);
-		return "redirect:eqmUoper";
-	}
+	
 	
 
 }
