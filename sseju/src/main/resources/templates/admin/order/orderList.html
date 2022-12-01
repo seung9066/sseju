@@ -54,14 +54,14 @@
 			</form>
 			<script>
 			// toastr
-	        /*  toastr.options = {
+	          toastr.options = {
 	                "closeButton": false,
 	                "newestOnTop": true,
 	                "positionClass": "toast-top-center",
 	                "preventDuplicates": true,
 	                "extendedTimeOut" : 1500, 
 	                "timeOut" : 2500
-	         } */
+	         } 
 			prtl();
 			const prtGrid = new tui.Grid({
 				el : document.getElementById('prtGrid'),
@@ -148,7 +148,6 @@
 						editor: 'text',
 						align : 'right',
 						onAfterChange : function(ev) {
-				            //console.log(ev.value,this)   
 				            let row = prtGrid1.getRow(ev.rowKey)
 				            let count = row.prtUnit * ev.value
 				            prtGrid1.setValue(ev.rowKey, 'orderQty', count)
@@ -191,12 +190,21 @@
 	                
 	                
 	         function clearA() {
-				 console.log("aaa")
 				 prtGrid1.clear()
 			 }
 			 
 			 
 	         function orInsert() {
+	        	 let rowData = prtGrid1.getData();
+	        	for(let i=0; i<rowData.length; i++) {
+	        		if (rowData[i].orderQty1 == '' || rowData[i].orderQty1.length == 0) {
+	        			toastr.warning('주문량을입력하셈');
+	        			rowData[i].orderQty1.focus();
+	        			return;
+	        		}
+	        		
+	        	}
+	        	 
 	        	 let orderNo1 = '';
 	        	 $.ajax({
 						url : "/user/getOrderNo",
@@ -206,7 +214,6 @@
 							a(orderNo1);
 						},
 						error : function(reject) {
-							console.log("bbbb")
 						}// suc
 					});
 	        
@@ -219,9 +226,7 @@
 					insert[i].orderNo = a;
 					insert[i].cpCode = $('#cpCode').val();
 					insert[i].dday = $('#dDay').val();
-					console.log(insert[i])
 	        	 }
-				console.log(insert)
 				ininsert();
 			 }
 	         
@@ -237,10 +242,11 @@
 						},
 						success : function(list) {
 							if (list > 0) {
-							prtGrid1.clear();								
+							prtGrid1.clear();
+							toastr.success("주문완료");
 							}
-						}// suc
-					}); //ajax 
+						} 
+					});  
 		       }
 	         
 	         function deleteA(){

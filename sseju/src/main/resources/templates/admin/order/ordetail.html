@@ -49,7 +49,7 @@
 				<div id="grid1"></div>
 			</div>
 			<div>
-				<h2>주문목승인후목록</h2>
+				<h2>주문승인후목록</h2>
 				<div id="grid123"></div>
 				<!-- empModal2 -->
 				<div class="modal" id="orModal2" tabindex="-1"
@@ -74,17 +74,16 @@
 				</div>
 			</div>
 
-
 			<script>
 			// toastr
-	      /*    toastr.options = {
+	        toastr.options = {
 	                "closeButton": false,
 	                "newestOnTop": true,
 	                "positionClass": "toast-top-center",
 	                "preventDuplicates": true,
 	                "extendedTimeOut" : 1500, 
 	                "timeOut" : 2500
-	         } */
+	         } 
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
 
@@ -249,7 +248,7 @@
 						alls();
 						alls3();
 						 $('#orModal').modal('hide');
-						alert('승인완료');
+						 toastr.success("출고완료");
 					}								
 
 				}// suc
@@ -416,8 +415,8 @@
 			  $('#orModal2').modal('show');
                 Agrid123.refreshLayout();
           });
-		</script>
-
+		
+			</script>
 		</main>
 	</article>
 </body>
