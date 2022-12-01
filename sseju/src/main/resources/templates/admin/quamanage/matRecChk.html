@@ -52,9 +52,6 @@
 		<main class="main" id="main">
 			<div id="od-title">
 				<h3>자재 수입 검사</h3>
-<!-- 				<ul class="ul-style">
-					<li><button class="button" onclick="updateErr()">입력</button></li>
-				</ul> -->
 			</div>
 			<hr>
 			<div id="od-content-2">
@@ -64,12 +61,10 @@
 			</div>
 			
 			<!-- Modal -->
-			<form id="docUpdate"> 
-			<!-- action="/docUpdate" method="post"-->
+			<form id="uupate" action="docUpdate" method="POST"> 
 				<input type="hidden" th:name="${_csrf.parameterName}"
 						th:value="${_csrf.token}" />
 				<div class="modal fade" id="docModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-						<input type="hidden" name="auth" value="ROLE_ADMIN">
 					<div class="modal-dialog  modal-lg">
 						<div class="modal-content">
 							<div class="modal-header">
@@ -82,14 +77,13 @@
 								<div class="mb-3">
 								    <input type="hidden" id="matChkCode" name="matChkCode">
 									<label for="message-text" class="col-form-label">불량 내역</label>
-									<textarea class="form-control" name="contents" id="message-text"></textarea>
+									<textarea class="form-control" name="matErrDoc" id="message-text"></textarea>
 								</div>
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary"
-									data-bs-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary" onclick="textIn()">Send
-									message</button>
+									data-bs-dismiss="modal">취소</button>
+								<button type="button" class="btn btn-primary" id="start">등록</button>
 							</div>
 						</div>
 					</div>
@@ -188,58 +182,15 @@
 				
 				
 	            /*------------
-	            // 모달 데이터 가져오기
-	            ----------------*/
-				
-				function textIn(){	            	
-					//$('#docUpdate').submit();
-					let 
-					$('#docModal').modal("hide");
-					matCheckList();
-	            }
-				
-				$.ajax({
-					
-				})
-				
-				
-				
-				
-				
-	            /*
-	            
-				function updateErr(){
-	            	
-	            	let rowData = chkGrid.getData();
-	            	
-	            	
-					$.ajax({
-						url : "/updateMatCheck",
-						method : "POST",
-						contentType : "application/json",
-			         	data:JSON.stringify(rowData),
-			         	dataType:"json",
-			         	async:false,
-			         	beforeSend : function(xhr) {
-					    	xhr.setRequestHeader(header, token);
-					        },
-						success : function(data) {
-						   if(data > 0) {
-								console.log(data);
-								matCheckList();
-						   }else {
-					       	   alert("실패")
-					       }
-					     },
-				         error : function(request,status,error) {
-					      	  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-					          alert("와우")  
-					      	  console.log(reject);			         		
-			         	}
+				// 모달 데이터 가져오기
+				----------------*/
+				$().ready(function() {
+					$("#start").click(function() {
+						$('#uupate').submit();
+						$('#docModal').modal("hide");
+						matCheckList();
 					})
-				}
-	            
-	            */
+				})
 			</script>
 
 		</main>
