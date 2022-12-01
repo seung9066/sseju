@@ -208,7 +208,6 @@
 			fetch(url) 
 	        .then(res=>res.json())
 	        .then(obj=>{
-	           console.log(obj);
 	           grid1.resetData(obj);
 	        })
 		}
@@ -232,7 +231,6 @@
 		}
 	   	
 		function updateOrderNy() {
-			console.log(Agrid1.getData())
 			let b = Agrid1.getData();
 			$.ajax({
 				url : "updateOrderNy",
@@ -254,7 +252,6 @@
 				}// suc
 			});
 			
-			console.log(b)
 			let list = b;
 			
 			$.ajax({
@@ -383,7 +380,6 @@
 			fetch(url) 
 	        .then(res=>res.json())
 	        .then(obj=>{
-	           console.log(obj);
 	           grid123.resetData(obj);
 	        })
 		}

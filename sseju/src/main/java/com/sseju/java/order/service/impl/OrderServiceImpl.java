@@ -129,8 +129,6 @@ public class OrderServiceImpl implements ORService {
 
 	public int updateOrderNy(List<ORVO> Ovo) {
 		int a = 0;
-		System.out.println("aaaaaaa");
-		System.out.println(Ovo);
 		ORVO vo = new ORVO();
 		for (int i = 0; i < Ovo.size(); i++) {
 			vo.setOrderNo(Ovo.get(i).getOrderNo());
@@ -143,8 +141,6 @@ public class OrderServiceImpl implements ORService {
 	@Override
 	public int updateOrderWK(List<ORVO> Ovo) {
 		int a = 0;
-		System.out.println("aaaaaaa");
-		System.out.println(Ovo);
 		CodeVO vo1 = new CodeVO();
 		ORVO vo = new ORVO();
 		for (int i = 0; i < Ovo.size(); i++) {

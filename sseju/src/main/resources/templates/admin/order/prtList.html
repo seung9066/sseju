@@ -49,7 +49,20 @@
 					<div id="grid1"></div>
 				</div>
 				<h4>출고 배송 현황 리스트</h4>
+
+				<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+					<input id="startpicker-input" type="text" aria-label="Date">
+					<span class="tui-ico-date"></span>
+					<div id="startpicker-container" style="margin-Right: -1px;"></div>
+				</div>
+				<span>to</span>
+				<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+					<input id="endpicker-input" type="text" aria-label="Date">
+					<span class="tui-ico-date"></span>
+					<div id="endpicker-container" style="margin-Right: -1px;"></div>
+				</div>
 				<div id="grid123"></div>
+
 			</div>
 			<script>
 			// toastr
@@ -176,7 +189,6 @@
 			fetch(url) 
 	        .then(res=>res.json())
 	        .then(obj=>{
-	           console.log(obj);
 	           grid1.resetData(obj);
 	        })
 		}
@@ -200,7 +212,6 @@
 		}
 	   	
 		function updateOrderNy() {
-			console.log(Agrid1.getData())
 			let b = Agrid1.getData();
 			$.ajax({
 				url : "updateOrderWK",
@@ -247,7 +258,12 @@
 				header : '주문일자',
 				name : 'orderDate', //납기일자명 수정
 				align : 'center',
-				filter: 'select',
+				filter: {
+                    type: 'date',
+                    options: {
+                      format: 'yyyy-MM-dd'
+                    }
+                 },
 				formatter(ev) {
 					if(ev.value){
                     return `${ev.value.substring(0,10)}`;
@@ -338,12 +354,27 @@
 				}
 		          ]
 		});
+	    var today = new Date();
+	    var picker = tui.DatePicker.createRangePicker({
+	        startpicker: {
+	            date: today,
+	            input: '#startpicker-input',
+	            container: '#startpicker-container'
+	        },
+	        endpicker: {
+	            date: today,
+	            input: '#endpicker-input',
+	            container: '#endpicker-container'
+	        },
+	        selectableRanges: [
+	            [today, new Date(today.getFullYear() + 1, today.getMonth(), today.getDate())]
+	        ]
+	    });
 		function alls3() {
 			url="selectOrderList"
 			fetch(url) 
 	        .then(res=>res.json())
 	        .then(obj=>{
-	           console.log(obj);
 	           grid123.resetData(obj);
 	        })
 		}

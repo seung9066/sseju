@@ -184,11 +184,25 @@
 	        		var prt = {prtCode : prtGrid.getRow(event.rowKey).prtCode,prtName:prtGrid.getRow(event.rowKey).prtName,
 	        				prtUnit: prtGrid.getRow(event.rowKey).prtUnit,
 	        			unitPrice:prtGrid.getRow(event.rowKey).prtPrice, orderQty1: '', orderQty:'', orderPrice:''}; //json 형태로 지정해도 됩니다.
-	        			prtGrid1.appendRow(prt);
-	        			
+				 if( prtGrid1.getRowCount()==0){
+					 prtGrid1.appendRow(prt);
+		          } else {
+		             let checkNum = 0;
+		             for(i=0; i<prtGrid1.getRowCount(); i++){
+		                 if( prtGrid1.getRow(i).prtCode==prtGrid.getRow(event.rowKey).prtCode){
+		                    checkNum++;
+		                 }
+		              }
+		             if(checkNum > 0){
+		            	 toastr.error("중복");
+		                checkNum = 0;
+		             } else {
+		            	 prtGrid1.appendRow(prt);
+		                checkNum = 0;
+		             }
+		          } 
 	                })
-	                
-	                
+	             
 	         function clearA() {
 				 prtGrid1.clear()
 			 }
@@ -199,7 +213,6 @@
 	        	for(let i=0; i<rowData.length; i++) {
 	        		if (rowData[i].orderQty1 == '' || rowData[i].orderQty1.length == 0) {
 	        			toastr.warning('주문량을입력하셈');
-	        			rowData[i].orderQty1.focus();
 	        			return;
 	        		}
 	        		
