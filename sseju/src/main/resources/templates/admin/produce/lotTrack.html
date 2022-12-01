@@ -57,7 +57,14 @@
 						formatter : function (ev){
 	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
 	                    }
-					},  {
+					}, {
+						header : '현재수량',
+						name : 'lotQty',
+						align : 'center',
+						formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+	                    }
+					}, {
 						header : '담당자',
 						name : 'empName',
 						filter : 'select',

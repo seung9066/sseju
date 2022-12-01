@@ -24,8 +24,10 @@ body {
 	cursor: pointer;
 	border: none;
 	border-radius: 4px;
-	background-color: green;
+	background-color: rgb(13, 110, 253);
 	color: white;
+	width: 70px;
+	height: 30px;
 }
 
 a {

@@ -3,6 +3,40 @@
 <mapper
 	namespace="com.sseju.java.processcheck.mapper.ProcessCheckMapper">
 	<!-- R -->
+		<!-- 공정 검사 페이지, 공정명 조회 그리드용 -->
+	<select id="getProcessMenu" resultType="pcVO">
+	SELECT prs_code,
+		   prs_name, 
+		   prs_detail
+		   
+	FROM process
+	</select>
+	
+		<!--ㄴ공정 리스트의 공정 명 클릭 시 아래 그리드에 정보 가져오기 -->
+	<select id="getPrsList" resultType="pcVO" parameterType="pcVO">
+		SELECT prr.prs_date, 
+		       pr.prs_name, 
+		       pre.err_code, 
+		       pre.prs_err_qty,
+		       ee.emp_name,
+		       er.err_name
+	       
+		FROM process pr
+		 JOIN process_run prr
+		   ON pr.prs_code = prr.prs_code
+		 JOIN process_inf pri
+		   ON prr.prs_no = pri.prs_no
+		 JOIN process_err pre
+		   ON pre.prs_pf_no = pri.prs_pf_no
+		 JOIN error er
+		   ON er.err_code = pre.err_code
+		 JOIN employee ee
+		   ON ee.emp_id = prr.prs_manager
+		   
+		WHERE pr.prs_name = #{prsCode}
+		ORDER BY prr.prs_date DESC
+	</select>
+	
 		<!-- 공정 검사 페이지의 그리드 데이터 불러오는 sql문 -->
 	<select id="getProcessCheck" resultType="pcVO">
 		SELECT prr.prs_date, 
@@ -11,6 +45,7 @@
 		       pre.err_code, 
 		       er.err_name,
 		       ee.emp_name
+		       
 		FROM process_run prr
 		 JOIN process_inf pri
 		   ON prr.prs_no = pri.prs_no
@@ -22,6 +57,7 @@
 		   ON pre.err_code = er.err_code
 		 JOIN employee ee
 		   ON ee.emp_id = prr.prs_manager
+		   
 		ORDER BY prr.prs_date DESC
 	</select>
 	
@@ -29,7 +65,4 @@
 		SELECT TO_CHAR(prr.prs_date, 'YYYY-MM-DD') AS "prs_date"
 		FROM process_run
 	</select>
-	<!-- U -->
-	
-	<!-- D -->
 </mapper>

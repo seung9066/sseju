@@ -36,8 +36,7 @@ public class ProcessCheckVO {
 	private String prsCode;		//공정코드 
 	private String prsName;		//공정명	 process tbl
 	private String prsManager;	//공정 검사 담당자 process_run tbl, emp테이블에서 id끌어와서 써야함
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	
+	private String prsDetail;	//공정 내용, 해당 공정이 어떤 공정인지 설명하는자리
 	//produce테이블
 	private String preNo;		//작업 지시 번호를 받아서 조회할것
 	

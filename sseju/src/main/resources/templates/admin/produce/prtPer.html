@@ -5,7 +5,7 @@
 	layout:decorate="~{/layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>PrtPerList</title>
+<title>생산 실적</title>
 <!-- 아이콘 -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 </head>
@@ -13,24 +13,25 @@
 	<article layout:fragment="content">
 		<main id="main" class="main">
 			<h4>생산 실적</h4>
-			<!-- 그리드 -->
-			<div id="prtperGrid"></div>
+			
+				<!-- 그리드 -->
+				<div id="prtperGrid"></div>
+			
 			<br>
-			<!-- 이거 회의후 띄울지 말지 결정 
-			 -->
+			
 			<div>
-			<h6>불량 상세 내역</h6>
-			<div id="prrErrGrid"></div>			
+				<h6>불량 상세 내역</h6>
+				<div id="prrErrGrid"></div>			
 			</div>
 			
 			<script type="text/javascript">
-			showAll();
-			
-			var token = $("meta[name='_csrf']").attr("content");
-			var header = $("meta[name='_csrf_header']").attr("content");
-			/*------------------------------- 
-			생산 실적 내역 그리드, 최신순이 위로 올라오게 설정
-			------------------------------------*/
+				showAll();
+				
+				var token = $("meta[name='_csrf']").attr("content");
+				var header = $("meta[name='_csrf_header']").attr("content");
+				/*------------------------------- 
+				생산 실적 내역 그리드, 최신순이 위로 올라오게 설정
+				------------------------------------*/
 				var prtperGrid = new tui.Grid({
 					el : document.getElementById('prtperGrid'),
 					scrollX : false,
@@ -53,29 +54,16 @@
 						name : 'prtQty',
 						align : 'center',
 						formatter : function (ev){
-		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
-		                    }
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+	                    }
 					}, {
 						header : '불량 발생 개수',
 						name : 'prsErrQty',
 						align : 'center',
 						formatter : function (ev){
-		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
-		                    },
-		                hidden : 1    
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+	                    }
 					}, {
-						header : '불량 코드',
-						name : 'errCode',
-						filter : 'select',
-						align : 'center',
-		                hidden : 1 
-					}, {
-						header : '불량명',
-						name : 'errName',
-						filter : 'select',
-						align : 'center',
-		                hidden : 1 
-					},  {
 						header : '작업일자',
 						name : 'prsDate',
 						filter: {
@@ -95,7 +83,8 @@
 						align : 'center'
 					}]
 				});
-			//생산 실적 그리드에 띄워주기 위한 값을 DB에서 가져옴
+				
+				//생산 실적 그리드에 띄워주기 위한 값을 DB에서 가져옴
 				function showAll() {
 				       fetch("getPrtPerList") 
 				       .then(res=>res.json())
@@ -106,9 +95,7 @@
 				}
 				/* prtPerGrid 행 클릭 시 prrErrGrid그리드에 데이터를 가져오는 클릭이벤트 */
 				prtperGrid.on('click', (ev)=>{
- 					let preNo = ev.nativeEvent.target.innerText;
-					console.log(preNo);
-					
+						let preNo = ev.nativeEvent.target.innerText;
 					$.ajax({
 						url:'getErrList',
 						data : {preNo:preNo},
@@ -122,8 +109,6 @@
 						}
 					}) 
 				});
-					
-				
 				/*------------------------
 				생산 실적 그리드 행 클릭 시, 불량갯수와 불량사유를 보여주는 그리드
 				--------------------------*/
