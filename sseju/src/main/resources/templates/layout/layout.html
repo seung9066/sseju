@@ -18,6 +18,8 @@
 
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
 
 <!-- Favicons -->
 <link href="assets/img/favicon.png" rel="icon">
@@ -88,8 +90,6 @@
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
 
-<script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
-
 </head>
 
 <body>
@@ -98,6 +98,7 @@
 		<div id="header" class="header fixed-top d-flex align-items-center">
 
 			<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+			<input type="hidden" value="ROLE_ADMIN" id="role">
 				<div class="d-flex align-items-center justify-content-between">
 					<a href="/dashboard" class="logo d-flex align-items-center"> <img
 						src="assets/img/logo.png" alt=""> <span
@@ -106,6 +107,7 @@
 				</div>
 			</th:block>
 			<th:block sec:authorize="hasRole('ROLE_COMPANY')">
+			<input type="hidden" value="ROLE_COMPANY" id="admin">
 				<div class="d-flex align-items-center justify-content-between">
 					<a href="/orlist" class="logo d-flex align-items-center"> <img
 						src="assets/img/logo.png" alt=""> <span
@@ -123,8 +125,8 @@
 							<li class="nav-item dropdown"><a class="nav-link nav-icon"
 								href="#" data-bs-toggle="dropdown" onclick="showMsg()"> <i
 									class="bi bi-bell" onclick="showMsg()"></i> <span
-									class="badge bg-primary badge-number" onclick="showMsg()">{{
-										msgCount }}</span></a> <!-- End Notification Icon -->
+									class="badge bg-primary badge-number" onclick="showMsg()">{{ msgCount }}</span></a>
+									 <!-- End Notification Icon -->
 
 								<ul
 									class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
@@ -146,12 +148,13 @@
 											notifications</a></li>
 
 								</ul> <!-- End Notification Dropdown Items --></li>
+								</th:block>
 							<!-- End Notification Nav -->
-							<li class="nav-item dropdown"><a class="nav-link nav-icon"
+							<!-- <li class="nav-item dropdown"><a class="nav-link nav-icon"
 								href="#" data-bs-toggle="dropdown"> <i
 									class="bi bi-chat-left-text"></i> <span
 									class="badge bg-success badge-number">3</span>
-							</a> <!-- End Messages Icon -->
+							</a> End Messages Icon
 
 								<ul
 									class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
@@ -204,8 +207,8 @@
 
 									<li class="dropdown-footer"><a href="#">Show all
 											messages</a></li></li>
-							<!-- End Messages Nav -->
-					</ul>
+							End Messages Nav
+					</ul> -->
 					<!-- End Messages Dropdown Items -->
 
 					<li class="nav-item dropdown pe-3"><a
@@ -255,20 +258,10 @@
 				</nav>
 				<!-- End Icons Navigation -->
 			</div>
-			</th:block>
 		</div>
 		<script>
-		
-		// toastr
-        toastrA.options = {
-               "closeButton": false,
-               "newestOnTop": true,
-               "positionClass": "toast-top-right",
-               "preventDuplicates": true,
-               "extendedTimeOut" : 1500, 
-               "timeOut" : 2500
-        }
-		
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
 		
 new Vue({
 	el: '#msg',
@@ -291,8 +284,6 @@ new Vue({
 						vueObject.msgCount = data.no
 					},
 					error:function(request,status,error){
-						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-						console.log(code);
 						console.log(reject);
 					}
 				})
@@ -301,11 +292,21 @@ new Vue({
 })
 
 let msgList = [];
+let msgListNo = [];
 
-
+// toastr
+toastr.options = {
+       "closeButton": false,
+       "newestOnTop": true,
+       "positionClass": "toast-top-right",
+       "preventDuplicates": true,
+       "extendedTimeOut" : 1500, 
+       "timeOut" : 2500
+}
 
 function showMsg() {
 	msgList = [];
+	msgListNo = [];
 	$('#msgA').empty();
 
 	$.ajax({
@@ -316,11 +317,10 @@ function showMsg() {
 	success:function(data){
 		for (let i = 0; i < data.length; i++) {
 			msgList.push(data[i].msg);
+			msgListNo.push(data[i].no);
 		}
 	},
 	error:function(request,status,error){
-		alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-		console.log(code);
 		console.log(reject);
 	}
 })
@@ -333,7 +333,8 @@ $('#msgA').prepend(`<li>
 		<li class="notification-item"><i
 		class="bi bi-check-circle text-success"></i>
 		<div>
-			<h4>${msgList[i]}</h4>
+			<h4 onclick="msgListClick(this)">${msgList[i]}</h4>
+			<input type="hidden" value="${msgListNo[i]}">
 		</div></li>`);
 }
 }
@@ -345,11 +346,8 @@ function deleteMsg() {
 		dataType:'json',
 		async:false,
 		success:function(data){
-			console.log("a")
 		},
 		error:function(request,status,error){
-			alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-			console.log(code);
 			console.log(reject);
 		}
 	})
@@ -361,7 +359,10 @@ function deleteMsg() {
 let msgListB = [];
 let msgListC = [];
 let msgTime = 1;
-showMsgB();
+
+if ($('#role').val() == 'ROLE_ADMIN') {
+showMsgB();	
+}
 
 function showMsgB() {
 	msgListB = [];
@@ -380,8 +381,6 @@ function showMsgB() {
 		}
 	},
 	error:function(request,status,error){
-		alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-		console.log(code);
 		console.log(reject);
 	}
 })
@@ -391,9 +390,9 @@ if (msgListB.length == 0) {
 } else {
 msgTime = msgListB.length;
 }
-
+	
 for (let i = 0; i < msgListB.length; i++) {
-	setTimeout(() => {toastrA.info(msgListB[i])}, (i + 1) * 2000);
+	setTimeout(() => {toastr.info(msgListB[i])}, (i + 1) * 2000);
 	let msgg = {'no':msgListC[i]};
 	setTimeout(() => {
 		$.ajax({
@@ -410,7 +409,6 @@ for (let i = 0; i < msgListB.length; i++) {
 				
 			},
 			error:function(request,status,error){
-				alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 				console.log(reject);
 			}
 		})
@@ -420,6 +418,45 @@ for (let i = 0; i < msgListB.length; i++) {
 }
 setInterval(() => showMsgB(), 100000 * msgTime);
 
+
+function msgListClick(a) {
+	let msgContent = a.innerText;
+	let msgContentNo = {'no':a.nextSibling.nextSibling.value};
+	$.ajax({
+		url:'deleteOneMsg',
+		type:'POST',
+		data:JSON.stringify(msgContentNo),
+		dataType:"json",
+		contentType: 'application/json; charset=utf-8',
+		async:false,
+		beforeSend : function(xhr){
+			xhr.setRequestHeader(header, token);
+		},
+		success:function(data){
+			
+		},
+		error:function(request,status,error){
+			console.log(reject);
+		}
+	})
+	if (msgContent.includes('주문')) {
+		location.href = "/ordetail";
+	} else if (msgContent.includes('자재발주')) {
+		location.href = "/matOrd"
+	} else if (msgContent.includes('자재검수')) {
+		location.href = "/matRecChk"
+	} else if (msgContent.includes('자재불량')) {
+		location.href = "/matRecChk"
+	} else if (msgContent.includes('자재창고')) {
+		location.href = "/matIn"
+	} else if (msgContent.includes('자재 출고')) {
+		location.href = "/matOut"
+	} else if (msgContent.includes('공정')) {
+		location.href = "/workHistory"
+	} else if (msgContent.includes('제품')) {
+		location.href = "/lotTrack"
+	}
+}
 </script>
 	</header>
 	<!-- End Header -->

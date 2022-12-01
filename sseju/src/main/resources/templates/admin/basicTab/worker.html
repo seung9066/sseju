@@ -218,13 +218,12 @@
 						},
 						success:function(data){
 							if(data != null) {
-								console.log(data);
 								workerBGrid.resetData(data);
 							} else {
 								alert("실패");
 							}
 						},
-						error:function(request,status,error){
+						error:function(reject){
 							console.log(reject);
 						}						
 					});
@@ -232,7 +231,6 @@
 				
 				workOrderGrid.on('click', ev => {
 					let data = workOrderGrid.getValue(ev.rowKey, 'preNo')
-					console.log(data);
 					$('#preNo').val(workOrderGrid.getValue(ev.rowKey, 'preNo'));
 					showA(data);
 					showB(data);
@@ -248,7 +246,6 @@
 				
 				
 				function updateWorker() {
-					console.log(workOrderGrid.getCheckedRows());
 					let inputId = [];
 					let deleteId = [];
 					let preNo = [];
@@ -261,6 +258,9 @@
 						preNo.push($('#preNo').val());
 					}
 					
+					if (inputId.length == 0) {
+						toastr.warning('체크된 인원이 없습니다')
+					} else {
 					$.ajax({
 						url:'updateWorker',
 						type:'POST',
@@ -279,19 +279,17 @@
 								alert("업데이트실패");
 							}
 						},
-						error:function(request,status,error){
-							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-							console.log(code);
+						error:function(reject){
 							console.log(reject);
 						}
 					})
+					}
 				}
 				
 				function showAll() {
 					fetch("getWorkOrderList") 
 				       .then(res=>res.json())
 				       .then(obj=>{
-				           console.log(obj);
 				           workOrderGrid.resetData(obj);
 				       })
 				}

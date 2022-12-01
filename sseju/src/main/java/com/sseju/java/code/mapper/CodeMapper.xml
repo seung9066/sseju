@@ -223,6 +223,11 @@
 	</select>
 
 	<insert id="insertWh" parameterType="CodeVO">
+		<selectKey keyProperty="whCode" resultType="String"
+			order="BEFORE">
+			SELECT 'STO_'||LPAD(NVL(MAX(SUBSTR(wh_code, -3)),0)+1,3,0)
+			FROM warehouse
+		</selectKey>
 		INSERT INTO warehouse
 		VALUES(#{whCode}, 
 				#{whName}, 
@@ -771,7 +776,7 @@
 	</select>
 	
 	<select id="msgUp" resultType="CodeVO">
-		SELECT msg 
+		SELECT * 
 		FROM msg 
 		ORDER BY no
 	</select>
@@ -803,4 +808,16 @@
 	<delete id="deleteMsg">
 		DELETE FROM msg
 	</delete>
+	
+	<delete id="deleteOneMsg" parameterType="CodeVO">
+		DELETE FROM msg WHERE no = #{no}
+	</delete>
+	
+	<select id="selectMPCode" parameterType="CodeVO" resultType="CodeVO">
+		SELECT COUNT(*) AS no
+		FROM product p, 
+			material m 
+		WHERE p.prt_name = #{name} 
+		OR m.mat_name = #{name}
+	</select>
 </mapper>

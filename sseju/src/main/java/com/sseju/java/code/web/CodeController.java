@@ -228,7 +228,8 @@ public class CodeController {
 
 	@PostMapping("/insertPrs")
 	public String insertPrs(CodeVO vo) {
-		return service.insertPrsA(vo);
+		service.insertPrsA(vo);
+		return "redirect:basicProcess";
 	}
 
 	@PostMapping("/selectDeletePW")
@@ -246,7 +247,8 @@ public class CodeController {
 
 	@PostMapping("/insertWh")
 	public String insertWh(CodeVO vo) {
-		return service.insertWhA(vo);
+		service.insertWhA(vo);
+		return "redirect:basicProcess";
 	}
 
 	@PostMapping("/updatePrs")
@@ -423,5 +425,20 @@ public class CodeController {
 	@ResponseBody
 	public int readMsg(@RequestBody CodeVO vo) {
 		return service.readMsg(vo);
+	}
+	
+	@PostMapping("/deleteOneMsg")
+	@ResponseBody
+	public int deleteOneMsg(@RequestBody CodeVO vo) {
+		return service.deleteOneMsg(vo);
+	}
+	
+	@PostMapping("/selectMPCode")
+	@ResponseBody
+	public Map<String, String> selectMPCode(@RequestBody CodeVO vo) {
+		int a = service.selectMPCode(vo).getNo();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("no", Integer.toString(a));
+		return map;
 	}
 }

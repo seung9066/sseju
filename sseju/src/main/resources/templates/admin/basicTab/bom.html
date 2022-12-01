@@ -37,23 +37,23 @@ input {
 			<h3 id="title">전체</h3>
 			<div>
 				<div id="menuGrid"></div>
-				<br>
+				<input type="hidden" value=0 id="menucheck"> <br>
 				<div style="float: right; margin-bottom: 3%;">
 					<button type="button" class="button"
 						style="width: 100px; height: 30px;" onclick="put()">재료추가</button>
 					<button type="button" class="button"
 						style="width: 100px; height: 30px;" onclick="updateBOM()">등록/수정</button>
 				</div>
-				<table>
+				<table class="table">
 					<tr>
-						<th>재료</th>
+						<th>*재료</th>
 						<td><select style="width: 150px;" id="mat">
-								<option>선택</option>
+								<option value=0>---선택---</option>
 								<th:block th:each="m : ${mat}">
 									<option th:value="${m.matName}" th:text="${m.matName}"></option>
 								</th:block>
 						</select></td>
-						<th>용량</th>
+						<th>*용량</th>
 						<td><input type="text" id="prc"></td>
 					</tr>
 				</table>
@@ -76,6 +76,23 @@ input {
 			
 			menuAll();
 			showAll();
+			
+			class MakingButtonRenderer1 {
+		         constructor(props) {
+		             const el = document.createElement('span');
+		              el.innerHTML='<button type="button" class="btn btn-sm btn-secondary" style="width:80px">삭제</button>';
+		              this.el = el;
+		              this.render(props);
+		          }
+
+		          getElement() {
+		             return this.el;
+		          }
+
+		          render(props) {
+		             this.el.value = String(props.value);
+		          }
+		      }
 			
 			const menuGrid = new tui.Grid({
 				el : document.getElementById('menuGrid'),
@@ -118,7 +135,10 @@ input {
 					header : '삭제',
 					name : 'dell',
 					align : 'center',
-					width : 300
+					width : 200,
+					renderer: {
+		                 type: MakingButtonRenderer1
+		              }
 				}]
 			});
 			
@@ -126,8 +146,9 @@ input {
 			
 			menuGrid.on('click', (ev) => {
 				
+				$('#menucheck').val(1);
+				
 				let prtName = ev.nativeEvent.target.innerText;
-				console.log(prtName);
 				
 				$("#title").text(prtName);
 
@@ -140,7 +161,6 @@ input {
 						BOMGrid.resetData(data);
 					},
 					error:function(request,status,error){
-						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 						console.log(reject);
 					}
 				})
@@ -153,7 +173,6 @@ input {
 			})
 			
 			function updateBOM() {
-				console.log(BOMGrid.getData());
 				let mat = [];
 				let cap = [];
 				for(co of BOMGrid.getData()){
@@ -165,7 +184,6 @@ input {
 				let prtName = [];
 				
 				prtName.push(prtName1);
-				console.log(prtName);
 				$.ajax({
 					url:'updateBOM',
 					type:'POST',
@@ -184,8 +202,6 @@ input {
 						}
 					},
 					error:function(request,status,error){
-						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-						console.log(code);
 						console.log(reject);
 					}
 				})
@@ -196,33 +212,30 @@ input {
 				       fetch(url) // 설비 단건조회 불러오는 아작스
 				       .then(res=>res.json())
 				       .then(obj=>{
-				           console.log(obj);
 				           menuGrid.resetData(obj);
 				       })
 			}
 			
 			function showAll() {
 				$('#title').text("전체");
-				
-				url="codeList"
-				       fetch(url) // 설비 단건조회 불러오는 아작스
-				       .then(res=>res.json())
-				       .then(obj=>{
-				           console.log(obj);
-				           BOMGrid.resetData(obj);
-				       })
 			}
 			
 			function put() {
-				let name = $('#name').val();
 				let prc = $('#prc').val();
 				let mat = $('#mat').val();
 				
-				let insertRow = {matName : mat, capacity: prc, dell: '삭제'};
-				BOMGrid.appendRow(insertRow);
+				if ($('#menucheck').val() == 0) {
+					toastr.warning('제품을 선택해주세요')
+				} else if (mat == 0) {
+					toastr.warning('재료를 선택해주세요')
+				} else if (prc.length == 0) {
+					toastr.warning('용량을 입력해주세요')
+				} else {
+					let insertRow = {matName : mat, capacity: prc, dell: '삭제'};
+					BOMGrid.appendRow(insertRow);
+				}
+				
 			}
-			
-			
 			</script>
 		</main>
 	</article>

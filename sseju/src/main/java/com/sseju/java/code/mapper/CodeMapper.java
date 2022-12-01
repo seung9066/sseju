@@ -22,6 +22,9 @@ public interface CodeMapper {
 	public int insertMsg(CodeVO vo);
 	public int deleteMsg();
 	public int readMsg(CodeVO vo);
+	public int deleteOneMsg(CodeVO vo);
+	
+	public CodeVO selectMPCode(CodeVO vo);
 	
 	// bom
 	public List<CodeVO> getBomList(CodeVO vo);

@@ -115,10 +115,8 @@ th {
 			var deleteCode = [];
 			
 			codeGrid.on('check', ev => {
-				console.log(codeGrid.getValue(ev.rowKey, 'code'));
 				deleteCode.push((codeGrid.getValue(ev.rowKey, 'code')));
 				
-				console.log($('input[name=_checked]').val());
 				
 				/* $('input[name=_checked]').each(function (idx, item){
 					codeGrid.getValue(i, 'code');
@@ -127,25 +125,20 @@ th {
 			});
 			
 			codeGrid.on('uncheck', ev => {
-				console.log(codeGrid.getValue(ev.rowKey, 'code'));
 				for(let i = 0; i < deleteCode.length; i++) {
 					if(deleteCode[i] == codeGrid.getValue(ev.rowKey, 'code')) {
 						deleteCode.splice(i, 1);
 					}
 				}
-				console.log(deleteCode);
 			});
 			
 			function selectDelete() {
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
 				
-				console.log(codeGrid.getCheckedRows());
 				let code = [];
 				for(co of codeGrid.getCheckedRows()){
-					console.log(co)
 					code.push(co.code)
-					console.log(code);
 				}
 				
 				$.ajax({
@@ -165,9 +158,7 @@ th {
 							alert("삭제실패");
 						}
 					},
-					error:function(request,status,error){
-						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-						console.log(code);
+					error:function(reject){
 						console.log(reject);
 					}
 				})
@@ -180,7 +171,6 @@ th {
 				       fetch(url) // 설비 단건조회 불러오는 아작스
 				       .then(res=>res.json())
 				       .then(obj=>{
-				           console.log(obj);
 				           codeGrid.resetData(obj);
 				       })
 			}
@@ -228,7 +218,6 @@ th {
 	            		xhr.setRequestHeader(header, token);
 	            	},
 		            success : function(result) {
-		               console.log(result)
 		               codeGrid.resetData(result);
 		            },
 		            error : function(error){

@@ -90,8 +90,6 @@
 							}
 						},
 						error:function(request,status,error){
-							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-							console.log(code);
 							console.log(reject);
 						}
 					})
@@ -155,8 +153,6 @@
 							}
 						},
 						error:function(request,status,error){
-							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-							console.log(code);
 							console.log(reject);
 						}
 					})
@@ -220,8 +216,6 @@
 							}
 						},
 						error:function(request,status,error){
-							alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-							console.log(code);
 							console.log(reject);
 						}
 					})
@@ -251,8 +245,6 @@ $.ajax({
 		pno0 = data;
 	},
 	error:function(request,status,error){
-		alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-		console.log(code);
 		console.log(reject);
 	}
 })	
@@ -279,8 +271,6 @@ $.ajax({
 		}
 	},
 	error:function(request,status,error){
-		alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-		console.log(code);
 		console.log(reject);
 	}
 })	
@@ -307,8 +297,6 @@ $.ajax({
 		}
 	},
 	error:function(request,status,error){
-		alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-		console.log(code);
 		console.log(reject);
 	}
 })	
@@ -335,8 +323,6 @@ $.ajax({
 		}
 		},
 	error:function(request,status,error){
-		alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-		console.log(code);
 		console.log(reject);
 	}
 })	
@@ -468,7 +454,6 @@ setInterval(() => runprr(), 100000);
 								            		xhr.setRequestHeader(header, token);
 								            	},
 									            success : function(result) {
-									               console.log(result)
 									               WHGrid.resetData(result);
 									            },
 									            error : function(error){
@@ -797,7 +782,6 @@ $.ajax({
 		xhr.setRequestHeader(header, token);
 	},
     success : function(result) {
-       console.log(result)
        WL2Grid.resetData(result);
     },
     error : function(error){
@@ -820,7 +804,6 @@ function startPr() {
 			xhr.setRequestHeader(header, token);
 		},
 	    success : function(result) {
-	       console.log(type)
 	    },
 	    error : function(error){
 	       console.log(11);
@@ -858,6 +841,7 @@ function startPr() {
 
 								<script>
 var CChart = [];
+var chartA = [];
 
 function prdCount() {	
 	$.ajax({
@@ -865,6 +849,9 @@ function prdCount() {
 	    type : "GET",
 	    success : function(result) {
 	       CChart = result;
+	       for (let i = 0; i < CChart.length; i++) {
+	        	  chartA.push([CChart[i].prtName, CChart[i].orderOutQty]);
+	          }
 	    },
 	    error : function(error){
 	       console.log(11);
@@ -874,7 +861,7 @@ function prdCount() {
 
 function prdChart1() {
 prdCount();
-chartt1();
+setTimeout(() => {chartt1()}, 100);
 }
 
 prdChart1();
@@ -889,11 +876,6 @@ google.charts.setOnLoadCallback(drawChart);
           var data = new google.visualization.DataTable();
           data.addColumn('string','소주');
           data.addColumn('number','비중');
-		  
-          let chartA = [];
-          for (let i = 0; i < CChart.length; i++) {
-        	  chartA.push([CChart[i].prtName, CChart[i].orderOutQty]);
-          }
           
           data.addRows(chartA);
           var opt = {
