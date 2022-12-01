@@ -78,14 +78,14 @@
 
 			<script>
 			// toastr
-	        /*  toastr.options = {
+	          toastr.options = {
 	                "closeButton": false,
 	                "newestOnTop": true,
 	                "positionClass": "toast-top-center",
 	                "preventDuplicates": true,
 	                "extendedTimeOut" : 1500, 
 	                "timeOut" : 2500
-	         } */
+	         } 
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
 
@@ -227,7 +227,7 @@
 						xhr.setRequestHeader(header, token);
 					},
 					success : function(list) {
-
+						
 							Agrid1.resetData(list)								
 
 					}// suc
@@ -251,9 +251,12 @@
 						alls();
 						alls3();
 						 $('#orModal').modal('hide');
-						alert('출고완료');
+						 toastr.success("출고완료");
+					}else{
+						list <=0
+						toastr.success("주문수량을 입력하세요");
 					}								
-				}// suc
+				}
 			});
 		}
 		</script>
