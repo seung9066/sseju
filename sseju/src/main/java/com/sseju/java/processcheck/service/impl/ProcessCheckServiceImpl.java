@@ -19,10 +19,18 @@ public class ProcessCheckServiceImpl implements ProcessCheckService {
 	public List<ProcessCheckVO> getProcessCheck() {
 		return pcMapper.getProcessCheck();
 	}
-	//
 	@Override
 	public List<Map<String, Object>> clickDate(ProcessCheckVO pcVO) {
 		return pcMapper.clickDate(pcVO);
+	}
+	@Override
+	public List<ProcessCheckVO> getProcessMenu() {
+		return pcMapper.getProcessMenu();
+	}
+	//공정메뉴페이지 클릭시 아래 그리드에 데이터 가져오기
+	@Override
+	public List<ProcessCheckVO> getPrsList(ProcessCheckVO pcVO) {
+		return pcMapper.getPrsList(pcVO);
 	}
 
 }

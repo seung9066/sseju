@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sseju.java.processcheck.service.ProcessCheckService;
@@ -24,12 +25,27 @@ public class ProcessCheckController {
 	public String processCheckList(Model model) {
 		return "/admin/quamanage/processCheck";
 	}
+	//ㄴ공정 리스트 출력
+	@GetMapping("/getProcessMenu")
+	@ResponseBody
+	public List<ProcessCheckVO> getProcessMenu() {
+		return pcService.getProcessMenu();
+	}
+	//ㄴ리스트 목록 클릭 시 데이터 출력
+	@GetMapping("/getPrsList")
+	@ResponseBody
+	public List<ProcessCheckVO> getPrsList(@RequestParam ProcessCheckVO pcVO){
+		
+		return pcService.getPrsList(pcVO);
+	}
+	
 	//ㄴ공정 조회 시 데이터 가져오기
 	@GetMapping("/getProcessCheckList")
 	@ResponseBody
 	public List<ProcessCheckVO> getProcessCheckList(){
 		return pcService.getProcessCheck();
 	}
+	
 	//일자별 조회 버튼 클릭 이벤트(공정조회 - 일자별 검색 탭)
 	@PostMapping("/prschkSearch")
 	@ResponseBody
