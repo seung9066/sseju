@@ -1,15 +1,19 @@
 package com.sseju.java.eqm.serviceImpl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sseju.java.code.mapper.CodeMapper;
 import com.sseju.java.code.service.CodeVO;
 import com.sseju.java.eqm.mapper.EqmMapper;
 import com.sseju.java.eqm.service.EqmService;
 import com.sseju.java.eqm.service.EqmVO;
+import com.sseju.java.eqm.service.FileRenamePolicy;
 
 @Service
 public class EqmServiceImpl implements EqmService {
@@ -28,7 +32,7 @@ public class EqmServiceImpl implements EqmService {
       return eqmMapper.selectEqmList();
    }
    
-	 @Override
+	/* @Override
 	 public int insertEqm(EqmVO eqmVO) {
 	 	
 	 int a = eqmMapper.insertEqm(eqmVO);
@@ -40,9 +44,26 @@ public class EqmServiceImpl implements EqmService {
 	 vo.setCodeName(eqmVO.getEqmName());
 
 	 cdMapper.insertCode(vo);
+	 
+	 
 
 	 return a;
-	 }
+	 } */
+   
+    @Override
+	 public int insertEqm(EqmVO eqmVO)   {
+	 	
+	 // 설비등록하는 동시에 공통코드에도 값 넣어주기
+	 CodeVO vo = new CodeVO();
+	 vo.setCode(eqmVO.getEqmCode());
+	 vo.setDivName("설비");
+	 vo.setDivCode("EQM");
+	 vo.setCodeName(eqmVO.getEqmName());
+
+	 cdMapper.insertCode(vo);
+	 return eqmMapper.insertEqm(eqmVO);
+
+	 } 
 	 
 
    @Override
@@ -134,7 +155,7 @@ public List<EqmVO> getEmpList() {
 
 @Override
 public int updateUoper(EqmVO eqmVO) {
-	// TODO Auto-generated method stub
+	
 	return eqmMapper.updateUoper(eqmVO);
 }
 

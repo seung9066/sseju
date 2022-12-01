@@ -18,6 +18,8 @@
 <!--부트스트랩 아이콘  -->
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+	
+
 
 <style>
 .row {
@@ -58,10 +60,6 @@ table, th, td {
 	cursor: pointer;
 }
 </style>
-
-
-
-
 
 
 </head>
@@ -128,7 +126,9 @@ table, th, td {
 
 				<!-- 설비정보 상세보기 -->
 				<div class="row">
+				<form id ="eqmForm" enctype="multipart/form-data">
 					<div class="col-9">
+					
 						<table id="regEqm">
 							<tr>
 								<th class="col1">설비코드</th>
@@ -191,17 +191,18 @@ table, th, td {
 									class="form-check-input" name="eqmYn" value="N" id="eqmN">N</td>
 							</tr>
 						</table>
+				
 					</div>
 					<div class="col-3">
 						<div id="imgDiv">
 							<img id="imgTag" name="imgTag" alt="설비이미지" src=""
 								style="width: 300px; height: 300px;">
 						</div>
-						<input type="file" id="img" name="img" onchange="previewImg()">
+						<input type="file" id="imageInput" name="imageInput" onchange="previewImg()">
 					</div>
+</form>
 				</div>
 			</div>
-
 
 
 			<br> <br>
@@ -228,8 +229,8 @@ table, th, td {
 					</div>
 				</div>
 			</div>
-
-			<script type="text/javascript">
+<script src="/assets/js/json.min.js"></script>
+		<script type="text/javascript">
          function dis(){
          if ($('#dis').css('display') == 'none') {
             $('#dis').show();
@@ -337,7 +338,7 @@ table, th, td {
    		
    				document.getElementById("imgTag").src = e.target.result;
    				};
-   				preview.readAsDataURL(document.getElementById("img").files[0]);
+   				preview.readAsDataURL(document.getElementById("imageInput").files[0]);
    			}
          
          
@@ -491,9 +492,11 @@ table, th, td {
                
             });
             
+           
+            
             //등록 insert ajax
             function insertEqm(){
-            	let eqmCode = $('#eqmCode').val();
+           /* 	let eqmCode = $('#eqmCode').val();
             	let eqmName = $('#eqmName').val();
             	let eqmModel = $('#eqmModel').val();
             	let eqmSize = $('#eqmSize').val();
@@ -507,18 +510,19 @@ table, th, td {
             	let eqmPurcName = $('#eqmPurcName').val();
             	let eqmPurcTel = $('#eqmPurcTel').val();
             	let eqmYn = $('input[name="eqmYn"]:checked').val();
-            	let lineNo = $('#lineNo option:selected').val();
+            	let lineNo = $('#eqmForm #lineNo').val();  // lineNo 이 여러개 있을때 제일 첫번째 lineNo이 들어가서 오류남
+            	*/
             	
-            	console.log(eqmCode);
-            	console.log(eqmImg);
-            	console.log(eqmName);
-            	console.log(lineNo);
+            	 const formData = new FormData(document.getElementById('eqmForm')); // js로 불러야됨(jquery말고)
             	
-            	$.ajax({
+            	 let insEqm = $('#eqmForm').serializeObject();// {eqmCode, eqmName ,eqmModel, 'eqmSize':eqmSize,'eqmLoc':eqmLoc,'eqmMaxTemp':eqmMaxTemp,'eqmMinTemp':eqmMinTemp,'eqmCheck':eqmCheck,'eqmCheckTerm':eqmCheckTerm,'eqmPurcDate':eqmPurcDate,'eqmImg':eqmImg,'eqmPurcName':eqmPurcName ,'eqmPurcTel' : eqmPurcTel,'eqmYn':eqmYn,'lineNo':lineNo};
+            	
+            	 $.ajax({
             		url:'insertEqm',
             		type : 'POST',
-            		data : {'eqmCode':eqmCode, 'eqmName' : eqmName , 'eqmModel':eqmModel, 'eqmSize':eqmSize,'eqmLoc':eqmLoc,'eqmMaxTemp':eqmMaxTemp,'eqmMinTemp':eqmMinTemp,'eqmCheck':eqmCheck,'eqmCheckTerm':eqmCheckTerm,'eqmPurcDate':eqmPurcDate,'eqmImg':eqmImg,'eqmPurcName':eqmPurcName ,'eqmPurcTel' : eqmPurcTel,'eqmYn':eqmYn,'lineNo':lineNo},
-            		dataType : "json",
+            		data : formData, //JSON.stringify(insEqm),
+                    processData: false,
+                    contentType: false,
                     async : false,
                     beforeSend : function(xhr){
                        xhr.setRequestHeader(header, token);
@@ -527,7 +531,8 @@ table, th, td {
                        if(data > 0) {
                          toastr.success("등록에 성공하였습니다!")
                           showAll(); 
-                          resetVal();
+                          eqmForm.reset();  // form serialize 했을때 바로 초기화시키는 메소드
+                          
                          
                        } else {
                          toastr.error("등록에 실패하였습니다.")
@@ -557,9 +562,26 @@ table, th, td {
                   },
                   success:function(data){
                      if(data > 0) {
-                        alert("삭제완료");
-                        showAll();
-                        resetVal();
+                    	 Swal.fire({
+                    		  title: '정말 삭제하시겠습니까?',
+                    		  icon: 'warning',
+                    		  showCancelButton: true,
+                    		  confirmButtonColor: '#3085d6',
+                    		  cancelButtonColor: '#d33',
+                    		  confirmButtonText: '네',
+                    		  cancelButtonText : '아니오'
+                    		}).then((result) => {
+                    		  if (result.isConfirmed) {
+                    		    Swal.fire(
+                    		      '삭제성공!',
+                    		      '',
+                    		      'success'
+                    		    )
+                    		    showAll();
+                                eqmForm.reset();
+                    		  }
+                    		})
+                       
                      } else {
                         alert("삭제실패");
                         resetVal();
@@ -572,7 +594,7 @@ table, th, td {
             }
             
             //등록, 수정, 삭제 후 input 태그 값들 초기화
-            
+            // stringify() => eqmForm.reset(); 하면 form으로 시리얼라이즈한 값들이 쉽게 초기화됨. 
            function resetVal(){
             		$('#eqmCode').val('');
                 	$('#eqmName').val('');
@@ -608,7 +630,7 @@ table, th, td {
             	let eqmImg = $('#eqmImg').val();
             	let eqmPurcName = $('#eqmPurcName').val();
             	let eqmPurcTel = $('#eqmPurcTel').val();
-            	let eqmYn = $('#eqmYn').val([]);
+            	let eqmYn = $('input[name="eqmYn"]:checked').val();
             	let lineNo = $('#lineNo').val();
                
                let updateEqm = {'eqmCode':eqmCode, 'eqmName' : eqmName , 'eqmModel':eqmModel, 'eqmSize':eqmSize,'eqmLoc':eqmLoc,'eqmMaxTemp':eqmMaxTemp,'eqmMinTemp':eqmMinTemp,'eqmCheck':eqmCheck,'eqmCheckTerm':eqmCheckTerm,'eqmPurcDate':eqmPurcDate,'eqmImg':eqmImg,'eqmPurcName':eqmPurcName ,'eqmPurcTel' : eqmPurcTel,'eqmYn':eqmYn,'lineNo':lineNo};
@@ -625,9 +647,9 @@ table, th, td {
                   },
                   success:function(data){
                      if(data > 0) {
-                        alert("수정완료");
+                        toastr.success("수정성공!");
                         showAll();  
-                        resetVal();
+                        eqmForm.reset();
                      } else {
                         alert("수정실패");
                      }
@@ -646,6 +668,7 @@ table, th, td {
                    .then(res=>res.json())
                    .then(obj=>{
                        eqmGrid.resetData(obj);
+                       
                    })
             }
             
@@ -655,6 +678,15 @@ table, th, td {
             		dataType:"json",
             		success : function(data){
             			cpGrid.resetData(data);
+            			 /* 파일이 존재하면 업로드한 이미지 띄우기, 존재하지 않으면 no Image 띄우기*/ 
+                        if(result.mfile != null){ 
+                       $('[name="mFile"]').attr("src", "/material/filedown?fname=" +result.mfile);
+                       $('[name="mFile"]').css("width", "500px");
+                        }else{
+                         $('[name="mFile"]').attr("src", "/assets/img/noImage.jpg" );  
+                         $('[name="mFile"]').css("width", "500px");
+                        }
+                     
             		},
             		error : function(reject){
             			console.log(reject);

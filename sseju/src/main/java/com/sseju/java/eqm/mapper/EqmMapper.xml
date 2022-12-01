@@ -59,7 +59,7 @@
 		<set>
 			<if test="eqmCode != null and !eqmCode.equals('')">
 				eqm_code=#{eqmCode},
-			</if>S
+			</if>
 			<if test="eqmName != null and !eqmName.equals('')">
 				eqm_name=#{eqmName},
 			</if>
@@ -76,7 +76,7 @@
 				eqm_max_temp = #{eqmMaxTemp},
 			</if>
 			<if test="eqmMinTemp != null and !eqmMinTemp.equals('')">
-				eqm_min_tem = #{eqmMinTemp},
+				eqm_min_temp = #{eqmMinTemp},
 			</if>
 			<if test="eqmCheck != null and !eqmCheck.equals('')">
 				eqm_check = #{eqmCheck},
@@ -289,7 +289,7 @@
         <set>
          EQM_YN = CASE WHEN EQM_YN = 'Y' THEN 'N' ELSE 'Y' END
         </set>
-        WHERE EQM_CODE = #{eqmCode} 
+        WHERE EQM_CODE = (SELECT EQM_CODE FROM EQM_UOPER WHERE EQM_CODE = #{eqmCode} AND UOPER_RSN=#{uoperRsn} AND EMP_ID = #{empId}) 
      </update>
 
 	<!-- 비가동 수정 -->
