@@ -2,8 +2,6 @@ package com.sseju.java.eqm.service;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 public interface EqmService {
    // 설비 전체조회
     public List<EqmVO> selectEqmList();
@@ -77,5 +75,6 @@ public interface EqmService {
 	
 	//비가동시 설비상태 yn
 	public int updateEqmYn(EqmVO eqmVO);
+
 	
 }

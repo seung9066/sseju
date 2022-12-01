@@ -526,8 +526,10 @@ img {
 			     
 			     // 비가동내역 상세보기 (수정, 삭제)
 			     	// '비가동' 버튼 눌리지 않게 o
+			            //1201배고프다 11:21 a.m 
 			     	// 작업내역 바로 나오게 o
 			     	// 수정=> {비가동사유, 작업자, 작업내용}만 되게
+			            //메시vs호날두
 			     	// '재가동'까지 끝내고 & 비가동 종료시간이 한달 지난애들만 삭제가능하도록
 			     var chkUoper = []; 
 		            
@@ -537,7 +539,6 @@ img {
 			            $('#endBtn').prop("disabled",true); 
 			            
 			           
-			            
 		            	chkUoper.push((uoperGrid.getValue(ev.rowKey,'uoperCode')));
 			           $('#uoperCode').val(uoperGrid.getValue(ev.rowKey,'uoperCode'));
 		               $('#eqmCode').val(uoperGrid.getValue(ev.rowKey,'eqmCode'));
@@ -606,13 +607,14 @@ img {
 		             }
 		            
 		            function updateUoper(){
+		            	let uoperCode = $('#uoperCode').val();
 		            	let eqmCode = $('#eqmCode').val();
 		            	let uoperRsn = $('#uoperRsn').val();
 		    			let uoperWork = $('#uoperWork').val();
 		    			let uoperEndTime =$('#uoperEndTime').val();
 		    			let empId = $('#empId').val();
 		               
-		               let updateUoper = {'eqmCode':eqmCode, 'uoperRsn':uoperRsn, 'uoperWork':uoperWork, 'uoperEndTime':uoperEndTime, 'empId':empId};
+		               let updateUoper = {'uoperCode':uoperCode,'eqmCode':eqmCode, 'uoperRsn':uoperRsn, 'uoperWork':uoperWork, 'uoperEndTime':uoperEndTime, 'empId':empId};
 		               
 		               $.ajax({
 		                  url :'updateUoper',
@@ -626,7 +628,7 @@ img {
 		                  },
 		                  success:function(data){
 		                     if(data > 0) {
-		                        tostr.success("수정완료")
+		                        toastr.success("수정완료")
 		                        uoperShow();
 		                        reset();
 
