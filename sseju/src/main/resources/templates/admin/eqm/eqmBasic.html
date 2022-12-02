@@ -49,7 +49,7 @@
                  
                      <input type="hidden" th:name="${_csrf.parameterName}"
                         th:value="${_csrf.token}" />
-                     <form>
+                     <form id="lineForm">
                         <input type="hidden" name="auth" value="ROLE_ADMIN">
                         <div style="float:right;">
                         <button type="button" class="button" onclick="insertLine()" id="ins">등록</button>
@@ -209,17 +209,17 @@
             });
             
             function insertLine(){
-            	let lineNo = $('#lineNo').val();
+            	/*let lineNo = $('#lineNo').val();
             	let totPrc = $('#totPrc').val();
             	let uph = $('#uph').val();
             	let lineYn = $("input[name='lineYn']:checked").val();
-            	let empNo = $('#empNo').val();
+            	let empNo = $('#empNo').val();*/
             	
-            	
+            	let eqmLine = $('#lineForm').serialize();
             	$.ajax({
             		url:'insertLine',
             		type : 'POST',
-            		data : {'lineNo':lineNo, 'totPrc' : totPrc , 'uph':uph, 'lineYn':lineYn,'empNo':empNo},
+            		data : eqmLine, //{'lineNo':lineNo, 'totPrc' : totPrc , 'uph':uph, 'lineYn':lineYn,'empNo':empNo},
             		dataType : "json",
                     async : false,
                     beforeSend : function(xhr){
@@ -229,8 +229,7 @@
                        if(data > 0) {
                     	  toastr.success("등록 성공하였습니다!")
                           showAll();
-                    	  reset();
-                         
+                         lineForm.reset();
                        } else {
                           toastr.error("등록 실패하였습니다.")
                           
@@ -262,11 +261,11 @@
                      if(data > 0) {
                     	toastr.success("삭제에 성공하였습니다!");
                         showAll();
-                        reset();
+                        lineForm.reset();
                         
                      } else {
                     	 toastr.success("삭제에 실패하였습니다!");
-                    	 reset();
+                         lineForm.reset();
                      }
                   },
                   error : function(reject){
@@ -297,7 +296,7 @@
                      if(data > 0) {
                         toastr.success("수정에 성공하였습니다.")
                         showAll();   
-                        reset();
+                        lineForm.reset();
                         
                      } else {
                          toastr.error("수정에 실패하였습니다.");
@@ -374,14 +373,7 @@
            
         	   
           
-            function reset(){
-              document.getElementById('lineNo').value=''; 
-          	  document.getElementById('totPrc').value='';
-          	  document.getElementById('uph').value='';
-          	  document.getElementById('empNo').value='';
-          	  $("input[name='lineYn']").val()='';
-              
-            }
+            
         	  
            
 

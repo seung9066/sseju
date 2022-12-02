@@ -110,12 +110,11 @@
 
 	<!-- 설비 삭제 -->
 	<delete id="deleteEqmInfo" parameterType="EqmVO">
-		DELETE FROM EQM
-		WHERE
-		eqm_code = #{eqmCode}
+		DELETE 
+		FROM EQM
+		WHERE eqm_code = #{eqmCode}
 	</delete>
-	<!-- 설비 단건 조회 -->
-
+	
 
 	<!-- 라인정보 전체조회 -->
 	<select id="getEqmLineList" resultType="EqmVO">
@@ -152,16 +151,20 @@
 		DELETE FROM eqm_line
 		WHERE line_no = #{lineNo}
 	</delete>
+	
+	<!-- 라인에 종속된 설비 찾기 -->
+	<select id="eqmLineEx" resultType="EqmVO">
+		SELECT EQM_CODE FROM EQM WHERE line_no = #{lineNo}
+	</select>
 
 	<!-- 정기점검 전체조회 -->
 	<select id="getEqmChkList" resultType="EqmVO">
 
     SELECT c.CHK_NO,
 	        c.CHK_DATE, c.CHK_NDATE, c.CHK_STATE, c.CHK_SOL,
-	        p.emp_id,q.EQM_CODE, q.EQM_NAME, q.eqm_check, q.eqm_check_term,q.line_no
+	        c.chk_emp_no,q.EQM_CODE, q.EQM_NAME, q.eqm_check, q.eqm_check_term,q.line_no
       FROM EQM_CHK c
       JOIN EQM q ON c.eqm_code = q.eqm_code
-      JOIN EMPLOYEE p ON c.chk_emp_no = p.emp_id	
     </select>
 
 	<!-- 정기점검 등록 -->
