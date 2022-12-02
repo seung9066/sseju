@@ -169,17 +169,6 @@ public class MatController {
 				}
 			}
 
-			/*
-			 * update -> Yn이 확인인 경우에만 미입고내역에 뜰수있고 insertMatord 발주확인에 넣고 미입고내역에 -> Yn을 '입고'로
-			 * update시에는 입고 내역에/ '진행'인 경우에는 미입고내역에 뜰수있도록 한다.
-			 * 
-			 * update -> Yn이 진행인 경우에 Insert -> mat_chk로 넘어가야함 만약 mat_chk에 mat_ord_no이 이미
-			 * 존재하는 경우엔 insert가 아닌 update를 해야하고 없는 경우엔 insert를 해야함
-			 * 
-			 * 
-			 * 
-			 */
-
 		}
 
 		System.out.println(uM);
@@ -234,66 +223,12 @@ public class MatController {
 		return service.matNotinList();
 	}
 
-	// 미입고 => LOT 입고
-
-	/*
-	@ResponseBody
-	@PostMapping("/insertLot")
-	public int insertLot(@RequestParam(value = "lotDate[]", required = false) List<Date> lotDate,
-			@RequestParam(value = "mpCode[]", required = false) List<String> mpCode,
-			@RequestParam(value = "whCode[]", required = false) List<String> whCode,
-			@RequestParam(value = "lotQty[]", required = false) List<String> lotQty,
-			@RequestParam(value = "matChkCode[]", required = false) List<String> matChkCode,
-			@RequestParam(value = "matPassQty[]", required = false) List<String> matPassQty,
-			@RequestParam(value = "matOrdNo[]", required = false) List<String> matOrdNo,
-			@RequestParam(value = "matOrdYn[]", required = false) List<String> matOrdYn) {
-
-		int result = 0;
-		System.out.println(matOrdNo.size());
-
-		for (int i = 0; i < matOrdNo.size(); i++) {
-			System.out.println("인서트 로트");
-			MatVO vo = new MatVO();
-			vo.setLotDate((lotDate.get(i)));
-			vo.setMpCode(mpCode.get(i));
-			vo.setWhCode(whCode.get(i));
-			vo.setLotQty(Integer.valueOf(lotQty.get(i)));
-			vo.setMatChkCode(matChkCode.get(i));
-
-			result += service.insertLot(vo);
-			
-			
-
-			// if(vo.getMatOrdYn() == "진행") {
-			if (vo.getMatOrdYn().equals("입고")) {
-//				vo.setMatErrQty(i)
-				vo.setMatPassQty(Integer.valueOf(matPassQty.get(i)));
-				vo.setMatErrQty(Integer.valueOf(matPassQty.get(i)));
-				vo.setMatOrdNo(matOrdNo.get(i));
-				// List<MatVO> list = new ArrayList<>();
-				System.out.println("도달");
-				System.out.println(vo.getMatOrdYn());
-				System.out.println(vo.getMatOrdNo());
-
-				service.updateChk(vo);
-				// 미검수 수량 matInQty의 3%를 불량처리하고 나머지를 PassQty로 처리해서 넣기
-				
-				//if(insert[i].matOrdYn.equals("입고")){
-				//if(insert[i].matOrdYn == "입고"){
-			}
-
-		}
-
-		return result;
-
-	}*/
-
+	
 	@ResponseBody
 	@PostMapping("/insertLot")
 	public int insertLot(@RequestBody List<MatVO> vo) {
 		int a = 0;
 		
-//		vo.get(mat)
 		for (int i = 0; i<vo.size(); i++) {
 			System.out.println("돌고있나????");
 			System.out.println(vo.get(i));
@@ -342,9 +277,9 @@ public class MatController {
 		return service.matStockList();
 	}
 	
-	@RequestMapping("/matCheck")
-	public String hh() {
-		return "/admin/mat/matCheck";
+	@GetMapping("/matRecChk")
+	public String matRecChkList() {
+		return "/admin/quamanage/matRecChk";
 	}
 	
 	//검수 내역 리스트
@@ -354,8 +289,9 @@ public class MatController {
 		return service.matCheckList();
 	}
 	
-	@PostMapping("/docUpdate")
-	public int docUpdate(MatVO MatVO) {
-		return service.docUpdate(MatVO);
+	@PostMapping("docUpdate")
+	public String docUpdate(MatVO MatVO) {
+		service.docUpdate(MatVO);
+		return "redirect:/matRecChk";
 	}
 }

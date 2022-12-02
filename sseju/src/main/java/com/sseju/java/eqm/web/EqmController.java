@@ -25,8 +25,6 @@ import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.employee.service.EmployeeService;
 import com.sseju.java.eqm.service.EqmService;
 import com.sseju.java.eqm.service.EqmVO;
-//import com.sseju.java.eqm.service.FileRenamePolicy;
-
 import ch.qos.logback.core.util.FileUtil;
 
 @Controller
@@ -158,6 +156,7 @@ public class EqmController {
 //		FileUtil.fileDownload(filepath + fname, request, response);
 //		// path는 application.properties에 선언되어있음
 //	}
+
 
 	@PostMapping("/updateEqm")
 	@ResponseBody
