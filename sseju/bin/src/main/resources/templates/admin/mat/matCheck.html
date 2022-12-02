@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script
+	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<style>
+.tui-datepicker {
+	z-index: 1001;
+}
+
+.tui-select-box {
+	z-index: 1001;
+}
+
+/* ul 스타일 */
+.ul-style {
+	list-style: none;
+	padding: 0px;
+}
+
+.ul-style li>label {
+	width: 100px;
+	text-align: center;
+}
+
+.ul-style li {
+	padding: 5px;
+}
+</style>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main class="main" id="main">
+			<div>
+				<div id="mat-od-title">
+					<h3>검수내역</h3>
+				</div>
+				<hr>
+				<div  id="input-group">
+					<ul class="ul-style">
+
+						<li><label for="pct">품목</label><input type="text" id="pct"
+							data-bs-toggle="modal" data-bs-target="#pctModal"> <i
+							class="bi bi-search" data-bs-toggle="modal"
+							data-bs-target="#pctModal"></i> <input type="text"
+							style="background-color: #E9E9E9" readonly></li>
+						<li><label>검수 일자</label>
+							<div
+								class="tui-datepicker-input tui-datetime-input tui-has-focus">
+								<input type="text" id="datepicker-input" aria-label="Date-Time">
+								<span class="tui-ico-date"></span>
+								<div id="wrapper" style="margin-top: -1px;"></div>
+							</div>
+							<button class="button">조회</button>
+								<button class="button">등록</button>
+								<button class="button">수정</button></li>
+					</ul>
+				</div>
+				<hr>
+				<div id="grid"></div>
+			</div>
+
+			<!-- 품목 목록 모달 -->
+			<div class="modal" id="pctModal" tabindex="-1"
+				aria-labelledby="actModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-xl">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="actModalLabel">품목</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div>
+								<div id="modalGrid2"></div>
+							</div>
+							<div align="center">
+								<button class="button">조회</button>
+								<button class="button"  data-bs-dismiss="modal"
+								aria-label="Close">취소</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<script>
+			//그리드1
+	const grid = new tui.Grid({
+      el: document.getElementById('grid'),
+      bodyHeight: 500,
+      data: [
+    {
+        maCode: 'OAF-20221104-011',
+        mtCode: 'RML-10101',
+        maNm: '얇은 만두피',
+        price: 1000,
+        count: 200,
+        sumPrice: 2000000,
+        acNm: 'YD 만두피',
+        fDate: '2022-11-04',
+        eDate: '2022-11-09'
+    },
+    {
+        maCode: 'OAF-20221104-022',
+        mtCode: 'RML-10102',
+        maNm: '두꺼운 만두피',
+        price: 1500,
+        count: 200,
+        sumPrice: 3000000,
+        acNm: 'YD 만두피',
+        fDate: '2022-11-04',
+        eDate: '2022-11-09'
+    }
+  ],
+      rowHeaders: ['checkbox', 'rowNum'],
+      scrollX: false,
+      scrollY: true,
+      columns: [
+        {
+          header: '발주코드',
+          name: 'maCode'
+        },
+        {
+          header: '자재코드',
+          name: 'mtCode'
+        },
+        {
+          header: '자재명',
+          name: 'maNm'
+        },
+        {
+          header: '단가(원)',
+          name: 'price'
+        },
+        {
+          header: '발주량',
+          name: 'count'
+        },
+        {
+          header: '총액',
+          name: 'sumPrice'
+        },
+        {
+          header: '업체명',
+          name: 'acNm'
+        },
+        {
+          header: '발주신청일',
+          name: 'fDate'
+        },
+        {
+          header: '납기요청일',
+          name: 'eDate'
+        }
+      ]
+    });
+	
+    grid.on('check', ev => {
+      console.log('check!', ev);
+    });
+
+    grid.on('uncheck', ev => {
+      console.log('uncheck!', ev);
+    });
+
+    grid.on('focusChange', ev => {
+      console.log('change focused cell!', ev);
+    });
+
+	
+	
+	
+	var modalGrid2 = new tui.Grid({
+		el: document.getElementById('modalGrid2'),
+		bodyHeight: 200,
+		data: [{
+			actCode: 'VDR-1101',
+			actName: 'YD 만두피'
+		}],
+		rowHeaders: ['checkbox'],
+		scrollX: false,
+		scrollY: true,
+		columns: [
+			{
+				header: '업체 코드',
+				name: 'actCode'
+			},
+			{
+				header: '업체명',
+				name: 'actName'
+			}
+		]
+	});
+	
+	document.addEventListener('shown.bs.modal', function (){
+		modalGrid2.refreshLayout();
+		}, '.modal');
+	</script>
+			<script>
+	const datepicker = new tui.DatePicker('#wrapper', {
+		date : new Date(),
+		input : {
+			element : '#datepicker-input',
+			format : 'yyyy-MM-dd'
+		}
+	});
+	</script>
+		</main>
+	</article>
+</body>
+</html>

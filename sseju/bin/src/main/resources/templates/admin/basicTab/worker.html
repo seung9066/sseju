@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+
+<head>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<style>
+.button {
+	width: 100px;
+	height: 30px;
+	margin-right: 1%;
+	margin-bottom: 1%;
+}
+</style>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main id="main" class="main">
+			<h4 style="margin-bottom: 3%;">
+				<strong>작업자 관리</strong>
+			</h4>
+			<button class="button" type="button" style="float: right;"
+				onclick="updateWorker()">추가/제거</button>
+			<div id="workorderGrid"></div>
+			<br>
+			<h4>추가할 작업자</h4>
+			<div id="workerAGrid"></div>
+			<br>
+			<h4>등록된 작업자</h4>
+			<input type="hidden" id="preNo">
+			<div id="workerBGrid"></div>
+			<script type="text/javascript">
+			
+			// toastr
+	         toastr.options = {
+	                "closeButton": false,
+	                "newestOnTop": true,
+	                "positionClass": "toast-top-center",
+	                "preventDuplicates": true,
+	                "extendedTimeOut" : 1500, 
+	                "timeOut" : 2500
+	         }
+	
+				showAll();
+
+				var workOrderGrid = new tui.Grid({
+					 el: document.getElementById('workorderGrid'),
+						pagination:true,
+						pageOptions: {
+							useClient:true,
+							perPage:8
+						},
+				        scrollX : false,
+				        scrollY : false,
+					    columns:
+					    	[{
+								header: '작업 지시 번호',
+						    	name: 'preNo',
+						    	filter : 'select',
+								align : 'center'							
+							},
+							{
+								header: '주문번호',
+							    name: 'orderNo',
+								align : 'center'
+							},
+							{
+							 	header: '품목명',
+							    name: 'prtName',
+								align : 'center'
+							},
+							{
+							 	header: '지시수량',
+							    name: 'insQty',
+								align : 'center'
+							},
+							{
+								header: '작업 시작일',
+							    name: 'preDate',
+							    filter : 'select',
+								align : 'center',
+						 		formatter({value}) {
+							      return `${value.substring(0,10)}`;
+							    } 
+							},
+							{
+							    header : '담당자',
+							    name:'empName',
+							    filter : 'select',
+								align : 'center'
+							},
+							{
+							    header : '납기일자',
+							    name:'dday',
+							    filter : 'select',
+								align : 'center',
+								formatter({value}) {
+							      return `${value.substring(0,10)}`;
+							    },
+							},
+							{
+								header : '제품코드',
+							    name : 'prtCode',
+							    hidden : 1
+							}]
+					      });
+				
+				
+				const workerAGrid = new tui.Grid({
+					el : document.getElementById('workerAGrid'),
+					pagination : true,
+					pageOptions : {
+						useClient : true,
+						perPage : 6
+					},
+					scrollX : false,
+					scrollY : false,
+					rowHeaders : [ 'checkbox' ],
+					columns : [ {
+						header : '아이디',
+						name : 'empId',
+						align : 'center',
+						filter: 'select'
+					},{
+						header : '이름',
+						name : 'empName',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '부서',
+						name : 'empDept',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '직급',
+						name : 'empRank', //납기일자명 수정
+						align : 'center',
+						filter : 'select'
+					} ]
+				});
+				
+				const workerBGrid = new tui.Grid({
+					el : document.getElementById('workerBGrid'),
+					pagination : true,
+					pageOptions : {
+						useClient : true,
+						perPage : 6
+					},
+					scrollX : false,
+					scrollY : false,
+					rowHeaders : [ 'checkbox' ],
+					columns : [ {
+						header : '아이디',
+						name : 'empId',
+						align : 'center',
+						filter: 'select'
+					},{
+						header : '이름',
+						name : 'empName',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '부서',
+						name : 'empDept',
+						align : 'center',
+						filter: 'select'
+					}, {
+						header : '직급',
+						name : 'empRank', //납기일자명 수정
+						align : 'center',
+						filter : 'select'
+					} ]
+				});
+				
+				var token = $("meta[name='_csrf']").attr("content");
+				var header = $("meta[name='_csrf_header']").attr("content");
+				
+				var deleteCode = [];
+				
+				function showA(data) {
+					$.ajax({
+						url:'workerAList',
+						type:'POST',
+						data:data,
+						contentType:'application/json',
+						async:false,
+						beforeSend : function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success:function(data){
+							if(data != null) {
+								workerAGrid.resetData(data);
+							} else {
+								alert("실패");
+							}
+						},
+						error:function(request,status,error){
+							console.log(reject);
+						}						
+					});
+				}
+				
+				function showB(data) {
+					$.ajax({
+						url:'workerBList',
+						type:'POST',
+						data:data,
+						contentType:'application/json',
+						async:false,
+						beforeSend : function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success:function(data){
+							if(data != null) {
+								workerBGrid.resetData(data);
+							} else {
+								alert("실패");
+							}
+						},
+						error:function(reject){
+							console.log(reject);
+						}						
+					});
+				}
+				
+				workOrderGrid.on('click', ev => {
+					let data = workOrderGrid.getValue(ev.rowKey, 'preNo')
+					$('#preNo').val(workOrderGrid.getValue(ev.rowKey, 'preNo'));
+					showA(data);
+					showB(data);
+					
+				});
+				
+				workOrderGrid.on('uncheck', ev => {
+					workerAGrid.clear();
+					workerBGrid.clear();
+
+				});
+				
+				
+				
+				function updateWorker() {
+					let inputId = [];
+					let deleteId = [];
+					let preNo = [];
+					for(co of workerAGrid.getCheckedRows()){
+						inputId.push(co.empId);
+						preNo.push($('#preNo').val());
+					}
+					for(co of workerBGrid.getCheckedRows()){
+						deleteId.push(co.empId);
+						preNo.push($('#preNo').val());
+					}
+					
+					if (inputId.length == 0) {
+						toastr.warning('체크된 인원이 없습니다')
+					} else {
+					$.ajax({
+						url:'updateWorker',
+						type:'POST',
+						data:{preNo:preNo, inputId:inputId, deleteId:deleteId},
+						dataType:"json",
+						async:false,
+						beforeSend : function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success:function(data){
+							if(data.msg != 'error') {
+								toastr.success('수정완료');
+								showA(data.msg);
+								showB(data.msg);
+							} else {
+								alert("업데이트실패");
+							}
+						},
+						error:function(reject){
+							console.log(reject);
+						}
+					})
+					}
+				}
+				
+				function showAll() {
+					fetch("getWorkOrderList") 
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           workOrderGrid.resetData(obj);
+				       })
+				}
+			</script>
+		</main>
+	</article>
+
+	<!-- Vendor JS Files -->
+	<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+	<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="assets/vendor/chart.js/chart.min.js"></script>
+	<script src="assets/vendor/echarts/echarts.min.js"></script>
+	<script src="assets/vendor/quill/quill.min.js"></script>
+	<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+	<script src="assets/vendor/tinymce/tinymce.min.js"></script>
+	<script src="assets/vendor/php-email-form/validate.js"></script>
+
+	<!-- Template Main JS File -->
+	<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

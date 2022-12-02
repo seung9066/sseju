@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta name="_csrf" th:content="${_csrf.token}">
+<meta name="_csrf_header" th:content="${_csrf.headerName}">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
+<script src="bootstrap/js/tui-grid.js"></script>
+
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script
+	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
+<style>
+.tui-datepicker {
+	z-index: 1001;
+}
+
+.tui-select-box {
+	z-index: 1001;
+}
+
+/* ul 스타일 */
+.ul-style {
+	list-style: none;
+	padding: 0px;
+}
+
+.ul-style li>label {
+	width: 100px;
+	text-align: center;
+}
+
+.ul-style li {
+	padding: 5px;
+}
+
+.button {
+	display: inline-block;
+	cursor: pointer;
+	border: none;
+	border-radius: 4px;
+	background-color: green;
+	color: white;
+}
+</style>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main class="main" id="main">
+			<div>
+				<h3>발주 정보</h3>
+			</div>
+			<hr>
+			<input type="hidden" th:name="${_csrf.parameterName}"
+					th:value="${_csrf.token}" />
+			<div id="input-group">
+						<input type="hidden" id="empId">
+			</div>
+			<!-- <form action="insertMatbuy" method="post"> -->
+				<input type="hidden" th:name="${_csrf.parameterName}"
+					th:value="${_csrf.token}" />
+			<div>
+				<div id="grid" class="col"></div>
+			</div>
+			<!-- empModal2 -->
+         <div class="modal" id="empModal2" tabindex="-1"
+            aria-labelledby="empModal2Label" aria-hidden="true">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                     <div>
+                        <div id="empGrid2"></div>
+                     </div>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Close</button>
+                     <button type="button" class="btn btn-primary">Save
+                        changes</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+			<script>
+
+
+            matOrdList();
+            emp();
+
+            const grid = new tui.Grid({
+               el : document.getElementById('grid'),
+               rowHeaders : [],
+               scrollX : false,
+               scrollY : true,
+               pageOptions: {
+                   useClient: true,
+                   perPage: 10
+               },
+               columns : [ {
+                  header : '발주 번호',
+                  name : 'matOrdNo',
+                  align : 'center',
+               }, {
+                  header : '수량',
+                  name : 'matOrdQty',
+                  align : 'center'
+               }, {
+                  header : '품목 코드',
+                  name : 'matCode',
+                  align : 'center'
+               }, {
+                  header : '품목명',
+                  name : 'matName',
+    			  filter: 'select',
+    			  align : 'center'
+               }, {
+                  header : '일자',
+                  name : 'matOrdDate',
+                  align : 'center',
+                  editor: 'datePicker',
+                  validation: {
+                     dataType: 'datePicker',
+                     required: true
+                      },
+                  formatter({value}) {
+                       return `${value.substring(0,10)}`;
+                      },
+                  filter: {
+				  	type: 'date',
+                 	options: {
+                    	format: 'yyyy-MM-dd'
+                    		}
+                       },
+                     
+               }, {
+                  header : '거래처 코드',
+                  align : 'center',
+                  name : 'cpCode',
+               }, {
+                  header : '거래처명',
+                  name : 'cpName',
+                  align : 'center',
+				  filter: 'select'
+               }, {
+                  header : '금액',
+                  align : 'right',
+                  name : 'matPrice',
+                  formatter : function (ev){
+                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    }
+               }, {
+                  header : '담당자Id',
+                  name : 'matOrdEmp',
+                  align : 'center'
+               }, {
+                   header : '담당자',
+                   name : 'empName',
+                   align : 'center'
+                }]
+            });
+            
+            grid.hideColumn("matOrdEmp", "matOrdEmp");
+            grid.hideColumn("cpCode", "cpCode");
+            grid.hideColumn("matCode", "matCode");
+            
+      
+            
+            function matOrdList() {
+               $.ajax({
+                  url : '/matordList',
+                  dataType : "json",
+                  success : function(data) {
+                     grid.resetData(data);
+                  },
+                  error : function(reject) {
+                     console.log(reject);
+                  }
+               })
+            };
+            
+            function emp() {
+               $.ajax({
+                  url : '/emp',
+                  dataType : "json",
+                  success : function(data) {
+                     empGrid2.resetData(data);
+                  },
+                  error : function(reject) {
+                     console.log(reject);
+                  }
+               })
+            };
+            
+            
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+            
+            
+             /*------------
+             // 모달 클릭
+             ----------------*/
+             
+             document.addEventListener('shown.bs.modal', function() {
+            	 empGrid2.refreshLayout();
+               }, '.modal');
+             
+
+                  
+            /*------------
+            // empModal2 모달 데이터 가져오기
+            ----------------*/
+			var empGrid2 = new tui.Grid({
+               el : document.getElementById('empGrid2'),
+               bodyHeight : 200,
+               rowHeaders : [],
+               scrollX : false,
+               scrollY : true,
+               columns : [{
+                  header : '사원 ID',
+                  name : 'empId'
+               },{
+                  header : '사원명',
+                  name : 'empName'
+               }]
+            });
+           
+            /*------------
+            // 사원 모달에서 가져온 데이터 행에 넣어주기
+            ----------------*/
+            
+            empGrid2.on('click', ev => {
+                let val = empGrid2.getRow(ev.rowKey); // 사원 클릭한 그리드
+               
+                let val2 = matGrid.getFocusedCell().rowKey; // 진짜 큰 그리드
+                 
+                   console.log(empGrid2.getValue(ev.rowKey,ev.columnName));
+                 const cmg = empGrid2.getValue(ev.rowKey,ev.columnName);
+                 matGrid.setValue(val2, 'matOrdEmp', val.empId);
+                 matGrid.setValue(val2, 'empName', val.empName);
+				//$('#empId').val(val.empId);          
+                 $('#empModal2').modal("hide");
+             });
+         </script>
+		</main>
+	</article>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.sseju.java.matinputhistory.mapper.MatInputHistoryMapper">
+	<!-- Read -->
+	<select id="getMatInputHistory" resultType="mihVO">
+		SELECT ma.mat_code,
+			   ma.mat_name,
+			   mo.mat_out_date,
+			   prr.prs_code,
+			   pr.prs_name,
+			   mo.mat_out_qty,
+			   ee.emp_name,
+			   pe.pre_no
+			   
+		FROM material ma
+		 JOIN process pr
+		   ON ma.prs_code = pr.prs_code
+		 JOIN process_run prr
+		   ON pr.prs_code = prr.prs_code
+		 JOIN mat_out mo
+		   ON prr.mat_out_no = mo.mat_out_no
+		 JOIN employee ee
+		   ON ee.emp_id = prr.prs_manager
+         JOIN produce pe
+           ON prr.pre_no = pe.pre_no
+		ORDER BY mo.mat_out_date
+	</select>
+</mapper>

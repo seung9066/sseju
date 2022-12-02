@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>생산 진행 현황 조회</title>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main id="main" class="main">
+			<h4>생산 진행 현황</h4>
+			<!-- 그리드 -->
+					<div id="prtProgGrid"></div>
+			<br>
+			<h6 style="display:inline-block">생산 공정별 자재 상황</h6>
+<!-- 			<div style="float:right">
+				<button type="button" class="button" onclick="location.href='/matOrd'">자재 발주 현황</button>
+			</div> -->
+			<div id="matConditionGrid"></div>
+			
+			<script type="text/javascript">
+			showAll();
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
+			/* 생산 진행 현황 그리드 */
+				var prtProgGrid= new tui.Grid({
+					el : document.getElementById('prtProgGrid'),
+					scrollX : false,
+					scrollY : false,
+			        pageOptions: {
+			            useClient: true,
+			            perPage: 10
+			        },
+					columns : [ {
+						header : '작업 지시 번호',
+						name : 'preNo',
+						align : 'center'
+					}, {
+						header : '제품명',
+						name : 'prtName',
+						filter : 'select',
+						align : 'center'
+					}, {
+						header : '생산량',
+						name : 'prtQty',
+						align : 'center',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+		                    }
+			/* 		}, {
+						header : '지시량',
+						name : 'insQty',
+						align : 'center',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+		                    } */
+					}, {
+						header : '지시일자',
+						name : 'preDate',
+						align : 'center',
+				 		 formatter({value}) {
+						      return `${value.substring(0,10)}`;
+						    } 
+					}, {
+						header : '담당자',
+						name : 'empName', //id값으로 가져오는것 잊지말기
+						filter : 'select',
+						align : 'center'
+					} ]
+				});
+			//생산 진행 현황 그리드 데이터 가져오기 함수
+				function showAll() {
+				       fetch("getPrtProgList") 
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           console.log(obj);
+				           prtProgGrid.resetData(obj);
+				       })
+			}
+			/* 생산 진행 현황 그리드 행 클릭 시 아래 자재 상황 그리드에 맞는 데이터 불러오는 자리 */
+			//자재 상황 그리드에 띄워줄 데이터 가져오는 함수
+			prtProgGrid.on('click', (ev)=>{
+				let preNo = ev.nativeEvent.target.innerText;
+				console.log(preNo);
+				$.ajax({
+					url:'/progPrtCondition',
+					data : {preNo:preNo},
+					dataType:"json",
+					async:false,
+					success:function(data){
+						matConditionGrid.resetData(data);
+					},
+					error:function(reject){
+						console.log(reject);
+					}
+				})
+			})
+			/* 자재 상황 그리드
+			생산 진행 중인 제품에 대한 자재 상황만 띄워줘야함 */
+			var matConditionGrid = new tui.Grid({
+					el : document.getElementById('matConditionGrid'),
+					scrollX : false,
+					scrollY : false,
+			        pageOptions: {
+			            useClient: true,
+			            perPage: 10
+			        },
+					columns : [ {
+						header : '자재 코드',
+						name : 'matCode',
+						filter: 'select',
+						align : 'center'
+					}, {
+						header : '자재명',
+						name : 'matName',
+						filter: 'select',
+						align : 'center'
+					}, {
+						header : '재고량',
+						name : 'matOutQty',
+						align : 'center'
+					} ]
+				});
+			</script>
+		</main>
+	</article>
+</body>
+</html>

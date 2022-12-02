@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>InOut</title>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script
+	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+
+
+<style type="text/css">
+.tui-datepicker {
+	z-index: 1001;
+}
+
+.tui-select-box {
+	z-index: 1001;
+}
+
+/* ul 스타일 */
+.ul-style {
+	list-style: none;
+	padding: 0px;
+}
+
+.ul-style li>label {
+	width: 100px;
+	text-align: center;
+}
+
+.ul-style li {
+	padding: 5px;
+}
+</style>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main class="main" id="main">
+			<h3>재고조회</h3>
+			<hr>
+			<div>
+				<div id="stockGrid"></div>
+			</div>
+			
+
+			<script>
+			//입고 => 창고만 수정 가능 // 이미 입고한 부분에 관해서 돈터치~
+			
+			matStockList();
+			
+			
+				const stockGrid = new tui.Grid({
+					el : document.getElementById('stockGrid'),
+					rowHeaders : [],
+					scrollX : false,
+					scrollY : false,
+		            pageOptions: {
+		                useClient: true,
+		                perPage: 10
+		            },
+					columns : [ {
+						header : 'LOT번호',
+						name : 'lotNo',
+						align : 'center'
+					},{
+						header : '입고일',
+						name : 'lotDate',
+						align : 'center',
+			            formatter({value}) {
+			            	return `${value.substring(0,10)}`;
+			            	},
+						filter: {
+	     					type: 'date',
+	     	                options: {
+	     	                	format: 'yyyy-MM-dd'
+	     	                    }
+						}
+					}, {
+						header : '자재 코드',
+						name : 'mpCode',
+						align : 'center'
+					}, {
+						header : '자재명',
+						name : 'matName',
+						align : 'center'
+					}, {
+						header : '수량',  //ㄱㅖ산
+						name : 'lotQty',
+						align : 'center'
+					}, {
+						header : '창고 코드', 
+						name : 'whCode',
+						align : 'center' 
+					}, {
+						header : '창고',
+						name : 'whName',
+						align : 'center'
+					}]
+				});
+			
+				stockGrid.hideColumn("mpCode", "mpCode");
+				stockGrid.hideColumn("whCode", "whCode");
+
+
+				
+				/*------------
+	            // 함수
+	            ----------------*/
+	            
+	            function matStockList(){
+					$.ajax({
+						url : "/matStockList",
+						dataType : "json",
+						success : function(data) {
+							stockGrid.resetData(data);
+							console.log(data);
+						},
+						error : function(reject) {
+							console.log(reject);
+						}
+					})
+				}
+				
+          
+			</script>
+		</main>
+	</article>
+</body>
+</html>

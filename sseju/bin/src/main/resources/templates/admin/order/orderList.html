@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>OrderList</title>
+
+<!-- 제이쿼리 -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!-- 토스트UI -->
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<!-- 토스트 UI 그리드 페이징 cdn -->
+<script type="text/javascript"
+	src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+</head>
+<body>
+
+	<article layout:fragment="content">
+		<main id="main" class="main">
+
+			<div id="mat-od-title">
+				<h2>제품 주문</h2>
+			</div>
+			<div style="text-align: right;">
+				<button type="submit" class="button" style="float: right;"
+					onclick="orInsert()">주문하기</button>
+			</div>
+			<div style="text-align: right;">
+				<button class="button" onclick="clearA()">초기화</button>
+			</div>
+			<form action="insertOrder" method="post">
+
+
+				<div id="prtGrid"></div>
+				<hr>
+				<table class="table">
+					<tr>
+						<th>거래처</th>
+						<td><input type="text" name="cpName" id="cpName"
+							th:value="${session.user.cpName}"></td>
+						<td><input type="hidden" id="cpCode" name="cpCode"
+							th:value="${session.user.cpCode}"></td>
+					</tr>
+				</table>
+				<div style="text-align: right;">
+					<button class="button" onclick="deleteA()" type="button">삭제하기</button>
+				</div>
+				<div id="prtGrid1"></div>
+			</form>
+			<script>
+			// toastr
+	          toastr.options = {
+	                "closeButton": false,
+	                "newestOnTop": true,
+	                "positionClass": "toast-top-center",
+	                "preventDuplicates": true,
+	                "extendedTimeOut" : 1500, 
+	                "timeOut" : 2500
+	         } 
+			prtl();
+			const prtGrid = new tui.Grid({
+				el : document.getElementById('prtGrid'),
+				pagination:true,
+				pageOptions: {
+				    useClient: true,
+				    perPage: 5
+				  },
+				scrollX : false,
+				scrollY : false,
+			//	rowHeaders: ['checkbox'],
+				columns : [ 
+					{
+					header : '제품코드',
+					name : 'prtCode',
+					align : 'left',
+				}, 
+					{
+					header : '제품',
+					name : 'prtName',
+					align : 'left',
+				}, 
+				{
+					header : '단위',
+					name : 'prtUnit', //납기일자명 수정
+					align : 'center'
+				},
+				{
+					header : '가격',
+					name : 'prtPrice',
+					align : 'right',
+					formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+	                    }
+				},
+				]
+			});
+			    function prtl() {
+					url="/user/selectPrtList"
+			        fetch(url) 
+			        .then(res=>res.json())
+			        .then(obj=>{
+			          
+			           prtGrid.resetData(obj);
+			        })
+				}
+			    const prtGrid1 = new tui.Grid({
+					el : document.getElementById('prtGrid1'),
+					pagination:true,
+					pageOptions: {
+					    useClient: true,
+					    perPage: 5
+					  },
+					scrollX : false,
+					scrollY : false,
+					rowHeaders: ['checkbox'],
+					columns : [ 
+						{
+						header : '제품코드',
+						name : 'prtCode',
+						align : 'left',
+					}, 
+						{
+						header : '제품',
+						name : 'prtName',
+						align : 'left',
+					}, 
+					{
+						header : '단위',
+						name : 'prtUnit', 
+						align : 'center',
+					},
+					{
+						header : '단가',
+						name : 'unitPrice', 
+						align : 'right',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+		                    }
+					},
+					{
+						header : '주문량',
+						name : 'orderQty1', 
+						editor: 'text',
+						align : 'right',
+						onAfterChange : function(ev) {
+				            let row = prtGrid1.getRow(ev.rowKey)
+				            let count = row.prtUnit * ev.value
+				            prtGrid1.setValue(ev.rowKey, 'orderQty', count)
+				            
+				            let sum = row.unitPrice * row.orderQty1 * row.prtUnit
+				            prtGrid1.setValue(ev.rowKey, 'orderPrice', sum)
+				         }
+					},
+					{
+						header : '총주문량',
+						name : 'orderQty', 
+						align : 'right',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+		                    }
+					},
+				
+					{
+						header : '총가격',
+						name : 'orderPrice',
+						align : 'right',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+		                    }
+					}
+					]
+				}); 
+			var token = $("meta[name='_csrf']").attr("content");
+			 var header = $("meta[name='_csrf_header']").attr("content");
+			 
+			 
+			
+			 prtGrid.on("click", event => {
+	        		var prt = {prtCode : prtGrid.getRow(event.rowKey).prtCode,prtName:prtGrid.getRow(event.rowKey).prtName,
+	        				prtUnit: prtGrid.getRow(event.rowKey).prtUnit,
+	        			unitPrice:prtGrid.getRow(event.rowKey).prtPrice, orderQty1: '', orderQty:'', orderPrice:''}; //json 형태로 지정해도 됩니다.
+				 if( prtGrid1.getRowCount()==0){
+					 prtGrid1.appendRow(prt);
+		          } else {
+		             let checkNum = 0;
+		             for(i=0; i<prtGrid1.getRowCount(); i++){
+		                 if( prtGrid1.getRow(i).prtCode==prtGrid.getRow(event.rowKey).prtCode){
+		                    checkNum++;
+		                 }
+		              }
+		             if(checkNum > 0){
+		            	 toastr.error("중복");
+		                checkNum = 0;
+		             } else {
+		            	 prtGrid1.appendRow(prt);
+		                checkNum = 0;
+		             }
+		          } 
+	                })
+	             
+	         function clearA() {
+				 prtGrid1.clear()
+			 }
+			 
+			 
+	         function orInsert() {
+	        	 let rowData = prtGrid1.getData();
+	        	for(let i=0; i<rowData.length; i++) {
+	        		if (rowData[i].orderQty1 == '' || rowData[i].orderQty1.length == 0) {
+	        			toastr.warning('주문량을입력하셈');
+	        			return;
+	        		}
+	        		
+	        	}
+	        	 
+	        	 let orderNo1 = '';
+	        	 $.ajax({
+						url : "/user/getOrderNo",
+						method : "GET",
+						success : function(data) {
+							orderNo1 = data.orderNo;
+							a(orderNo1);
+						},
+						error : function(reject) {
+						}// suc
+					});
+	        
+	        	 }
+				 
+	        	 function a(a) {
+	        		 
+				 insert = prtGrid1.getData();
+				for (let i = 0; i < insert.length; i++) {
+					insert[i].orderNo = a;
+					insert[i].cpCode = $('#cpCode').val();
+					insert[i].dday = $('#dDay').val();
+	        	 }
+				ininsert();
+			 }
+	         
+	         function ininsert() {
+				 $.ajax({
+						url : "/user/insertOrder",
+						method : "POST",
+						data: JSON.stringify(insert),
+						dataType : "JSON",
+						contentType: 'application/json; charset=utf-8',
+						beforeSend : function(xhr){
+							xhr.setRequestHeader(header, token);
+						},
+						success : function(list) {
+							if (list > 0) {
+							prtGrid1.clear();
+							toastr.success("주문완료");
+							}
+						} 
+					});  
+		       }
+	         
+	         function deleteA(){
+	        	 prtGrid1.removeCheckedRows(false);
+	         }
+			</script>
+		</main>
+	</article>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>자재 수입 검사</title>
+
+<style>
+.tui-datepicker {
+	z-index: 1001;
+}
+
+.tui-select-box {
+	z-index: 1001;
+}
+
+/* ul 스타일 */
+.ul-style {
+	list-style: none;
+	padding: 0px;
+}
+
+.ul-style li>label {
+	width: 100px;
+	text-align: center;
+}
+
+.ul-style li {
+	padding: 5px;
+}
+
+#od-title {
+	font-weight: bold;
+}
+
+#od-btn {
+	display: inline-block;
+	margin: 0 5px;
+	float: right;
+}
+</style>
+
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script
+	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main class="main" id="main">
+			<div id="od-title">
+				<h3>자재 수입 검사</h3>
+<!-- 				<ul class="ul-style">
+					<li><button class="button" onclick="updateErr()">입력</button></li>
+				</ul> -->
+			</div>
+			<hr>
+			<div id="od-content-2">
+				
+				<div id="grid"></div>
+
+			</div>
+			
+			<!-- Modal -->
+			<form id="docUpdate"> 
+			<!-- action="/docUpdate" method="post"-->
+				<input type="hidden" th:name="${_csrf.parameterName}"
+						th:value="${_csrf.token}" />
+				<div class="modal fade" id="docModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<input type="hidden" name="auth" value="ROLE_ADMIN">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h1 class="modal-title fs-5" id="exampleModalLabel">New
+									message</h1>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								<div class="mb-3">
+								    <input type="hidden" id="matChkCode" name="matChkCode">
+									<label for="message-text" class="col-form-label">불량 내역</label>
+									<textarea class="form-control" name="contents" id="message-text"></textarea>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-primary" onclick="textIn()">Send
+									message</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			<br>
+			<script>			
+			matCheckList();
+
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
+			
+			const chkGrid = new tui.Grid({
+					el : document.getElementById('grid'),
+					rowHeaders : [ ],
+					scrollX : false,
+					scrollY : false,
+					columns : [
+				            {
+				              header: '검수번호',
+				              name: 'matChkCode',
+				              align : 'center'
+				            },{
+								header: '자재명',
+								align : 'center',
+					            name: 'matName'
+					        }, {
+				              header: '총 검수량',
+				              align : 'center',
+				              name: 'matInQty'
+				            }, {
+				              header: '불량 수량',
+				              align : 'center',
+				              name: 'matErrQty'
+				            }, {
+				              header: '합격 수량',
+				              align : 'center',
+				              name: 'matPassQty'
+				            }, {
+				              header: '검수일',
+				              align : 'center',
+				              name: 'matChkDate'
+				            }, {
+				              header: '발주 번호',
+				              align : 'center',
+				              name: 'matOrdNo'
+				            }, {
+								header: '불량 코드',
+								align : 'center',
+					            name: 'errCode'
+					        }, {
+								header: '불량 내역',
+								align : 'center',
+					            name: 'matErrDoc'
+					        }, {
+								header: '불량명',
+								align : 'center',
+					            name: 'errName'
+					        }, {
+								header: '자재 코드',
+								align : 'center',
+					            name: 'mpCode'
+					        }]
+					});
+				
+				chkGrid.hideColumn("mpCode", "mpCode");
+				chkGrid.hideColumn("matOrdNo", "matOrdNo");
+				
+				function matCheckList(){
+					$.ajax({
+						url : "/matCheckList",
+						dataType : "json",
+						success : function(data){
+							chkGrid.resetData(data);
+						},
+						error : function(reject){
+							console.log(reject);
+						}
+					})
+				};
+				
+				
+				/*------------
+	            // 해당하는 header의 모달창 띄우기
+	            ----------------*/
+	          
+	          
+	            chkGrid.on('click',function(ev){	         	   
+	            	if (ev.columnName == 'matErrDoc'){
+	                	$('#docModal').modal('show');
+	                	$('#matChkCode').val(chkGrid.getValue(ev.rowKey,'matChkCode'));
+	            	}
+	            });
+				
+				
+	            /*------------
+	            // 모달 데이터 가져오기
+	            ----------------*/
+				
+				function textIn(){	            	
+					//$('#docUpdate').submit();
+					let 
+					$('#docModal').modal("hide");
+					matCheckList();
+	            }
+				
+				$.ajax({
+					
+				})
+				
+				
+				
+				
+				
+	            /*
+	            
+				function updateErr(){
+	            	
+	            	let rowData = chkGrid.getData();
+	            	
+	            	
+					$.ajax({
+						url : "/updateMatCheck",
+						method : "POST",
+						contentType : "application/json",
+			         	data:JSON.stringify(rowData),
+			         	dataType:"json",
+			         	async:false,
+			         	beforeSend : function(xhr) {
+					    	xhr.setRequestHeader(header, token);
+					        },
+						success : function(data) {
+						   if(data > 0) {
+								console.log(data);
+								matCheckList();
+						   }else {
+					       	   alert("실패")
+					       }
+					     },
+				         error : function(request,status,error) {
+					      	  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+					          alert("와우")  
+					      	  console.log(reject);			         		
+			         	}
+					})
+				}
+	            
+	            */
+			</script>
+
+		</main>
+	</article>
+</body>
+</html>

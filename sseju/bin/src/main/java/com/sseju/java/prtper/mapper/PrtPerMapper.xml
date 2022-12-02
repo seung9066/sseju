@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sseju.java.prtper.mapper.PrtPerMapper">
+	
+	<!-- Create 등록 관련 쿼리 -->
+	<!-- 등록 -->
+	<insert id="insertPrtPer" parameterType="ppVO">
+	</insert>
+	
+	<!-- Read 조회 쿼리 모음 -->
+	<!-- 실적 전체 조회 -->
+	<select id="getPrtPerList" resultType="ppVO">
+		SELECT pe.pre_no,
+		       pt.prt_name,
+		       prr.prt_qty,
+		       pri.prs_err_qty,
+		       pe.pre_manager,
+		       prr.prs_date,
+		       ee.emp_name
+		       
+		FROM produce pe 
+		 JOIN product pt
+		   ON pt.prt_code = pe.prt_code
+		 JOIN process_run prr
+		   ON pe.pre_no = prr.pre_no
+		 JOIN process_inf pri
+		   ON prr.prs_no = pri.prs_no
+		 JOIN employee ee
+		   ON ee.emp_id = pe.pre_manager
+		WHERE prr.prt_qty IS NOT NULL
+		ORDER BY pe.pre_no DESC
+	</select>
+	
+	<!-- 실적 한 행 클릭 시 아래 그리드에 불량코드, 불량명 상세조회 띄워주기
+	11/28 학원에서 쿼리문 수정 필요함,
+	11/30 사용 해야함 -->
+	<select id="getErrList" resultType="ppVO">
+		SELECT er.err_code, 
+				er.err_name, 
+				prer.prs_err_qty
+		FROM error er 
+		 JOIN process_err prer
+			ON er.err_code = prer.err_code
+		JOIN process_inf pi
+			ON prer.prs_pf_no = pi.prs_pf_no
+		JOIN process_run prr
+			ON pi.prs_no = prr.prs_no
+		JOIN produce pe
+			ON prr.pre_no = pe.pre_no
+		WHERE prr.pre_no = #{preNo}
+	</select>
+	<!-- Update 쿼리 모음 -->
+	<!-- 수정 ㅡ 실적칸은 수정 필요없으므로 추가X -->
+	
+	<!-- Delete 쿼리 모음 -->
+	<!-- 삭제 -->
+	<delete id="deletePrtPer" parameterType="ppVO">
+		DELETE FROM produce
+		WHERE pre_no = #{preNo}
+	</delete>
+</mapper>

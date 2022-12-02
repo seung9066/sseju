@@ -1,19 +1,15 @@
 package com.sseju.java.eqm.serviceImpl;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.sseju.java.code.mapper.CodeMapper;
 import com.sseju.java.code.service.CodeVO;
 import com.sseju.java.eqm.mapper.EqmMapper;
 import com.sseju.java.eqm.service.EqmService;
 import com.sseju.java.eqm.service.EqmVO;
-import com.sseju.java.eqm.service.FileRenamePolicy;
 
 @Service
 public class EqmServiceImpl implements EqmService {
@@ -61,6 +57,7 @@ public class EqmServiceImpl implements EqmService {
 	 vo.setCodeName(eqmVO.getEqmName());
 
 	 cdMapper.insertCode(vo);
+	 
 	 return eqmMapper.insertEqm(eqmVO);
 
 	 } 
@@ -98,10 +95,7 @@ public class EqmServiceImpl implements EqmService {
       return eqmMapper.updateEqmLine(eqmVO);
    }
 
-   @Override
-   public int deleteEqmLine(EqmVO eqmVO) {
-      return eqmMapper.deleteEqmLine(eqmVO);
-   }
+  
 
 // 정기점검 eqmChk
    @Override
@@ -178,6 +172,7 @@ public int deleteEqm(List<String> deleteEqm) {
 }
 
 
+/*라인정보 삭제*/
 
 @Override
 public int deleteLine(List<String> line) {
@@ -187,8 +182,10 @@ public int deleteLine(List<String> line) {
 
 		EqmVO vo = new EqmVO();
 		vo.setLineNo(line1);
+		
+		
 
-		a += eqmMapper.deleteEqmLine(vo);
+		
 	}
 	return a;
 }
@@ -234,6 +231,18 @@ public int updateEqmYn(EqmVO eqmVO) {
 public List<EqmVO> getChkList() {
 	// TODO Auto-generated method stub
 	return eqmMapper.getChkList();
+}
+
+@Override
+public String eqmLineEx(EqmVO eqmVO) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public int deleteEqmLine(EqmVO eqmVO) {
+	// TODO Auto-generated method stub
+	return 0;
 }
 
 

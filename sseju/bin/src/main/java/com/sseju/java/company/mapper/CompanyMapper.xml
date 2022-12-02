@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.sseju.java.company.mapper.CompanyMapper">
+
+	<select id="getCompanyList" resultType="CompanyVO">
+		SELECT * FROM company ORDER BY cp_code
+	</select>
+	<insert id="insertLogin" parameterType="CompanyVO">
+		INSERT INTO login values (#{id}, #{auth}, #{password})
+	</insert>
+	
+	<delete id="deleteLogin" parameterType="CompanyVO">
+		DELETE FROM login WHERE id = #{id}
+	</delete>
+	
+	<select id="companyCode" parameterType="CompanyVO" resultType="String">
+		SELECT cp_code FROM company ORDER BY cp_code
+	</select>
+	
+	<select id="getCompanyInfoId" parameterType="CompanyVO" resultType="CompanyVO">
+		SELECT * FROM company WHERE id = #{id}
+	</select>
+	
+	<select id="getCompanyInfo" parameterType="CompanyVO" resultType="CompanyVO">
+		SELECT * FROM company WHERE cp_code = #{cpCode}
+	</select>
+	
+	<insert id="insertCompany" parameterType="CompanyVO">
+		<selectKey keyProperty="cpCode" resultType="String" order="BEFORE">
+			SELECT 'CP_'||LPAD(NVL(MAX(SUBSTR(cp_code, -3)),0)+1,3,0) FROM company
+		</selectKey>
+		INSERT INTO company values (#{cpCode}, #{cpName}, #{cpCeo}, #{cpTel}, #{cpNo}, #{cpAddr}, #{id})
+	</insert>
+	
+	<delete id="deleteCompany" parameterType="CompanyVO">
+		DELETE FROM company WHERE cp_code = #{cpCode}
+	</delete>
+	
+	<update id="updateCompany" parameterType="CompanyVO">
+		UPDATE company SET cp_name = #{cpName}, cp_ceo = #{cpCeo}, cp_tel = #{cpTel}, cp_no = #{cpNo}, id = #{id}, cp_addr = #{cpAddr}
+		WHERE cp_code = #{cpCode}
+	</update>
+</mapper>

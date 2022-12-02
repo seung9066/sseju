@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>LotTrack</title>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main id="main" class="main">
+		<h4>제품 로트 조회</h4>
+			<!-- 그리드 -->
+			<div id="lotGrid"></div>
+
+		<script type="text/javascript">
+			showLotGrid();
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
+				var lotGrid = new tui.Grid({
+					el : document.getElementById('lotGrid'),
+					scrollX : false,
+					scrollY : false,
+	                 pageOptions: {
+	                     useClient: true,
+	                     perPage: 10
+	                 },
+					columns : [ {
+						header : '로트번호',
+						name : 'lotNo',
+						align : 'center'
+					}, {
+						header : '로트 등록 일자',
+						name : 'lotDate',
+						align : 'center',
+						formatter({value}) {
+	                        return `${value.substring(0,10)}`;
+	                      } ,
+						    filter: {
+		                        type: 'date',
+		                        options: {
+		                          format: 'yyyy-MM-dd'
+		                        }
+		                     }
+					}, {
+						header : '제품명',
+						name : 'prtName',
+						filter : 'select',
+						align : 'center'
+					}, {
+						header : '생산수량',
+						name : 'prtQty',
+						align : 'center',
+						formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+	                    }
+					}, {
+						header : '현재수량',
+						name : 'lotQty',
+						align : 'center',
+						formatter : function (ev){
+	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+	                    }
+					}, {
+						header : '담당자',
+						name : 'empName',
+						filter : 'select',
+						align : 'center'
+					}]
+				});
+				//lotGrid의 정보 가져오기
+				function showLotGrid(){
+					fetch("getLotTrackList")
+					.then(res=>res.json())
+					.then(obj=>{
+						console.log(obj);
+						lotGrid.resetData(obj);
+					})
+				}
+			</script>
+		</main>
+	</article>
+</body>
+</html>

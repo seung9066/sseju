@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>자재 투입 내역</title>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main id="main" class="main">
+			<h4>자재 투입 내역 조회</h4>
+			<!-- <div style="float:right">
+				<button type="button" class="button" onclick="location.href='/matOrd'">자재 발주 신청</button>
+			</div> -->
+			<!-- 그리드 -->
+			<div id="mihGrid"></div>
+
+			<script type="text/javascript">
+			
+			showMihList();
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+				var mihGrid = new tui.Grid({
+					el : document.getElementById('mihGrid'),
+					scrollX : false,
+					scrollY : false,
+			        pageOptions: {
+			            useClient: true,
+			            perPage: 10
+			        },
+					columns : [ {
+						header : '투입일자', //투입일자, sql에 투입일자 기준으로DESC 해두었음
+						name : 'matOutDate',
+						align : 'center',
+						formatter({value}) {
+					      return `${value.substring(0,10)}`;
+					    },
+					    filter: {
+	                        type: 'date',
+	                        options: {
+	                          format: 'yyyy-MM-dd'
+	                        }
+	                     },
+					}, {
+						header : '작업 지시 번호',
+						name : 'preNo',
+						align : 'center',
+						filter : 'select'
+					}, {
+						header : '자재명', //공정에 투입된 자재의 이름
+						name : 'matName',
+						filter : 'select',
+						align : 'center'
+					},
+					{
+						header : '공정명', //각 자재별로 어느 공정에 투입되었는지
+						name : 'prsName',
+						filter : 'select',
+						align : 'center'
+					}, {
+						header : '투입수량', //각 공정에 몇개씩 투입되었는지=이거는 필요한가? 다똑같이 투입될건데
+						name : 'matOutQty',
+						align : 'center',
+						formatter : function (ev){
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
+		                    }
+					}/* , {
+						header : '자재 출고 담당자',
+						name : 'empName',
+						align : 'center',
+						filter : 'select'
+					} */ ]
+				});
+				//자재 투입 이력 그리드의 데이터 가져오기
+				function showMihList(){
+					fetch("getmihList")
+					.then(res=>res.json())
+					.then(obj=>{
+						console.log(obj);
+						mihGrid.resetData(obj);
+					})
+				}
+			</script>
+
+		</main>
+	</article>
+</body>
+</html>

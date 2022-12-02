@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+
+<head>
+<meta charset="utf-8">
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<style>
+th {
+	cursor: pointer;
+	border: 0.1px solid gray;
+}
+
+.menuTable {
+	width: 90%;
+	margin-left: 5%;
+	height: 100px;
+	text-align: center;
+	border: 0.1px solid gray;
+	background-color: white;
+}
+
+.button {
+	width: 100px;
+	height: 30px;
+}
+</style>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main id="main" class="main">
+
+			<h4 style="margin-bottom: 3%;">
+				<strong>공통코드 관리</strong>
+			</h4>
+
+			<div>
+				<table class="menuTable" style="margin-bottom: 3%;">
+					<tr>
+						<th onclick="showAll()">전체</th>
+						<th onclick="showCompany(this.innerText)">거래처</th>
+						<th onclick="showCompany(this.innerText)">공정</th>
+						<th onclick="showCompany(this.innerText)">제품</th>
+						<th onclick="showCompany(this.innerText)">자재</th>
+					</tr>
+					<tr>
+						<th onclick="showCompany(this.innerText)">창고</th>
+						<th onclick="showCompany(this.innerText)">설비</th>
+						<th onclick="showCompany(this.innerText)">진행</th>
+						<th onclick="showCompany(this.innerText)">제품(공정)불량</th>
+						<th onclick="showCompany(this.innerText)">자재불량</th>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<h3 id="title"></h3>
+			</div>
+			<div style="float: right; margin-bottom: 3%;">
+				<button class="button" onclick="selectDelete()">삭제</button>
+			</div>
+
+			<div id="codeGrid"></div>
+
+			<script>
+			toastr.options = {
+	                "closeButton": false,
+	                "newestOnTop": true,
+	                "positionClass": "toast-top-center",
+	                "preventDuplicates": true,
+	                "extendedTimeOut" : 1500, 
+	                "timeOut" : 2500
+	         }
+			
+			showAll();
+			       
+			const codeGrid = new tui.Grid({
+				el : document.getElementById('codeGrid'),
+				pagination:true,
+				pageOptions: {
+					useClient:true,
+					perPage:10
+				},
+				scrollX : false,
+				scrollY : false,
+				rowHeaders: ['checkbox'],
+				columns : [ {
+					header : '코드',
+					name : 'code',
+					align : 'center',
+					filter: 'select'
+				}, {
+					header : '코드명',
+					name : 'codeName',
+					align : 'center',
+					filter: 'select'
+				}, {
+					header : '공통코드',
+					name : 'divCode', //납기일자명 수정
+					align : 'center',
+					filter: 'select'
+				}, {
+					header : '구분',
+					name : 'divName',
+					align : 'center',
+					filter: 'select'
+				} ]
+			});
+			
+			var deleteCode = [];
+			
+			codeGrid.on('check', ev => {
+				deleteCode.push((codeGrid.getValue(ev.rowKey, 'code')));
+				
+				
+				/* $('input[name=_checked]').each(function (idx, item){
+					codeGrid.getValue(i, 'code');
+					console.log(codeGrid.getValue(ev.rowKey, 'code'));
+				}) */
+			});
+			
+			codeGrid.on('uncheck', ev => {
+				for(let i = 0; i < deleteCode.length; i++) {
+					if(deleteCode[i] == codeGrid.getValue(ev.rowKey, 'code')) {
+						deleteCode.splice(i, 1);
+					}
+				}
+			});
+			
+			function selectDelete() {
+				var token = $("meta[name='_csrf']").attr("content");
+				var header = $("meta[name='_csrf_header']").attr("content");
+				
+				let code = [];
+				for(co of codeGrid.getCheckedRows()){
+					code.push(co.code)
+				}
+				
+				$.ajax({
+					url:'selectDeleteCP',
+					type:'POST',
+					data:{code:code},
+					dataType:"json",
+					async:false,
+					beforeSend : function(xhr){
+						xhr.setRequestHeader(header, token);
+					},
+					success:function(data){
+						if(data > 0) {
+							toastr.success("삭제완료");
+							showAll();					
+						} else {
+							alert("삭제실패");
+						}
+					},
+					error:function(reject){
+						console.log(reject);
+					}
+				})
+			}
+			
+			function showAll() {
+				$('#title').text("전체");
+				
+				url="codeList"
+				       fetch(url) // 설비 단건조회 불러오는 아작스
+				       .then(res=>res.json())
+				       .then(obj=>{
+				           codeGrid.resetData(obj);
+				       })
+			}
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
+			function showCompany(a) {
+				$("#title").text(a);
+				
+				let url = '';
+				let type = '';
+				
+				if (a == '거래처') {
+					type = 'CP';
+				} else if (a == '설비') {
+					type = 'EQM';
+				} else if (a == '공정') {
+					type = 'PRS';
+				} else if (a == '제품') {
+					type = 'PRD';
+				} else if (a == '자재') {
+					type = 'MAT';
+				} else if (a == '창고') {
+					type = 'STO';
+				} else if (a == '설비상태') {
+					type = 'EQS';
+				} else if (a == '비가동') {
+					type = 'UOR';
+				} else if (a == '진행') {
+					type = 'PRG';
+				} else if (a == '제품(공정)불량') {
+					type = 'ERP';
+				} else if (a == '자재불량') {
+					type = 'ERM';
+				}
+				
+				$.ajax({
+		            url: 'codeCpList',
+		            type : "POST",
+		            data:{'type':type},
+					dataType:"json",
+					async:false,
+		            beforeSend : function(xhr){
+	            		xhr.setRequestHeader(header, token);
+	            	},
+		            success : function(result) {
+		               codeGrid.resetData(result);
+		            },
+		            error : function(error){
+		               console.log(11);
+		            }
+		         })
+		         
+				/* url=url
+			       fetch(url, data)
+			       .then(res=>res.json())
+			       .then(obj=>{
+			           console.log(obj);
+			           codeGrid.resetData(obj);
+			       }); */
+			}
+
+			</script>
+		</main>
+	</article>
+
+	<!-- Vendor JS Files -->
+	<script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+	<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="assets/vendor/chart.js/chart.min.js"></script>
+	<script src="assets/vendor/echarts/echarts.min.js"></script>
+	<script src="assets/vendor/quill/quill.min.js"></script>
+	<script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+	<script src="assets/vendor/tinymce/tinymce.min.js"></script>
+	<script src="assets/vendor/php-email-form/validate.js"></script>
+
+	<!-- Template Main JS File -->
+	<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

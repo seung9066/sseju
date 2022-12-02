@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sseju.java.eqm.mapper.EqmMapper">
+	<!-- 설비 eqm -->
+	<!-- 전체조회 -->
+	<select id="selectEqmList" resultType="EqmVO">
+		SELECT e.eqm_code,
+			e.eqm_name, 
+			e.eqm_model, 
+			e.eqm_size, 
+			e.eqm_size,
+			e.eqm_loc,
+			e.eqm_max_temp,
+			 e.eqm_min_temp,
+			  e.eqm_check,			  
+			e.eqm_check_term,
+			 e.eqm_purc_date,
+			e.eqm_img, 
+			e.eqm_purc_name,
+			e.eqm_purc_tel,
+			 e.eqm_yn,e.line_no
+		FROM EQM e
+		JOIN EQM_LINE l 
+		  ON e.line_no = l.line_no
+	</select>
+
+
+	<insert id="insertEqm" parameterType="EqmVO">
+
+		INSERT INTO EQM
+		(eqm_code,eqm_name,eqm_model,eqm_size,eqm_loc,eqm_max_temp,eqm_min_temp,
+		eqm_check,eqm_check_term,eqm_purc_date,eqm_img,eqm_purc_name,eqm_purc_tel,eqm_yn,line_no)
+		VALUES(
+		#{eqmCode},
+		#{eqmName},
+		#{eqmModel},
+		#{eqmSize},
+		#{eqmLoc},
+		#{eqmMaxTemp},
+		#{eqmMinTemp},
+		#{eqmCheck,jdbcType=VARCHAR},
+		#{eqmCheckTerm,jdbcType=VARCHAR},
+		#{eqmPurcDate},
+		#{eqmImg,jdbcType=VARCHAR},
+		#{eqmPurcName},
+		#{eqmPurcTel},
+		#{eqmYn},
+		#{lineNo}
+
+		)
+	</insert>
+
+	<!-- 설비 수정 -->
+	<update id="updateEqmInfo" parameterType="EqmVO">
+		UPDATE EQM
+		<set>
+			<if test="eqmCode != null and !eqmCode.equals('')">
+				eqm_code=#{eqmCode},
+			</if>
+			<if test="eqmName != null and !eqmName.equals('')">
+				eqm_name=#{eqmName},
+			</if>
+			<if test="eqmModel != null and !eqmModel.equals('')">
+				eqm_model=#{eqmModel},
+			</if>
+			<if test="eqmSize != null and !eqmSize.equals('')">
+				eqm_size = #{eqmSize},
+			</if>
+			<if test="eqmLoc != null and !eqmLoc.equals('')">
+				eqm_loc = #{eqmLoc},
+			</if>
+			<if test="eqmMaxTemp != null and !eqmMaxTemp.equals('')">
+				eqm_max_temp = #{eqmMaxTemp},
+			</if>
+			<if test="eqmMinTemp != null and !eqmMinTemp.equals('')">
+				eqm_min_temp = #{eqmMinTemp},
+			</if>
+			<if test="eqmCheck != null and !eqmCheck.equals('')">
+				eqm_check = #{eqmCheck},
+			</if>
+			<if test="eqmPurcDate != null">
+				eqm_purc_date = #{eqmPurcDate},
+			</if>
+			<if test="eqmImg != null and !eqmImg.equals('')">
+				eqm_img=#{eqmImg},
+			</if>
+			<if test="eqmPurcName != null and !eqmPurcName.equals('')">
+				eqm_purc_name=#{eqmPurcName},
+			</if>
+			<if test="eqmPurcTel != null and !eqmPurcTel.equals('')">
+				eqm_purc_tel= #{eqmPurcTel},
+			</if>
+			<if test="eqmYn != null and !eqmYn.equals('')">
+				eqm_yn=#{eqmYn},
+			</if>
+			<if test="lineNo != null and !lineNo.equals('')">
+				line_no =#{lineNo},
+			</if>
+			<if test="eqmCheckTerm != null and !eqmCheckTerm.equals('')">
+				eqm_check_term=#{eqmCheckTerm}
+			</if>
+
+		</set>
+		WHERE eqm_code = #{eqmCode}
+	</update>
+
+
+	<!-- 설비 삭제 -->
+	<delete id="deleteEqmInfo" parameterType="EqmVO">
+		DELETE FROM EQM
+		WHERE
+		eqm_code = #{eqmCode}
+	</delete>
+	<!-- 설비 단건 조회 -->
+
+
+	<!-- 라인정보 전체조회 -->
+	<select id="getEqmLineList" resultType="EqmVO">
+	SELECT * FROM EQM_LINE
+	ORDER BY 1 DESC
+	</select>
+
+	<!-- 라인정보 등록 -->
+	<insert id="insertEqmLine" parameterType="EqmVO">
+		INSERT INTO eqm_line (line_no,tot_prc,uph,emp_no,line_yn)
+		VALUES (
+		#{lineNo},
+		#{totPrc,jdbcType=INTEGER},
+		#{uph,jdbcType=INTEGER},
+		#{empNo},
+		#{lineYn}
+		)
+	</insert>
+
+	<!-- 라인정보 수정 -->
+	<update id="updateEqmLine" parameterType="EqmVO">
+		UPDATE EQM_LINE
+		set
+			tot_prc = #{totPrc},
+			uph = #{uph},
+			emp_no = #{empNo},
+			line_yn = #{lineYn}
+		
+		WHERE line_no = #{lineNo}
+	</update>
+
+	<!-- 라인정보 삭제 -->
+	<delete id="deleteEqmLine" parameterType="EqmVO">
+		DELETE FROM eqm_line
+		WHERE line_no = #{lineNo}
+	</delete>
+
+	<!-- 정기점검 전체조회 -->
+	<select id="getEqmChkList" resultType="EqmVO">
+
+    SELECT c.CHK_NO,
+	        c.CHK_DATE, c.CHK_NDATE, c.CHK_STATE, c.CHK_SOL,
+	        p.emp_id,q.EQM_CODE, q.EQM_NAME, q.eqm_check, q.eqm_check_term,q.line_no
+      FROM EQM_CHK c
+      JOIN EQM q ON c.eqm_code = q.eqm_code
+      JOIN EMPLOYEE p ON c.chk_emp_no = p.emp_id	
+    </select>
+
+	<!-- 정기점검 등록 -->
+
+	<insert id="insertEqmChk" parameterType="EqmVO">
+		<selectKey keyProperty="chkNo" resultType="String"
+			order="BEFORE">
+			SELECT 'CHK'||
+			TO_CHAR(SYSDATE,'YYYYMMDD')||'_'||LPAD(NVL(MAX(SUBSTR(chk_no,
+			-3)),0)+1,3,0)
+			FROM EQM_CHK
+		</selectKey>
+		INSERT INTO EQM_CHK(CHK_NO,
+		CHK_DATE,
+		CHK_NDATE,
+		CHK_STATE,
+		CHK_SOL,
+		CHK_EMP_NO,
+		EQM_CODE )
+		VALUES (#{chkNo},
+		#{chkDate,jdbcType=VARCHAR},
+		#{chkNdate,jdbcType=VARCHAR},
+		#{chkState,jdbcType=VARCHAR},
+		#{chkSol,jdbcType=VARCHAR},
+		#{chkEmpNo,jdbcType=VARCHAR},
+		#{eqmCode})
+	</insert>
+	
+	<!-- 정기점검 모달 가져오기 -->
+	<select id="getChkList" resultType="EqmVO">
+		SELECT q.eqm_code,q.eqm_name,q.eqm_check,q.eqm_check_term,c.chk_date,c.chk_ndate
+		FROM EQM_CHK c
+		JOIN EQM q
+		ON c.eqm_code = q.eqm_code
+	</select>
+	
+	<!-- 정기점검일 update하기 -->
+	
+
+	<!-- 직원 아이디, 이름 가져오기 -->
+	<select id="getEmpList" resultType="EqmVO">
+		SELECT *
+		FROM employee
+	</select>
+
+	<!-- 정기점검 수정 -->
+	<update id="updateEqmChk" parameterType="EqmVO">
+		UPDATE EQM_CHK
+		<set>
+		<if test="chkDate != null and !chkDate.equals('')">
+			chk_date = #{chkDate},
+		</if>
+		<if test="chkNdate != null and !chkNdate.equals('')">
+			chk_ndate = #{chkNdate},
+		</if>
+		<if test="chkState != null and !chkStateequals('')">
+			chk_state = #{chkState},
+		</if>
+		<if test="chkSol != null and !chkSol.equals('')">
+			chk_sol = #{chkSol},
+		</if>
+		<if test="chkEmpNo != null and !chkEmpNo.equals('')">
+			chk_emp_no = #{chkEmpNo}
+		</if>
+		
+		</set>
+		WHERE chk_no = #{chkNo}
+
+
+	</update>
+
+
+	<!-- 정기점검 삭제 -->
+	<delete id="deleteEqmChk" parameterType="EqmVO">
+		DELETE FROM EQM_CHK
+		WHERE chk_no = #{chkNo}
+
+	</delete>
+
+	<!-- 비가동 전체조회 -->
+	<select id="getUoperList" resultType="EqmVO">
+	SELECT u.UOPER_CODE,u.UOPER_RSN,u.UOPER_WORK,u.UOPER_START_TIME,u.UOPER_END_TIME,u.EQM_CODE,u.EMP_ID,u.EQM_NAME
+	FROM EQM_UOPER u
+	JOIN EQM q
+	ON u.eqm_code = q.eqm_code
+	ORDER BY 1 DESC
+      </select>
+
+	<!-- 비가동 등록 -->
+	<insert id="insertUoper" parameterType="EqmVO">
+		<selectKey keyProperty="uoperCode" resultType="String"
+			order="BEFORE">
+			SELECT 'UOPR' ||
+					LPAD(NVL(MAX(SUBSTR(uoper_code,	-3)),0)+1,3,0) 
+			  FROM EQM_UOPER
+		</selectKey>
+		INSERT INTO EQM_UOPER(uoper_code,
+								emp_id,
+								uoper_rsn,
+								uoper_work,
+								uoper_start_time,
+								uoper_end_time,
+								eqm_code,
+								eqm_name)
+		VALUES (#{uoperCode}, 
+				#{empId}, 
+				#{uoperRsn},
+				#{uoperWork,jdbcType=VARCHAR},
+				#{uoperStartTime}, 
+				#{uoperEndTime,jdbcType=VARCHAR},
+				#{eqmCode},
+				#{eqmName})
+
+	</insert>
+
+	<!-- 비가동 삭제 -->
+	<delete id="deleteUoper" parameterType="EqmVO">
+		DELETE FROM EQM_UOPER
+		WHERE uoper_code = #{uoperCode}
+	</delete>
+	
+	<!-- 비가동 누를 시 설비상태(eqmYn) N으로 바꿔줌  -->
+	<update id="updateEqmYn" parameterType="EqmVO">
+		UPDATE EQM 
+        <set>
+         EQM_YN = CASE WHEN EQM_YN = 'Y' THEN 'N' ELSE 'Y' END
+        </set>
+        WHERE EQM_CODE = (SELECT EQM_CODE FROM EQM_UOPER WHERE EQM_CODE = #{eqmCode} AND UOPER_RSN=#{uoperRsn} AND EMP_ID = #{empId}) 
+     </update>
+
+	<!-- 비가동 수정 -->
+	<update id="updateUoper" parameterType="EqmVO">
+		UPDATE EQM_UOPER
+		<set>
+		<if test="uoperRsn != null and !uoperRsn.equals('')">
+			uoper_rsn = #{uoperRsn},
+		</if>
+		<if test="uoperWork != null and !uoperWork.equals('')">
+			uoper_work = #{uoperWork},
+		</if>
+		<if test="uoperEndTime != null and !uoperEndTime.equals('')">
+			uoper_end_time =#{uoperEndTime},
+		</if>
+		<if test="empId != null and !empId.equals('')">
+			emp_id = #{empId}
+		</if>			
+		</set>
+		WHERE eqm_code = #{eqmCode}
+		AND uoper_code = #{uoperCode}
+
+	</update>
+
+
+
+
+
+</mapper>

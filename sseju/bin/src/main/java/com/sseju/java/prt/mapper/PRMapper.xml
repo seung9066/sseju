@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sseju.java.prt.mapper.PRMapper">
+
+
+
+	<!-- 제품목록 조회 -->
+	<select id="selectPrtList" resultType="PRVO">
+		SELECT *
+		FROM product
+		ORDER
+		BY
+		prt_code DESC
+	</select>
+
+
+	<!-- 주문상세 목록 조회 -->
+	<select id="selectPrtInfoList" resultType="ORVO">
+		SELECT
+		TO_CHAR(a.order_date, 'YYYY-MM-DD') AS order_date,
+		d.cp_code,
+		c.prt_name,
+		c.prt_price,
+		b.order_qty,
+		(c.prt_price*b.order_qty) AS
+		order_price
+		FROM
+		orders a,
+		order_Inf b,
+		product c,
+		company d
+		where
+		a.order_no = b.order_no
+		and b.prt_code = c.prt_code
+		and
+		a.cp_code =
+		d.cp_code
+	</select>
+
+	<!-- 전체조회 -->
+	<select id="selectPrtList2" resultType="ORVO">
+	<![CDATA[
+		SELECT
+		a.order_no,
+		c.prt_code,
+		e.cp_name,
+		c.prt_name,
+		b.order_qty,
+		d.del
+		FROM
+		orders a,
+		order_Inf b,
+		product c,
+		product_out d,
+		company e
+		where a.order_no = b.order_no
+		and b.prt_code = c.prt_code
+		and a.cp_code = e.cp_code
+        and b.order_qty <>'0'
+		and a.order_no= d.order_no(+)
+        order by c.prt_code ASC
+		]]>
+	</select>
+	<!-- 단거조회 -->
+	<select id="selectPrtInfo" parameterType="PRVO">
+		select PRT_CODE
+		PRT_NAME
+		PRT_STANDARD
+		PRT_UNIT
+		PRT_PRICE
+		PRT_IMAGE
+		from product
+		where
+		prt_name = #{prtName}
+	</select>
+
+	<insert id="insertPrtInf" parameterType="PRVO">
+		<selectKey keyProperty="prtCode" resultType="String"
+			order="BEFORE">
+			SELECT 'PRD_'||LPAD(NVL(MAX(SUBSTR(cp_code, -3)),0)+1,3,0) FROM
+			product
+		</selectKey>
+		insert into product
+		(prt_code,
+		prt_name,
+		prt_standard,
+		prt_unit,
+		prt_price,
+		prt_image)
+		values(
+		#{prtCode},
+		#{prtName},
+		#{prtStandard]},
+		#{prtUnit},
+		#{prtPrice},
+		#{prtImage}
+		)
+	</insert>
+
+
+</mapper>

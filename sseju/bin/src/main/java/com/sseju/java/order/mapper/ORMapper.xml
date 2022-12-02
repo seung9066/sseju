@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sseju.java.order.mapper.ORMapper">
+
+	<!-- 주문승인 1grid -->
+	<select id="select" resultType="ORVO">
+		with b as (select order_no, sum
+		(order_price) as order_price
+		from order_inf
+		where order_yn ='N'
+		group by
+		order_no)
+		select
+		a.order_no,
+		a.d_day,
+		a.order_prg ,
+		a.order_date + 9/24 as
+		order_date,
+		a.cp_code,
+		c.cp_name,
+		order_price
+		from orders a,
+		b,
+		company c
+		where a.order_no=b.order_no
+		and a.cp_code = c.cp_code
+	</select>
+	<select id="selectA" resultType="ORVO">
+		select
+		a.order_no ,
+		a.d_day,
+		a.order_prg ,
+		a.order_date + 9/24 as order_date,
+		a.cp_code,
+		c.prt_name,
+		sum(b.order_price) as order_price
+		from
+		orders
+		a,order_inf b, product c
+		where
+		a.order_no=b.order_no
+		and b.order_yn ='W'
+		and c.prt_code=b.prt_code
+		group by a.order_no, a.d_day,
+		a.order_prg, a.order_date, a.cp_code,c.prt_name
+	</select>
+	<!-- 주문승인 2grid -->
+	<select id="select1" resultType="ORVO">
+		select
+		a.order_no,
+		a.d_day,
+		a.order_prg,
+		a.order_date + 9/24 as order_date,
+		a.cp_code,
+		sum(b.order_price) as order_price
+		from
+		orders
+		a,order_inf b
+		where
+		a.order_no=b.order_no
+		and b.order_yn ='Y'
+		or b.order_yn = 'W' or
+		b.order_yn = 'K'
+		group by a.order_no, a.d_day,
+		a.order_prg,
+		a.order_date, a.cp_code
+	</select>
+
+	<select id="selectB" resultType="ORVO">
+		select
+		a.order_no,
+		a.d_day,
+		a.order_prg,
+		a.order_date +9/24 as order_date,
+		a.cp_code,
+		d.prt_name
+		sum(b.order_price) as order_price,
+		c.cp_name,
+		sum(b.order_out_qty) as
+		order_out_qty
+		from
+		orders a,
+		order_inf b,
+		company c,
+		product d
+		where
+		a.order_no=b.order_no
+		and b.order_yn ='K'
+		group by
+		a.order_no, a.d_day,
+		a.order_prg, a.order_date, a.cp_code,c.cp_name,d.prt_name
+	</select>
+	<!-- 주문승인모달 1grid -->
+	<select id="select2" resultType="ORVO" parameterType="ORVO">
+		select
+		b.prt_name,
+		a.order_qty,
+		a.order_price,
+		a.prt_code,
+		a.order_no
+		from
+		order_inf a, product b
+		where a.order_no = #{orderNo}
+		and b.prt_code =
+		a.prt_code
+	</select>
+
+	<select id="selectC" parameterType="ORVO">
+		select
+		prt_code,
+		sum(order_out_qty)as order_out_qty
+		from order_inf
+		group by prt_code
+	</select>
+	<!-- 주문내역 조회 -->
+	<select id="selectOrderList" resultType="ORVO">
+		<![CDATA[
+		SELECT 
+                    a.order_date + 9/24 as order_date,
+                    a.order_no,
+                    d.cp_name,
+                    sum(b.order_qty) as order_qty,
+                    b.order_out_qty,
+                    a.order_prg,
+                    a.d_day,
+                    c.prt_name
+		FROM 
+				    orders a,
+				    order_Inf b,
+				    product c,
+				    company d
+		where 		a.order_no = b.order_no
+		and 		b.prt_code = c.prt_code
+		and 		a.cp_code = d.cp_code
+		and         a.order_prg ='배송완료'
+        and         b.order_qty<> 0
+        group by  a.order_date,
+                    a.order_no,
+                    d.cp_name,
+                    b.order_out_qty,
+                    a.order_prg,
+                    a.d_day,
+                    c.prt_name
+]]>
+	</select>
+
+	<!-- 진행중인 주문서 현황에 진행중인 주문 -->
+	<select id="selectOrdeIng" resultType="ORVO">
+	<![CDATA[
+		 SELECT 
+                    a.order_date + 9/24 as order_date,
+                    a.order_no,
+                    d.cp_name,
+                    sum(b.order_qty) as order_qty,
+                    b.order_out_qty,
+                    a.order_prg
+		FROM 
+				    orders a,
+				    order_Inf b,
+				    product c,
+				    company d
+		where 		a.order_no = b.order_no
+		and 		b.prt_code = c.prt_code
+		and 		a.cp_code = d.cp_code
+		and         a.order_prg <> '배송완료'
+        and         b.order_qty<> 0
+        group by  a.order_date,
+                    a.order_no,
+                    d.cp_name,
+                    b.order_out_qty,
+                    a.order_prg
+	]]>
+	</select>
+
+
+	<select id="selectPrtManager" resultType="ORVO">
+		select
+		c.prt_name,
+		sum(b.order_qty) as order_qty,
+		sum(b.order_out_qty) as
+		order_out_qty,
+		sum(lot_qty) as lot_qty
+		from
+		orders a,
+		order_inf b,
+		product c,
+		lot d
+		where
+		a.order_no =b.order_no
+		and c.prt_code = b.prt_code
+		and c.prt_code
+		=d.mp_code(+)
+		GROUP BY c.prt_name
+	</select>
+
+	<select id="getOrderNo" resultType="ORVO">
+		SELECT 'OR'||to_char(sysdate,
+		'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(order_no,
+		-3)),0)+1,3,0) AS order_no
+		FROM
+		orders
+	</select>
+	<!-- 출고 테이블 등럭 -->
+	<insert id="insertOut" parameterType="CodeVO">
+		<selectKey keyProperty="prtOutNo" resultType="String"
+			order="BEFORE">
+			SELECT 'PO'||to_char(sysdate,
+			'rrrrMMdd')||LPAD(NVL(MAX(SUBSTR(prt_out_no,
+			-3)),0)+1,3,0)
+			FROM
+			product_out
+		</selectKey>
+		insert into product_out
+		values(
+		#{prtOutNo},
+		#{whCode},
+		#{orderNo},
+		sysdate,
+		#{prtQty},
+		'배송중'
+		)
+
+	</insert>
+	
+	<select id="getLotWh" resultType="CodeVO">
+		SELECT * FROM lot WHERE out_from = #{orderNo}
+	</select>
+
+	<!-- 주문 테이블 등록 쿼리 추가하기 -->
+	<insert id="insertOrder" parameterType="ORVO">
+		INSERT INTO orders
+		(ORDER_NO,
+		D_DAY,
+		ORDER_DATE,
+		order_prg,
+		CP_CODE
+		)
+		VALUES
+		(
+		#{orderNo},
+		sysdate+7,
+		sysdate,
+		'배송전',
+		#{cpCode})
+	</insert>
+
+	<!-- 주문상세 테이블 등록 쿼리 추가하기 -->
+	<insert id="insertOrderInfo" parameterType="ORVO">
+		<selectKey keyProperty="preNo" resultType="String"
+			order="BEFORE">
+			SELECT NVL(MAX(no), 0)+1 FROM
+			order_inf
+		</selectKey>
+
+		INSERT INTO order_inf
+		VALUES ( #{preNo}
+		,#{orderQty}
+		,0
+		,#{orderNo}
+		,#{prtCode}
+		,#{unitPrice}
+		,#{orderPrice}
+		, 'N')
+	</insert>
+	<!-- 단거조회 -->
+	<select id="selectOrderInfo" parameterType="ORVO">
+		select ORDER_NO,
+		TO_CHAR(a.d_day, 'YYYY-MM-DD') AS d_day,
+		ORDER_PRG,
+		ORDER_DATE + 9/24 as
+		order_date,
+		CP_CODE,
+		ORDER_YN
+		from orderss
+		where
+		order_no=#{orderNo}
+	</select>
+
+	<select id="selectOrder" parameterType="ORVO">
+		SELECT
+		TO_CHAR(a.order_date, 'YYYY-MM-DD') AS order_date,
+		d.cp_code,
+		c.prt_name,
+		c.prt_price,
+		b.order_qty,
+		(c.prt_price*b.order_qty) AS
+		order_price
+		FROM
+		orders a,
+		order_Inf b,
+		product c,
+		company d
+		where
+		a.order_no = b.order_no
+		and b.prt_code = c.prt_code
+		and
+		a.cp_code =
+		d.cp_code;
+	</select>
+
+	<!-- 수정 -->
+	<update id="updateOrderNy" parameterType="ORVO">
+		UPDATE order_inf set
+		order_yn = CASE
+		WHEN order_yn = 'N' THEN 'Y' ELSE 'N'
+		END
+		where
+		order_no =
+		#{orderNo}
+		AND prt_code = #{prtCode}
+	</update>
+	<update id="updateOrderWK" parameterType="ORVO">
+		UPDATE order_inf set
+		order_yn = CASE
+		WHEN order_yn = 'W' THEN 'K' ELSE 'W'
+		END
+		where
+		order_no =
+		#{orderNo}
+		AND prt_code = #{prtCode}
+	</update>
+	<update id="updateLot" parameterType="ORVO">
+		UPDATE lot set
+		lot_qty = 0
+		where
+		out_from =
+		#{orderNo}
+	</update>
+
+	<update id="updateDel" parameterType="ORVO">
+		update orders set
+		order_prg= '배송중'
+		where order_no = #{orderNo}
+	</update>
+
+	<update id="updateDelOut" parameterType="ORVO">
+		update orders set
+		order_prg= '배송완료'
+		where order_no = #{orderNo}
+	</update>
+
+	<update id="updateOut" parameterType="ORVO">
+		UPDATE order_inf
+		SET
+		order_out_qty = order_qty,
+		order_yn= 'K'
+		WHERE order_yn = 'K'
+		AND
+		prt_code = #{prtCode}
+		AND order_no = #{orderNo}
+	</update>
+	<!-- 삭제 -->
+	<!-- <delete id="deleteOrderInfo" parameterType="Integer"> delete from orders 
+		where order_no = #{orderNo} </delete> -->
+
+
+</mapper>

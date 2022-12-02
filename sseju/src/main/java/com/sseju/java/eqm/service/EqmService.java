@@ -38,6 +38,9 @@ public interface EqmService {
     // 라인정보 삭제
     public int deleteEqmLine(EqmVO eqmVO);
     
+ // 라인에 종속된 설비 찾기
+    public String eqmLineEx(EqmVO eqmVO);
+    
     // 정기점검 전체조회
     public List<EqmVO> getEqmChkList();
     

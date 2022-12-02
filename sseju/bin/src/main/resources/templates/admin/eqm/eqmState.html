@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- 제이쿼리 -->
+<script
+   src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!-- 토스트UI -->
+<link rel="stylesheet"
+   href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<!-- 토스트 UI 그리드 페이징 cdn -->
+<script type="text/javascript"
+   src="https://uicdn.toast.com/tui.pagination/v3.4.0/tui-pagination.js"></script>
+<script
+   src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.js"></script>
+<!-- 차트  -->
+<link rel="stylesheet" href="https://uicdn.toast.com/chart/latest/toastui-chart.min.css" />
+<script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
+
+
+</head>
+<body>
+   <article layout:fragment="content">
+      <main id="main" class="main">
+         <div class="container">
+            <div class="row">
+               <div class="col"></div>
+               <div class="col"></div>
+               <div class="w-100"></div>
+               <div class="col" id="chart"></div>
+               <div class="col" id="colChart"></div>
+            </div>
+         </div>
+
+      <script>
+      
+         const Chart = toastui.Chart;
+         chartList();
+         
+      function chartList(){
+         
+      
+         const el = document.getElementById('chart');
+         /* let checkEqm = [];
+         $.ajax({
+            url : 'getEqmList',
+            dataType : "json",
+            async : false,
+                success:function(json)
+               checkEqm.push(json);
+               for(let j in checkEqm){
+                  let p = checkEqm[j];
+               }
+                   
+                },
+                error:function(reject){
+                   console.log(reject);
+                }
+             }); */
+         
+         let data = {
+                 categories: [
+                   08,09,10,11,12,13,14,15,16,17,18,19,20,21
+                 ],
+                 series: [
+                      {
+                        name: 'SiteA',
+                        data: [
+                          { x: 1, y: 202 },
+                          { x: 7, y: 350 },
+                          { x: 8, y: 213 },
+                          { x: 9, y: 230 },
+                          { x: 12, y: 230 },
+                        ],
+                      },
+                      {
+                        name: 'SiteB',
+                        data: [
+                          { x: 1, y: 312 },
+                          { x: 3, y: 320 },
+                          { x: 7, y: 300 },
+                          { x: 9, y: 320 },
+                          { x: 13, y: 20 },
+                        ],
+                      }
+                    ]
+         };
+                  
+               
+         const options = {
+                chart: {
+                      width: 600,
+                      height: 400,
+                      title: '설비별 실시간 온도변화',
+                    },
+               series : {
+                  spline:true,
+                  eventDetectType: 'grouped'
+               },
+                yAxis: {
+                      title: '온도',
+                      suffix: '°C'
+               },
+               xAxis: {
+                      title: '시간'
+               }
+               
+               };
+      
+         const chart = Chart.lineChart({el, data, options});
+         
+      }
+           
+         const el = document.getElementById('colChart');
+         const data = {
+                 categories: ['설비1', '설비2', '설비3', '설비4', '설비5'],
+                 series: [
+                   {
+                     name: '10월',
+                     data: [5000, 3000, 5000, 7000, 6000, 4000, 1000]
+                   },
+                   {
+                     name: '11월',
+                     data: [8000, 4000, 7000, 2000, 6000, 3000, 5000]
+                   },
+                   {
+                     name: '12월',
+                     data: [4000, 4000, 6000, 3000, 4000, 5000, 7000]
+                   }
+                 ],
+               };
+         const options = {
+               chart: {
+                   width: 600,
+                   height: 400,
+                   title: '4분기 설비별 불량률',
+                 },
+                  series : {
+                     spline:true,
+                     eventDetectType: 'grouped'
+                  },
+                   yAxis: {
+                         title: '불량률',
+                         suffix : '%'
+                  },
+                  xAxis: {
+                         title: '설비'
+                  }
+         }
+
+         
+         
+            const chart = Chart.columnChart({el, data,options});
+
+
+            
+
+
+
+         </script>
+      </main>
+   </article>
+</body>
+</html>

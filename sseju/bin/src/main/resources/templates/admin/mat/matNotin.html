@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>InOut</title>
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script
+	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.13/dist/vue.js"></script>
+<style>
+.tui-datepicker {
+	z-index: 1001;
+}
+
+.tui-select-box {
+	z-index: 1001;
+}
+
+/* ul 스타일 */
+.ul-style {
+	list-style: none;
+	padding: 0px;
+}
+
+.ul-style li>label {
+	width: 100px;
+	text-align: center;
+}
+
+.ul-style li {
+	padding: 5px;
+}
+</style>
+</head>
+<body>
+	<article layout:fragment="content">
+		<main class="main" id="main">
+			<h3>미검수내역</h3>
+			<hr>
+			<div>
+				<div id="grid"></div>
+			</div>
+			
+			<script>
+			//미입고 내역 => 수정 기능 외엔 없음 (수정으로 입고를 시킴)
+			matNotinList();
+
+			//발주번호,자재코드,자재명,입고수량(합격수량),입고일,창고,LOT번호
+				const grid = new tui.Grid({
+					el : document.getElementById('grid'),
+					
+					rowHeaders : [],
+					scrollX : false,
+					scrollY : false,
+		            pageOptions: {
+		            	useClient: true,
+		                perPage: 10
+		           	},
+					columns : [{
+						header : '발주 번호',
+						name : 'matOrdNo',
+						align : 'center'
+					}, {
+						header : '자재 코드',
+						name : 'matCode',
+						align : 'center'
+					}, {
+						header : '자재명',
+						name : 'matName',
+						align : 'center'
+					}, {
+						header : '확인번호',
+						name : 'matChkCode',
+						align : 'center'
+					},{
+						header : '미검수 수량',
+						name : 'matInQty',
+						editor: 'text',
+						align : 'center'
+					}, {
+						header : '창고 코드',
+						name : 'whCode',
+						align : 'center'
+					}, {
+						header : '창고',
+						name : 'whName',
+						align : 'center'
+					}, {
+						header : '입고일', 
+						name : 'matChkDate',
+						align : 'center',
+/*    	                    formatter({value}) {
+   	                        return `${value.substring(0,10)}`;
+   	                      }, */
+   	                    filter: {
+   					  	  type: 'date',
+   	                 	  options: {
+   	                    	  format: 'yyyy-MM-dd'
+   	                    		  }
+   	                         },
+					},{
+						header : '진행사항',
+						name : 'matOrdYn',						
+						align : 'center'
+					}]
+				});
+			
+				grid.hideColumn("matCode", "matCode");
+	            grid.hideColumn("whCode", "whCode");
+
+				var datepicker = new tui.DatePicker('#wrapper', {
+					date : new Date(),
+					input : {
+						element : '#datepicker-input',
+						format : 'yyyy-MM-dd'
+					}
+				});
+				
+				/*------------
+	            // 함수
+	            ----------------*/
+	            
+	            function matNotinList(){
+					$.ajax({
+						url : '/matNotinList',
+						dataType : "json",
+						success : function(data) {
+							grid.resetData(data);
+							console.log(data);
+						},
+						error : function(reject) {
+							console.log(reject);
+						}
+					})
+				};
+			</script>
+		</main>
+	</article>
+</body>
+</html>

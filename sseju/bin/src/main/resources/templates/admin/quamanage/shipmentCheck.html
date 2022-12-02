@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>출하 검사 페이지</title>
+
+<style>
+.tui-datepicker {
+	z-index: 1001;
+}
+
+.tui-select-box {
+	z-index: 1001;
+}
+
+/* ul 스타일 */
+.ul-style {
+	list-style: none;
+	padding: 0px;
+}
+
+.ul-style li>label {
+	width: 100px;
+	text-align: center;
+}
+
+.ul-style li {
+	padding: 5px;
+}
+
+#od-title {
+	font-weight: bold;
+}
+
+#od-btn {
+	display: inline-block;
+	margin: 0 5px;
+	float: right;
+}
+</style>
+
+<link rel="stylesheet"
+	href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<script
+	src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+</head>
+<body>
+
+	<article layout:fragment="content">
+		<main class="main" id="main">
+			<div id="od-title">
+				<h3>출하 검사</h3>
+			</div>
+
+			<div id="od-content">
+				<div id="input-group">
+					<ul class="ul-style">
+						<!-- <li><label for="prtName">검색</label><input type="text">
+							<br></li> -->
+
+						<li><label>일자별 검색</label>
+							<div
+								class="tui-datepicker-input tui-datetime-input tui-has-focus">
+								<input id="startpicker-input" type="text" aria-label="Date">
+								<span class="tui-ico-date"></span>
+								<div id="startpicker-container" style="margin-left: -1px;"></div>
+							</div> <span>-</span>
+							<div
+								class="tui-datepicker-input tui-datetime-input tui-has-focus">
+								<input id="endpicker-input" type="text" aria-label="Date">
+								<span class="tui-ico-date"></span>
+								<div id="endpicker-container" style="margin-left: -1px;"></div>
+							</div> <!-- 버튼 -->
+							<button class="button">조회</button>
+							<button class="button">초기화</button></li>
+					</ul>
+				</div>
+
+			</div>
+			
+			<div id="ShipmentGrid"></div>
+
+			<script>
+			
+			//showShipment();
+			
+			var token = $("meta[name='_csrf']").attr("content");
+			var header = $("meta[name='_csrf_header']").attr("content");
+			
+				var today = new Date();
+				var picker = tui.DatePicker.createRangePicker({
+					startpicker : {
+						date : today,
+						input : '#startpicker-input',
+						container : '#startpicker-container'
+					},
+					endpicker : {
+						date : today,
+						input : '#endpicker-input',
+						container : '#endpicker-container'
+					},
+					selectableRanges : [ [
+							today,
+							new Date(today.getFullYear() + 1, today.getMonth(),
+									today.getDate()) ] ]
+				});
+
+				var ShipmentGrid = new tui.Grid({
+					el : document.getElementById('ShipmentGrid'),
+					scrollX : false,
+					scrollY : false,
+					columns : [ {
+						header : '창고코드',
+						name : 'orderNo',
+						align : 'center'
+					}, {
+						header : '상품명',
+						name : 'prtName',
+						align : 'center'
+					}, {
+						header : '주문 수량',
+						name : 'orderQty',
+						align : 'center'
+					}, {
+						header : '납기일자',
+						name : 'dday',
+						filter : 'select',
+						align : 'center',
+				 		formatter({value}) {
+					      return `${value.substring(0,10)}`;
+						    }
+					} ]
+				});
+			</script>
+
+		</main>
+	</article>
+</body>
+</html>
