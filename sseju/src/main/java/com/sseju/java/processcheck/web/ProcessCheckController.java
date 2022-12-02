@@ -35,11 +35,9 @@ public class ProcessCheckController {
 	@GetMapping("/getPrsList")
 	@ResponseBody
 	public List<ProcessCheckVO> getPrsList(ProcessCheckVO pcVO){
-		System.out.println("*************************************************************************");
 		
 		return pcService.getPrsList(pcVO);
 	}
-	
 	//ㄴ공정 조회 시 데이터 가져오기
 	@GetMapping("/getProcessCheckList")
 	@ResponseBody

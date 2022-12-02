@@ -1,7 +1,5 @@
 package com.sseju.java.mat.web;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,6 @@ import com.sseju.java.employee.service.EmployeeVO;
 import com.sseju.java.mat.service.MatService;
 import com.sseju.java.mat.service.MatVO;
 import com.sseju.java.workorder.serivce.WorkOrderService;
-import com.sseju.java.workorder.serivce.WorkOrderVO;
 
 @Controller
 public class MatController {
@@ -277,7 +274,7 @@ public class MatController {
 		return service.matStockList();
 	}
 	
-	@GetMapping("/matRecChk")
+	@PostMapping("/matRecChk")
 	public String matRecChkList() {
 		return "/admin/quamanage/matRecChk";
 	}
