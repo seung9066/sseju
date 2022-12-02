@@ -13,21 +13,24 @@
 	<article layout:fragment="content">
 		<main id="main" class="main">
 			<h4>생산 실적</h4>
- 			<!-- datepicker -->
-<!--  			<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-				<input id="startpicker-input" type="text" aria-label="Date">
-					<span class="tui-ico-date"></span>
-				<div id="startpicker-container" style="margin-left: -1px;"></div>
-			</div> <span>~</span>
-			<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-				<input id="endpicker-input" type="text" aria-label="Date">
-					<span class="tui-ico-date"></span>
-				<div id="endpicker-container" style="margin-left: -1px;"></div>
-			</div>
-				<button class="button" id="Search">조회</button>
-				<button class="button" id="Reset">초기화</button> -->
 			<div>
-			
+               <ul class="ul-style">
+                  <li>
+                     <div>
+                        <label for="prsDate" style="width: 100px">날짜별조회</label> 
+                        <input type="date" class="form-control" style="width: 200px; display: inline" id="sDate">
+                           &nbsp;~
+                        <input type="date" class="form-control" style="width: 200px; display: inline" id="eDate">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        
+                        <button type="button" class="button" id="Search">검색</button>
+                        &nbsp;
+                        <button type="button" class="button" id="Reset">초기화</button>
+                     </div>
+                  </li>
+               </ul>
+            </div>
+			<div>
 			<br>
 				<!-- 생산 실적 그리드 -->
 				<div id="prtperGrid"></div>
@@ -145,6 +148,20 @@
 	                    }
 					} ]
 				});
+				
+		         //filter 이용한 날짜조회 기능
+		            Search.addEventListener('click', () => {
+		            if($('#eDate').val() != '' && $('#sDate').val() != ''){
+		            	prtperGrid.filter('prsDate' , [{code:'afterEq', value:$('#sDate').val()}])
+		            	prtperGrid.filter('prsDate' , [{code:'afterEq', value:$('#eDate').val()}])
+		            }
+		            });
+		         
+		           //초기화 기능
+		                 Reset.addEventListener('click', () => {
+		                 	document.getElementById('sDate').value = '';
+		                 	prtperGrid.unfilter('prsDate');
+		            })  
 			</script>
 		</main>
 	</article>
