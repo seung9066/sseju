@@ -5,24 +5,7 @@
 	layout:decorate="~{/layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>workOrderList</title>
-<style type="text/css">
-.row {
-	margin: 15px;
-}
-h4 {
-	display: inline-block;
-}
-td {
-	padding: 0;
-}
-input {
-	padding: 0, 0;
-}
-.ibox{
-	width : 140px;
-}
-</style>
+<title>작업지시</title>
 </head>
 <body>
 	<article layout:fragment="content">
@@ -129,32 +112,38 @@ input {
 							formatter : function (ev){
 		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
 		                    }
-						},
-						{
+						}, {
 							header: '작업 시작일',
 						    name: 'preDate',
-						    filter : 'select',
-							align : 'center',
-					 		formatter({value}) {
-						      return `${value.substring(0,10)}`;
-						    } 
-						},
-						{
+						    align : 'center',
+						    filter: {
+		                        type: 'date',
+		                        options: {
+		                          format: 'yyyy-MM-dd'
+		                        }
+		                     },
+		                     formatter({value}) {
+							      return `${value.substring(0,10)}`;
+							    },
+						}, {
 						    header : '담당자',
 						    name:'empName',
 						    filter : 'select',
 							align : 'center'
-						},
-						{
+						}, {
 						    header : '납기일자',
 						    name:'dday',
-						    filter : 'select',
+						    filter: {
+		                        type: 'date',
+		                        options: {
+		                          format: 'yyyy-MM-dd'
+		                        }
+		                     },
 							align : 'center',
 							formatter({value}) {
 						      return `${value.substring(0,10)}`;
-						    },
-						},
-						{
+						    }
+						}, {
 							header : '제품코드',
 						    name : 'prtCode',
 						    hidden : 1
@@ -165,35 +154,30 @@ input {
 				var chkWorkOrder = [];
 				
 			   	workOrderGrid.on('click', ev => {
-			   		
-			   		chkWorkOrder.push((workOrderGrid.getValue(ev.rowKey, 'preNo')));
-				      $('#orderNo').val(workOrderGrid.getValue(ev.rowKey, 'orderNo'));
-				      $('#orderNo').attr('readonly', true);
-				      $('#preNo').val(workOrderGrid.getValue(ev.RowKey, 'preNo'));
-				      $('#preNo').attr('readonly', true);
-				      $('#prtName').val(workOrderGrid.getValue(ev.rowKey, 'prtName'));
-				      $('#insQty').val(workOrderGrid.getValue(ev.rowKey, 'insQty'));
-				      $('#dDay').val(workOrderGrid.getValue(ev.rowKey, 'dDay'));
-				      $('#prePrg').val(workOrderGrid.getValue(ev.rowKey, 'prePrg'));
-				      $('#prtCode').val(workOrderGrid.getValue(ev.rowKey, 'prtCode'));
-				    });
-
-			   	workOrderGrid.on('check', ev => {
-				      for(let i=0; i<chkWorkOrder.length; i++){
-				    	  if(chkWorkOrder[i] == workOrderGrid.getValue(ev.rowKey, 'preNo')){
-				    		  chkWorkOrder.splice(i, 1);
-				    	  }
-				      }
-				      $('#orderNo').val('');
-				      $('#orderNo').attr('readonly', true);
-				      $('#preNo').val('');
-				      $('#preNo').attr('readonly', true);
-				      $('#dDay').val('');
-				      $('#prtName').val('');
-				      $('#insQty').val('');
-				      $('#prePrg').val('');
-				      $('#prtCode').val('');
-				    });
+			   		if($('#orderNo').val()==workOrderGrid.getValue(ev.rowKey, 'orderNo')
+			   				&& $('#prtName').val()==workOrderGrid.getValue(ev.rowKey, 'prtName')){
+			   			$('#orderNo').val('');
+					      $('#orderNo').attr('readonly', true);
+					      $('#preNo').val('');
+					      $('#preNo').attr('readonly', true);
+					      $('#dDay').val('');
+					      $('#prtName').val('');
+					      $('#insQty').val('');
+					      $('#prePrg').val('');
+					      $('#prtCode').val('');
+			   		}else{
+				   		chkWorkOrder.push((workOrderGrid.getValue(ev.rowKey, 'preNo')));
+					      $('#orderNo').val(workOrderGrid.getValue(ev.rowKey, 'orderNo'));
+					      $('#orderNo').attr('readonly', true);
+					      $('#preNo').val(workOrderGrid.getValue(ev.RowKey, 'preNo'));
+					      $('#preNo').attr('readonly', true);
+					      $('#prtName').val(workOrderGrid.getValue(ev.rowKey, 'prtName'));
+					      $('#insQty').val(workOrderGrid.getValue(ev.rowKey, 'insQty'));
+					      $('#dDay').val(workOrderGrid.getValue(ev.rowKey, 'dDay'));
+					      $('#prePrg').val(workOrderGrid.getValue(ev.rowKey, 'prePrg'));
+					      $('#prtCode').val(workOrderGrid.getValue(ev.rowKey, 'prtCode'));
+					   	}
+			    });
 				 
 			   	//작업 지시 그리드의 선택 행 삭제
 			   	function selectDeleteWO(){
@@ -223,7 +207,9 @@ input {
 				   				toastr.success("삭제완료")
 				   				showAll();
 				   				showAll2();
-				   				
+				   				$('#orderNo').val('');
+				   				$('#prtName').val('');
+				   				$('#insQty').val('');
 				   			}else{
 				   				toastr.error("삭제 실패")				   			
 				   				}
@@ -267,11 +253,7 @@ input {
 					   		}
 						});
 					}
-							
-					
-					/* -------------
-				    	주문 번호 그리드
-				      ---------------*/
+			    	//주문 번호 그리드
 				    var orderNoGrid = new tui.Grid({
 						el : document.getElementById('orderNoGrid'),
 						scrollX : false,
@@ -295,7 +277,12 @@ input {
 						}, {
 							header : '납기일자',
 							name : 'dday',
-							filter : 'select',
+						    filter: {
+		                        type: 'date',
+		                        options: {
+		                          format: 'yyyy-MM-dd'
+		                        }
+		                     },
 							align : 'center',
 					 		formatter({value}) {
 						      return `${value.substring(0,10)}`;
@@ -303,10 +290,20 @@ input {
 						} ]
 					});
 					
-					
 				    	var chkOrderNo2 = [];
-		            
 				    	orderNoGrid.on('click', ev => {
+					   		if($('#orderNo').val()==orderNoGrid.getValue(ev.rowKey, 'orderNo')
+					   				&& $('#prtName').val()==orderNoGrid.getValue(ev.rowKey, 'prtName')){
+					   			$('#orderNo').val('');
+							      $('#orderNo').attr('readonly', true);
+							      $('#preNo').val('');
+							      $('#preNo').attr('readonly', true);
+							      $('#dDay').val('');
+							      $('#prtName').val('');
+							      $('#insQty').val('');
+							      $('#prePrg').val('');
+							      $('#prtCode').val('');
+					   		}else{
 			            	chkOrderNo2.push((orderNoGrid.getValue(ev.rowKey,'orderNo')));
 		                   
 		                   $('#orderNo').val(orderNoGrid.getRow(ev.rowKey).orderNo);
@@ -315,20 +312,8 @@ input {
 		                   $('#insQty').val(orderNoGrid.getRow(ev.rowKey).orderQty);
 		                   let a = orderNoGrid.getRow(ev.rowKey).orderQty;
 		                   $('#insQty').attr("max", a);
+					   		}
 		                });
-				    var chkOrderNO = [];
-				    orderNoGrid.on('uncheck', ev => {
-					      for(let i=0; i<chkOrderNO.length; i++){
-					    	  if(chkOrderNO[i] == orderNoGrid.getValue(ev.rowKey, 'orderNo')){
-					    		  chkOrderNO.splice(i, 1);
-					    	  }
-					      }
-					      $('#orderNo').val('');
-					      $('#orderNo').attr('readonly', false);
-					      $('#prtName').val('');
-					      $('#insQty').val('');
-					    });
-				    
 					//작업 지시 내역 그리드
 					function showAll() {
 						       fetch("getWorkOrderList") 
@@ -350,24 +335,32 @@ input {
 					
 					$(document).ready(function(){
 						$("#submit").click(function(){
-							if($("#orderNo").val().length==0){toastr.error("주문 번호가 없습니다.")}
-							if($("#prtName").val().length==0){toastr.error("제품명이 없습니다.")}
-							if($("#empId").val()==0){toastr.error("담당자를 지정해 주세요.")}
-							if($("#insQty").val().length==0){toastr.error("지시 수량이 없습니다.")}
-							if($("#preDate").val().length==0){toastr.error("작업 시작 일자를 지정해 주세요.")}
-							return false;
+						let tr = false;
+						if($("#orderNo").val().length==0){toastr.error("주문 번호가 없습니다.")}
+							else if($("#prtName").val().length==0){toastr.error("제품명이 없습니다.")}
+							else if($("#empId").val()==0){toastr.error("담당자를 지정해 주세요.")}
+							else if($("#insQty").val().length==0){toastr.error("지시 수량이 없습니다.")}
+							else if($("#preDate").val().length==0){toastr.error("작업 시작 일자를 지정해 주세요.")}
+							else {toastr.success("작업 지시 등록 성공");
+									tr = true;
+								}
+							return tr;
+							})
 						})
-					})
-					
-				// toastr
-		         toastr.options = {
-		                "closeButton": false,
-		                "newestOnTop": true,
-		                "positionClass": "toast-top-center",
-		                "preventDuplicates": true,
-		                "extendedTimeOut" : 1500, 
-		                "timeOut" : 2500
-		         }
+					// toastr
+			         toastr.options = {
+			                "closeButton": false,
+			                "newestOnTop": true,
+			                "positionClass": "toast-top-center",
+			                "preventDuplicates": true,
+			                "extendedTimeOut" : 1500, 
+			                "timeOut" : 2500
+			         }
+					 //#preDate오늘 이전 날짜 선택 막기
+			        var now_utc = Date.now()
+					var timeOff = new Date().getTimezoneOffset()*60000;
+					var today = new Date(now_utc-timeOff).toISOString().split("T")[0];
+					document.getElementById("preDate").setAttribute("min", today);
 			</script>
 		</main>
 	</article>

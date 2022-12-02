@@ -832,6 +832,9 @@ public class CodeServiceImpl implements CodeService {
 		}
 		if (c != -1 && d != -1) {
 			b = String.valueOf("전일대비" + Math.round((c - d) / d * 100) + "%");
+			if (b.equals("전일대비-100%")) {
+				b = "금일생산량없음";
+			}
 		}
 		if (d == 0) {
 			b = "전일실적없음";
@@ -861,6 +864,9 @@ public class CodeServiceImpl implements CodeService {
 		}
 		if (c != -1 && d != -1) {
 			b = String.valueOf("전일대비" + Math.round((c - d) / d * 100) + "%");
+			if (b.equals("전일대비-100%")) {
+				b = "금일생산량없음";
+			}
 		}
 		if (d == 0) {
 			b = "전일실적없음";
@@ -890,6 +896,9 @@ public class CodeServiceImpl implements CodeService {
 		}
 		if (c != -1 && d != -1) {
 			b = String.valueOf("전일대비" + Math.round((c - d) / d * 100) + "%");
+			if (b.equals("전일대비-100%")) {
+				b = "금일생산량없음";
+			}
 		}
 		if (d == 0) {
 			b = "전일실적없음";
@@ -1053,9 +1062,6 @@ public class CodeServiceImpl implements CodeService {
 					// 완제품 공정
 					while (j < prdOrder) {
 
-						k = prdOut * 1 / 100;
-						j += prdOut / 3;
-
 						if (j == prdOrder) {
 							k += 2;
 						}
@@ -1090,6 +1096,9 @@ public class CodeServiceImpl implements CodeService {
 							voMsg.setMsg("제품 창고 입고 완료 : " + vo.getPrtCode());
 							mapper.insertMsg(voMsg);
 						}
+						
+						k = prdOut * 1 / 100;
+						j += prdOut / 3;
 
 						try {
 							Thread.sleep(1000);
@@ -1109,9 +1118,6 @@ public class CodeServiceImpl implements CodeService {
 
 					// 완제품 이전 공정
 					while (j < prdOrder) {
-
-						k = prdOut * 1 / 100;
-						j += prdOut / 3;
 
 						// 불량수량
 						if (i > prsList.size() / 2 - 1) {
@@ -1138,6 +1144,9 @@ public class CodeServiceImpl implements CodeService {
 							voMsg.setMsg("공정 완료 : " + voPR.getPrsCode());
 							mapper.insertMsg(voMsg);
 						}
+						
+						k = prdOut * 1 / 100;
+						j += prdOut / 3;
 
 						try {
 							Thread.sleep(1000);
@@ -1174,9 +1183,6 @@ public class CodeServiceImpl implements CodeService {
 					// 완제품 공정
 					while (j < prdOrder) {
 
-						k = prdOut * 1 / 100;
-						j += prdOut / 10;
-
 						if (j == prdOrder) {
 							String z = Integer.toString(prdOut % 100);
 							if (z.length() == 2) {
@@ -1190,8 +1196,8 @@ public class CodeServiceImpl implements CodeService {
 							}
 						}
 
-						if (j + (j % 10) == prdOrder) {
-							j += (j % 10);
+						if (j + (prdOrder % 10) == prdOrder) {
+							j += (prdOrder % 10);
 							String z = Integer.toString(prdOut % 100);
 							if (z.length() == 2) {
 								if (Integer.parseInt(z.substring(1)) != 0) {
@@ -1221,7 +1227,7 @@ public class CodeServiceImpl implements CodeService {
 						System.out.println("ㅁlot완제품");
 						mapper.updateLotQty(voLotI);
 
-						if (j == prdOrder || j + (j % 10) == prdOrder) {
+						if (j == prdOrder || j + (prdOrder % 10) == prdOrder) {
 							System.out.println("ㅁ작업중단시간");
 							voPI.setPrsPfNo(prspfnoList.get(i));
 							mapper.endProcessInf(voPI);
@@ -1234,7 +1240,10 @@ public class CodeServiceImpl implements CodeService {
 							voMsg.setMsg("제품 창고 입고 완료 : " + vo.getPrtCode());
 							mapper.insertMsg(voMsg);
 						}
-
+						
+						k = prdOut * 1 / 100;
+						j += prdOut / 10;
+						
 						try {
 							Thread.sleep(1000);
 						} catch (Exception e) {
@@ -1253,9 +1262,6 @@ public class CodeServiceImpl implements CodeService {
 
 					// 완제품 이전 공정
 					while (j < prdOrder) {
-
-						k = prdOut * 1 / 100;
-						j += prdOut / 10;
 
 						// 불량수량
 						if (i > prsList.size() / 2 - 1) {
@@ -1281,8 +1287,8 @@ public class CodeServiceImpl implements CodeService {
 								}
 							}
 
-							if (j + (j % 10) == prdOrder) {
-								j += (j % 10);
+							if (j + (prdOrder % 10) == prdOrder) {
+								j += (prdOrder % 10);
 								String z = Integer.toString(prdOut % 100);
 								if (z.length() == 2) {
 									if (Integer.parseInt(z.substring(1)) != 0) {
@@ -1295,15 +1301,15 @@ public class CodeServiceImpl implements CodeService {
 								}
 							}
 						} else {
-							if (j + (j % 10) == prdOrder) {
-								j += (j % 10);
+							if (j + (prdOrder % 10) == prdOrder) {
+								j += (prdOrder % 10);
 							}
 							System.out.println("ㅁprocessInf 생산량");
 							voPI.setPrsOutPut(j);
 							mapper.upCountProcessInf(voPI);
 						}
 
-						if (j == prdOrder || j + (j % 10) == prdOrder) {
+						if (j == prdOrder || j + (prdOrder % 10) == prdOrder) {
 							System.out.println("ㅁprocessInf 중단시간");
 							voPI.setPrsPfNo(prspfnoList.get(i));
 							mapper.endProcessInf(voPI);
@@ -1312,6 +1318,9 @@ public class CodeServiceImpl implements CodeService {
 							voMsg.setMsg("공정 완료 : " + voPR.getPrsCode());
 							mapper.insertMsg(voMsg);
 						}
+						
+						k = prdOut * 1 / 100;
+						j += prdOut / 10;
 
 						try {
 							Thread.sleep(1000);

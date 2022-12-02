@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MatRecChkController {
 	@GetMapping("/matRecChk")
-	public String matRecChkList() {
-		
+	public String matRecChk() {
 		return "/admin/quamanage/matRecChk";
 	}
 }
+	

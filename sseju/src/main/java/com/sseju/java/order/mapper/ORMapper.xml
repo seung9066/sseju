@@ -38,11 +38,12 @@
 		sum(b.order_price) as order_price
 		from
 		orders
-		a,order_inf b, product c
+		a,order_inf b, product c , lot d
 		where
 		a.order_no=b.order_no
 		and b.order_yn ='W'
 		and c.prt_code=b.prt_code
+        and a.order_no = d.out_from
 		group by a.order_no, a.d_day,
 		a.order_prg, a.order_date, a.cp_code,c.prt_name
 	</select>
@@ -66,6 +67,7 @@
 		group by a.order_no, a.d_day,
 		a.order_prg,
 		a.order_date, a.cp_code
+        order by a.order_no
 	</select>
 
 	<select id="selectB" resultType="ORVO">
@@ -75,7 +77,7 @@
 		a.order_prg,
 		a.order_date +9/24 as order_date,
 		a.cp_code,
-		d.prt_name
+		d.prt_name,
 		sum(b.order_price) as order_price,
 		c.cp_name,
 		sum(b.order_out_qty) as
@@ -91,6 +93,7 @@
 		group by
 		a.order_no, a.d_day,
 		a.order_prg, a.order_date, a.cp_code,c.cp_name,d.prt_name
+		order by a.order_no
 	</select>
 	<!-- 주문승인모달 1grid -->
 	<select id="select2" resultType="ORVO" parameterType="ORVO">
@@ -143,34 +146,44 @@
                     a.order_prg,
                     a.d_day,
                     c.prt_name
+        order by  a.order_no            
 ]]>
 	</select>
 
 	<!-- 진행중인 주문서 현황에 진행중인 주문 -->
 	<select id="selectOrdeIng" resultType="ORVO">
 	<![CDATA[
-		 SELECT 
+		      	SELECT 
                     a.order_date + 9/24 as order_date,
                     a.order_no,
                     d.cp_name,
                     sum(b.order_qty) as order_qty,
                     b.order_out_qty,
-                    a.order_prg
+                    e.prt_out_qty,
+                    a.order_prg,
+                    a.d_day,
+                    c.prt_name
 		FROM 
 				    orders a,
 				    order_Inf b,
 				    product c,
-				    company d
+				    company d,
+                    product_out e
 		where 		a.order_no = b.order_no
 		and 		b.prt_code = c.prt_code
 		and 		a.cp_code = d.cp_code
-		and         a.order_prg <> '배송완료'
+		and         b.order_yn ='W'
         and         b.order_qty<> 0
         group by  a.order_date,
                     a.order_no,
                     d.cp_name,
                     b.order_out_qty,
-                    a.order_prg
+                    a.order_prg,
+                    a.d_day,
+                    c.prt_name,
+                    e.prt_out_qty
+        order by  a.order_no
+                    
 	]]>
 	</select>
 

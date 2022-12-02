@@ -49,20 +49,23 @@
 					<div id="grid1"></div>
 				</div>
 				<h4>출고 배송 현황 리스트</h4>
-
-				<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-					<input id="startpicker-input" type="text" aria-label="Date">
-					<span class="tui-ico-date"></span>
-					<div id="startpicker-container" style="margin-Right: -1px;"></div>
+				<div>
+					<ul class="ul-style">
+						<li>
+							<div>
+								<label for="orderDate" style="width: 100px">날짜별조회</label> <input
+									type="date" class="form-control"
+									style="width: 200px; display: inline" id="dateInput">&nbsp;~
+								<input type="date" class="form-control"
+									style="width: 200px; display: inline" id="dateInput1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<button type="button" class="button" id="ordSearch">검색</button>
+								&nbsp;
+								<button type="button" class="button" id="ordReset">초기화</button>
+							</div>
+						</li>
+					</ul>
+					<div id="grid123"></div>
 				</div>
-				<span>to</span>
-				<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-					<input id="endpicker-input" type="text" aria-label="Date">
-					<span class="tui-ico-date"></span>
-					<div id="endpicker-container" style="margin-Right: -1px;"></div>
-				</div>
-				<div id="grid123"></div>
-
 			</div>
 			<script>
 			// toastr
@@ -74,6 +77,26 @@
 	                "extendedTimeOut" : 1500, 
 	                "timeOut" : 2500
 	         } 
+			//날짜
+			//filter 기능
+            ordSearch.addEventListener('click', () => {
+      		if($('#dateInput1').val() != '' && $('#dateInput').val() != ''){
+      			grid123.filter('orderDate' , [{code:'afterEq', value:$('#dateInput').val()}])
+      			grid123.filter('dday' , [{code:'beforeEq', value:$('#dateInput1').val()}])
+         
+     		 }
+  			 });
+			
+	        //초기화 기능
+	              ordReset.addEventListener('click', () => {
+	  		      document.getElementById('dateInput').value = '';
+	  		      grid123.unfilter('orderDate');
+	  		   	  document.getElementById('dateInput1').value = '';
+	  		 	  grid123.unfilter('dday');
+			   })  
+			
+			
+			
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
 
@@ -112,26 +135,14 @@
 					align : 'center',
 					filter: 'select'
 				},
-			
-				/* {
-					header : '주문량',
-					name : 'orderQty',
-					align : 'center',
-					filter: 'select',
-					formatter : function (ev){
-	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'EA';
-	                    }
-				}, */
 				{
 					header : '배송상태',
 					name : 'orderPrg',
 					align : 'center',
 					filter: 'select'
-					
 				}
 		          ]
 		});
-			
 			
 		const Agrid1 = new tui.Grid({
 			el : document.getElementById('Agrid1'),
@@ -227,14 +238,15 @@
 						alls();
 						alls3();
 						 $('#orModal').modal('hide');
-						 toastr.success("출고완료");
+						 toastr.success("배송");
 					}								
 
 				}// suc
 			});
 		}
-		
-		
+	
+		</script>
+			<script>
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
 
@@ -271,20 +283,6 @@
                   }
 			},
 			{
-				header : '품목',
-				name : 'prtName',
-				align : 'center',
-				filter: 'select',
-				
-			}, 
-			{
-				header : '거래처명',
-				name : 'cpName',
-				align : 'center',
-				filter: 'select',
-				
-			}, 
-			{
 				header : '납기일자',
 				name : 'dday',
 				align : 'center',
@@ -301,6 +299,20 @@
                    }
 			},
 			{
+				header : '거래처명',
+				name : 'cpName',
+				align : 'center',
+				filter: 'select',
+				
+			}, 
+			{
+				header : '품목',
+				name : 'prtName',
+				align : 'center',
+				filter: 'select',
+				
+			}, 
+			{
 				header : '주문량',
 				name : 'orderQty',
 				align : 'center',
@@ -310,7 +322,7 @@
                     }
 			},
 			{
-				header : '진행상태',
+				header : '배송상태',
 				name : 'orderPrg',
 				align : 'center',
 				filter: 'select'
@@ -354,22 +366,7 @@
 				}
 		          ]
 		});
-	    var today = new Date();
-	    var picker = tui.DatePicker.createRangePicker({
-	        startpicker: {
-	            date: today,
-	            input: '#startpicker-input',
-	            container: '#startpicker-container'
-	        },
-	        endpicker: {
-	            date: today,
-	            input: '#endpicker-input',
-	            container: '#endpicker-container'
-	        },
-	        selectableRanges: [
-	            [today, new Date(today.getFullYear() + 1, today.getMonth(), today.getDate())]
-	        ]
-	    });
+	 
 		function alls3() {
 			url="selectOrderList"
 			fetch(url) 
@@ -390,11 +387,10 @@
 						xhr.setRequestHeader(header, token);
 					},
 					success : function(list) {
-
 							Agrid123.resetData(list)								
 					}// suc
 				});
-		}
+			}
 		</script>
 		</main>
 	</article>

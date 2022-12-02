@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sseju.java.prtper.service.PrtPerService;
@@ -38,15 +38,8 @@ public class PrtPerController {
 	//ㄴ행클릭시 불량코드, 불량명, 상세조회 가져오기
 	@GetMapping("/getErrList")
 	@ResponseBody
-	public List<PrtPerVO> getErrList(@RequestParam(value="preNo", required=false) String preNo){
-		PrtPerVO ppVO = new PrtPerVO();
-		ppVO.setPreNo(preNo);
+	public List<PrtPerVO> getErrList(PrtPerVO ppVO){
 		
-		return ppService.getErrList(preNo);
+		return ppService.getErrList(ppVO);
 	}
-	//생산 실적 삭제 D
-//	@PostMapping("/deletePrtPer")
-//	public String deletePrtPer() {
-//		
-//	}
 }

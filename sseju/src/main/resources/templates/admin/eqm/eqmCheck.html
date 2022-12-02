@@ -78,6 +78,7 @@ table, th, td {
 
 .tui-grid-cell.blue {
 	background-color: blue;
+
 }
 
 #show {
@@ -112,6 +113,7 @@ table, th, td {
 .modal-content.modal-80size {
 	height: auto;
 	min-height: 80%;
+
 }
 </style>
 
@@ -173,7 +175,7 @@ table, th, td {
 			<div id='dis' style="display: none;" class="row">
 				<div>
 					<div style="float: right;">
-
+          
 						<button type="button" class="button" onclick="insertChk()">추가</button>
 					</div>
 					<table>
@@ -190,6 +192,7 @@ table, th, td {
 								data-bs-target="#chkModal" class="showModal"></td>
 							<th class="col1">점검주기</th>
 							<td><input type="number" name="eqmCheck" id="eqmCheck"></td>
+
 							<th class="col1">조치사항</th>
 							<!--  <td rowspan="2"><textarea placeholder="입력하시오." name="chkSol" id="chkSol"></textarea></td>-->
 							<td><select id="chkSol" name="chkSol">
@@ -199,23 +202,30 @@ table, th, td {
 									<option value="direct">직접입력</option>
 							</select> <input type="text" id="selboxDirect" name="selboxDirect" /></td>
 
+
 						</tr>
 						<tr>
 							<th class="col1">판정</th>
+
 							<td><input type="radio" name="chkState" id="err" value="불합격">불합격
+
 								<input type="radio" id="pas" name="chkState" value="합격">합격</td>
 							<th class="col1">담당자</th>
 							<td><input type="text" name="chkEmpNo" id="chkEmpNo"
 								data-bs-toggle="modal" data-bs-target="#empModal"
-								class="showModal" readonly> <input type="hiddexn"
+
+								class="showModal" readonly> <input type="hidden"
+
 								name="chkEmpNo" id="chkEmpNo"></td>
 							<th class="col1">차기점검일</th>
 							<td><input type="date" name="chkNdate" id="chkNdate"></td>
 							<th class="col1">점검단위</th>
 							<td><input type="text" name="eqmCheckTerm" id="eqmCheckTerm"
 								readonly></td>
+
 							<th class="col1">이미지</th>
 							<td><input type="file"></td>
+
 
 						</tr>
 
@@ -285,11 +295,13 @@ table, th, td {
 						</div>
 						<div class="modal-body">
 							<div id="chkTermGrid"></div>
+
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary" id="call">불러오기</button>
 							<button type="button" class="btn btn-secondary cancel"
 								data-dismiss="modal">취소</button>
+
 						</div>
 
 					</div>

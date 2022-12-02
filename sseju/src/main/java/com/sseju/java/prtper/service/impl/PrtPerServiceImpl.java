@@ -44,9 +44,9 @@ public class PrtPerServiceImpl implements PrtPerService {
 	}
 
 	@Override
-	public List<PrtPerVO> getErrList(String preNo) {
+	public List<PrtPerVO> getErrList(PrtPerVO ppVO) {
 		// TODO Auto-generated method stub
-		return ppMapper.getErrList(preNo);
+		return ppMapper.getErrList(ppVO);
 	}
 
 }
