@@ -2,12 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sseju.java.prtper.mapper.PrtPerMapper">
 	
-	<!-- Create 등록 관련 쿼리 -->
-	<!-- 등록 -->
-	<insert id="insertPrtPer" parameterType="ppVO">
-	</insert>
-	
-	<!-- Read 조회 쿼리 모음 -->
+	<!-- Read -->
 	<!-- 실적 전체 조회 -->
 	<select id="getPrtPerList" resultType="ppVO">
 		SELECT pe.pre_no,
@@ -31,9 +26,7 @@
 		ORDER BY pe.pre_no DESC
 	</select>
 	
-	<!-- 실적 한 행 클릭 시 아래 그리드에 불량코드, 불량명 상세조회 띄워주기
-	11/28 학원에서 쿼리문 수정 필요함,
-	11/30 사용 해야함 -->
+	<!-- 실적 한 행 클릭 시 아래 그리드에 불량코드, 불량명 상세조회 띄워주기 -->
 	<select id="getErrList" resultType="ppVO">
 		SELECT er.err_code, 
 				er.err_name, 
@@ -49,8 +42,20 @@
 			ON prr.pre_no = pe.pre_no
 		WHERE prr.pre_no = #{preNo}
 	</select>
-	<!-- Update 쿼리 모음 -->
-	<!-- 수정 ㅡ 실적칸은 수정 필요없으므로 추가X -->
+	
+	<!-- datepicker 일자별 지정 조회 -->
+	<select id="perSearch" parameterType="ppVO" resultType="ppVO">
+		SELECT TO_CHAR(prs_date, 'YYYY-MM-DD') AS "prs_date"
+		FROM process_run
+		<where>
+			<if test="sDate != null and !sDate.equals('')">
+				prs_date <![CDATA[>=]]> #{sDate}
+			</if>
+			<if test="eDate !=null and !eDate.equals('')">
+				AND prs_date <![CDATA[<=]]> #{eDate}
+			</if>
+		</where>
+	</select>
 	
 	<!-- Delete 쿼리 모음 -->
 	<!-- 삭제 -->

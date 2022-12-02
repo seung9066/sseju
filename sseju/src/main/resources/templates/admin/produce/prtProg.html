@@ -12,16 +12,15 @@
 		<main id="main" class="main">
 			<h4>생산 진행 현황</h4>
 			<!-- 그리드 -->
-					<div id="prtProgGrid"></div>
+			<div id="prtProgGrid"></div>
 			<br>
 			<h6 style="display:inline-block">생산 공정별 자재 상황</h6>
-<!-- 			<div style="float:right">
-				<button type="button" class="button" onclick="location.href='/matOrd'">자재 발주 현황</button>
-			</div> -->
 			<div id="matConditionGrid"></div>
 			
 			<script type="text/javascript">
 			showAll();
+			/*ㄴ실시간 공정 조회를 위해 showAll함수용 인터벌 생성*/
+			setInterval(()=>showAll(), 5000);
 			
 			var token = $("meta[name='_csrf']").attr("content");
 			var header = $("meta[name='_csrf_header']").attr("content");
@@ -51,13 +50,6 @@
 						formatter : function (ev){
 		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
 		                    }
-			/* 		}, {
-						header : '지시량',
-						name : 'insQty',
-						align : 'center',
-						formatter : function (ev){
-		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
-		                    } */
 					}, {
 						header : '지시일자',
 						name : 'preDate',
@@ -67,7 +59,7 @@
 						    } 
 					}, {
 						header : '담당자',
-						name : 'empName', //id값으로 가져오는것 잊지말기
+						name : 'empName',
 						filter : 'select',
 						align : 'center'
 					} ]
@@ -81,8 +73,8 @@
 				           prtProgGrid.resetData(obj);
 				       })
 			}
-			/* 생산 진행 현황 그리드 행 클릭 시 아래 자재 상황 그리드에 맞는 데이터 불러오는 자리 */
-			//자재 상황 그리드에 띄워줄 데이터 가져오는 함수
+			
+			/* 생산 진행 현황 그리드 행 클릭 시 아래 자재 상황 그리드에 맞는 데이터 불러오기 */
 			prtProgGrid.on('click', (ev)=>{
 				let preNo = ev.nativeEvent.target.innerText;
 				console.log(preNo);
@@ -92,6 +84,7 @@
 					dataType:"json",
 					async:false,
 					success:function(data){
+						toastr.success("데이터를 불러왔습니다.")
 						matConditionGrid.resetData(data);
 					},
 					error:function(reject){
