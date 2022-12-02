@@ -83,6 +83,12 @@
 <link href="bootstrap/css/tui-grid.css" rel="stylesheet">
 <script src="bootstrap/js/tui-grid.js"></script>
 
+<style type="text/css">
+#msgScroll {
+    max-height: 600px;
+    overflow-y: auto;
+}
+</style>
 <!-- =======================================================
   * Template Name: NiceAdmin - v2.4.1
   * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -118,7 +124,7 @@
 			<!-- End Logo -->
 
 			<div id="msg" class="header-nav ms-auto">
-				<nav class="header-nav ms-auto">
+				<nav id="msgNav" class="header-nav ms-auto">
 					<ul class="d-flex align-items-center">
 
 						<th:block sec:authorize="hasRole('ROLE_ADMIN')">
@@ -129,7 +135,7 @@
 									 <!-- End Notification Icon -->
 
 								<ul
-									class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
+									class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications" id="msgNav">
 									<li class="dropdown-header">새로운 알림이 {{ msgCount }} 개 있습니다<a
 										href="#"><span
 											class="badge rounded-pill bg-primary p-2 ms-2"
@@ -138,9 +144,9 @@
 									<li>
 										<hr class="dropdown-divider">
 									</li>
-
+									<li id="msgScroll">
 									<span id="msgA"></span>
-
+									</li>
 									<li>
 										<hr class="dropdown-divider">
 									</li>

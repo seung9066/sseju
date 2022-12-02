@@ -25,8 +25,6 @@ import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.employee.service.EmployeeService;
 import com.sseju.java.eqm.service.EqmService;
 import com.sseju.java.eqm.service.EqmVO;
-import com.sseju.java.eqm.service.FileRenamePolicy;
-import com.sseju.java.eqm.service.FileUtil;
 
 
 @Controller
@@ -151,7 +149,7 @@ public class EqmController {
 	         String fName = imageFile.getOriginalFilename(); // 이미지 실제 이름
 	         
 	         File file = new File(filepath, fName);         
-	         file = FileRenamePolicy.rename(file); // 파일 중복 검사
+//	         file = FileRenamePolicy.rename(file); // 파일 중복 검사
 	         
 	         imageFile.transferTo(file); // 파일을 폴더로 옮겨줌
 	         eqmVO.setEqmImg(file.getName());
@@ -165,7 +163,7 @@ public class EqmController {
 	   @GetMapping("/filedown")
 	   public void fileDown (String fname, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	      
-	      FileUtil.fileDownload(filepath + fname, request, response); 
+//	      FileUtil.fileDownload(filepath + fname, request, response); 
 	      // path는 application.properties에 선언되어있음
 	   }
 	
