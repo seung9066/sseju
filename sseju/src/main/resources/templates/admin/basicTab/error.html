@@ -47,7 +47,8 @@ td {
 						</select></td>
 						<th>*불량코드</th>
 						<td><input type="text" id="errCode" name="errCode"></td>
-						</tr><tr>
+					</tr>
+					<tr>
 						<th>*불량명</th>
 						<td><input type="text" id="errName" name="errName"></td>
 						<th id="type">*자재/공정</th>
@@ -56,19 +57,20 @@ td {
 								<th:block th:each="e : ${err}">
 									<th:block
 										th:if="${#strings.contains(e.code, 'MAT')} or ${#strings.contains(e.code, 'PRS')}">
-										<option th:value="${e.code}" th:text="${e.codeName}" class="type"></option>
+										<option th:value="${e.code}" th:text="${e.codeName}"
+											class="type"></option>
 									</th:block>
 								</th:block>
 								<th:block th:each="e : ${err}">
-									<th:block id="type"
-										th:if="${#strings.contains(e.code, 'MAT')}">
-										<option th:value="${e.code}" th:text="${e.codeName}" class="typeMat"></option>
+									<th:block id="type" th:if="${#strings.contains(e.code, 'MAT')}">
+										<option th:value="${e.code}" th:text="${e.codeName}"
+											class="typeMat"></option>
 									</th:block>
 								</th:block>
 								<th:block th:each="e : ${err}">
-									<th:block id="type"
-										th:if="${#strings.contains(e.code, 'PRS')}">
-										<option th:value="${e.code}" th:text="${e.codeName}" class="typePrs"></option>
+									<th:block id="type" th:if="${#strings.contains(e.code, 'PRS')}">
+										<option th:value="${e.code}" th:text="${e.codeName}"
+											class="typePrs"></option>
 									</th:block>
 								</th:block>
 						</select></td>
@@ -79,7 +81,8 @@ td {
 					onclick="updateErr()">수정</button>
 				<button class="button" type="button" style="float: right;"
 					onclick="selectDeleteCp()">삭제</button>
-				<button type="button" class="button" onclick="sub()" style="float: right;">등록</button>
+				<button type="button" class="button" onclick="sub()"
+					style="float: right;">등록</button>
 			</form>
 			<div id="errGrid"></div>
 
@@ -149,21 +152,45 @@ td {
 						$('.typeMat').show();
 						$('.typePrs').hide();
 						$('.type').hide();
-						$('#type').text('자재');
+						$('#type').text('*자재');
 					} else if ($(this).val() == 'PRS') {
 						$('#errCode').val('ERP_');
 						$('.typeMat').hide();
 						$('.typePrs').show();
 						$('.type').hide();
-						$('#type').text('공정');
+						$('#type').text('*공정');
 					} else {
 						$('#errCode').val('');
 						$('.typeMat').hide();
 						$('.typePrs').hide();
 						$('.type').show();
-						$('#type').text('자재/공정');
+						$('#type').text('*자재/공정');
 					}
 				})
+				
+				$('.type').change(function(){
+					let codeA = $('.type').val()
+					if (codeA.substr(0,4) == 'MAT_') {
+						$('#errCode').val('ERM_' + codeA.substr(4));
+						$('#errCode').attr('readonly', true);
+					}
+					if (codeA.substr(0,4) == 'PRS_') {
+						$('#errCode').val('ERP_' + codeA.substr(4));
+						$('#errCode').attr('readonly', true);
+					}
+				});
+				
+				$('.typeMat').change(function(){
+					let codeA = $('.typeMat').val()
+					$('#errCode').val('ERM_' + codeA.substr(4));
+					$('#errCode').attr('readonly', true);
+				});
+				
+				$('.typePrs').change(function(){
+					let codeA = $('.typePrs').val()
+					$('#errCode').val('ERP_' + codeA.substr(4));
+					$('#errCode').attr('readonly', true);
+				});
 				
 				errGrid.on('check', ev => {
 					deleteCode.push((errGrid.getValue(ev.rowKey, 'errCode')));

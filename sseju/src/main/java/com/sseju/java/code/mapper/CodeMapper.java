@@ -117,7 +117,7 @@ public interface CodeMapper {
 	public int insertProcessRun(CodeVO vo);
 	public CodeVO prfNo();
 	public int insertProcessInf(CodeVO vo);
-	public CodeVO getError(CodeVO vo);
+	public List<CodeVO> getError(CodeVO vo);
 	public CodeVO processErrNo();
 	public int insertProcessErr(CodeVO vo);
 	public int upCountProcessInf(CodeVO vo);

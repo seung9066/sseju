@@ -78,7 +78,6 @@ td {
 	                "timeOut" : 2500
 	         }
 			
-			$('#cpTable').hide();
 				showAll();
 
 				const cpGrid = new tui.Grid({
@@ -95,7 +94,6 @@ td {
 						header : '업체코드',
 						name : 'cpCode',
 						align : 'center',
-						filter: 'select'
 					}, {
 						header : '아이디',
 						name : 'id',
@@ -125,7 +123,6 @@ td {
 						header : '주소',
 						name : 'cpAddr',
 						align : 'center',
-						filter: 'select'
 					}]
 				});
 				
@@ -135,7 +132,6 @@ td {
 				var deleteCode = [];
 				
 				cpGrid.on('click', ev => {
-					$('#cpTable').show();
 						$('#cpCode').val(cpGrid.getValue(ev.rowKey, 'cpCode'));
 						$('#cpCode').attr('readonly', true);
 						$('#id').val(cpGrid.getValue(ev.rowKey, 'id'));

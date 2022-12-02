@@ -437,7 +437,7 @@ public class CodeServiceImpl implements CodeService {
 	}
 
 	@Override
-	public CodeVO getError(CodeVO vo) {
+	public List<CodeVO> getError(CodeVO vo) {
 		// TODO Auto-generated method stub
 		return mapper.getError(vo);
 	}
@@ -970,6 +970,8 @@ public class CodeServiceImpl implements CodeService {
 		CodeVO voPI = new CodeVO();
 		// process_err 테이블
 		CodeVO voPE = new CodeVO();
+		// error 테이블
+		CodeVO voER = new CodeVO();
 
 		// 공정 종류 담는 list
 		System.out.println("ㅁ공정종류");
@@ -1012,7 +1014,9 @@ public class CodeServiceImpl implements CodeService {
 				voPE.setPrsErrNo(prerrNo);
 				System.out.println("ㅁprocess_err2");
 				voPE.setPrsPfNo(prfNo);
-				voPE.setErrCode(mapper.getError(voPR).getErrCode());
+				List<CodeVO> ErrList = mapper.getError(voPR);
+				int err = (int) Math.random() * ErrList.size();
+				voPE.setErrCode(ErrList.get(err).getErrCode());
 				mapper.insertProcessErr(voPE);
 			}
 
