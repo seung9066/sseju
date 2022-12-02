@@ -194,7 +194,7 @@
 		                 }
 		              }
 		             if(checkNum > 0){
-		            	 toastr.error("중복");
+		            	 toastr.error("중복된 제품이 있습니다.");
 		                checkNum = 0;
 		             } else {
 		            	 prtGrid1.appendRow(prt);
@@ -212,7 +212,7 @@
 	        	 let rowData = prtGrid1.getData();
 	        	for(let i=0; i<rowData.length; i++) {
 	        		if (rowData[i].orderQty1 == '' || rowData[i].orderQty1.length == 0) {
-	        			toastr.warning('주문량을입력하셈');
+	        			toastr.warning('!!주문량을 입력하세요!!');
 	        			return;
 	        		}
 	        		
@@ -256,7 +256,7 @@
 						success : function(list) {
 							if (list > 0) {
 							prtGrid1.clear();
-							toastr.success("주문완료");
+							toastr.success("주문이 완료 되었습니다.");
 							}
 						} 
 					});  
