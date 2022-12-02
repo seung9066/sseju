@@ -72,12 +72,12 @@ table, th, td {
 	cursor: pointer;
 }
 
-.tui-grid-cell.red{
-	background-color : red;
+.tui-grid-cell.red {
+	background-color: red;
 }
 
-.tui-grid-cell.blue{
-	background-color : blue;
+.tui-grid-cell.blue {
+	background-color: blue;
 }
 </style>
 
@@ -102,14 +102,14 @@ table, th, td {
 								style="width: 200px; display: inline" id="chkDateInput">&nbsp;~
 							<input type="date" class="form-control"
 								style="width: 200px; display: inline" id="chkNdateInput">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<label style="width: 100px">라인명</label>
-							<select name="lineNo" id="lineNo">
+							<label style="width: 100px">라인명</label> <select name="lineNo"
+								id="lineNo">
 								<option selected>--전체--</option>
 								<th:block th:each="li:${line}">
-									<option th:value="${li.lineNo}" th:text="${li.lineNo}" id="lineSearch"></option>
+									<option th:value="${li.lineNo}" th:text="${li.lineNo}"
+										id="lineSearch"></option>
 								</th:block>
-							</select>
-							&nbsp;
+							</select> &nbsp;
 							<button type="button" class="button" id="chkSearch">검색</button>
 							&nbsp;
 							<button type="button" class="button" id="chkReset">초기화</button>
@@ -137,7 +137,8 @@ table, th, td {
 			<div id='dis' style="display: none;" class="row">
 				<div>
 					<div style="float: right;">
-						<button type="button" class="button"  data-bs-toggle="modal" data-bs-target="#chkModal">불러오기</button>
+						<button type="button" class="button" data-bs-toggle="modal"
+							data-bs-target="#chkModal">불러오기</button>
 						<button type="button" class="button" onclick="insertChk()">추가</button>
 					</div>
 					<table>
@@ -145,46 +146,49 @@ table, th, td {
 
 							<th class="col1">설비코드</th>
 							<td><input type="text" name="eqmCode" id="eqmCode"
-								data-bs-toggle="modal" data-bs-target="#eqmModal" class="showModal" readonly>
-							</td>
+								data-bs-toggle="modal" data-bs-target="#eqmModal"
+								class="showModal" readonly></td>
 							<th class="col1">설비명</th>
 							<td><input type="text" name="eqmName" id="eqmName" readonly></td>
 							<th class="col1">점검일</th>
-							<td><input type="date" name="chkDate" id="chkDate" data-bs-target="#chkModal" class="showModal" ></td>
+							<td><input type="date" name="chkDate" id="chkDate"
+								data-bs-target="#chkModal" class="showModal"></td>
 							<th class="col1">점검주기</th>
 							<td><input type="number" name="eqmCheck" id="eqmCheck"></td>
 							<th class="col1" rowspan="2">조치사항</th>
-							<td rowspan="2"><textarea placeholder="입력하시오." name="chkSol" id="chkSol"></textarea></td>
-							
+							<td rowspan="2"><textarea placeholder="입력하시오." name="chkSol"
+									id="chkSol"></textarea></td>
+
 
 						</tr>
 						<tr>
-							<th  class="col1">판정</th>
-							<td><input type="radio" name="chkState" id="err"
-								 value="불량" >불량 <input type="radio" id="pas"
-								name="chkState" value="합격">합격</td>
+							<th class="col1">판정</th>
+							<td><input type="radio" name="chkState" id="err" value="불량">불량
+								<input type="radio" id="pas" name="chkState" value="합격">합격</td>
 							<th class="col1">담당자</th>
 							<td><input type="text" name="chkEmpNo" id="chkEmpNo"
-								data-bs-toggle="modal" data-bs-target="#empModal" class="showModal" readonly>
-								<input type="hidden" name="chkEmpNo" id="chkEmpNo"></td>
-								<th class="col1">차기점검일</th>
+								data-bs-toggle="modal" data-bs-target="#empModal"
+								class="showModal" readonly> <input type="hidden"
+								name="chkEmpNo" id="chkEmpNo"></td>
+							<th class="col1">차기점검일</th>
 							<td><input type="date" name="chkNdate" id="chkNdate"></td>
 							<th class="col1">점검단위</th>
-							<td><input type="text" name="eqmCheckTerm" id="eqmCheckTerm" readonly></td>
-							
+							<td><input type="text" name="eqmCheckTerm" id="eqmCheckTerm"
+								readonly></td>
+
 						</tr>
 
 					</table>
 				</div>
-				
+
 			</div>
-		
+
 			<div id="insertGrid"></div>
 
-			
+
 			<br> <br>
-			
-		
+
+
 
 
 			<!-- 설비 모달  -->
@@ -243,8 +247,8 @@ table, th, td {
 						</div>
 						<div class="modal-body">
 							<div id="chkTermGrid"></div>
-						
-				 </div>
+
+						</div>
 
 					</div>
 				</div>
@@ -305,7 +309,7 @@ table, th, td {
             
      </script>
 
-	<script>
+			<script>
 			chkList();
 			chk();
 			eqm();
