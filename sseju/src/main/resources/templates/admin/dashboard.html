@@ -144,7 +144,6 @@
 		},
 		mounted () {
 			this.updateNow()
-			setInterval(this.updateNow.bind(this) , 1000)
 		},
 		methods : {
 			updateNow() {
@@ -661,7 +660,7 @@ prsWrite();
 }
 prcOn();
 
-setInterval(() => prcOn(), 1000);
+setInterval(() => prcOn(), 2500);
 </script>
 						<div class="modal" id="WLModal" tabindex="-1"
 							aria-labelledby="WLModalLabel" aria-hidden="true">
@@ -711,7 +710,6 @@ $.ajax({
 }
 
 upWL();
-setInterval(() => upWL(), 1000);
 
 const WLGrid = new tui.Grid({
 	el : document.getElementById('todayWorkList'),
@@ -811,6 +809,7 @@ function startPr() {
 			xhr.setRequestHeader(header, token);
 		},
 	    success : function(result) {
+	    	upWL();
 	    },
 	    error : function(error){
 	       console.log(11);
@@ -873,8 +872,6 @@ setTimeout(() => {chartt1()}, 100);
 }
 
 prdChart1();
-
-setInterval(() => prdChart1(), 1000);
 
 function chartt1() {
 	
