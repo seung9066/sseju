@@ -6,7 +6,19 @@
 <head>
 <meta charset="UTF-8">
 <title>OrderList</title>
-
+<style type="text/css">
+/*클래스 버튼 태그 스타일 지정한것*/
+.button {
+	display: inline-block;
+	cursor: pointer;
+	border: none;
+	border-radius: 4px;
+	background-color: rgb(13, 110, 253);
+	color: white;
+	width: 80px;
+	height: 30px;
+}
+</style>
 <!-- 제이쿼리 -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -31,7 +43,7 @@
 					onclick="orInsert()">주문하기</button>
 			</div>
 			<div style="text-align: right;">
-				<button class="button" onclick="clearA()">초기화</button>
+				<button class="button" onclick="clearA()">초기화</button>&nbsp;&nbsp;
 			</div>
 			<form action="insertOrder" method="post">
 
@@ -161,7 +173,7 @@
 						name : 'orderQty', 
 						align : 'right',
 						formatter : function (ev){
-		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'원';
+		                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'EA';
 		                    }
 					},
 				
@@ -178,7 +190,10 @@
 			var token = $("meta[name='_csrf']").attr("content");
 			 var header = $("meta[name='_csrf_header']").attr("content");
 			 
-			 
+		     function deleteA(){
+	        	 prtGrid1.removeCheckedRows(false);
+	        	 toastr.success("삭제되었습니다.");
+	         }
 			
 			 prtGrid.on("click", event => {
 	        		var prt = {prtCode : prtGrid.getRow(event.rowKey).prtCode,prtName:prtGrid.getRow(event.rowKey).prtName,
@@ -205,6 +220,7 @@
 	             
 	         function clearA() {
 				 prtGrid1.clear()
+				 toastr.success('초기화 되었습니다.');
 			 }
 			 
 			 
@@ -261,10 +277,6 @@
 						} 
 					});  
 		       }
-	         
-	         function deleteA(){
-	        	 prtGrid1.removeCheckedRows(false);
-	         }
 			</script>
 		</main>
 	</article>

@@ -90,6 +90,8 @@
 		where
 		a.order_no=b.order_no
 		and b.order_yn ='K'
+        and a.cp_code=c.cp_code
+        and b.prt_code=d.prt_code
 		group by
 		a.order_no, a.d_day,
 		a.order_prg, a.order_date, a.cp_code,c.cp_name,d.prt_name
@@ -152,39 +154,32 @@
 
 	<!-- 진행중인 주문서 현황에 진행중인 주문 -->
 	<select id="selectOrdeIng" resultType="ORVO">
-	<![CDATA[
-		      	SELECT 
-                    a.order_date + 9/24 as order_date,
-                    a.order_no,
-                    d.cp_name,
-                    sum(b.order_qty) as order_qty,
-                    b.order_out_qty,
-                    e.prt_out_qty,
-                    a.order_prg,
-                    a.d_day,
-                    c.prt_name
-		FROM 
-				    orders a,
-				    order_Inf b,
-				    product c,
-				    company d,
-                    product_out e
-		where 		a.order_no = b.order_no
-		and 		b.prt_code = c.prt_code
-		and 		a.cp_code = d.cp_code
-		and         b.order_yn ='W'
-        and         b.order_qty<> 0
-        group by  a.order_date,
-                    a.order_no,
-                    d.cp_name,
-                    b.order_out_qty,
-                    a.order_prg,
-                    a.d_day,
-                    c.prt_name,
-                    e.prt_out_qty
-        order by  a.order_no
+	  select
+		a.order_no,
+		a.d_day,
+		a.order_prg,
+		a.order_date +9/24 as order_date,
+		a.cp_code,
+		d.prt_name,
+		sum(b.order_price) as order_price,
+		c.cp_name,
+		sum(b.order_out_qty) as
+		order_out_qty
+		from
+		orders a,
+		order_inf b,
+		company c,
+		product d
+		where
+		a.order_no=b.order_no
+		and b.order_yn ='W'
+        and a.cp_code=c.cp_code
+        and b.prt_code=d.prt_code
+		group by
+		a.order_no, a.d_day,
+		a.order_prg, a.order_date, a.cp_code,c.cp_name,d.prt_name
+		order by a.order_no
                     
-	]]>
 	</select>
 
 
@@ -344,7 +339,7 @@
 
 	<update id="updateDel" parameterType="ORVO">
 		update orders set
-		order_prg= '배송중'
+		order_prg= '배송전'
 		where order_no = #{orderNo}
 	</update>
 
