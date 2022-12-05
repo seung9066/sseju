@@ -28,6 +28,7 @@ public interface CodeMapper {
 	
 	// bom
 	public List<CodeVO> getBomList(CodeVO vo);
+	public List<CodeVO> MatBomListCount(CodeVO vo);
 	public List<CodeVO> getBomMenu();
 	public List<CodeVO> getBOMMatList();
 	public CodeVO getPrtCode(CodeVO vo);

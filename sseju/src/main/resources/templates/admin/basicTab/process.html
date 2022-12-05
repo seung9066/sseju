@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{/layout/layout}">
+	layout:decorate="~{layout/layout}">
 
 <head>
 <meta charset="utf-8">
@@ -358,6 +358,9 @@ td {
 						toastr.warning('공정순서를 입력하세요')
 					} else if ($('#runNo').val().length != 0) {
 						let a = prGrid.getData();
+						if (a.length == 0) {
+							$('#insertPrs').submit()
+						} else {
 						for (let i = 0; i < a.length; i++) {
 							if (a[i].runNo == $('#runNo').val()) {
 								toastr.warning('다른 순서를 입력해주세요')
@@ -368,6 +371,7 @@ td {
 									$('#insertPrs').submit()
 								}
 							}
+						}
 						}
 				}
 				}
