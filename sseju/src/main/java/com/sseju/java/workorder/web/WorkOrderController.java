@@ -29,7 +29,7 @@ public class WorkOrderController {
 		model.addAttribute("prt", woService.getPrtList());
 		//사원명, 이름 가져오기
 		model.addAttribute("idName", woService.getWoEmpList());
-		return "/admin/produce/workOrderList";
+		return "admin/produce/workOrderList";
 	}
 	
     //지시 목록 가져옴

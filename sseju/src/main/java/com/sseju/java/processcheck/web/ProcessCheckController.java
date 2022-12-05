@@ -23,7 +23,7 @@ public class ProcessCheckController {
 	//페이지 불러옴
 	@GetMapping("/processCheckList")
 	public String processCheckList() {
-		return "/admin/quamanage/processCheck";
+		return "admin/quamanage/processCheck";
 	}
 	//ㄴ공정 리스트 출력
 	@GetMapping("/getProcessMenu")
