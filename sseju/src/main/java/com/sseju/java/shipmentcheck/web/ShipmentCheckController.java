@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ShipmentCheckController {
 	@GetMapping("shipmentCheckList")
 	public String shipmentCheckList(Model model) {
-		return "/admin/quamanage/shipmentCheck";
+		return "admin/quamanage/shipmentCheck";
 	}
 }

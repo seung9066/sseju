@@ -34,7 +34,7 @@ public class PrtController {
 	// 주문상세 페이지
 	@GetMapping("orderList")
 	public String orderList(Model model) {
-		return "/admin/order/orderList";
+		return "admin/order/orderList";
 	}
 	@GetMapping("/selectPrtList2")
 	@ResponseBody

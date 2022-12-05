@@ -132,21 +132,21 @@ public class OrderController {
 	// 전체
 	@GetMapping("/orlist")
 	public String OrderList(Model model) {
-		return "/admin/order/orderList";
+		return "admin/order/orderList";
 	}
 
 	@GetMapping("prtlist")
 	public String selecetprtList(Model model) {
-		return "/admin/order/prtlist";
+		return "admin/order/prtlist";
 	}
 
 	@GetMapping("inout")
 	public String selectrinout(Model model) {
-		return "/admin/order/inout";
+		return "admin/order/inout";
 	}
 
 	@GetMapping("/ordetail")
 	public String ordetail(Model model) {
-		return "/admin/order/ordetail";
+		return "admin/order/ordetail";
 	}
 }

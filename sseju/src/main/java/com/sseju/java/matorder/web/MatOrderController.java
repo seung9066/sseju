@@ -9,6 +9,6 @@ public class MatOrderController {
 //생산 진행 현황 페이지에서 자재 발주 클릭 시 모달창 띄워주기위한 컨트롤러
 	@GetMapping("/matOrder")
 	public String matOrderList(Model model) {
-		return "/admin/produce/matOrder";
+		return "admin/produce/matOrder";
 	}
 }
