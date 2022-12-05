@@ -1061,12 +1061,13 @@ public class CodeServiceImpl implements CodeService {
 
 					prdOut = 3135;
 					j = 0;
-					k = prdOut * 1 / 100;
+					k = 0;
 
 					// 완제품 공정
 					while (j < prdOrder) {
 						
 						j += prdOut / 3;
+						k = prdOut * 1 / 100;
 						
 						if (j == prdOrder) {
 							k += 2;
@@ -1090,6 +1091,8 @@ public class CodeServiceImpl implements CodeService {
 						mapper.updateLotQty(voLotI);
 
 						if (j == prdOrder) {
+							voPR.setPrtQty(prdOut);
+							mapper.endProcessRun(voPR);
 							System.out.println("ㅁ작업중단시간");
 							voPI.setPrsPfNo(prspfnoList.get(i));
 							mapper.endProcessInf(voPI);
@@ -1102,8 +1105,6 @@ public class CodeServiceImpl implements CodeService {
 							voMsg.setMsg("제품 창고 입고 완료 : " + vo.getPrtCode());
 							mapper.insertMsg(voMsg);
 						}
-						
-						k = prdOut * 1 / 100;
 						
 						try {
 							Thread.sleep(1000);
@@ -1233,6 +1234,8 @@ public class CodeServiceImpl implements CodeService {
 						mapper.updateLotQty(voLotI);
 
 						if (j == prdOrder || j + (prdOrder % 10) == prdOrder) {
+							voPR.setPrtQty(prdOut);
+							mapper.endProcessRun(voPR);
 							System.out.println("ㅁ작업중단시간");
 							voPI.setPrsPfNo(prspfnoList.get(i));
 							mapper.endProcessInf(voPI);

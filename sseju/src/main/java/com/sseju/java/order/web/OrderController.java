@@ -137,7 +137,7 @@ public class OrderController {
 
 	@GetMapping("prtlist")
 	public String selecetprtList(Model model) {
-		return "admin/order/prtlist";
+		return "admin/order/prtList";
 	}
 
 	@GetMapping("inout")

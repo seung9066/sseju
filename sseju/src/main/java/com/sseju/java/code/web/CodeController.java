@@ -72,7 +72,7 @@ public class CodeController {
 	public String basicBOM(Model model) {
 		model.addAttribute("mat", service.getBOMMatList());
 		model.addAttribute("prt", service.getBOMPrtList());
-		return "admin/basicTab/BOM";
+		return "admin/basicTab/bom";
 	}
 
 	@GetMapping("/basicCompany")
@@ -83,7 +83,7 @@ public class CodeController {
 	@GetMapping("/basicEmployee")
 	public String basicEmployee(Model model) {
 		model.addAttribute("dept", service.getDept());
-		return "admin/basicTab/Employee";
+		return "admin/basicTab/employee";
 	}
 
 	@GetMapping("/basicError")
