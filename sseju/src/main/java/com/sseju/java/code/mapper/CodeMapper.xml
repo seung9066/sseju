@@ -683,6 +683,28 @@
 		and bom.mat_code = m.mat_code
 		and m.cp_code = c.cp_code
 		and ord.order_no = #{orderNo}
+		and bom.prt_code = #{prtCode}
+	</select>
+
+	<select id="MatBomListCount" parameterType="CodeVO"
+		resultType="CodeVO">
+		select bom.prt_code, 
+				bom.mat_code, 
+				i.order_qty, 
+				c.cp_code ,
+				m.mat_unit_prc
+		from orders ord,
+			order_inf i,
+			product pd,
+			bom bom,
+			material m,
+			company c
+		where i.order_no = ord.order_no
+		and i.prt_code = pd.prt_code
+		and pd.prt_code = bom.prt_code
+		and bom.mat_code = m.mat_code
+		and m.cp_code = c.cp_code
+		and ord.order_no = #{orderNo}
 	</select>
 
 	<select id="matOrdNo" resultType="CodeVO">

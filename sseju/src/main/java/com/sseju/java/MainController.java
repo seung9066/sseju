@@ -32,7 +32,7 @@ public class MainController {
 	@GetMapping("/dashboard")
 	public String dashboard(Model model) {
 		model.addAttribute("wh", service.whList());
-		return "/admin/dashboard";
+		return "admin/dashboard";
 	}
 	
 	@GetMapping("/accountform")

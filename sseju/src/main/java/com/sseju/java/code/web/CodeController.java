@@ -59,54 +59,54 @@ public class CodeController {
 
 	@GetMapping("/basicCode")
 	public String getCodeListForm() {
-		return "/admin/basicTab/code";
+		return "admin/basicTab/code";
 	}
 
 	@GetMapping("/basicProduct")
 	public String basicProduct(Model model) {
 		model.addAttribute("code", service.getCodeList());
-		return "/admin/basicTab/product";
+		return "admin/basicTab/product";
 	}
 
 	@GetMapping("/basicBOM")
 	public String basicBOM(Model model) {
 		model.addAttribute("mat", service.getBOMMatList());
 		model.addAttribute("prt", service.getBOMPrtList());
-		return "/admin/basicTab/BOM";
+		return "admin/basicTab/BOM";
 	}
 
 	@GetMapping("/basicCompany")
 	public String basicCompany() {
-		return "/admin/basicTab/company";
+		return "admin/basicTab/company";
 	}
 
 	@GetMapping("/basicEmployee")
 	public String basicEmployee(Model model) {
 		model.addAttribute("dept", service.getDept());
-		return "/admin/basicTab/Employee";
+		return "admin/basicTab/Employee";
 	}
 
 	@GetMapping("/basicError")
 	public String basicError(Model model) {
 		model.addAttribute("err", service.getCodeList());
-		return "/admin/basicTab/error";
+		return "admin/basicTab/error";
 	}
 
 	@GetMapping("/basicProcess")
 	public String basicProcess(Model model) {
 		model.addAttribute("eqm", service.eqmList());
 		model.addAttribute("emp", serviceEM.getEmpList());
-		return "/admin/basicTab/process";
+		return "admin/basicTab/process";
 	}
 
 	@GetMapping("/basicWarehouse")
 	public String basicWarehouse() {
-		return "/admin/basicTab/warehouse";
+		return "admin/basicTab/warehouse";
 	}
 
 	@GetMapping("/basicWorker")
 	public String basicWorker() {
-		return "/admin/basicTab/worker";
+		return "admin/basicTab/worker";
 	}
 
 	@GetMapping("/codeList")

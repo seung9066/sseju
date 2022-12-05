@@ -1065,7 +1065,9 @@ public class CodeServiceImpl implements CodeService {
 
 					// 완제품 공정
 					while (j < prdOrder) {
-
+						
+						j += prdOut / 3;
+						
 						if (j == prdOrder) {
 							k += 2;
 						}
@@ -1102,8 +1104,7 @@ public class CodeServiceImpl implements CodeService {
 						}
 						
 						k = prdOut * 1 / 100;
-						j += prdOut / 3;
-
+						
 						try {
 							Thread.sleep(1000);
 						} catch (Exception e) {
@@ -1122,7 +1123,10 @@ public class CodeServiceImpl implements CodeService {
 
 					// 완제품 이전 공정
 					while (j < prdOrder) {
-
+						
+						k = prdOut * 1 / 100;
+						j += prdOut / 3;
+						
 						// 불량수량
 						if (i > prsList.size() / 2 - 1) {
 
@@ -1149,9 +1153,6 @@ public class CodeServiceImpl implements CodeService {
 							mapper.insertMsg(voMsg);
 						}
 						
-						k = prdOut * 1 / 100;
-						j += prdOut / 3;
-
 						try {
 							Thread.sleep(1000);
 						} catch (Exception e) {
@@ -1351,12 +1352,13 @@ public class CodeServiceImpl implements CodeService {
 
 	@Override
 	public int orderNow(List<CodeVO> list) {
-		List<CodeVO> listBom = new ArrayList<>();
 		List<CodeVO> whList = new ArrayList<>();
 		List<CodeVO> errList = new ArrayList<>();
 		whList = mapper.WHListA();
 		System.out.println("ㅁAAA");
 		CodeVO voMsg = new CodeVO();
+		List<CodeVO> listBom = new ArrayList<>();
+		
 		for (int i = 0; i < list.size(); i++) {
 			System.out.println("ㅁbom 리스트 가져오기");
 			CodeVO vo = new CodeVO();
@@ -1406,28 +1408,36 @@ public class CodeServiceImpl implements CodeService {
 				vo.setOrderNo(list.get(i).getOrderNo());
 				mapper.orderInfYN(vo);
 			}
-			for (int j = 0; j < listBom.size(); j++) {
-				vo.setMatCode(listBom.get(j).getMatCode());
-				voMsg.setMsg("자재발주 완료 : " + vo.getMatCode());
-				mapper.insertMsg(voMsg);
-			}
-			for (int j = 0; j < listBom.size(); j++) {
-				vo.setMatCode(listBom.get(j).getMatCode());
-				voMsg.setMsg("자재검수 완료 : " + vo.getMatCode());
-				mapper.insertMsg(voMsg);
-			}
-			for (int j = 0; j < listBom.size(); j++) {
-				vo.setMatCode(listBom.get(j).getMatCode());
-				voMsg.setMsg("자재불량 등록 완료 : " + vo.getMatCode());
-				mapper.insertMsg(voMsg);
-			}
-			for (int j = 0; j < listBom.size(); j++) {
-				vo.setMatCode(listBom.get(j).getMatCode());
-				voMsg.setMsg("자재창고 입고 완료 : " + vo.getMatCode());
-				mapper.insertMsg(voMsg);
-			}
 		}
 
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println("ㅁbom 리스트 가져오기");
+			CodeVO vo = new CodeVO();
+			vo.setOrderNo(list.get(i).getOrderNo());
+			vo.setPrtCode(list.get(i).getPrtCode());
+			listBom = mapper.MatBomListCount(vo);
+		}
+		
+		CodeVO vo = new CodeVO();
+		
+		List<String> listMat = new ArrayList<>();
+		
+		for (int j = 0; j < listBom.size(); j++) {
+			vo.setMatCode(listBom.get(j).getMatCode());
+			listMat.add(vo.getMatCode());
+		}
+		
+		int countMat = listMat.size();
+		
+		voMsg.setMsg("자재발주 완료 : 총" + countMat + " 종류");
+		mapper.insertMsg(voMsg);
+		voMsg.setMsg("자재검수 완료 : 총" + countMat + " 종류");
+		mapper.insertMsg(voMsg);
+		voMsg.setMsg("자재불량 등록 완료 : 총" + countMat + " 종류");
+		mapper.insertMsg(voMsg);
+		voMsg.setMsg("자재창고 입고 완료 : 총" + countMat + " 종류");
+		mapper.insertMsg(voMsg);
+		
 		return 0;
 	}
 
