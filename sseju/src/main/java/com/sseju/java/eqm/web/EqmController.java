@@ -59,30 +59,30 @@ public class EqmController {
 	@GetMapping("/eqmList")
 	public String eqmList(Model model) {
 		model.addAttribute("line", eqmService.getEqmLineList());
-		return "/admin/eqm/eqmList";
+		return "admin/eqm/eqmList";
 	}
 
 	@GetMapping("/eqmBasic")
 	public String lineList() {
-		return "/admin/eqm/eqmBasic";
+		return "admin/eqm/eqmBasic";
 	}
 
 	@GetMapping("/eqmCheck")
 	public String eqmCheck(Model model) {
 		model.addAttribute("line", eqmService.getEqmLineList());
 		model.addAttribute("eqmm", eqmService.selectEqmList());
-		return "/admin/eqm/eqmCheck";
+		return "admin/eqm/eqmCheck";
 	}
 
 	@GetMapping("/eqmUoper")
 	public String eqmUoper(Model model) {
 		model.addAttribute("line", eqmService.getEqmLineList());
-		return "/admin/eqm/eqmUoper";
+		return "admin/eqm/eqmUoper";
 	}
 
 	@GetMapping("/eqmState")
 	public String eqmState() {
-		return "/admin/eqm/eqmState";
+		return "admin/eqm/eqmState";
 	}
 
 	// 설비 리스트
@@ -196,7 +196,7 @@ public class EqmController {
 	public String insertUoper(@RequestBody EqmVO eqmVO, Model mode) {
 		eqmService.insertUoper(eqmVO);
 		eqmService.updateEqmYn(eqmVO);
-		return "/admin/eqm/eqmUoper";
+		return "admin/eqm/eqmUoper";
 	}
 	// 비가동 수정
 

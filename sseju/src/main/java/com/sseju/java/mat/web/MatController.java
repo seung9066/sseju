@@ -44,7 +44,7 @@ public class MatController {
 //	@ResponseBody
 	@GetMapping("/matOrd")
 	public String matOrd() {
-		return "/admin/mat/matOrd";
+		return "admin/mat/matOrd";
 	}
 
 
@@ -79,7 +79,7 @@ public class MatController {
 	@GetMapping("/matIn")
 	public String matIn(Model model) {
 		// model.addAttribute("mat", model)
-		return "/admin/mat/matIn";
+		return "admin/mat/matIn";
 	}
 
 	// 입고 종합 리스트
@@ -92,7 +92,7 @@ public class MatController {
 
 	@GetMapping("/matOut")
 	public String matOut() {
-		return "/admin/mat/matOut";
+		return "admin/mat/matOut";
 	}
 	
 	//출고 종합 리스트
@@ -104,7 +104,7 @@ public class MatController {
 
 	@RequestMapping("/matStock")
 	public String matt() {
-		return "/admin/mat/matStock";
+		return "admin/mat/matStock";
 	}
 	
 	//재고 종합 리스트
@@ -116,7 +116,7 @@ public class MatController {
 	
 	@PostMapping("/matRecChk")
 	public String matRecChkList() {
-		return "/admin/quamanage/matRecChk";
+		return "admin/quamanage/matRecChk";
 	}
 	
 	//검수 내역 리스트
@@ -129,6 +129,6 @@ public class MatController {
 	@PostMapping("docUpdate")
 	public String docUpdate(MatVO MatVO) {
 		service.docUpdate(MatVO);
-		return "redirect:/matRecChk";
+		return "redirect:matRecChk";
 	}
 }

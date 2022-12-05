@@ -10,18 +10,18 @@ public class MController {
 	
 	@GetMapping("prduce")
 	public String selectprduce(Model model) {
-		return "/admin/monitoring/prduce";
+		return "admin/monitoring/prduce";
 	}
 	@GetMapping("shipment")
 	public String selectshipment(Model model) {
-		return "/admin/monitoring/shipment";
+		return "admin/monitoring/shipment";
 	}
 	@GetMapping("Stock")
 	public String selectStock(Model model) {
-		return "/admin/monitoring/Stock";
+		return "admin/monitoring/Stock";
 	}
 	@GetMapping("plan")
 	public String selectPlan(Model model) {
-		return "/admin/monitoring/plan";
+		return "admin/monitoring/plan";
 	}
 }

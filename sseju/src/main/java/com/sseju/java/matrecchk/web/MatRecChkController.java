@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MatRecChkController {
 	@GetMapping("/matRecChk")
 	public String matRecChk() {
-		return "/admin/quamanage/matRecChk";
+		return "admin/quamanage/matRecChk";
 	}
 }
 	
