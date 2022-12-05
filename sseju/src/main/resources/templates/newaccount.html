@@ -60,9 +60,15 @@ input {
 	border: none;
 	border-bottom: 1px solid #999;
 	font-size: 18px;
-	color: #fff;
+	color:black;
 	text-align: center;
 }
+
+input::placeholder {
+  color: black;
+  font-size : 15px;
+}
+
 </style>
 </head>
 
@@ -89,16 +95,17 @@ input {
 		<div class="hero-slide">
 			<div class="img overlay"
 				style="background-image: url('bootstrap/images/소주1.jpg')"></div>
-			<div class="img overlay"
-				style="background-image: url('bootstrap/images/hero_bg_2.jpg')"></div>
-			<div class="img overlay"
-				style="background-image: url('bootstrap/images/hero_bg_1.jpg')"></div>
+			
 		</div>
 
 		<div class="container">
-			<div class="row justify-content-center align-items-center">
-				<div class="col-lg-9 text-center">
-					<h1 class="heading" data-aos="fade-up">회원가입 </h1>
+		<div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+				<div class="card border-0 shadow rounded-3 my-5"
+					style="background: hsla(0, 0%, 100%, 0.40); backdrop-filter: blur(10px);">
+					<div class="card-body p-4 p-sm-5">
+						<h5 class="card-title text-center mb-5"
+							style="font-weight: bold; font-size: 25px;">회원가입</h5>
+						<hr class="my-4">
 
 
 					<form action="newCpAccount" method="post" id="newaccount">
@@ -136,13 +143,16 @@ input {
 								<input type="hidden" name="auth" value="ROLE_COMPANY">
 							</dt>
 						</dl>
+						<div style="text-align:center">
 						<button type="button" class="btn btn-primary" onclick="newacc()">회원가입</button>
+						</div>
 					</form>
 
 				</div>
 			</div>
-		</div>
-	</div>
+			</div>
+			</div>
+			</div>
 
 
 

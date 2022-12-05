@@ -2,6 +2,7 @@ package com.sseju.java.eqm.mapper;
 
 import java.util.List;
 
+import com.sseju.java.code.service.CodeVO;
 import com.sseju.java.eqm.service.EqmVO;
 
 public interface EqmMapper {
@@ -61,12 +62,18 @@ public interface EqmMapper {
       
       // 비가동 전체조회
       public List<EqmVO> getUoperList();
+      
+      // 비가동코드만 불러오기
+      public List<CodeVO> getUoperCode();
       	
       // 비가동 등록
       public int insertUoper(EqmVO eqmVO);
       // 비가동 삭제
       public int deleteUoper(EqmVO eqmVO);
       
+
+      // 비가동 공통코드
+      public int updateUoprCd(CodeVO vo);
       //비가동 수정
       public int updateUoper(EqmVO eqmVO);
       

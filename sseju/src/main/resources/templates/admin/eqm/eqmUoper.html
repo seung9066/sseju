@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{/layout/layout}">
+	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
 <title>설비 비가동관리</title>
@@ -46,6 +46,11 @@ img {
 	width: 150px;
 }
 
+.showModal {
+	/* 커서 손모양 */
+	cursor: pointer;
+}
+
 </style>
 <!-- 제이쿼리 -->
 <script
@@ -79,12 +84,14 @@ img {
 					</div>
 					<div><br>
 						<label style="padding-right: 15px;">라인명</label> 
-						<select name="lineNo" id="lineNo">
-								<option selected>--전체--</option>
+						<select name="lineNo" id="lineSearch">
+								<option selected value='' >--전체--</option>
 								<th:block th:each="li:${line}">
-									<option th:value="${li.lineNo}" th:text="${li.lineNo}" id="lineSearch"></option>
+									<option th:value="${li.lineNo}" th:text="${li.lineNo}" ></option>
 								</th:block>
 							</select>
+							
+						<button type="button" class="button" id="eqmSearch">조회</button>
 					</div>
 					<hr>
 					<br>
@@ -118,18 +125,13 @@ img {
 						<tr>
 
 							<th class="col1">비가동사유</th>
-							<td><select name="uoperRsn" id="uoperRsn">
-									<option value='' selected>--선택--</option>
-									<option value='점검'>점검</option>
-									<option value='수리'>수리</option>
-									<option value='자재부족'>자재부족</option>
-							</select></td>
+							<td><input type="text" id="uoperRsn" name="uoperRsn" data-bs-toggle="modal" data-bs-target="#rsnModal" class="showModal" readonly></td>
 						</tr>
 						<tr>
 
 							<th class="col1">작업자</th>
 							<td><input type="text" name="empId" id="empId"
-								data-bs-toggle="modal" data-bs-target="#empModal" readonly></td>
+								data-bs-toggle="modal" data-bs-target="#empModal" class="showModal" readonly></td>
 						</tr>
 
 						<tr>
@@ -180,6 +182,27 @@ img {
 					</div>
 				</div>
 			</div>
+			<!-- rsn 모달  -->
+			<div class="modal" tabindex="-1" role="dialog" id="rsnModal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">
+								<b>비가동코드</b>
+							</h5>
+							<button type="button" class="close" data-bs-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div id="rsnGrid"></div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			
 
 
 
@@ -190,7 +213,9 @@ img {
 			showEqm();
 			emp();
 			uoperShow();
+			rsnShow();
 			
+		
 			
 			
 			 // <설비현황>에서 checked 된 애만 화면에 보여주기
@@ -283,6 +308,12 @@ img {
 				    myModalEl.addEventListener('shown.bs.modal', event => {
 				     empgrid.refreshLayout();
 				    })
+				    
+				     const myModalE2 = document.getElementById('rsnModal')
+				    myModalE2.addEventListener('shown.bs.modal', event => {
+				     rsnGrid.refreshLayout();
+				    })
+				    
 			
 			$('#endBtn').on('click', function(){
 				
@@ -382,7 +413,7 @@ img {
 	                  header : '라인',
 	                  name : 'lineNo', 
 	                  align : 'center',
-	                  filter : 'select'
+	                  filter : 'text'
 	               },
 	               {
 		              header : '설치장소',
@@ -407,6 +438,28 @@ img {
 	            	}
 	            });
 	            }
+	            
+	            
+	            // filter기능
+	            eqmSearch.addEventListener('click', () => {
+	                eqmGrid.filter('lineNo' , [{code:'contain', value:$("#lineSearch option:selected").val()}])
+	                
+/*  	                if( document.getElementById("#lineSearch").value = ''){
+	                	 eqmGrid.unfilter('lineNo');
+	                }  */
+					
+ 	                if( $("#lineSearch option:selected").val() == '' ) {
+	                	eqmGrid.unfilter('lineNo');
+	                }
+ 	                
+	             });
+
+	                
+	           /*  eqmReset.addEventListener('click', () => {
+	                document.getElementById('lineSearch').value = '';
+	                eqmGrid.unfilter('lineNo');
+	               
+	             })  */  
                 
                 
 	            eqmGrid.on("click", event => {
@@ -452,6 +505,7 @@ img {
 	                       if(data > 0) {
 	                    	  Swal.fire('비가동 시작','', 'success');
 		                      reset();
+		                      showEqm();
 
 	                       } else {
 	                          alert("입력실패");
@@ -518,7 +572,6 @@ img {
 	                   fetch("uoperList") 
 	                   .then(res=>res.json())
 	                   .then(obj=>{
-	                	   console.log(obj);
 	                       uoperGrid.resetData(obj);
 	
 	                   })
@@ -629,8 +682,8 @@ img {
 		                  success:function(data){
 		                     if(data > 0) {
 		                        toastr.success("수정완료")
-		                        uoperShow();
 		                        reset();
+		                        uoperShow();
 
 		                      } else {
 		                        alert("수정실패");
@@ -655,6 +708,58 @@ img {
 		           }
 			     
 		           $('.uoperClass').hide();    
+		           
+
+				 	  // rsn-그리드
+					   var rsnGrid = new tui.Grid({
+			               el : document.getElementById('rsnGrid'),
+			               scrollX : false,
+			               scrollY : true,
+			               pageOptions: {
+							    useClient: true,
+							    perPage: 5
+							  },
+			               columns : [{
+			                  header : '비가동코드',
+			                  name : 'code',
+			                  align : 'center'
+			                  
+			               }, {
+			                  header : '비가동명',
+			                  name : 'codeName',	
+			                  align : 'center'
+			               }, {
+				                  header : '구분',
+				                  name : 'divName',	
+				                  align : 'center'
+				               }]
+			            }); 
+				 	  
+					   function rsnShow() {
+			                
+		                   fetch("getUoperCode") 
+		                   .then(res=>res.json())
+		                   .then(obj=>{
+		                       rsnGrid.resetData(obj);
+		
+		                   })
+		            }
+					   
+						// 클릭한 거래처 정보 input 태그에 넣기
+			           rsnGrid.on('click',ev => {
+			            	let rowData = rsnGrid.getRow(ev.rowKey);
+			            	
+			            	let code = rowData['code'];
+			            	let codeName = rowData['codeName'];
+			            	
+			            	$('#uoperRsn').val(codeName);
+			            	
+			            	$('#rsnModal').modal("hide");
+			            });
+						 
+				 	  
+				 	  
+					   
 			</script>
 
 		</main>
