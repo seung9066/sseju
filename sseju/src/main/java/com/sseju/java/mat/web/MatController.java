@@ -47,11 +47,6 @@ public class MatController {
 		return "/admin/mat/matOrd";
 	}
 
-	@ResponseBody
-	@GetMapping("/emp")
-	public List<EmployeeVO> getEmpList() {
-		return empservice.getEmpList();
-	}
 
 	@ResponseBody
 	@GetMapping("/material")
@@ -77,107 +72,8 @@ public class MatController {
 	public List<MatVO> matordList() {
 		return service.matordList();
 	}
+
 	
-	@ResponseBody
-	@GetMapping("/prtOrdList")
-	public List<MatVO> prtOrdList(){
-		return service.prtOrdList();
-	}
-	
-	@ResponseBody
-	@PostMapping("/infoModal")
-	public List<MatVO> infoModal (@RequestBody MatVO MatVO) {
-		return service.infoModal(MatVO);
-	}
-
-	@ResponseBody
-	@PostMapping("/matOrdModal")
-	public List<MatVO> matOrdModal
-		(@RequestBody MatVO MatVO) {
-		
-		return service.matOrdModal(MatVO);
-	}
-	
-	@ResponseBody
-	@PostMapping("/insertMatbuy")
-	public int insertMatbuy(@RequestBody List<MatVO> vo) {
-		int result = 0;
-		
-		for (int i = 0; i < vo.size(); i++) { 
-			result += service.insertMatbuy(vo.get(i)); 
-		 }
-		
-		return result; 
-	}
-	
-	@ResponseBody
-	@PostMapping("/updateordYn")
-	public int updateordYn(@RequestBody List<MatVO> vo) {
-		int result = 0;
-		
-		result += service.updateordYn(vo.get(0));
-		
-		return result;
-		}
-
-	// 발주 수정
-	@ResponseBody
-	@PostMapping("/updateMatbuy")
-	public int updateMatbuy(
-			@RequestParam(value = "mon[]", required = false) List<String> mon,
-			@RequestParam(value = "Qty[]", required = false) List<String> Qty,
-			@RequestParam(value = "mc[]", required = false) List<String> mc,
-			@RequestParam(value = "cd[]", required = false) List<String> cd,
-			@RequestParam(value = "mp[]", required = false) List<String> mp,
-			@RequestParam(value = "moe[]", required = false) List<String> moe,
-			@RequestParam(value = "yn[]", required = false) List<String> yn) {
-		int uM = 0;
-		System.out.println(mon.size());
-		for (int i = 0; i < mon.size(); i++) {
-			MatVO vo = new MatVO();
-			vo.setMatOrdNo(mon.get(i));
-			vo.setMatOrdQty(Integer.valueOf(Qty.get(i)));
-			vo.setMatCode(mc.get(i));
-			vo.setCpCode(cd.get(i));
-			vo.setMatPrice(mp.get(i));
-			vo.setMatOrdEmp(moe.get(i));
-			vo.setMatOrdYn(yn.get(i));
-
-			System.out.println(vo.getMatOrdYn());
-			System.out.println(yn.get(i));
-
-			vo.setMatInQty(Integer.valueOf(Qty.get(i)));
-
-			uM += service.updateMatbuy(vo);
-
-			// if(vo.getMatOrdYn() == "진행") {
-			if (vo.getMatOrdYn().equals("확인")) {
-				MatVO vo1 = new MatVO();
-				// List<MatVO> list = new ArrayList<>();
-				System.out.println("도달");
-				System.out.println(vo.getMatOrdYn());
-				System.out.println(vo.getMatOrdNo());
-				vo1 = service.selectMatordno(vo);
-
-				if (vo1 != null) {
-					service.updateMatnotIn(vo);
-				} else {
-					service.insertMatord(vo);
-				}
-			}
-
-		}
-
-		System.out.println(uM);
-		return uM;
-	}
-
-	// 발주 삭제
-	@PostMapping("/deleteMat")
-	@ResponseBody
-	public int selectDelete(@RequestBody MatVO vo) {
-		return service.deleteMatbuy(vo.getDelno());
-	}
 
 	// 입고파트
 	@GetMapping("/matIn")
@@ -192,64 +88,8 @@ public class MatController {
 	public List<MatVO> matInList() {
 		return service.matInList();
 	}
-	
-	//입고 수정
-	@ResponseBody
-	@PostMapping("/updateMat")
-	public int updateMat(@RequestBody List<MatVO> vo) {
-		int a = 0;
-		
-		for(int i=0; i < vo.size(); i++) {
-			a += service.updateMat(vo.get(i));
-		}
-		return a;
-	}
 
-	// 미입고
-	@GetMapping("/matNotin")
-	public String matNotin() {
-		// model.addAttribute("mat", model)
-		return "/admin/mat/matNotin";
-	}
 
-	// 미입고 리스트
-	@ResponseBody
-	@GetMapping("/matNotinList")
-	public List<MatVO> matNotinList() {
-		// model.addAttribute("mat", model)
-		return service.matNotinList();
-	}
-
-	
-	@ResponseBody
-	@PostMapping("/insertLot")
-	public int insertLot(@RequestBody List<MatVO> vo) {
-		int a = 0;
-		
-		for (int i = 0; i<vo.size(); i++) {
-			System.out.println("돌고있나????");
-			System.out.println(vo.get(i));
-			a += service.insertLot(vo.get(i));
-			a += service.updateMoy(vo.get(i));
-			a += service.updateChk(vo.get(i));
-			a += service.insertErr(vo.get(i));
-		}		
-		return a;
-	}
-	
-	@ResponseBody
-	@PostMapping("/updateMatnotIn")
-	public int updateMatnotIn(@RequestBody List<MatVO> vo) {
-		int a = 0;
-
-		for (int i = 0; i < vo.size(); i++) {
-			System.out.println(vo.get(i));
-			a += service.updateMatnotIn(vo.get(i));
-			
-		}
-		return a;
-	}
-	
 	@GetMapping("/matOut")
 	public String matOut() {
 		return "/admin/mat/matOut";

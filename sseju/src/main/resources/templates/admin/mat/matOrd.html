@@ -103,7 +103,6 @@
 
 
             matOrdList();
-            emp();
 
             const grid = new tui.Grid({
                el : document.getElementById('grid'),
@@ -195,69 +194,13 @@
                   }
                })
             };
-            
-            function emp() {
-               $.ajax({
-                  url : '/emp',
-                  dataType : "json",
-                  success : function(data) {
-                     empGrid2.resetData(data);
-                  },
-                  error : function(reject) {
-                     console.log(reject);
-                  }
-               })
-            };
+
             
             
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
             
-            
-             /*------------
-             // 모달 클릭
-             ----------------*/
-             
-             document.addEventListener('shown.bs.modal', function() {
-            	 empGrid2.refreshLayout();
-               }, '.modal');
-             
 
-                  
-            /*------------
-            // empModal2 모달 데이터 가져오기
-            ----------------*/
-			var empGrid2 = new tui.Grid({
-               el : document.getElementById('empGrid2'),
-               bodyHeight : 200,
-               rowHeaders : [],
-               scrollX : false,
-               scrollY : true,
-               columns : [{
-                  header : '사원 ID',
-                  name : 'empId'
-               },{
-                  header : '사원명',
-                  name : 'empName'
-               }]
-            });
-           
-            /*------------
-            // 사원 모달에서 가져온 데이터 행에 넣어주기
-            ----------------*/
-            
-            empGrid2.on('click', ev => {
-                let val = empGrid2.getRow(ev.rowKey); // 사원 클릭한 그리드
-               
-                let val2 = matGrid.getFocusedCell().rowKey; // 진짜 큰 그리드
-                 
-                   console.log(empGrid2.getValue(ev.rowKey,ev.columnName));
-                 const cmg = empGrid2.getValue(ev.rowKey,ev.columnName);
-                 matGrid.setValue(val2, 'matOrdEmp', val.empId);
-                 matGrid.setValue(val2, 'empName', val.empName);
-				//$('#empId').val(val.empId);          
-                 $('#empModal2').modal("hide");
-             });
          </script>
 		</main>
 	</article>
