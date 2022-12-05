@@ -81,7 +81,7 @@
 		},
 		mounted () {
 			this.updateNow()
-			setInterval(this.updateNow.bind(this) , 100000)
+			setInterval(this.updateNow.bind(this) , 1000)
 		},
 		methods : {
 			updateNow() {
@@ -144,7 +144,7 @@
 		},
 		mounted () {
 			this.updateNow()
-			setInterval(this.updateNow.bind(this) , 100000)
+			setInterval(this.updateNow.bind(this) , 1000)
 		},
 		methods : {
 			updateNow() {
@@ -207,7 +207,7 @@
 		},
 		mounted () {
 			this.updateNow()
-			setInterval(this.updateNow.bind(this) , 100000)
+			setInterval(this.updateNow.bind(this) , 1000)
 		},
 		methods : {
 			updateNow() {
@@ -388,7 +388,7 @@ for (let i = 0; i < dataa.length; i++) {
 
 runprr();
 
-setInterval(() => runprr(), 100000);
+setInterval(() => runprr(), 10000);
 
 </script>
 										<!-- End Line Chart -->
@@ -661,7 +661,7 @@ prsWrite();
 }
 prcOn();
 
-setInterval(() => prcOn(), 100000);
+setInterval(() => prcOn(), 1000);
 </script>
 						<div class="modal" id="WLModal" tabindex="-1"
 							aria-labelledby="WLModalLabel" aria-hidden="true">
@@ -711,7 +711,7 @@ $.ajax({
 }
 
 upWL();
-setInterval(() => upWL(), 100000);
+setInterval(() => upWL(), 1000);
 
 const WLGrid = new tui.Grid({
 	el : document.getElementById('todayWorkList'),
@@ -874,7 +874,7 @@ setTimeout(() => {chartt1()}, 100);
 
 prdChart1();
 
-setInterval(() => prdChart1(), 100000);
+setInterval(() => prdChart1(), 1000);
 
 function chartt1() {
 	

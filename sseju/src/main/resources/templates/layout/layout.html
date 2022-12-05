@@ -280,7 +280,7 @@ new Vue({
 	},
 	mounted () {
 		this.updateNow()
-		setInterval(this.updateNow.bind(this) , 100000)
+		setInterval(this.updateNow.bind(this) , 500)
 	},
 	methods : {
 		updateNow() {
@@ -308,7 +308,7 @@ let msgListNo = [];
 toastr.options = {
        "closeButton": false,
        "newestOnTop": true,
-       "positionClass": "toast-top-right",
+       "positionClass": "toast-top-center",
        "preventDuplicates": true,
        "extendedTimeOut" : 1500, 
        "timeOut" : 2500
@@ -426,7 +426,7 @@ for (let i = 0; i < msgListB.length; i++) {
 }
 	
 }
-setInterval(() => showMsgB(), 100000 * msgTime);
+setInterval(() => showMsgB(), 2000 * msgTime);
 
 
 function msgListClick(a) {

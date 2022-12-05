@@ -1091,7 +1091,7 @@ public class CodeServiceImpl implements CodeService {
 						mapper.updateLotQty(voLotI);
 
 						if (j == prdOrder) {
-							voPR.setPrtQty(prdOut);
+							voPR.setPrtQty(prdOrder1);
 							mapper.endProcessRun(voPR);
 							System.out.println("ㅁ작업중단시간");
 							voPI.setPrsPfNo(prspfnoList.get(i));
@@ -1125,7 +1125,7 @@ public class CodeServiceImpl implements CodeService {
 					// 완제품 이전 공정
 					while (j < prdOrder) {
 						
-						k = prdOut * 1 / 100;
+						k = prdOrderA * 1 / 100;
 						j += prdOut / 3;
 						
 						// 불량수량
@@ -1234,7 +1234,7 @@ public class CodeServiceImpl implements CodeService {
 						mapper.updateLotQty(voLotI);
 
 						if (j == prdOrder || j + (prdOrder % 10) == prdOrder) {
-							voPR.setPrtQty(prdOut);
+							voPR.setPrtQty(prdOrder1);
 							mapper.endProcessRun(voPR);
 							System.out.println("ㅁ작업중단시간");
 							voPI.setPrsPfNo(prspfnoList.get(i));
@@ -1249,7 +1249,7 @@ public class CodeServiceImpl implements CodeService {
 							mapper.insertMsg(voMsg);
 						}
 						
-						k = prdOut * 1 / 100;
+						k = prdOrderA * 1 / 100;
 						j += prdOut / 10;
 						
 						try {
