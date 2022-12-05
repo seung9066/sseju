@@ -5,6 +5,19 @@
 	layout:decorate="~{/layout/layout}">
 <head>
 <meta charset="UTF-8">
+<style type="text/css">
+/*클래스 버튼 태그 스타일 지정한것*/
+.button {
+	display: inline-block;
+	cursor: pointer;
+	border: none;
+	border-radius: 4px;
+	background-color: rgb(13, 110, 253);
+	color: white;
+	width: 80px;
+	height: 30px;
+}
+</style>
 <title>Insert title here</title>
 <!-- 제이쿼리 -->
 <script
@@ -257,7 +270,7 @@
 						 toastr.success("출고완료");
 					}else{
 						list <=0
-						toastr.success("주문수량을 입력하세요");
+						
 					}								
 				}
 			});

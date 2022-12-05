@@ -6,6 +6,19 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+/*클래스 버튼 태그 스타일 지정한것*/
+.button {
+	display: inline-block;
+	cursor: pointer;
+	border: none;
+	border-radius: 4px;
+	background-color: rgb(13, 110, 253);
+	color: white;
+	width: 80px;
+	height: 30px;
+}
+</style>
 <!-- 제이쿼리 -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -41,7 +54,7 @@
 								</div>
 								<div class="modal-footer">
 									<button type="button" class="button" data-bs-dismiss="modal">닫기</button>
-									<button type="submit" class="button" onclick="updateOrderNy()">배송완료</button>
+									<button type="submit" class="button" onclick="updateOrderNy()">배송하기</button>
 								</div>
 							</div>
 						</div>
@@ -83,7 +96,7 @@
       		if($('#dateInput1').val() != '' && $('#dateInput').val() != ''){
       			grid123.filter('orderDate' , [{code:'afterEq', value:$('#dateInput').val()}])
       			grid123.filter('dday' , [{code:'beforeEq', value:$('#dateInput1').val()}])
-         
+      			 
      		 }
   			 });
 			
@@ -93,6 +106,7 @@
 	  		      grid123.unfilter('orderDate');
 	  		   	  document.getElementById('dateInput1').value = '';
 	  		 	  grid123.unfilter('dday');
+	  		 	toastr.success("조기화 되었습니다.");
 			   })  
 			
 			
@@ -354,7 +368,6 @@
 	                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'EA';
 	                    }
 				},
-				
 				{
 					header : '금액',
 					name : 'orderPrice',
@@ -366,7 +379,6 @@
 				}
 		          ]
 		});
-	 
 		function alls3() {
 			url="selectOrderList"
 			fetch(url) 
