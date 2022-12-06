@@ -18,7 +18,13 @@
 <!--부트스트랩 아이콘  -->
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
-	
+<!-- Sheet JS -->
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.3/xlsx.full.min.js"></script>
+<!--FileSaver savaAs 이용 -->
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
 
 
 <style>
@@ -75,18 +81,17 @@ table, th, td {
 			<div>
 
 				<h5 style="width: 200px">
-					<b>설비 전체조회</b>
-					<br>
-					<br>
+					<b>설비 전체조회</b> <br> <br>
 				</h5>
 				<div>
 					<div>
-						<label for="eqmCodeInput" style="width: 100px">설비코드</label> 
-						<input type="text" class="form-control"
-							style="width: 200px; display: inline" id="eqmCodeInput">&nbsp;<br><br> 
-						<label >라인명</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<select name="lineNo" id="lineNo">
-							<option value='' >--전체--</option>
+						<label for="eqmCodeInput" style="width: 100px">설비코드</label> <input
+							type="text" class="form-control"
+							style="width: 200px; display: inline" id="eqmCodeInput">&nbsp;<br>
+						<br> <label>라인명</label>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <select
+							name="lineNo" id="lineNoSch">
+							<option value=''>--전체--</option>
 							<th:block th:each="li : ${line}">
 								<option th:value="${li.lineNo}" th:text="${li.lineNo}"></option>
 							</th:block>
@@ -102,7 +107,7 @@ table, th, td {
 				</div>
 				<div style="float: right">
 
-					<button class="button" onclick="deleteEqm()">삭제</button>
+					<button class="button" onclick="deleteEqm(); return false;">삭제</button>
 					<button type="button" class="button download" id="excelDownload">Excel</button>
 				</div>
 
@@ -117,7 +122,7 @@ table, th, td {
 				</h5>
 				<input type="hidden" name="auth" value="ROLE_ADMIN">
 				<div style="float: right">
-					<button class="button" type="button" onclick="insertEqm()">등록</button>
+					<button class="button" type="button" id="reg" onclick="insertEqm()">등록</button>
 					<button class="button" onclick="updateEqm()">수정</button>
 					<button class="button" type="button" onclick="resetVal()">초기화</button>
 				</div>
@@ -125,84 +130,82 @@ table, th, td {
 					th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
 				<!-- 설비정보 상세보기 -->
-				<div class="row">
-				<form id ="eqmForm" enctype="multipart/form-data">
-					<div class="col-9">
-					
-						<table id="regEqm">
-							<tr>
-								<th class="col1">설비코드</th>
-								<td><input type="text" value="EQM_" name="eqmCode" id="eqmCode" ></td>
-								<th class="col1">설비명</th>
-								<td><input 
-								type="text" name="eqmName" id="eqmName"></td>
-								<th class="col1">모델명</th>
-								<td><input type="text" name="eqmModel" id="eqmModel"></td>
-								<th class="col1">라인</th>
-								<td><select id="lineNo" name="lineNo">
-										<option value="">-----선택----</option>
-										<th:block th:each="li : ${line}">
-											<option th:value="${li.lineNo}" th:text="${li.lineNo}" ></option>
-										</th:block>
+				<form id="eqmForm" enctype="multipart/form-data">
+					<div class="row">
+						<div class="col-9">
 
-								</select></td>
-							</tr>
+							<table id="regEqm">
+								<tr>
+									<th class="col1">설비코드</th>
+									<td><input type="text" value="EQM_" name="eqmCode"
+										id="eqmCode"></td>
+									<th class="col1">설비명</th>
+									<td><input type="text" name="eqmName" id="eqmName"></td>
+									<th class="col1">모델명</th>
+									<td><input type="text" name="eqmModel" id="eqmModel"></td>
+									<th class="col1">라인</th>
+									<td><select id="lineNo" name="lineNo">
+											<option value="">-----선택----</option>
+											<th:block th:each="li : ${line}">
+												<option th:value="${li.lineNo}" th:text="${li.lineNo}"></option>
+											</th:block>
 
-							<tr>
-								<th class="col1">설치장소</th>
-								<td><select id="eqmLoc" name="eqmLoc">
-										<option value=''>--선택--</option>
-										<option value="생산1팀">생산1팀</option>
-										<option value="생산2팀">생산2팀</option>
-										<option value="생산3팀">생산3팀</option>
-								</select></td>
-								<th class="col1">최고온도</th>
-								<td><input type="number" name="eqmMaxTemp" id="eqmMaxTemp"></td>
-								<th class="col1">최저온도</th>
-								<td><input type="number" name="eqmMinTemp" id="eqmMinTemp"></td>
-								<th class="col1">규격</th>
-								<td><input type="text" name="eqmSize" id="eqmSize"></td>
-							</tr>
+									</select></td>
+								</tr>
 
-							<tr>
-								<th class="col1">구입업체</th>
-								<td><input type="text" name="eqmPurcName" id="eqmPurcName"
-									data-bs-toggle="modal" class="showModal"
-									data-bs-target="#eqmPurcModal"></td>
-								<th class="col1">비상연락망</th>
-								<td><input type="tel" name="eqmPurcTel" id="eqmPurcTel" readonly></td>
-								<th class="col1">입고일</th>
-								<td><input type="date" name="eqmPurcDate" id="eqmPurcDate"></td>
+								<tr>
+									<th class="col1">설치장소</th>
+									<td><select id="eqmLoc" name="eqmLoc">
+											<option value=''>--선택--</option>
+											<option value="생산1팀">생산1팀</option>
+											<option value="생산2팀">생산2팀</option>
+											<option value="생산3팀">생산3팀</option>
+									</select></td>
+									<th class="col1">최고온도</th>
+									<td><input type="number" name="eqmMaxTemp" id="eqmMaxTemp"></td>
+									<th class="col1">최저온도</th>
+									<td><input type="number" name="eqmMinTemp" id="eqmMinTemp"></td>
+									<th class="col1">규격</th>
+									<td><input type="text" name="eqmSize" id="eqmSize"></td>
+								</tr>
 
-							</tr>
+								<tr>
+									<th class="col1">구입업체</th>
+									<td><input type="text" name="eqmPurcName" id="eqmPurcName"
+										data-bs-toggle="modal" class="showModal"
+										data-bs-target="#eqmPurcModal"></td>
+									<th class="col1">비상연락망</th>
+									<td><input type="tel" name="eqmPurcTel" id="eqmPurcTel"
+										readonly></td>
+									<th class="col1">입고일</th>
+									<td><input type="date" name="eqmPurcDate" id="eqmPurcDate"></td>
 
-							<tr>
-								<th class="col1">점검주기</th>
-								<td><input type="number" name="eqmCheck" id="eqmCheck">
-									<select id="eqmCheckTerm" name="eqmCheckTerm">
-										<option value='' selected>--선택--</option>
-										<option value="일">일</option>
-										<option value="달">달</option>
-										<option value="년">년</option>
-								</select></td>
-								<th class="col1">사용여부</th>
-								<td><input type="radio" class="form-check-input" id="eqmY"
-									name="eqmYn" value="Y">Y <input type="radio"
-									class="form-check-input" name="eqmYn" value="N" id="eqmN">N</td>
-							</tr>
-						</table>
-				
-					</div>
-					<div class="col-3">
-						<div id="imgDiv">
-							<img id="imgTag" name="imgTag" alt="설비이미지" src=""
-								style="width: 300px; height: 300px;">
+								</tr>
+
+								<tr>
+									<th class="col1">점검주기</th>
+									<td><input type="number" name="eqmCheck" id="eqmCheck">
+										<select id="eqmCheckTerm" name="eqmCheckTerm">
+											<option value='' selected>--선택--</option>
+											<option value="일">일</option>
+											<option value="달">달</option>
+											<option value="년">년</option>
+									</select></td>
+									<th class="col1">사용여부</th>
+									<td><input type="radio" class="form-check-input" id="eqmY"
+										name="eqmYn" value="Y">Y <input type="radio"
+										class="form-check-input" name="eqmYn" value="N" id="eqmN">N</td>
+								</tr>
+							</table>
+
 						</div>
-						<input type="file" id="imageInput" name="imageInput" onchange="previewImg()">
+						<div class="col-3">
+							<img name="eImg" id="eImg"></img> <input type="file"
+								name="imageFile" class="form-control-file" id="input-image">
+						</div>
 					</div>
-</form>
+				</form>
 			</div>
-				</div>
 
 
 			<br> <br>
@@ -229,8 +232,8 @@ table, th, td {
 					</div>
 				</div>
 			</div>
-<script src="/assets/js/json.min.js"></script>
-		<script type="text/javascript">
+			<script src="/assets/js/json.min.js"></script>
+			<script type="text/javascript">
          function dis(){
          if ($('#dis').css('display') == 'none') {
             $('#dis').show();
@@ -254,12 +257,63 @@ table, th, td {
             resetVal();
             //imgTagReset();
             
+            // Excel download
+            
+            const excelDownload = document.querySelector('#excelDownload');
+
+				document.addEventListener('DOMContentLoaded', ()=>{
+				    excelDownload.addEventListener('click', exportExcel);
+				});
+				
+				function exportExcel(){ 
+				  // step 1. workbook 생성
+				  var wb = XLSX.utils.book_new();
+				
+				  // step 2. 시트 만들기 
+				  var newWorksheet = excelHandler.getWorksheet();
+				
+				  // step 3. workbook에 새로만든 워크시트에 이름을 주고 붙인다.  
+				  XLSX.utils.book_append_sheet(wb, newWorksheet, excelHandler.getSheetName());
+				
+				  // step 4. 엑셀 파일 만들기 
+				  var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+				
+				  // step 5. 엑셀 파일 내보내기 
+				  saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), excelHandler.getExcelFileName());
+				}
+				
+				var excelHandler = {
+				    getExcelFileName : function(){
+				        return '설비전체리스트.xlsx';	//파일명
+				    },
+				    getSheetName : function(){
+				        return '설비리스트';	//시트명
+				    },
+				    getExcelData : function(){
+				        return document.getElementById('eqmGrid'); 	//TABLE id
+				    },
+				    getWorksheet : function(){
+				        return XLSX.utils.table_to_sheet(this.getExcelData());
+				    }
+				}
+				
+				function s2ab(s) { 
+				  var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+				  var view = new Uint8Array(buf);  //create uint8array as viewer
+				  for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+				  return buf;    
+				}
+            
            
             
             //거래처 그리드(모달)
 			var cpGrid = new tui.Grid({
                el : document.getElementById('cpGrid'),
-               bodyHeight : 200,
+               pagination:true,
+				pageOptions: {
+				    useClient: true,
+				    perPage: 5
+				  },
                rowHeaders : [],
                scrollX : false,
                scrollY : false,
@@ -294,53 +348,27 @@ table, th, td {
             
             
             
-            
-            
-          //이미지 관련 js
-      function inputImgInteract() {
-            img.addEventListener('change', function (event) {
-               // 파일명 가져오기
-               let index = document.getElementById('img').value.lastIndexOf('\\');
-               let fileStr = document.getElementById('img').value.substring(index + 1);
-               
-               // img태그 생성
-               let newImgTag = document.createElement('img');
-               newImgTag.setAttribute('id', 'imgTag');
-               newImgTag.setAttribute('name', 'imgTag');
-               newImgTag.setAttribute('alt', '설비사진');
-               newImgTag.setAttribute('width', '300px');
-               newImgTag.setAttribute('height', '300px');
-               
-               // 이미 document에 img태그 존재시 삭제. 미존재시 src 속성 만들어 넣기
-               if (document.getElementById('imgTag') != null) {
-                  document.getElementById('imgTag').remove();
-                  
-                  // 새 파일을 고른 경우
-                  if (fileStr != '') {
-                     newImgTag.setAttribute('src', '/assets/img/' + fileStr);
-                  }
-               } else {
-                  newImgTag.setAttribute('src', '/assets/img/' + fileStr);
-               }
-               
-               // document에 삽입
-               imgDiv.prepend(newImgTag);
-            });
-            
-         }
-
-          
           /**파일 미리보기*/
-            function previewImg(){
-   				//파일리더 생성
-   				var preview = new FileReader();
-   				preview.onload = function(e){
-   		
-   				document.getElementById("imgTag").src = e.target.result;
-   				};
-   				preview.readAsDataURL(document.getElementById("imageInput").files[0]);
-   			}
-         
+           function readImage(input) {
+			    // 인풋 태그에 파일이 있는 경우
+			    if(input.files && input.files[0]) {
+			        // 이미지 파일인지 검사 (생략)
+			        // FileReader 인스턴스 생성
+			        const reader = new FileReader()
+			        // 이미지가 로드가 된 경우
+			        reader.onload = e => {
+			            const previewImage = document.getElementById("eImg")
+			            previewImage.src = e.target.result
+			        }
+			        // reader가 이미지 읽도록 하기
+			        reader.readAsDataURL(input.files[0])
+			    }
+			}
+			// input file에 change 이벤트 부여
+			const inputImage = document.getElementById("input-image")
+			inputImage.addEventListener("change", e => {
+			    readImage(e.target)
+			})
          
             
             //설비 그리드
@@ -373,7 +401,8 @@ table, th, td {
                }, {
                   header : '라인',
                   name : 'lineNo', 
-                  align : 'center'
+                  align : 'center',
+                  filter:'text'
                   
                }, {
                   header : '설치장소',
@@ -381,12 +410,12 @@ table, th, td {
                   align : 'center'
                 
                }, {
-                  header : '최고온도',
+                  header : '최고온도(°C)',
                   name : 'eqmMaxTemp', 
                   align : 'center'
                  
                }, {
-                  header : '최저온도',
+                  header : '최저온도(°C)',
                   name : 'eqmMinTemp',
                   align : 'center'
                   
@@ -431,14 +460,21 @@ table, th, td {
                        align : 'center',
                        hidden : 1
                        
-                    } ]
+                    },{
+                        header : '이미지',
+                        name : 'eqmImg',
+                        align : 'center',
+                        hidden : 1
+                        
+                     }
+                    ]
                
             });
             
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
             
-             var chkEqm = []; 
+              var chkEqm = []; 
             
             eqmGrid.on('check', ev => {
                chkEqm.push((eqmGrid.getValue(ev.rowKey,'eqmCode')));
@@ -447,20 +483,23 @@ table, th, td {
                $('#eqmCode').attr('readonly',true);
                $('#eqmName').val(eqmGrid.getValue(ev.rowKey,'eqmName'));
                $('#eqmModel').val(eqmGrid.getValue(ev.rowKey,'eqmModel'));
-               $('#lineNo').val([eqmGrid.getValue(ev.rowKey,'lineNo')]);
+               $('#lineNo option:selected').val(eqmGrid.getValue(ev.rowKey,'lineNo'));
                $('#eqmLoc').val(eqmGrid.getValue(ev.rowKey,'eqmLoc')); 
                $('#eqmMaxTemp').val(eqmGrid.getValue(ev.rowKey,'eqmMaxTemp'));
                $('#eqmMinTemp').val(eqmGrid.getValue(ev.rowKey,'eqmMinTemp'));
                $('#eqmCheck').val(eqmGrid.getValue(ev.rowKey,'eqmCheck')); 
                $('#eqmCheckTerm').val(eqmGrid.getValue(ev.rowKey,'eqmCheckTerm'));
                $('#eqmPurcDate').val(eqmGrid.getValue(ev.rowKey,'eqmPurcDate').substring(0,10));
-               $('#eqmImg').val(eqmGrid.getValue(ev.rowKey,'eqmImg')); 
                $('#eqmPurcName').val(eqmGrid.getValue(ev.rowKey,'eqmPurcName')); 
                $('#eqmPurcTel').val(eqmGrid.getValue(ev.rowKey,'eqmPurcTel'));
                $('input[name="eqmYn"]').val([eqmGrid.getValue(ev.rowKey,'eqmYn')]); 
                $('#eqmSize').val(eqmGrid.getValue(ev.rowKey,'eqmSize'));
-               
-               
+               $('#eImg').attr("src","/eqm/filedown?fname=" + eqmGrid.getValue(ev.rowKey,'eqmImg'));
+               $('#eImg').css("display", "block");
+               $('#eImg').css("width", "400px");
+				$('#eImg').css("margin", "0px auto");
+				
+               console.log($('#lineNo').val());
 
                
             });
@@ -471,6 +510,7 @@ table, th, td {
                      chkEqm.splice(i,1);
                }
             }
+              
             
                $('#eqmCode').val('');
                $('#eqmCode').attr('readonly',false);
@@ -483,14 +523,14 @@ table, th, td {
                $('#eqmCheck').val('');
                $('#eqmCheckTerm').val('');
                $('#eqmPurcDate').val('');
-               $('#eqmImg').val('');
+               $('#eImg').css('display','none'); // uncheck하면 이미지 사리지게
                $('#eqmPurcName').val('');
                $('#eqmPurcTel').val('');
                $('input[name="eqmYn"]').val([]);
                $('#eqmSize').val('');
 
                
-            });
+            }); 
             
            
             
@@ -543,7 +583,40 @@ table, th, td {
             		
             		
             	});
+            	 
+            	 
+            	 
+            	 document.getElementById('reg').addEventListener('click', function () {
+
+                 if (parseInt($('#eqmMinTemp').val()) >= parseInt($('#eqmMaxTemp').val())) {
+                    toastr.warning('최저온도, 최고온도를 다시 확인해주세요.');
+                    return false;
+                 }
+            	 }
+				)
             }
+            
+            $(document).ready(function(){
+                $("#reg").click(function(){
+                	
+                   if($("#eqmCode").val().length==0){toastr.error("설비코드 없습니다.")}
+                   if($("#eqmName").val().length==0){toastr.error("설비명이 없습니다.")}
+                   if($("#eqmModel").val()==0){toastr.error("모델명을 지정해 주세요.")}
+                   if($("#lineNo").val().length==0){toastr.error("라인이 없습니다.")}
+                   if($("#eqmLoc").val().length==0){toastr.error("설치장소를 지정해 주세요..")}
+                   if($("#eqmMaxTemp").val().length==0){toastr.error("최고온도를 지정해 주세요.")}
+                   if($("#eqmMinTemp").val().length==0){toastr.error("최저온도를 지정해 주세요.")}
+                   if($("#eqmSize").val().length==0){toastr.error("규격을 지정해 주세요.")}
+                   if($("#eqmPurcName").val().length==0){toastr.error("설비구매업체를 지정해 주세요.")}
+                   if($("#eqmPurcTel").val().length==0){toastr.error("비상연락망를 지정해 주세요.")}
+                   if($("#eqmPurcDate").val().length==0){toastr.error("입고일을 지정해 주세요.")}
+                   if($("#eqmCheck").val().length==0){toastr.error("점검주기를 지정해 주세요.")}
+                   if($("#eqmCheckTerm").val().length==0){toastr.error("점검단위를 지정해 주세요.")}
+                   if($("#eqmYn").val().length==0){toastr.error("사용여부를 지정해 주세요.")}
+
+                   return false;
+                })
+             })
             
             function deleteEqm(){
                
@@ -578,7 +651,6 @@ table, th, td {
                     		      'success'
                     		    )
                     		    showAll();
-                                eqmForm.reset();
                     		  }
                     		})
                        
@@ -649,7 +721,7 @@ table, th, td {
                      if(data > 0) {
                         toastr.success("수정성공!");
                         showAll();  
-                        lineForm.reset();
+                        eqmForm.reset();
                      } else {
                         alert("수정실패");
                      }
@@ -678,15 +750,6 @@ table, th, td {
             		dataType:"json",
             		success : function(data){
             			cpGrid.resetData(data);
-            			 /* 파일이 존재하면 업로드한 이미지 띄우기, 존재하지 않으면 no Image 띄우기*/ 
-                        if(result.mfile != null){ 
-                       $('[name="mFile"]').attr("src", "/material/filedown?fname=" +result.mfile);
-                       $('[name="mFile"]').css("width", "500px");
-                        }else{
-                         $('[name="mFile"]').attr("src", "/assets/img/noImage.jpg" );  
-                         $('[name="mFile"]').css("width", "500px");
-                        }
-                     
             		},
             		error : function(reject){
             			console.log(reject);
@@ -702,7 +765,7 @@ table, th, td {
             // filter기능
             eqmSearch.addEventListener('click', () => {
                 eqmGrid.filter('eqmCode' , [{code:'contain', value:$('#eqmCodeInput').val()}])
-                eqmGrid.filter('lineNo' , [{code:'eq', value:$('#lineNo').val()}])
+                eqmGrid.filter('lineNo' , [{code:'eq', value:$("#lineNoSch option:selected").val()}])
                
              });
 

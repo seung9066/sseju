@@ -28,23 +28,7 @@ public class EqmServiceImpl implements EqmService {
       return eqmMapper.selectEqmList();
    }
    
-	/* @Override
-	 public int insertEqm(EqmVO eqmVO) {
-	 	
-	 int a = eqmMapper.insertEqm(eqmVO);
-	 // 설비등록하는 동시에 공통코드에도 값 넣어주기
-	 CodeVO vo = new CodeVO();
-	 vo.setCode(eqmVO.getEqmCode());
-	 vo.setDivName("설비");
-	 vo.setDivCode("EQM");
-	 vo.setCodeName(eqmVO.getEqmName());
-
-	 cdMapper.insertCode(vo);
-	 
-	 
-
-	 return a;
-	 } */
+	
    
     @Override
 	 public int insertEqm(EqmVO eqmVO)   {
@@ -68,10 +52,7 @@ public class EqmServiceImpl implements EqmService {
       return eqmMapper.updateEqmInfo(eqmVO);
    }
 
-   @Override
-   public int deleteEqmInfo(EqmVO eqmVO) {
-      return eqmMapper.deleteEqmInfo(eqmVO);
-   }
+ 
 
 // eqmLine
    @Override
@@ -132,13 +113,22 @@ public List<EqmVO> getUoperList() {
 @Override
 public int insertUoper(EqmVO eqmVO) {
 	// TODO Auto-generated method stub
+	eqmMapper.updateEqmYn(eqmVO);
 	return eqmMapper.insertUoper(eqmVO);
 }
 
 @Override
-public int deleteUoper(EqmVO eqmVO) {
-	// TODO Auto-generated method stub
-	return eqmMapper.deleteUoper(eqmVO);
+public int deleteUoper(List<String> deleteUoper) {
+	int a = 0;
+	for (int i = 0; i < deleteUoper.size(); i++) {
+		String line1 = deleteUoper.get(i);
+
+		EqmVO vo = new EqmVO();
+		vo.setUoperCode(line1);
+		a += eqmMapper.deleteUoper(vo);
+	}
+
+	return a;
 }
 
 @Override
@@ -205,19 +195,7 @@ public int deleteChk(List<String> deleteChk) {
 	return a;
 }
 
-@Override
-public int deleteUoper(List<String> deleteUoper) {
-	int a = 0;
-	for (int i = 0; i < deleteUoper.size(); i++) {
-		String line1 = deleteUoper.get(i);
 
-		EqmVO vo = new EqmVO();
-		vo.setUoperCode(line1);
-		a += eqmMapper.deleteUoper(vo);
-	}
-
-	return a;
-}
 
 @Override
 public int updateEqmYn(EqmVO eqmVO) {
@@ -245,6 +223,41 @@ public int deleteEqmLine(EqmVO eqmVO) {
 	return 0;
 }
 
+@Override
+public EqmVO getEqmInfo(EqmVO eqmVO) {
+	// TODO Auto-generated method stub
+	return eqmMapper.getEqmInfo(eqmVO);
+}
+
+
+
+@Override
+public List<CodeVO> getUoperCode() {
+	// TODO Auto-generated method stub
+	return eqmMapper.getUoperCode();
+}
+
+
+
+@Override
+public int updateUoprCd(CodeVO vo) {
+	// TODO Auto-generated method stub
+	return cdMapper.updateCode(vo);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
 
 
 

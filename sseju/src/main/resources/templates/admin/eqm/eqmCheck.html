@@ -17,6 +17,14 @@
 <!--부트스트랩 아이콘  -->
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+<!-- Sheet JS -->
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.3/xlsx.full.min.js"></script>
+<!--FileSaver savaAs 이용 -->
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+
 
 
 
@@ -78,7 +86,6 @@ table, th, td {
 
 .tui-grid-cell.blue {
 	background-color: blue;
-
 }
 
 #show {
@@ -99,7 +106,7 @@ table, th, td {
 	border-radius: 4px;
 	background-color: rgb(13, 110, 253);
 	color: white;
-	width: 80px;
+	width: 150;
 	height: 30px;
 }
 
@@ -113,7 +120,6 @@ table, th, td {
 .modal-content.modal-80size {
 	height: auto;
 	min-height: 80%;
-
 }
 </style>
 
@@ -153,14 +159,17 @@ table, th, td {
 						</div></li>
 				</ul>
 			</div>
+			
+		
 
 
 			<div style="float: right;">
+				<button type="button" id="chkList" data-bs-toggle="modal"
+					data-bs-target="#chkModal">점검예정리스트 불러오기</button>
 				<button id="show" onclick="dis()">+</button>
 				<button class="button" onclick="updateChk()">수정</button>
 				<button class="button" onclick="deleteChk()">삭제</button>
-				<button type="button" id="chkList" data-bs-toggle="modal"
-					data-bs-target="#chkModal">점검예정</button>
+				<button type="button" class="button download" id="excelDownload">Excel</button>
 			</div>
 			<br>
 			<hr>
@@ -175,8 +184,8 @@ table, th, td {
 			<div id='dis' style="display: none;" class="row">
 				<div>
 					<div style="float: right;">
-          
-						<button type="button" class="button" onclick="insertChk()">추가</button>
+
+						<button type="button" class="button" onclick="insertChk()" id="reg">등록</button>
 					</div>
 					<table>
 						<tr>
@@ -191,44 +200,35 @@ table, th, td {
 							<td><input type="date" name="chkDate" id="chkDate"
 								data-bs-target="#chkModal" class="showModal"></td>
 							<th class="col1">점검주기</th>
-							<td><input type="number" name="eqmCheck" id="eqmCheck"></td>
-
+							<td><input type="number" name="eqmCheck" id="eqmCheck" onchange="changeDate()"></td>
 							<th class="col1">조치사항</th>
 							<!--  <td rowspan="2"><textarea placeholder="입력하시오." name="chkSol" id="chkSol"></textarea></td>-->
 							<td><select id="chkSol" name="chkSol">
 									<option value="">--선택--</option>
 									<option value="해당사항없음">해당사항없음</option>
 									<option value="수리요청">수리요청</option>
-									<option value="direct">직접입력</option>
+									<option value="" id="direct">직접입력</option>
 							</select> <input type="text" id="selboxDirect" name="selboxDirect" /></td>
-
 
 						</tr>
 						<tr>
 							<th class="col1">판정</th>
-
 							<td><input type="radio" name="chkState" id="err" value="불합격">불합격
-
 								<input type="radio" id="pas" name="chkState" value="합격">합격</td>
 							<th class="col1">담당자</th>
 							<td><input type="text" name="chkEmpNo" id="chkEmpNo"
 								data-bs-toggle="modal" data-bs-target="#empModal"
-
 								class="showModal" readonly> <input type="hidden"
-
 								name="chkEmpNo" id="chkEmpNo"></td>
 							<th class="col1">차기점검일</th>
 							<td><input type="date" name="chkNdate" id="chkNdate"></td>
 							<th class="col1">점검단위</th>
 							<td><input type="text" name="eqmCheckTerm" id="eqmCheckTerm"
 								readonly></td>
-
-							<th class="col1">이미지</th>
-							<td><input type="file"></td>
-
-
+							
+							
+							<td style="display:none;"><input type="hidden" id="chkNo" name="chkNo"></td>	
 						</tr>
-
 					</table>
 				</div>
 
@@ -295,13 +295,11 @@ table, th, td {
 						</div>
 						<div class="modal-body">
 							<div id="chkTermGrid"></div>
-
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-primary" id="call">불러오기</button>
 							<button type="button" class="btn btn-secondary cancel"
 								data-dismiss="modal">취소</button>
-
 						</div>
 
 					</div>
@@ -328,7 +326,7 @@ table, th, td {
             	
           $("#chkSol").change(function() {
 
-    		if($("#chkSol").val() == "direct") {
+    		if($("#direct").on('click')) {
     			$("#selboxDirect").show();
     		}  else {
     			$("#selboxDirect").hide();
@@ -353,7 +351,7 @@ table, th, td {
             chkSearch.addEventListener('click', () => {
       		chkGrid.filter('lineNo' , [{code:'contain', value:$('#lineNo').val()}])
       		if($('#chkNdateInput').val() != '' && $('#chkDateInput').val() != ''){
-      			chkGrid.filter('chkDate' , [{code:'afterEq', value:$('#chkDateInput').val()}])
+      			chkGrid.filter('chkNdate' , [{code:'afterEq', value:$('#chkDateInput').val()}])
       			chkGrid.filter('chkNdate' , [{code:'beforeEq', value:$('#chkNdateInput').val()}])
          
      		 }
@@ -369,6 +367,75 @@ table, th, td {
 		      chkGrid.unfilter('lineNo');
 		   })   
 		   
+		   // 설비에 따라 점검일 선택하면 자동으로 차기점검일 나오게
+		   function changeDate(){
+		   
+			   var date = $('#chkDate').val(); // date :string타입
+               date = new Date(date); // string -> date타입으로
+               
+               if($('#eqmCheckTerm').val() == '일'){
+                  var a = new Date(date.getFullYear() , date.getMonth(),date.getDate()+ parseInt($('#eqmCheck').val()));
+                  $('#chkNdate').val(toStringByFormatting(a));
+               }else if($('#eqmCheckTerm').val() == '달'){
+                  var b = new Date(date.getFullYear() , date.getMonth()+ parseInt($('#eqmCheck').val()),date.getDate());
+                  $('#chkNdate').val(toStringByFormatting(b));
+               }else if($('#eqmCheckTerm').val() == '년'){
+                  var c = new Date(date.getFullYear()+ parseInt($('#eqmCheck').val()) , date.getMonth(),date.getDate());
+                  $('#chkNdate').val(toStringByFormatting(c));
+               }
+           	}
+		   
+		   
+		   
+		   
+		   // Excel download
+            
+            const excelDownload = document.querySelector('#excelDownload');
+
+				document.addEventListener('DOMContentLoaded', ()=>{
+				    excelDownload.addEventListener('click', exportExcel);
+				});
+				
+				function exportExcel(){ 
+				  // step 1. workbook 생성
+				  var wb = XLSX.utils.book_new();
+				  
+				  // step 2. 시트 만들기 
+				  var newWorksheet = excelHandler.getWorksheet();
+				
+				  // step 3. workbook에 새로만든 워크시트에 이름을 주고 붙인다.  
+				  XLSX.utils.book_append_sheet(wb, newWorksheet, excelHandler.getSheetName());
+				
+				  // step 4. 엑셀 파일 만들기 
+				  var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary', cellDates:true});
+				  
+				  // step 5. 엑셀 파일 내보내기 
+				  saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), excelHandler.getExcelFileName());
+				}
+				
+				var excelHandler = {
+				    getExcelFileName : function(){
+				        return '설비점검내역.xlsx';	//파일명
+				    },
+				    getSheetName : function(){
+				        return '설비점검내역';	//시트명
+				    },
+				    getExcelData : function(){
+				        return document.getElementById('chkGrid'); 	//TABLE id
+				    },
+				    getWorksheet : function(){
+				        return XLSX.utils.table_to_sheet(this.getExcelData());
+				    }
+				}
+				
+				function s2ab(s) { 
+				  var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+				  var view = new Uint8Array(buf);  //create uint8array as viewer
+				  for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+				  return buf;    
+				}
+            
+		   
 		   
 		   
 		    
@@ -379,10 +446,12 @@ table, th, td {
      </script>
 
 			<script>
+			
 			chkList();
 			chk();
 			eqm();
 			emp();
+			
 		
             var chkGrid = new tui.Grid({
                el : document.getElementById('chkGrid'),
@@ -456,44 +525,18 @@ table, th, td {
                   align : 'center',
                   filter: 'select'
                }, {
-                   header : '이미지',
-                   name : 'chkImg',
-                   align : 'center',
-                   filter: 'select',
-                   width : 80
-                }, {
                    header : '라인',
                    name : 'lineNo',
                    align : 'center',
-                   filter: 'text',
-                   hidden : 1
+                   filter: 'text'
+                   
                 } ]
             });
             
             var token = $("meta[name='_csrf']").attr("content");
             var header = $("meta[name='_csrf_header']").attr("content");
             
-            function dateCal(sDate, nNum, type) {
-                var yy = parseInt(sDate.substr(0, 4), 10);
-                var mm = parseInt(sDate.substr(5, 2), 10);
-                var dd = parseInt(sDate.substr(8), 10);
-                
-                if (type == "d") {
-                    d = new Date(yy, mm - 1, dd + nNum);
-                }
-                else if (type == "m") {
-                    d = new Date(yy, mm - 1, dd + (nNum * 31));
-                }
-                else if (type == "y") {
-                    d = new Date(yy + nNum, mm - 1, dd);
-                }
-             
-                yy = d.getFullYear();
-                mm = d.getMonth() + 1; mm = (mm < 10) ? '0' + mm : mm;
-                dd = d.getDate(); dd = (dd < 10) ? '0' + dd : dd;
-             
-                return '' + yy + '-' +  mm  + '-' + dd;
-            }
+          
             
             // 선택하면 인풋태그에 담기(상세보기)
             var checked = [];
@@ -511,6 +554,7 @@ table, th, td {
             	$('#chkSol option:selected').val(chkGrid.getValue(ev.rowKey,'chkSol'));
             	$('#chkEmpNo').val(chkGrid.getValue(ev.rowKey,'chkEmpNo'));
             	$('input[name="chkState"]').val([chkGrid.getValue(ev.rowKey,'chkState')]);
+            	
 
             	
        
@@ -548,9 +592,9 @@ table, th, td {
   			
   			var today = new Date();
   			var chkDate = new Date($('#chkNdate').val());
-  			var dateGap = Math.ceil((today.getTime() - chkDate.getTime()) / (1000*60*60*24));
+  			var dateGap = (today.getTime() - chkDate.getTime()) / (1000*60*60*24);
   			
-  			if (dateGap < 3 ){
+  			if (dateGap < 3 && dateGap > 0 ){
     			  // 색 = red
 				chkGrid.addRowClassName(i,'red');
     			
@@ -645,7 +689,7 @@ table, th, td {
             
             
             function updateChk(){
-            	 let chkNo = $('#chkNo').val();
+            	let chkNo = $('#chkNo').val();
                 let chkDate = $('#chkDate').val();
                 let chkNdate = $('#chkNdate').val();
                 let chkState = $('input[name="chkState"]:checked').val();
@@ -653,7 +697,7 @@ table, th, td {
                 let chkEmpNo = $('#chkEmpNo').val();
                
                 
-                let updChk={ 'chkNo':chkNo,'chkDate':chkDate, 'chkNdate':chkNdate, 'chkState':chkState, 'chkSol':chkSol, 'chkEmpNo':chkEmpNo};
+                let updChk={'chkNo':chkNo, 'chkDate':chkDate, 'chkNdate':chkNdate, 'chkState':chkState, 'chkSol':chkSol, 'chkEmpNo':chkEmpNo};
                 
                 $.ajax({
                    url : 'updateChk',
@@ -699,7 +743,8 @@ table, th, td {
            
             
             
-		   
+
+      
 		   
 		   // 등록 
 		   function insertChk(){
@@ -713,13 +758,21 @@ table, th, td {
                let chkEmpNo = $('#chkEmpNo').val();
 			   
                 let insChk={'chkNo':chkNo, 'eqmCode':eqmCode,'eqmName':eqmName, 'chkDate':chkDate, 'chkNdate':chkNdate, 'chkState':chkState, 'chkSol':chkSol, 'chkEmpNo':chkEmpNo};
-				console.log(chkSol);
-               console.log(chkNdate);
-               console.log(eqmCode);
-               console.log(chkDate);
-               console.log(chkEmpNo);
-               console.log(chkNo);
-              console.log(insChk)
+				
+             // 유효성 체크 : 차기점검일이 점검일 보다 빠르면 alert창 뜨면서 값 들어가지 못하게 하기        
+	               var date1 = new Date($('#chkDate').val());
+	  			   var date2 = new Date($('#chkNdate').val());
+	              
+	              if(date1.getTime() > date2.getTime()){
+	                 toastr.warning('차기점검일을 정확하게 입력하세요!');
+	                 $('#chkNdate').val('');
+	                 date2.focus();
+	                 return false;
+	              }
+	              
+	         // 점검일 입력하면 자동으로 차기점검일 계산해서 입력
+	         
+     	
        	
 			   
            let header = $("meta[name='_csrf_header']").attr('content');
@@ -748,20 +801,11 @@ table, th, td {
            });
     		} 
 		   
-		   // 차기점검일이 점검일 보다 빠르면 alert창 뜨면서 값 들어가지 못하게 하기
-		   // 문자열로 된 날짜 => Date 형식으로 변환
-		   var date1 = new Date($('#chkDate').val());
-		   var date2 = new Date($('#chkNdate').val());
-		
-		
-		  $('#chkNdate').change(function(){
+		   
+            
+	
 			  
-			  if(date1.getTime() > date2.getTime()){
-				   alert("차기점검일을 정확하게 입력하세요!");
-				   $('#chkNdate').val('');
-			   }
-			   
-		  });
+			  
 		  
 		 
 		   
@@ -1026,11 +1070,7 @@ table, th, td {
               });
           
 		   
-			 
-
-		   
 		
-		   
 		   
          </script>
 

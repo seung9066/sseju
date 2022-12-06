@@ -10,7 +10,6 @@
 		SELECT e.eqm_code,
 			e.eqm_name, 
 			e.eqm_model, 
-			e.eqm_size, 
 			e.eqm_size,
 			e.eqm_loc,
 			e.eqm_max_temp,
@@ -25,6 +24,19 @@
 		FROM EQM e
 		JOIN EQM_LINE l 
 		  ON e.line_no = l.line_no
+		ORDER BY EQM_CODE DESC
+	</select>
+	
+	<!-- 설비 단건조회  -->
+	<select id="getEqmInfo" resultType="EqmVO">
+		SELECT eqm_code, eqm_name, eqm_model, eqm_size, eqm_loc,eqm_max_temp,
+				eqm_min_temp, eqm_check, eqm_check_term, eqm_purc_date, eqm_purc_name,
+				eqm_purc_tel,eqm_yn,line_no,eqm_img
+		FROM EQM
+		WHERE eqm_code = #{eqmCode}
+		
+	
+	
 	</select>
 
 
@@ -32,7 +44,7 @@
 
 		INSERT INTO EQM
 		(eqm_code,eqm_name,eqm_model,eqm_size,eqm_loc,eqm_max_temp,eqm_min_temp,
-		eqm_check,eqm_check_term,eqm_purc_date,eqm_img,eqm_purc_name,eqm_purc_tel,eqm_yn,line_no)
+		eqm_check,eqm_check_term,eqm_purc_date,eqm_purc_name,eqm_purc_tel,eqm_yn,line_no,eqm_img)
 		VALUES(
 		#{eqmCode},
 		#{eqmName},
@@ -44,11 +56,11 @@
 		#{eqmCheck,jdbcType=VARCHAR},
 		#{eqmCheckTerm,jdbcType=VARCHAR},
 		#{eqmPurcDate},
-		#{eqmImg,jdbcType=VARCHAR},
 		#{eqmPurcName},
 		#{eqmPurcTel},
 		#{eqmYn},
-		#{lineNo}
+		#{lineNo},
+		#{eqmImg,jdbcType=VARCHAR}
 
 		)
 	</insert>
@@ -84,7 +96,7 @@
 			<if test="eqmPurcDate != null">
 				eqm_purc_date = #{eqmPurcDate},
 			</if>
-			<if test="eqmImg != null and !eqmImg.equals('')">
+			<if test="eqmImg != null">
 				eqm_img=#{eqmImg},
 			</if>
 			<if test="eqmPurcName != null and !eqmPurcName.equals('')">
@@ -214,13 +226,13 @@
 	<update id="updateEqmChk" parameterType="EqmVO">
 		UPDATE EQM_CHK
 		<set>
-		<if test="chkDate != null and !chkDate.equals('')">
+		<if test="chkDate != null">
 			chk_date = #{chkDate},
 		</if>
-		<if test="chkNdate != null and !chkNdate.equals('')">
+		<if test="chkNdate != null">
 			chk_ndate = #{chkNdate},
 		</if>
-		<if test="chkState != null and !chkStateequals('')">
+		<if test="chkState != null and !chkState.equals('')">
 			chk_state = #{chkState},
 		</if>
 		<if test="chkSol != null and !chkSol.equals('')">
@@ -252,6 +264,14 @@
 	ON u.eqm_code = q.eqm_code
 	ORDER BY 1 DESC
       </select>
+      
+     <!-- 공통코드에서 비가동코드만 가져오기 -->
+     <select id="getUoperCode" resultType="CodeVO">
+     	SELECT code,div_name,code_name,div_code
+     	FROM CODE
+     	WHERE DIV_CODE = 'UOR'
+     	ORDER BY 1 ASC
+     </select>
 
 	<!-- 비가동 등록 -->
 	<insert id="insertUoper" parameterType="EqmVO">
@@ -279,12 +299,16 @@
 				#{eqmName})
 
 	</insert>
+	
 
+		
 	<!-- 비가동 삭제 -->
 	<delete id="deleteUoper" parameterType="EqmVO">
 		DELETE FROM EQM_UOPER
 		WHERE uoper_code = #{uoperCode}
 	</delete>
+	
+
 	
 	<!-- 비가동 누를 시 설비상태(eqmYn) N으로 바꿔줌  -->
 	<update id="updateEqmYn" parameterType="EqmVO">
@@ -315,6 +339,19 @@
 		WHERE eqm_code = #{eqmCode}
 		AND uoper_code = #{uoperCode}
 
+	</update>
+	
+	<update id="updateUoprCd" parameterType="CodeVO">
+		UPDATE CODE
+		<set>
+		<if test="code != null and !code.equals('')">
+			code = #{code},
+		</if>
+		<if test="codeName != null and !codeName.equals('')">
+			codeName = #{codeName}
+		</if>
+		</set>
+		WHERE div_code = 'UOR'
 	</update>
 
 

@@ -20,17 +20,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sseju.java.code.service.CodeService;
+import com.sseju.java.code.service.CodeVO;
 import com.sseju.java.company.service.CompanyService;
 import com.sseju.java.company.service.CompanyVO;
 import com.sseju.java.employee.service.EmployeeService;
 import com.sseju.java.eqm.service.EqmService;
 import com.sseju.java.eqm.service.EqmVO;
-import ch.qos.logback.core.util.FileUtil;
+import com.sseju.java.eqm.service.FileRenamePolicy;
+import com.sseju.java.eqm.service.FileUtil;
+
 
 @Controller
 public class EqmController {
-
-	@Value("${filepath}") // properties 값 불러오기
+	
+	@Value("${filepath}")  //properties 값 불러오기
 	private String filepath;
 
 	@Autowired
@@ -41,6 +44,13 @@ public class EqmController {
 	CodeService cdService;
 	@Autowired
 	EmployeeService eService;
+	
+	// 비가동 공통코드 등록
+	@PostMapping("insUoprCode")
+	@ResponseBody
+	public int insUoprCode(CodeVO vo) {
+	 return cdService.insertCode(vo);
+	}
 
 	// 거래처 정보
 	@GetMapping("/cpList")
@@ -48,13 +58,14 @@ public class EqmController {
 	public List<CompanyVO> getCompanyList() {
 		return cService.getCompanyList();
 	}
-
+	
 	// 직원 정보
-	@GetMapping("eList")
-	@ResponseBody
-	public List<EqmVO> getEmpList() {
-		return eqmService.getEmpList();
-	}
+	  @GetMapping("eList")
+	   @ResponseBody
+	   public List<EqmVO> getEmpList(){
+	      return eqmService.getEmpList();
+	   }
+
 
 	@GetMapping("/eqmList")
 	public String eqmList(Model model) {
@@ -73,38 +84,61 @@ public class EqmController {
 		model.addAttribute("eqmm", eqmService.selectEqmList());
 		return "admin/eqm/eqmCheck";
 	}
+	
+	
 
 	@GetMapping("/eqmUoper")
 	public String eqmUoper(Model model) {
 		model.addAttribute("line", eqmService.getEqmLineList());
 		return "admin/eqm/eqmUoper";
 	}
-
+	
 	@GetMapping("/eqmState")
 	public String eqmState() {
 		return "admin/eqm/eqmState";
 	}
 
-	// 설비 리스트
+	//설비 리스트
 	@GetMapping("/getEqmList")
 	@ResponseBody
 	public List<EqmVO> getEqmList(Model model) {
 
-		return eqmService.selectEqmList();
-
+		 return eqmService.selectEqmList();
+		 
 	}
+	
+	// 비가동 코드만 공통코드에서 빼오기
+		@GetMapping("/getUoperCode")
+		@ResponseBody
+		public List<CodeVO> getUoperCode(Model model) {
+			 return eqmService.getUoperCode();
+			 
+		}
+
+	
+	//설비 단건조회
+		@ResponseBody
+		@GetMapping("/getEqmInfo")
+		public EqmVO getEqmInfo(EqmVO eqmVO) {
+			return eqmService.getEqmInfo(eqmVO); // ajax의 데이터를 보여줘야기때문에 데이터로 return
+		}
+	
+	
+
 
 	@GetMapping("/eqmChkList")
 	@ResponseBody
 	public List<EqmVO> eqmChkList() {
 		return eqmService.getEqmChkList();
 	}
-
+	
 	@GetMapping("/chkList")
 	@ResponseBody
-	public List<EqmVO> chkList() {
+	public List<EqmVO> chkList(){
 		return eqmService.getChkList();
 	}
+	
+	
 
 	@GetMapping("/uoperList")
 	@ResponseBody
@@ -117,48 +151,51 @@ public class EqmController {
 	public int deleteEqm(@RequestParam(value = "deleteEqm[]", required = false) List<String> deleteEqm) {
 		return eqmService.deleteEqm(deleteEqm);
 	}
+	
 
 	@PostMapping("/deleteUoper")
 	@ResponseBody
 	public int deleteUoper(@RequestParam(value = "deleteUoper[]", required = false) List<String> deleteUoper) {
 		return eqmService.deleteUoper(deleteUoper);
 	}
-
+	
 	@PostMapping("/deleteChk")
 	@ResponseBody
 	public int deleteChk(@RequestParam(value = "chk[]", required = false) List<String> deleteChk) {
-
+	
 		return eqmService.deleteChk(deleteChk);
 	}
 
-//	@PostMapping("insertEqm")
-//	@ResponseBody
-//	public int insertEqm(EqmVO eqmVO, MultipartFile imageFile) throws IllegalStateException, IOException  {
-//		if(imageFile != null && imageFile.getSize() >0) {
-//	         //첨부파일 처리
-//	         String fName = imageFile.getOriginalFilename(); // 이미지 실제 이름
-//	         
-//	         File file = new File(filepath, fName);         
-//	         file = FileRenamePolicy.rename(file); // 파일 중복 검사
-//	         
-//	         imageFile.transferTo(file); // 파일을 폴더로 옮겨줌
-//	         eqmVO.setEqmImg(file.getName());
-//	      }
-//	      
-//		return  eqmService.insertEqm(eqmVO);
-//		
-//	}
-//	
-//	   // 파일 다운
-//	   @GetMapping("/filedown")
-//	   public void fileDown (String fname, HttpServletRequest request, HttpServletResponse response) throws Exception {
-//	      
-//	      FileUtil.fileDownload(filepath + fname, request, response); 
-//	      // path는 application.properties에 선언되어있음
-//	   }
-//	
-//
-//	   
+	@PostMapping("insertEqm")
+	@ResponseBody
+	public int insertEqm(EqmVO eqmVO, MultipartFile imageFile) throws IllegalStateException, IOException  {
+		if(imageFile != null && imageFile.getSize() >0) {
+	         //첨부파일 처리
+	         String fName = imageFile.getOriginalFilename(); // 이미지 실제 이름
+	         
+	         File file = new File(filepath, fName);         
+	         file = FileRenamePolicy.rename(file); // 파일 중복 검사
+	         
+	         imageFile.transferTo(file); // 파일을 폴더로 옮겨줌
+	         //eqmVO.setEqmImg(file.getName());
+	         eqmVO.setEqmImg(fName);
+	      }
+	      
+		return eqmService.insertEqm(eqmVO);
+		
+		
+	}
+	
+	   // 파일 다운
+	   @GetMapping("/eqm/filedown")
+	   public void fileDown (String fname, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	      
+	      FileUtil.fileDownload(filepath + fname, request, response); 
+	      // path는 application.properties에 선언되어있음
+	   }
+	
+
+	   
 
 	@PostMapping("/updateEqm")
 	@ResponseBody
@@ -183,35 +220,46 @@ public class EqmController {
 
 	@PostMapping("insertEqmChk")
 	@ResponseBody
-	public int insertChk(EqmVO eqmVO) {
-		int a = eqmService.insertEqmChk(eqmVO);
-
-		return a;
+	public int insertChk(EqmVO eqmVO)  {
+		
+		return eqmService.insertEqmChk(eqmVO);
+		
 	}
 
-	// 비가동 등록
-
+	//비가동 등록
+	
 	@PostMapping("insertUoper")
 	@ResponseBody
-	public String insertUoper(@RequestBody EqmVO eqmVO, Model mode) {
-		eqmService.insertUoper(eqmVO);
-		eqmService.updateEqmYn(eqmVO);
-		return "admin/eqm/eqmUoper";
+	public int insertUoper(@RequestBody EqmVO eqmVO,Model mode) {
+		int a =0;
+		 a += eqmService.insertUoper(eqmVO);
+		 a+=eqmService.updateEqmYn(eqmVO);
+		 return a;
 	}
-	// 비가동 수정
-
+	//비가동 수정
+	
 	@RequestMapping("/updateUoper")
 	@ResponseBody
 	public String updateUoper(@RequestBody EqmVO eqmVO) {
-		eqmService.updateEqmYn(eqmVO);
-		eqmService.updateUoper(eqmVO);
-
+			eqmService.updateEqmYn(eqmVO);
+		 	eqmService.updateUoper(eqmVO);
+			
 		return "redirect:eqmUoper";
 	}
+	
+	//비가동 공통코드 수정
+	
+		@RequestMapping("/updateUoprCd")
+		@ResponseBody
+		public int updateUoprCd(@RequestBody CodeVO vo) {
+			
+			return cdService.updateCode(vo);
+		}
 
 	@PostMapping("/deleteLine")
 	@ResponseBody
-	public int deleteLine(@RequestParam(value = "line[]" + "", required = false) List<String> line) {
+	public int deleteLine(@RequestParam(value = "line[]"
+			+ "", required = false) List<String> line) {
 		return eqmService.deleteLine(line);
 	}
 
@@ -226,5 +274,9 @@ public class EqmController {
 	public int updateChk(@RequestBody EqmVO eqmVO) {
 		return eqmService.updateEqmChk(eqmVO);
 	}
+	
+	
+	
+	
 
 }
