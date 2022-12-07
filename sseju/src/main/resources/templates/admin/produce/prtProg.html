@@ -84,8 +84,10 @@
 					dataType:"json",
 					async:false,
 					success:function(data){
-						toastr.success("데이터를 불러왔습니다.")
-						matConditionGrid.resetData(data);
+						if(data > 0){
+							toastr.success("데이터를 불러왔습니다.")
+							matConditionGrid.resetData(data);
+						}
 					},
 					error:function(reject){
 						console.log(reject);
