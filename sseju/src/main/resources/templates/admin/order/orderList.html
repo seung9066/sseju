@@ -160,13 +160,17 @@
 						editor: 'text',
 						align : 'right',
 						onAfterChange : function(ev) {
+							if(ev.value<=0){
+								 toastr.error('최소 1개이상 입력하세요')
+							}
 				            let row = prtGrid1.getRow(ev.rowKey)
 				            let count = row.prtUnit * ev.value
 				            prtGrid1.setValue(ev.rowKey, 'orderQty', count)
 				            
 				            let sum = row.unitPrice * row.orderQty1 * row.prtUnit
 				            prtGrid1.setValue(ev.rowKey, 'orderPrice', sum)
-				         }
+				            
+				         } 
 					},
 					{
 						header : '총주문량',
@@ -198,7 +202,7 @@
 			 prtGrid.on("click", event => {
 	        		var prt = {prtCode : prtGrid.getRow(event.rowKey).prtCode,prtName:prtGrid.getRow(event.rowKey).prtName,
 	        				prtUnit: prtGrid.getRow(event.rowKey).prtUnit,
-	        			unitPrice:prtGrid.getRow(event.rowKey).prtPrice, orderQty1: '', orderQty:'', orderPrice:''}; //json 형태로 지정해도 됩니다.
+	        			unitPrice:prtGrid.getRow(event.rowKey).prtPrice, orderQty1: '', orderQty:'', orderPrice:''}; 
 				 if( prtGrid1.getRowCount()==0){
 					 prtGrid1.appendRow(prt);
 		          } else {

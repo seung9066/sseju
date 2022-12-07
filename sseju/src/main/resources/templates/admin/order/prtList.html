@@ -106,7 +106,7 @@
 	  		      grid123.unfilter('orderDate');
 	  		   	  document.getElementById('dateInput1').value = '';
 	  		 	  grid123.unfilter('dday');
-	  		 	toastr.success("조기화 되었습니다.");
+	  		 	toastr.success("초기화 되었습니다.");
 			   })  
 			
 			
@@ -194,12 +194,9 @@
 				}
 		          ]
 		});
-		
-		
 	  document.addEventListener('shown.bs.modal', function() {
 		  grid1.refreshLayout();
       });
-	  
 	  grid1.on('click',function(ev){
 		  let a = grid1.getRow(ev.rowKey).orderNo;
           alls1(a);
@@ -208,7 +205,6 @@
            Agrid1.refreshLayout();
        	
        });
-		
 		function alls() {
 			url="selectOrdeIng"
 			fetch(url) 
@@ -232,7 +228,7 @@
 							
 							Agrid1.resetData(list)								
 
-					}// suc
+					}
 				});
 		}
 	   	
@@ -252,10 +248,10 @@
 						alls();
 						alls3();
 						 $('#orModal').modal('hide');
-						 toastr.success("배송");
+						 toastr.success("배송되었습니다.");
 					}								
 
-				}// suc
+				}
 			});
 		}
 	
