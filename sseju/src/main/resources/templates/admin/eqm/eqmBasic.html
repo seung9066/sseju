@@ -100,8 +100,8 @@
                         <div style="float:right;">
                         <button type="button" class="button" onclick="insUoprCode()" id="uoperReg" >등록</button>
                         <button type="button" class="button" onclick="updateUoprCd()" id="upd">수정</button>
-                        <button type="button" class="button" id="deleteBt"
-                              onclick="deleteUoperCd()">삭제</button>
+                        <!-- <button type="button" class="button" id="deleteBt"
+                              onclick="deleteUoperCd()">삭제</button> -->
                         <button type="reset" class="button" >초기화</button>   
                         </div>
                         <br>
@@ -163,14 +163,6 @@
          }
          
          
-         
-            function dis() {
-               if ($('#dis').css('display') == 'none') {
-                  $('#dis').show();
-               } else {
-                  $('#dis').hide();
-               }
-            };
             
             //모달클릭
             document.addEventListener('shown.bs.modal', function() {
@@ -284,8 +276,8 @@
                           showAll();
                          lineForm.reset();
                        } else {
-                          toastr.error("등록 실패하였습니다.")
-                          
+                          toastr.warning("등록 실패하였습니다.")
+                          lineForm.reset();
                        }
                     },error : function(reject){
                     	console.log(reject);
@@ -317,7 +309,12 @@
                         lineForm.reset();
                         
                      } else {
-                    	 toastr.success("삭제에 실패하였습니다!");
+                    	 Swal.fire({
+                    		  icon: 'error',
+                    		  title: '삭제실패',
+                    		  text: '설비가 가동중입니다! 설비상태를 "N"로 바꾸십시오',
+                    		  footer: '<a href="eqmList">설비관리페이지로 이동</a>'
+                    		})
                          lineForm.reset();
                      }
                   },

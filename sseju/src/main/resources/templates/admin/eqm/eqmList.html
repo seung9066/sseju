@@ -596,27 +596,7 @@ table, th, td {
 				)
             }
             
-            $(document).ready(function(){
-                $("#reg").click(function(){
-                	
-                   if($("#eqmCode").val().length==0){toastr.error("설비코드 없습니다.")}
-                   if($("#eqmName").val().length==0){toastr.error("설비명이 없습니다.")}
-                   if($("#eqmModel").val()==0){toastr.error("모델명을 지정해 주세요.")}
-                   if($("#lineNo").val().length==0){toastr.error("라인이 없습니다.")}
-                   if($("#eqmLoc").val().length==0){toastr.error("설치장소를 지정해 주세요..")}
-                   if($("#eqmMaxTemp").val().length==0){toastr.error("최고온도를 지정해 주세요.")}
-                   if($("#eqmMinTemp").val().length==0){toastr.error("최저온도를 지정해 주세요.")}
-                   if($("#eqmSize").val().length==0){toastr.error("규격을 지정해 주세요.")}
-                   if($("#eqmPurcName").val().length==0){toastr.error("설비구매업체를 지정해 주세요.")}
-                   if($("#eqmPurcTel").val().length==0){toastr.error("비상연락망를 지정해 주세요.")}
-                   if($("#eqmPurcDate").val().length==0){toastr.error("입고일을 지정해 주세요.")}
-                   if($("#eqmCheck").val().length==0){toastr.error("점검주기를 지정해 주세요.")}
-                   if($("#eqmCheckTerm").val().length==0){toastr.error("점검단위를 지정해 주세요.")}
-                   if($("#eqmYn").val().length==0){toastr.error("사용여부를 지정해 주세요.")}
-
-                   return false;
-                })
-             })
+       
             
             function deleteEqm(){
                

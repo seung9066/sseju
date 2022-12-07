@@ -367,24 +367,7 @@ table, th, td {
 		      chkGrid.unfilter('lineNo');
 		   })   
 		   
-		   // 설비에 따라 점검일 선택하면 자동으로 차기점검일 나오게
-		   function changeDate(){
-		   
-			   var date = $('#chkDate').val(); // date :string타입
-               date = new Date(date); // string -> date타입으로
-               
-               if($('#eqmCheckTerm').val() == '일'){
-                  var a = new Date(date.getFullYear() , date.getMonth(),date.getDate()+ parseInt($('#eqmCheck').val()));
-                  $('#chkNdate').val(toStringByFormatting(a));
-               }else if($('#eqmCheckTerm').val() == '달'){
-                  var b = new Date(date.getFullYear() , date.getMonth()+ parseInt($('#eqmCheck').val()),date.getDate());
-                  $('#chkNdate').val(toStringByFormatting(b));
-               }else if($('#eqmCheckTerm').val() == '년'){
-                  var c = new Date(date.getFullYear()+ parseInt($('#eqmCheck').val()) , date.getMonth(),date.getDate());
-                  $('#chkNdate').val(toStringByFormatting(c));
-               }
-           	}
-		   
+		  
 		   
 		   
 		   
@@ -771,7 +754,25 @@ table, th, td {
 	              }
 	              
 	         // 점검일 입력하면 자동으로 차기점검일 계산해서 입력
-	         
+	   		 $(document).ready(function(){			
+				$("#chkDate").mouseleave(function() { 
+	   			   var date = $('#chkDate').val(); // date :string타입
+	                  date = new Date(date); // string -> date타입으로
+	                  
+	                  if($('#eqmCheckTerm').val() == '일'){
+	                     var a = new Date(date.getFullYear() , date.getMonth(),date.getDate()+ parseInt($('#eqmCheck').val()));
+	                     $('#chkNdate').val(toStringByFormatting(a));
+	                  }else if($('#eqmCheckTerm').val() == '달'){
+	                     var b = new Date(date.getFullYear() , date.getMonth()+ parseInt($('#eqmCheck').val()),date.getDate());
+	                     $('#chkNdate').val(toStringByFormatting(b));
+	                  }else if($('#eqmCheckTerm').val() == '년'){
+	                     var c = new Date(date.getFullYear()+ parseInt($('#eqmCheck').val()) , date.getMonth(),date.getDate());
+	                     $('#chkNdate').val(toStringByFormatting(c));
+	                  }
+	   		   })});
+	   		   
+	   			   
+	   		   
      	
        	
 			   
@@ -814,6 +815,10 @@ table, th, td {
                el : document.getElementById('eqmGrid'),
                scrollX : false,
                scrollY : true,
+               pageOptions: {
+           	    useClient: true, // front에서만 페이징하는 속성(서버x)
+           	    perPage: 7
+           	  },
                columns : [{
                   header : '설비코드',
                   name : 'eqmCode',

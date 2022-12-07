@@ -173,9 +173,7 @@ public int deleteLine(List<String> line) {
 		EqmVO vo = new EqmVO();
 		vo.setLineNo(line1);
 		
-		
-
-		
+		a += eqmMapper.deleteEqmLine(vo);
 	}
 	return a;
 }
