@@ -35,10 +35,9 @@
 		<!-- 생산 공정별 자재 상황 그리드용 쿼리 -->
 	<select id="progPrtCondition" resultType="pprVO">
 		SELECT ma.mat_code, 
-			   ma.mat_name, 
-			   lo.lot_qty, 
-			   mo.mat_out_qty
-			   
+		       ma.mat_name, 
+		       mo.mat_out_qty
+		       
 		FROM material ma
 		 JOIN process pr
 		   ON ma.prs_code = pr.prs_code
@@ -49,6 +48,10 @@
 		 JOIN lot lo
 		   ON mo.mat_lot_no = lo.lot_no
 		 JOIN produce pe
-		   ON pe.pre_no = #{preNo}
+		   ON pe.pre_no = prr.pre_no
+		WHERE pe.pre_no = #{preNo}
+		 group by  ma.mat_code, 
+		       ma.mat_name, 
+		       mo.mat_out_qty;
 	</select>
 </mapper>
