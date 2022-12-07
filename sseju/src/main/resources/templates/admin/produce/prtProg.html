@@ -18,8 +18,8 @@
 			<div id="matConditionGrid"></div>
 			
 			<script type="text/javascript">
-			showAll();
-			/*ㄴ실시간 공정 조회를 위해 showAll함수용 인터벌 생성*/
+			showProg();
+			/*ㄴ실시간 공정 조회 위한 인터벌 생성*/
 			setInterval(()=>showAll(), 1500);
 			
 			var token = $("meta[name='_csrf']").attr("content");
@@ -65,7 +65,7 @@
 					} ]
 				});
 			//생산 진행 현황 그리드 데이터 가져오기 함수
-				function showAll() {
+				function showProg() {
 				       fetch("getPrtProgList") 
 				       .then(res=>res.json())
 				       .then(obj=>{
@@ -84,8 +84,10 @@
 					dataType:"json",
 					async:false,
 					success:function(data){
-						toastr.success("데이터를 불러왔습니다.")
-						matConditionGrid.resetData(data);
+						if(data > 0){
+							toastr.success("데이터를 불러왔습니다.")
+							matConditionGrid.resetData(data);
+						}
 					},
 					error:function(reject){
 						console.log(reject);
@@ -113,7 +115,7 @@
 						filter: 'select',
 						align : 'center'
 					}, {
-						header : '재고량',
+						header : '투입량',
 						name : 'matOutQty',
 						align : 'center'
 					} ]
