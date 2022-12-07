@@ -384,7 +384,7 @@ img {
 				}).then((result) => {
 				  if (result.isConfirmed) {
 				    
-				    	Swal.fire('재가동 시작!','','success');
+				    	
 				    	show(); // '작업내용' 보여주기
 				  }
 				})
@@ -506,6 +506,7 @@ img {
 	                    	  Swal.fire('비가동 시작','', 'success');
 		                      reset();
 		                      showEqm();
+		                      uoperShow();
 
 	                       } else {
 	                          alert("입력실패");
@@ -681,9 +682,10 @@ img {
 		                  },
 		                  success:function(data){
 		                     if(data > 0) {
-		                        toastr.success("수정완료")
+		                    	 Swal.fire('재가동 시작!','','success');
 		                        reset();
 		                        uoperShow();
+		                        showEqm();
 
 		                      } else {
 		                        alert("수정실패");

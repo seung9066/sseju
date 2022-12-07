@@ -132,9 +132,11 @@ public class EqmController {
 		return eqmService.getEqmChkList();
 	}
 	
+	// 정기점검 리스트 가져오기
 	@GetMapping("/chkList")
 	@ResponseBody
 	public List<EqmVO> chkList(){
+	
 		return eqmService.getChkList();
 	}
 	
@@ -240,11 +242,12 @@ public class EqmController {
 	
 	@RequestMapping("/updateUoper")
 	@ResponseBody
-	public String updateUoper(@RequestBody EqmVO eqmVO) {
-			eqmService.updateEqmYn(eqmVO);
-		 	eqmService.updateUoper(eqmVO);
+	public int updateUoper(@RequestBody EqmVO eqmVO) {
+		int a = 0;
+			a +=eqmService.updateEqmYn(eqmVO);
+		 	a +=eqmService.updateUoper(eqmVO);
 			
-		return "redirect:eqmUoper";
+		return a;
 	}
 	
 	//비가동 공통코드 수정

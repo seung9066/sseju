@@ -7,24 +7,7 @@
 	<!-- 설비 eqm -->
 	<!-- 전체조회 -->
 	<select id="selectEqmList" resultType="EqmVO">
-		SELECT e.eqm_code,
-			e.eqm_name, 
-			e.eqm_model, 
-			e.eqm_size,
-			e.eqm_loc,
-			e.eqm_max_temp,
-			 e.eqm_min_temp,
-			  e.eqm_check,			  
-			e.eqm_check_term,
-			 e.eqm_purc_date,
-			e.eqm_img, 
-			e.eqm_purc_name,
-			e.eqm_purc_tel,
-			 e.eqm_yn,e.line_no
-		FROM EQM e
-		JOIN EQM_LINE l 
-		  ON e.line_no = l.line_no
-		ORDER BY EQM_CODE DESC
+		SELECT * FROM EQM ORDER BY EQM_CODE DESC
 	</select>
 	
 	<!-- 설비 단건조회  -->
@@ -59,7 +42,7 @@
 		#{eqmPurcName},
 		#{eqmPurcTel},
 		#{eqmYn},
-		#{lineNo},
+		#{lineNo,jdbcType=VARCHAR},
 		#{eqmImg,jdbcType=VARCHAR}
 
 		)
@@ -158,16 +141,14 @@
 		WHERE line_no = #{lineNo}
 	</update>
 
-	<!-- 라인정보 삭제 -->
+	<!-- 라인정보 삭제 : 설비가 N(비가동)인 라인들만 삭제가능 -->
 	<delete id="deleteEqmLine" parameterType="EqmVO">
-		DELETE FROM eqm_line
-		WHERE line_no = #{lineNo}
+		DELETE 
+		FROM eqm_line l 
+		WHERE l.LINE_NO = (SELECT e.LINE_NO FROM EQM e WHERE e.EQM_YN = 'N' AND e.LINE_NO = #{lineNo})
 	</delete>
 	
-	<!-- 라인에 종속된 설비 찾기 -->
-	<select id="eqmLineEx" resultType="EqmVO">
-		SELECT EQM_CODE FROM EQM WHERE line_no = #{lineNo}
-	</select>
+
 
 	<!-- 정기점검 전체조회 -->
 	<select id="getEqmChkList" resultType="EqmVO">
@@ -211,6 +192,7 @@
 		FROM EQM_CHK c
 		JOIN EQM q
 		ON c.eqm_code = q.eqm_code
+		
 	</select>
 	
 	<!-- 정기점검일 update하기 -->
