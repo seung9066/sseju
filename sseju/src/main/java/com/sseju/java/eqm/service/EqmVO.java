@@ -29,7 +29,7 @@ public class EqmVO {
    private String eqmCheckTerm; // 점검 '주기' 
    @DateTimeFormat(pattern = "yyyy-MM-dd")
    private Date eqmPurcDate;
-   private String eqmImg;
+   String eqmImg;
    private String eqmPurcName;
    private String eqmPurcTel;
    private String eqmYn;
@@ -39,6 +39,13 @@ public class EqmVO {
    private String cpCode; 
    private String cpName;
    private String cpTel;
+   
+   //
+   private String code; 
+   private String divName;
+   private String codeName;
+   private String divCode;
+
    
    // 직원
    private String empId;
@@ -70,6 +77,7 @@ public class EqmVO {
    private String uoperWork; //작업내용
    private String uoperStartTime; //비가동 시작시간
    private String uoperEndTime; // 재가동 시간
+   private String uoperRsnCode; // 비가동사유 코드
    
    
 
