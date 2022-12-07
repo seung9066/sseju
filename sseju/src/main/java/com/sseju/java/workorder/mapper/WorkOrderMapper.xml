@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sseju.java.workorder.mapper.WorkOrderMapper">
 
-	<!-- Create : insert관련 sql 구문 -->
+	<!-- Create -->
 	<!-- 작업 지시 등록 -->
 	<insert id="insertWorkOrder" parameterType="woVO">
 		<selectKey keyProperty="preNo" resultType="String" order="BEFORE">
@@ -98,8 +98,9 @@
 		ORDER BY prt_code
 	</select>
 	
-	<!-- Update : 수정, 업데이트 관련 쿼리 -->
-	<!-- 주문 -> 작업지시로 등록 시 주문 그리드에 있던 주문정보 1개 행을 order_yn y로 바꿔서 그리드에서 보이지 않게 만듦 -->
+	<!-- Update -->
+	<!-- 주문 -> 작업지시로 등록 시 주문 그리드에 있던 주문정보
+		 order_yn 삭제/등록시마다 'O', 'W' 변경 -->
 	<update id="updateOrderYn" parameterType="woVO">
 			UPDATE order_inf set
 			order_yn = CASE

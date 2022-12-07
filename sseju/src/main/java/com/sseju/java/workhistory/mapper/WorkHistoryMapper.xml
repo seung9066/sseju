@@ -22,6 +22,7 @@
           ON mo.mat_out_no = prr.mat_out_no
 	    JOIN employee ee
 	      ON ee.emp_id = prr.prs_manager
+	    WHERE pi.prs_sp_hour IS NOT NULL
         ORDER BY  prr.prs_date DESC
 	</select>
 </mapper>

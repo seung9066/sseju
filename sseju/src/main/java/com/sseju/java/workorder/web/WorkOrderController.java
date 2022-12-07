@@ -60,7 +60,7 @@ public class WorkOrderController {
 		return "redirect:workOrder";
 	}
 	
-	//작업 지시 수정
+	//작업 지시 order_yn 업데이트
 	@PostMapping("/updateWorkOrder")
 	@ResponseBody
 	public int updateWorkOrder(@RequestBody WorkOrderVO woVO) {

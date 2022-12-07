@@ -51,9 +51,4 @@
 		 JOIN produce pe
 		   ON pe.pre_no = #{preNo}
 	</select>
-	
-	<!-- Delete-->
-	<delete id="deletePrtProg" parameterType="pprVO">
-	
-	</delete>
 </mapper>
