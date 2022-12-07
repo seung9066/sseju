@@ -8,8 +8,7 @@
 		SELECT pe.pre_no,
 		       pt.prt_name,
 		       prr.prt_qty,
-		       pri.prs_err_qty,
-		       pe.pre_manager,
+		       (NVL(pri.prs_err_qty,0)*5) AS prs_err_qty,
 		       prr.prs_date,
 		       ee.emp_name
 		       
@@ -23,7 +22,7 @@
 		 JOIN employee ee
 		   ON ee.emp_id = pe.pre_manager
 		WHERE prr.prt_qty IS NOT NULL
-		ORDER BY pe.pre_no DESC
+		ORDER BY pe.pre_no DESC           
 	</select>
 	
 	<!-- 실적 한 행 클릭 시 아래 그리드에 불량코드, 불량명 상세조회 띄워주기 -->
