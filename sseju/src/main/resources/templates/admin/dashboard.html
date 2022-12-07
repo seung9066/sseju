@@ -425,6 +425,9 @@ setInterval(() => runprr(), 10000);
 										<div id="WHGrid"></div>
 
 										<script type="text/javascript">
+										var token = $("meta[name='_csrf']").attr("content");
+										var header = $("meta[name='_csrf_header']").attr("content");
+										
 										const WHGrid = new tui.Grid({
 											el : document.getElementById('WHGrid'),
 											pagination : true,
@@ -444,9 +447,6 @@ setInterval(() => runprr(), 10000);
 												align : 'center'
 											} ]
 										});
-										
-										var token = $("meta[name='_csrf']").attr("content");
-										var header = $("meta[name='_csrf_header']").attr("content");
 										
 										function selectWh(a) {
 											let type = a.getAttribute('value');
@@ -660,15 +660,14 @@ prsWrite();
 }
 prcOn();
 
-setInterval(() => prcOn(), 2500);
+setInterval(() => prcOn(), 2000);
 </script>
 						<div class="modal" id="WLModal" tabindex="-1"
 							aria-labelledby="WLModalLabel" aria-hidden="true">
 							<div class="modal-dialog">
 								<div class="modal-content">
 									<div class="modal-header">
-										<h5 class="modal-title" id="exampleModalLabel">Modal
-											title</h5>
+										<h5 class="modal-title" id="exampleModalLabel">작업관련 주문번호</h5>
 										<button type="button" class="btn-close"
 											data-bs-dismiss="modal" aria-label="Close"></button>
 									</div>

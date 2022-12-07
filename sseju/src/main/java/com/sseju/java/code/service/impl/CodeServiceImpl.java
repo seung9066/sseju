@@ -811,7 +811,8 @@ public class CodeServiceImpl implements CodeService {
 		// TODO Auto-generated method stub
 		return mapper.insertMatBuy(vo);
 	}
-
+	
+	// 생산량 카운트
 	@Override
 	public Map<String, String> updatePrtCountA() {
 		Map<String, String> map = new HashMap<>();
@@ -932,6 +933,9 @@ public class CodeServiceImpl implements CodeService {
 		// mat_out 번호
 		List<CodeVO> matOutList = new ArrayList<>();
 
+		voMsg.setMsg("자재 출고 완료 : " + bomList.size() + " 종류");
+		mapper.insertMsg(voMsg);
+		
 		// lot테이블, 자재출고 테이블
 		for (int i = 0; i < bomList.size(); i++) {
 			System.out.println("ㅁlot수량 줄이기");
@@ -953,8 +957,6 @@ public class CodeServiceImpl implements CodeService {
 			System.out.println("ㅁmatoutno");
 			matOutList.add(voMout);
 			mapper.insertMatOut(voMout);
-			voMsg.setMsg("자재 출고 완료 : " + bomList.get(i).getMatCode());
-			mapper.insertMsg(voMsg);
 
 			// lot 테이블 out_from 출고처용 공정코드 찾기
 			System.out.println("ㅁlot테이블 공정코드 찾");
@@ -1163,7 +1165,7 @@ public class CodeServiceImpl implements CodeService {
 				}
 
 			} else {
-				// 주문량 3300 이외
+				// 공정수량 증가
 				if (i == prsList.size() - 1) {
 
 					System.out.println("ㅁ설비 가동");
@@ -1352,7 +1354,9 @@ public class CodeServiceImpl implements CodeService {
 		// TODO Auto-generated method stub
 		return mapper.insertMatChk(vo);
 	}
-
+	
+	
+	// 자재 자동화
 	@Override
 	public int orderNow(List<CodeVO> list) {
 		List<CodeVO> whList = new ArrayList<>();
@@ -1373,7 +1377,7 @@ public class CodeServiceImpl implements CodeService {
 
 				System.out.println("ㅁ자재발주");
 				vo.setMatOrdNo(mapper.matOrdNo().getMatOrdNo());
-				vo.setMatOrdQty(list.get(i).getOrderQty());
+				vo.setMatOrdQty(list.get(i).getOrderQty() * 110 / 100);
 				vo.setMatCode(listBom.get(j).getMatCode());
 				vo.setCpCode(mapper.getMatCompany(vo).getCpCode());
 				vo.setMatPrice(listBom.get(j).getMatUnitPrc() * list.get(i).getOrderQty());
