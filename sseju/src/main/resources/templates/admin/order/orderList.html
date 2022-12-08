@@ -160,6 +160,10 @@
 						editor: 'text',
 						align : 'right',
 						onAfterChange : function(ev) {
+							if(ev.value <=0){
+								toastr.error("최소 1개이상 입력하세요.");
+								ev.value.clear()
+							}
 				            let row = prtGrid1.getRow(ev.rowKey)
 				            let count = row.prtUnit * ev.value
 				            prtGrid1.setValue(ev.rowKey, 'orderQty', count)
