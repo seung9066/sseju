@@ -1190,6 +1190,8 @@ public class CodeServiceImpl implements CodeService {
 
 					// 완제품 공정
 					while (j < prdOrder) {
+						
+						j += prdOut / 10;
 
 						if (j == prdOrder) {
 							String z = Integer.toString(prdOut % 100);
@@ -1252,7 +1254,6 @@ public class CodeServiceImpl implements CodeService {
 						}
 						
 						k = prdOrderA * 1 / 100;
-						j += prdOut / 10;
 						
 						try {
 							Thread.sleep(1000);
@@ -1272,6 +1273,8 @@ public class CodeServiceImpl implements CodeService {
 
 					// 완제품 이전 공정
 					while (j < prdOrder) {
+						
+						j += prdOut / 10;
 
 						// 불량수량
 						if (i > prsList.size() / 2 - 1) {
@@ -1330,7 +1333,6 @@ public class CodeServiceImpl implements CodeService {
 						}
 						
 						k = prdOut * 1 / 100;
-						j += prdOut / 10;
 
 						try {
 							Thread.sleep(1000);
