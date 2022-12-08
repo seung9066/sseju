@@ -36,10 +36,8 @@
 		       ods.d_day
 		
 		  FROM orders ods
-		   
 		  JOIN order_inf odi
 		    ON ods.order_no = odi.order_no
-		    
 		  JOIN product pt
 		    ON pt.prt_code= odi.prt_code
 		
@@ -61,6 +59,7 @@
 		JOIN employee ee
 		    ON ee.emp_id = pe.pre_manager
 		WHERE  odi.order_yn ='W'
+		AND pe.prt_code = odi.prt_code
 		ORDER BY ods.order_no ASC
 	</select>
 	
@@ -69,24 +68,6 @@
 		SELECT *
 		FROM employee
 		ORDER BY emp_id
-	</select>
-	
-	<!-- 단건조회 아직 미사용 -->
-	<select id="getSearchWorkOrder" parameterType="woVO" resultType="woVO">
-		SELECT ods.order_no,
-		       pe.pre_no,
-		       pe.pre_date,
-		       pe.pre_manager,
-		       pe.ins_qty,
-		       pe.pre_qty,
-		       pe.prt_code,
-		       pe.pre_prg
-		FROM produce pe 
-		 JOIN orders ods
-		ON pe.order_no = ods.order_no
-		<where>
-			ods.order_no = #{orderNo}
-		</where> 
 	</select>
 	
 	<!--그리드에서 바로 가져가는 형식으로 바뀌었기 때문에 사용X  

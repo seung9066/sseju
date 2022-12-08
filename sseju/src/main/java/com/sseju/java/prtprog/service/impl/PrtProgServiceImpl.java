@@ -17,32 +17,27 @@ public class PrtProgServiceImpl implements PrtProgService {
 	
 	@Override
 	public int insertPrtProg(PrtProgVO pprVO) {
-		// TODO Auto-generated method stub
 		return pprMapper.insertPrtProg(pprVO);
 	}
 	
 	//생산 진행 현황 리스트 모두 불러오기
 	@Override
 	public List<PrtProgVO> getPrtProgList() {
-		// TODO Auto-generated method stub
 		return pprMapper.getPrtProgList();
 	}
 	//생산 진행 현황 삭제
 	@Override
 	public int deletePrtProg(PrtProgVO pprVO) {
-		// TODO Auto-generated method stub
 		return pprMapper.deletePrtProg(pprVO);
 	}
 	//생산 공정별 자재 상황 확인
 	@Override
-	public List<PrtProgVO> progPrtCondition(String preNo) {
-		// TODO Auto-generated method stub
-		return pprMapper.progPrtCondition(preNo);
+	public List<PrtProgVO> progPrtCondition(PrtProgVO pprVO) {
+		return pprMapper.progPrtCondition(pprVO);
 	}
 
 	@Override
 	public int updateProgYtoE(PrtProgVO pprVO) {
-		// TODO Auto-generated method stub
 		return pprMapper.updateProgYtoE(pprVO);
 	}
 

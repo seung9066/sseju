@@ -8,7 +8,7 @@ public interface PrtProgService {
 	//R 생산 진행 현황 전체 조회
 	public List<PrtProgVO> getPrtProgList();
 	//R 생산 공정별 자재 상황 조회
-	public List<PrtProgVO> progPrtCondition(String preNo);
+	public List<PrtProgVO> progPrtCondition(PrtProgVO pprVO);
 	//U 생산 진행이 완료되었을때 그리드에서 행이 사라지게
 	public int updateProgYtoE(PrtProgVO pprVO);
 	

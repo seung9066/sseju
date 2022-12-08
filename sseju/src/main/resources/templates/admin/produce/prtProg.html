@@ -20,7 +20,7 @@
 			<script type="text/javascript">
 			showProg();
 			/*ㄴ실시간 공정 조회 위한 인터벌 생성*/
-			setInterval(()=>showAll(), 1500);
+			setInterval(()=>showProg(), 1500);
 			
 			var token = $("meta[name='_csrf']").attr("content");
 			var header = $("meta[name='_csrf_header']").attr("content");
@@ -62,6 +62,11 @@
 						name : 'empName',
 						filter : 'select',
 						align : 'center'
+					},{
+						header : '제품코드',
+						name : 'prtCode',
+						align : 'center',
+						hidden : 1
 					} ]
 				});
 			//생산 진행 현황 그리드 데이터 가져오기 함수
@@ -76,18 +81,16 @@
 			
 			/* 생산 진행 현황 그리드 행 클릭 시 아래 자재 상황 그리드에 맞는 데이터 불러오기 */
 			prtProgGrid.on('click', (ev)=>{
-				let preNo = ev.nativeEvent.target.innerText;
-				console.log(preNo);
+				let data = prtProgGrid.getRow(ev.rowKey)
+				console.log(data);
 				$.ajax({
-					url:'/progPrtCondition',
-					data : {preNo:preNo},
+					url:'progPrtCondition',
+					data : data,
 					dataType:"json",
 					async:false,
 					success:function(data){
-						if(data > 0){
 							toastr.success("데이터를 불러왔습니다.")
 							matConditionGrid.resetData(data);
-						}
 					},
 					error:function(reject){
 						console.log(reject);
