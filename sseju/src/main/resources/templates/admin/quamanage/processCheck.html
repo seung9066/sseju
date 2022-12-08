@@ -22,8 +22,6 @@
 				<div id="prsChkGrid"></div>
 			</div>
 			
-			
-			
 			<script>
 				//그리드 함수 호출
 				showPrsMenu();
@@ -45,20 +43,16 @@
 			    	[{
 						header: '공정 코드',
 				    	name: 'prsCode',
-				    	filter : 'select',
 						align : 'center',
 						hidden : 1
 					}, {
 						header: '공정명',
 					    name: 'prsName',
 						align : 'center',
-						filter : 'select'
 					}, {
 						header: '공정 상세',
 				    	name: 'prsDetail',
-				    	filter : 'select',
 						align : 'center',
-						filter : 'select'
 					}]
 			      });
 				
@@ -105,7 +99,12 @@
 						    	name: 'prsDate',
 						    	filter : 'select',
 								align : 'center',
-								filter : 'select',
+								filter: {
+			                        type: 'date',
+			                        options: {
+			                          format: 'yyyy-MM-dd'
+			                        }
+			                     },
  								formatter({value}) {
 							      return `${value.substring(0,10)}`;
 							    }
@@ -113,8 +112,7 @@
 							{
 								header: '공정명',
 							    name: 'prsName',
-								align : 'center',
-								filter : 'select'
+								align : 'center'
 							},
 							{
 							 	header: '불량 코드',
@@ -129,7 +127,6 @@
 							{
 								header: '불량 수',
 							    name: 'prsErrQty',
-							    filter : 'select',
 								align : 'center',
 								formatter : function (ev){
 			                      return ev.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')+ 'EA';
@@ -143,7 +140,6 @@
 							}]
 					      });
 			</script>
-
 		</main>
 	</article>
 </body>

@@ -16,12 +16,11 @@ public class LotTrackController {
 	@Autowired
 	LotTrackService ltService;
 	
-	//생산관리/제품 로트 페이지로 연결
+	//제품 로트 페이지 연결
 	@GetMapping("/lotTrack")
 	public String lotTrack() {
 		return "admin/produce/lotTrack";
 	}
-	//ㄴ제품로트 페이지 그리드에 띄워주기
 	@GetMapping("/getLotTrackList")
 	@ResponseBody
 	public List<LotTrackVO> getLotTrackList(){

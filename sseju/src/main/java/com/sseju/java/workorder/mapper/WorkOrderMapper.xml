@@ -26,8 +26,8 @@
 						   )
 	</insert>
 	
-	<!-- Read : workorder페이지에서 정보를 불러오는 쿼리문 모음 -->
-		<!-- 주문 번호, 주문한 상품명, 주문수량, 주문일자 불러오기(주문 신청 내역 그리드에 대한 쿼리) -->
+	<!-- Read -->
+	<!-- 주문 번호, 주문한 상품명, 주문수량, 주문일자 불러오기(주문 신청 내역 그리드에 대한 쿼리) -->
 	<select id="getOrderList" resultType="woVO">
 		SELECT odi.order_no, 
 		       pt.prt_code, 
@@ -47,19 +47,27 @@
 	
 		<!-- 등록된 작업 지시 내역 그리드에 띄우는 쿼리 -->
 	<select id="getWorkOrderList" resultType="woVO">
-		SELECT pe.order_no, pe.pre_no, pt.prt_name, pt.prt_code, pe.ins_qty,
-		        pe.pre_date  + 9/24 as pre_date, pe.pre_manager, ee.emp_name, ods.d_day
+		SELECT pe.order_no,
+			   pe.pre_no, 
+			   pt.prt_name, 
+			   pt.prt_code, 
+			   pe.ins_qty,
+		       pe.pre_date  + 9/24 as pre_date, 
+		       pe.pre_manager, 
+		       ee.emp_name, 
+		       ods.d_day
 		
-		FROM orders ods JOIN produce pe
-		    ON ods.order_no = pe.order_no
-		JOIN order_inf odi
-		    ON odi.order_no = ods.order_no
-		JOIN product pt
-		    ON pt.prt_code = odi.prt_code
-		JOIN employee ee
-		    ON ee.emp_id = pe.pre_manager
+		FROM orders ods 
+		 JOIN produce pe
+		   ON ods.order_no = pe.order_no
+		 JOIN order_inf odi
+		   ON odi.order_no = ods.order_no
+		 JOIN product pt
+		   ON pt.prt_code = odi.prt_code
+		 JOIN employee ee
+		   ON ee.emp_id = pe.pre_manager
 		WHERE  odi.order_yn ='W'
-		AND pe.prt_code = odi.prt_code
+		  AND  pe.prt_code = odi.prt_code
 		ORDER BY ods.order_no ASC
 	</select>
 	
@@ -70,9 +78,7 @@
 		ORDER BY emp_id
 	</select>
 	
-	<!--그리드에서 바로 가져가는 형식으로 바뀌었기 때문에 사용X  
-		상품 코드, 이름 가져오기, 
-		workorder 페이지에 select박스에 제품 종류 띄워주기 위해서-->
+	<!-- 상품 코드, 이름 가져오기 -->
 	<select id="getPrtList" resultType="woVO">
 		SELECT *
 		FROM product

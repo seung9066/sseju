@@ -19,9 +19,7 @@
 
 			<!-- 작업 지시 등록 칸 -->
 			<form action="insertWorkOrder" method="post">
-			
 				<h6 style="display: inline-block;">작업 지시 등록</h6>
-				
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 				<input type="hidden" name="auth" value="ROLE_ADMIN">
 				<button type="submit" id="submit" class="button" style="float: right">등록</button>
@@ -332,7 +330,7 @@
 					           orderNoGrid.resetData(obj);
 					       })
 					}
-					
+					//값이 없을때 submit 방지
 					$(document).ready(function(){
 						$("#submit").click(function(){
 						let tr = false;
@@ -356,7 +354,7 @@
 			                "extendedTimeOut" : 1500, 
 			                "timeOut" : 2500
 			         }
-					 //#preDate오늘 이전 날짜 선택 막기
+					 //작업지시 당일 이후 선택만 가능
 			        var now_utc = Date.now()
 					var timeOff = new Date().getTimezoneOffset()*60000;
 					var today = new Date(now_utc-timeOff).toISOString().split("T")[0];
