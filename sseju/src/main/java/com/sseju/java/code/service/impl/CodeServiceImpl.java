@@ -936,6 +936,9 @@ public class CodeServiceImpl implements CodeService {
 		voMsg.setMsg("자재 출고 완료 : " + bomList.size() + " 종류");
 		mapper.insertMsg(voMsg);
 		
+		voMsg.setMsg("생산 시작 : " + vo.getPrtCode());
+		mapper.insertMsg(voMsg);
+		
 		// lot테이블, 자재출고 테이블
 		for (int i = 0; i < bomList.size(); i++) {
 			System.out.println("ㅁlot수량 줄이기");
@@ -996,8 +999,6 @@ public class CodeServiceImpl implements CodeService {
 			voPR.setPrsManager(vo.getPreManager());
 			voPR.setMatOutNo(matOutList.get(i / 2).getMatOutNo());
 			mapper.insertProcessRun(voPR);
-			voMsg.setMsg("공정 시작 : " + voPR.getPrsCode());
-			mapper.insertMsg(voMsg);
 
 			// process_inf insert
 			System.out.println("ㅁprocess_inf");
@@ -1152,8 +1153,6 @@ public class CodeServiceImpl implements CodeService {
 							mapper.endProcessInf(voPI);
 							System.out.println("ㅁ설비중지");
 							mapper.updateEqm(voEqm);
-							voMsg.setMsg("공정 완료 : " + voPR.getPrsCode());
-							mapper.insertMsg(voMsg);
 						}
 						
 						try {
@@ -1328,8 +1327,6 @@ public class CodeServiceImpl implements CodeService {
 							mapper.endProcessInf(voPI);
 							System.out.println("ㅁ설비중지");
 							mapper.updateEqm(voEqm);
-							voMsg.setMsg("공정 완료 : " + voPR.getPrsCode());
-							mapper.insertMsg(voMsg);
 						}
 						
 						k = prdOut * 1 / 100;
