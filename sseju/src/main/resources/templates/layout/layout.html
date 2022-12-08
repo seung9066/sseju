@@ -401,6 +401,8 @@ if (msgListB.length == 0) {
 } else {
 msgTime = msgListB.length;
 }
+
+if (msgListB.length != 0) {
 	
 for (let i = 0; i < msgListB.length; i++) {
 	setTimeout(() => {toastr.info(msgListB[i])}, (i + 1) * 2000);
@@ -424,6 +426,7 @@ for (let i = 0; i < msgListB.length; i++) {
 			}
 		})
 	}, (i + 1) * 2000);
+}
 }
 	
 }
