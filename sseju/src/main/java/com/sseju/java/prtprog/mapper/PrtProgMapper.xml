@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sseju.java.prtprog.mapper.PrtProgMapper">
-	<!-- C insert 관련 쿼리 -->
-	<insert id="insertPrtProg" parameterType="pprVO">
-	
-	</insert>
-	
 	<!-- R select 관련 쿼리 -->
 		<!-- 생산 진행 현황의 첫번째 그리드 -->
 	<select id="getPrtProgList" resultType="pprVO">
         SELECT prr.pre_no,
-               pt.prt_name, 
+               pt.prt_name,
+               pt.prt_code, 
                prr.prt_qty, 
                pe.ins_qty, 
                pe.pre_date, 
@@ -34,24 +30,23 @@
 	
 		<!-- 생산 공정별 자재 상황 그리드용 쿼리 -->
 	<select id="progPrtCondition" resultType="pprVO">
-		SELECT ma.mat_code, 
-		       ma.mat_name, 
+		SELECT bo.mat_code,
+		       ma.mat_name,
 		       mo.mat_out_qty
-		       
-		FROM material ma
-		 JOIN process pr
-		   ON ma.prs_code = pr.prs_code
+		FROM product pt
+		 JOIN bom bo
+		   ON bo.prt_code = pt.prt_code
+		 JOIN material ma
+		   ON bo.mat_code = ma.mat_code
+		 JOIN process prs
+		   ON ma.prs_code = prs.prs_code
 		 JOIN process_run prr
-		   ON pr.prs_code = prr.prs_code
+		   ON prs.prs_code = prr.prs_code
 		 JOIN mat_out mo
 		   ON mo.mat_out_no = prr.mat_out_no
-		 JOIN lot lo
-		   ON mo.mat_lot_no = lo.lot_no
 		 JOIN produce pe
 		   ON pe.pre_no = prr.pre_no
 		WHERE pe.pre_no = #{preNo}
-		 group by  ma.mat_code, 
-		       ma.mat_name, 
-		       mo.mat_out_qty;
+		AND bo.prt_code = #{prtCode}
 	</select>
 </mapper>
