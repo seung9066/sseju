@@ -25,17 +25,14 @@ public class ProcessCheckController {
 	public String processCheckList() {
 		return "admin/quamanage/processCheck";
 	}
-	//ㄴ공정 리스트 출력
 	@GetMapping("/getProcessMenu")
 	@ResponseBody
 	public List<ProcessCheckVO> getProcessMenu() {
 		return pcService.getProcessMenu();
 	}
-	//ㄴ리스트 목록 클릭 시 데이터 출력
 	@GetMapping("/getPrsList")
 	@ResponseBody
 	public List<ProcessCheckVO> getPrsList(ProcessCheckVO pcVO){
-		
 		return pcService.getPrsList(pcVO);
 	}
 	//ㄴ공정 조회 시 데이터 가져오기
