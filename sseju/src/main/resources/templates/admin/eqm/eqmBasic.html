@@ -23,8 +23,9 @@
 <body>
    <article layout:fragment="content">
       <main id="main" class="main">
+      <br>
          <h4>
-            <strong>설비정보 관리</strong>
+            <strong>&nbsp;&nbsp;설비 기본정보</strong>
          </h4>
 
          <hr>
@@ -32,7 +33,7 @@
          <div class="row">
                <div class="col-7">	
                   <h5 style="width: 200px">
-                     <b>라인정보 관리</b>
+                     <b>✓ 라인정보 관리</b>
                   </h5>
                   <div style="float:right;">
                  
@@ -67,17 +68,17 @@
                         </tr>
                         <tr>
                            <th>*총생산량</th>
-                           <td><input type="number" name="totPrc" id="totPrc" min="1"></td>
+                           <td><input type="text" name="totPrc" id="totPrc" min="1"></td>
                            <th>*UPH</th>
-                           <td><input type="number" name="uph" id="uph" min="1"> </td>
+                           <td><input type="text" name="uph" id="uph" min="1"> </td>
                            
                            
                         </tr>
                         <tr>
                            <th>*사용여부</th>
-                           <td><input type="radio" name="lineYn" id="lineYn"
+                           <td><input type="radio" name="lineYn" id="y"
                               value="Y" style="vertical-align: 0px;">Y <input
-                              type="radio"  name="lineYn" value="N" id="lineYn"
+                              type="radio"  name="lineYn" value="N" id="n"
                               style="vertical-align: 1px;">N</td>
                         </tr>
                      </table>
@@ -88,7 +89,7 @@
              <br>
              <br>
              <h5 style="width: 200px">
-                     <b>비가동코드 관리</b>
+                     <b>✓ 비가동코드 관리</b>
                   </h5>
              <div class="row">
              	<div class="col-7">
@@ -100,26 +101,26 @@
                         <div style="float:right;">
                         <button type="button" class="button" onclick="insUoprCode()" id="uoperReg" >등록</button>
                         <button type="button" class="button" onclick="updateUoprCd()" id="upd">수정</button>
-                        <!-- <button type="button" class="button" id="deleteBt"
-                              onclick="deleteUoperCd()">삭제</button> -->
+                        <button type="button" class="button" id="deleteBt"
+                              onclick="deleteUoperCd()">삭제</button>
                         <button type="reset" class="button" >초기화</button>   
                         </div>
                         <br>
                         <br>
                         
                         
+                     		<div style="display:hidden" id="code" name="code"></div>
                      	<table class="table">
                         <tr>
-                           <th>* 비가동코드</th>
-                           <td><input type="text" name="code" id="code" value="UOR_"></td>
                            <th>* 비가동명</th>
                            <td><input type="text" name="codeName" id="codeName"></td>
                         </tr>
                         <tr>
                            <th> &nbsp; 공통코드</th>
-                           <td><input type="text" name="divCode" id="divCode" value="UOR" style="text-align:center;" readonly></td>
+                           <td><input type="text" name="divCode" id="divCode" value="UOR" style="text-align:center; background-color:lightgray;" readonly></td>
+                        
                            <th>&nbsp;&nbsp;구분</th>
-                           <td><input type="text" name="divName" id="divName" value="비가동코드"style="text-align:center;" readonly> </td>
+                           <td><input type="text" name="divName" id="divName" value="비가동코드"style="text-align:center; background-color:lightgray" readonly> </td>
                         </tr>
                      </table>
                      </form>
@@ -170,7 +171,7 @@
                }, '.modal');
             
             // 유효성 체크(uph,totPrc에 숫자가 아닌 값이 들어가면 )
-            $(document).ready(function(){
+            /* $(document).ready(function(){
                 $("#ins").click(function(){
                 	
                    if($("#lineNo").val().length==0){toastr.error("라인명이 없습니다.")}
@@ -181,7 +182,7 @@
 
                    return false;
                 })
-             })
+             }) */
            
                
          </script>
@@ -254,75 +255,118 @@
             });
             
             function insertLine(){
-            	/*let lineNo = $('#lineNo').val();
-            	let totPrc = $('#totPrc').val();
-            	let uph = $('#uph').val();
-            	let lineYn = $("input[name='lineYn']:checked").val();
-            	let empNo = $('#empNo').val();*/
-            	
-            	let eqmLine = $('#lineForm').serialize();
-            	$.ajax({
-            		url:'insertLine',
-            		type : 'POST',
-            		data : eqmLine, //{'lineNo':lineNo, 'totPrc' : totPrc , 'uph':uph, 'lineYn':lineYn,'empNo':empNo},
-            		dataType : "json",
-                    async : false,
-                    beforeSend : function(xhr){
-                       xhr.setRequestHeader(header, token);
-                    },
-                    success:function(data){
-                       if(data > 0) {
-                    	  toastr.success("등록 성공하였습니다!")
-                          showAll();
-                         lineForm.reset();
-                       } else {
-                          toastr.warning("등록 실패하였습니다.")
+                
+                // <유효성 체크> 1. 빈값이면 에러메세지
+                // <유효성 체크> 2. uph, totPrc 숫자 아니면 경고 => isNaN 함수 사용하기(Not a Number) =>  true, false  반환
+                // 변수에 담기
+                var lineNo = document.getElementById("lineNo");
+                var totPrc = document.getElementById("totPrc");
+                var uph = document.getElementById("uph");
+                var lineYn = document.querySelector('input[name=lineYn]:checked');
+                var empNo = document.getElementById("empNo");
+                
+                if(lineNo.value == ''){
+                   toastr.error("라인명을 입력해주세요");
+                   lineNo.focus(); // 커서가 깜빡이는 현상.
+                   return false; // 아무것도 반환하지 마라. 밑에 코드부터 진행하지 말것.
+                }
+                if(empNo.value == ''){
+                   toastr.error("담당자를 입력해주세요");
+                   empNo.focus(); 
+                   return false; 
+                }
+                if(totPrc.value == ''){
+                   toastr.error("총생산량을 입력해주세요");
+                   totPrc.focus(); 
+                   return false; 
+                }
+                if(isNaN(totPrc.value) == true){
+                   toastr.error("총생산량엔 숫자를 입력해주세요!!")
+                   totPrc.focus(); 
+                   return false;
+                }
+                if(uph.value == ''){
+                   toastr.error("UPH를 입력해주세요");
+                   uph.focus(); 
+                   return false; 
+                }
+                if(isNaN(uph.value) == true){
+                   toastr.error("UPH는 숫자를 입력해주세요!!")
+                   uph.focus(); 
+                   return false;
+                }
+                if(lineYn.value == '' ){  // radio 버튼 체크여부 확인하기 => .checked => true or false 반환함.
+		            toastr.error("사용여부를 체크해주세요");
+		            lineYn.focus(); 
+		            return false;
+                }
+                	
+                
+                
+                
+                let eqmLine = $('#lineForm').serialize();
+                
+                $.ajax({
+                   url:'insertLine',
+                   type : 'POST',
+                   data : eqmLine, //{'lineNo':lineNo, 'totPrc' : totPrc , 'uph':uph, 'lineYn':lineYn,'empNo':empNo},
+                   dataType : "json",
+                     async : false,
+                     beforeSend : function(xhr){
+                        xhr.setRequestHeader(header, token);
+                     },
+                     success:function(data){
+                        if(data > 0) {
+                          toastr.success("등록 성공하였습니다!")
+                           showAll();
                           lineForm.reset();
-                       }
-                    },error : function(reject){
-                    	console.log(reject);
-                    }
-            		
-            		
-            	});
-            }
-            
-            function deleteLine(){
-               let line = [];
-               for(li of lineGrid.getCheckedRows()){
-                  line.push(li.lineNo);
-               }
-            	console.log(line);
-               $.ajax({
-                  url : 'deleteLine',
-                  type : 'POST',
-                  data : {line:line},
-                  dataType:"json",
-                  async:false,
-                  beforeSend : function(xhr){
-                     xhr.setRequestHeader(header, token);
-                  },
-                  success:function(data){
-                     if(data > 0) {
-                    	toastr.success("삭제에 성공하였습니다!");
-                        showAll();
-                        lineForm.reset();
-                        
-                     } else {
-                    	 Swal.fire({
-                    		  icon: 'error',
-                    		  title: '삭제실패',
-                    		  text: '설비가 가동중입니다! 설비상태를 "N"로 바꾸십시오',
-                    		  footer: '<a href="eqmList">설비관리페이지로 이동</a>'
-                    		})
-                         lineForm.reset();
+                        } else {
+                           toastr.warning("등록 실패하였습니다.")
+                           lineForm.reset();
+                        }
+                     },error : function(reject){
+                        console.log(reject);
                      }
-                  },
-                  error : function(reject){
-                     console.log(reject);
-                  }
-               })
-            }
+                   
+                   
+                });
+             }
+             
+             function deleteLine(){
+                let delLine = [];
+                for(li of lineGrid.getCheckedRows()){
+                   delLine.push(li.lineNo);
+                }
+                $.ajax({
+                   url : 'deleteLine',
+                   type : 'POST',
+                   data : {delLine:delLine},
+                   dataType:"json",
+                   async:false,
+                   beforeSend : function(xhr){
+                      xhr.setRequestHeader(header, token);
+                   },
+                   success:function(data){
+                      if(data > 0) {
+                        toastr.success("삭제에 성공하였습니다!");
+                         showAll();
+                         lineForm.reset();
+                         
+                      } else {
+                         Swal.fire({
+                             icon: 'error',
+                             title: '삭제실패',
+                             text: '라인에 연결된 설비가 있습니다. 해당 설비를 별도의 라인으로 변경하십시오.',
+                             footer: '<a href="eqmList">설비관리페이지로 이동</a>'
+                           })
+                          lineForm.reset();
+                      }
+                   }, error : function(reject){
+                      console.log(reject);
+                   }
+                   
+                })
+             }
             
             function updateLine(){
                let lineNo = $('#lineNo').val();
@@ -452,21 +496,15 @@
 			    
 			    // 등록 
 				   function insUoprCode(){
-					   let code = $('#code').val();
-		               let divName = $('#divName').val();
-		               let codeName = $('#codeName').val();
-		               let divCode = $('#divCode').val();
-					   
-		                let insUopr={code,divName,codeName,divCode};
-						
-		       	
+					  
+					let uoperForm = $('#uoperForm').serialize();		       	
 					   
 		           let header = $("meta[name='_csrf_header']").attr('content');
 		           let token = $("meta[name='_csrf']").attr('content');
 		           $.ajax({
 		              url : "insUoprCode",
 		              method : "POST",
-		              data : insUopr,
+		              data : uoperForm,
 		              dataType:"json",
 		              async: false,
 		              beforeSend : function(xhr) {
@@ -476,8 +514,10 @@
 		            	  if(data > 0) {
 		            		  toastr.success("등록 되었습니다!");
 		            		  uoper();
+		            		  uoperForm.reset();
 		                   } else {
 		                      alert("입력실패!");
+		                      uoperForm.reset();
 		                   }
 		                },
 		              error : function(reject) {
@@ -524,7 +564,7 @@
 		               
 		            }); 
 		            
-		           /*  function deleteUoperCd(){
+		           function deleteUoperCd(){
 		               
 		               let deleteUoperCd = [];
 		               
@@ -570,12 +610,11 @@
 		                     console.log(reject);
 		                  }
 		               });
-		            } */
+		            } 
 		            
 		            //등록, 수정, 삭제 후 input 태그 값들 초기화
 		            // stringify() => eqmForm.reset(); 하면 form으로 시리얼라이즈한 값들이 쉽게 초기화됨. 
 		           function resetVal(){
-		            		$('#code').val('');
 		                	$('#codeName').val('');
 		            
 		                }

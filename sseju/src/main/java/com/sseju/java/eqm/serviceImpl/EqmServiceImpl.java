@@ -98,12 +98,7 @@ public class EqmServiceImpl implements EqmService {
       return eqmMapper.updateEqmChk(eqmVO);
    }
 
-   @Override
-   public int deleteEqmChk(EqmVO eqmVO) {
-      // TODO Auto-generated method stub
-      return eqmMapper.deleteEqmChk(eqmVO);
-   }
-
+ 
 @Override
 public List<EqmVO> getUoperList() {
 	// TODO Auto-generated method stub
@@ -118,17 +113,8 @@ public int insertUoper(EqmVO eqmVO) {
 }
 
 @Override
-public int deleteUoper(List<String> deleteUoper) {
-	int a = 0;
-	for (int i = 0; i < deleteUoper.size(); i++) {
-		String line1 = deleteUoper.get(i);
-
-		EqmVO vo = new EqmVO();
-		vo.setUoperCode(line1);
-		a += eqmMapper.deleteUoper(vo);
-	}
-
-	return a;
+public int deleteUoper(EqmVO eqmVO) {
+	return eqmMapper.deleteUoper(eqmVO);
 }
 
 @Override
@@ -209,17 +195,9 @@ public List<EqmVO> getChkList() {
 	return eqmMapper.getChkList();
 }
 
-@Override
-public String eqmLineEx(EqmVO eqmVO) {
-	// TODO Auto-generated method stub
-	return null;
-}
 
-@Override
-public int deleteEqmLine(EqmVO eqmVO) {
-	// TODO Auto-generated method stub
-	return 0;
-}
+
+
 
 @Override
 public EqmVO getEqmInfo(EqmVO eqmVO) {
@@ -240,8 +218,126 @@ public List<CodeVO> getUoperCode() {
 @Override
 public int updateUoprCd(CodeVO vo) {
 	// TODO Auto-generated method stub
-	return cdMapper.updateCode(vo);
+	int a = 0;
+	a += eqmMapper.updateUoprCd(vo);
+	return a;
 }
+
+
+
+@Override
+public int insUoprCode(CodeVO vo) {
+	int a = 0;
+	a += eqmMapper.insUoprCode(vo);
+	return a;
+}
+
+
+
+@Override
+public List<EqmVO> getFixingList() {
+	
+	return eqmMapper.getFixingList();
+}
+
+
+
+
+
+
+@Override
+public int updateFix(EqmVO eqmVO) {
+	// TODO Auto-generated method stub
+	int a = 0;
+	a += eqmMapper.updateFix(eqmVO);
+	//a += eqmMapper.updIng(eqmVO);
+	return a;
+}
+
+
+
+/*
+ * @Override public int delFix(List<String> delFix) { int a = 0; for (int i = 0;
+ * i < delFix.size(); i++) { String line1 = delFix.get(i);
+ * 
+ * EqmVO vo = new EqmVO(); vo.setFixNo(line1); a += eqmMapper.delFix(vo); }
+ * return a; }
+ */
+
+
+
+@Override
+public List<EqmVO> getReqList() {
+	// TODO Auto-generated method stub
+	return eqmMapper.getReqList();
+}
+
+
+
+@Override
+public int fixingDel(EqmVO eqmVO) {
+	// TODO Auto-generated method stub
+	return eqmMapper.fixingDel(eqmVO);
+}
+
+
+
+@Override
+public int insFix(EqmVO eqmVO) {
+	// TODO Auto-generated method stub
+	return eqmMapper.insFix(eqmVO);
+}
+
+
+
+@Override
+public List<EqmVO> getFixedList() {
+	// TODO Auto-generated method stub
+	return eqmMapper.getFixedList();
+}
+
+
+
+@Override
+public int fixedDel(EqmVO eqmVO) {
+	// TODO Auto-generated method stub
+	return eqmMapper.fixedDel(eqmVO);
+}
+
+
+
+
+
+
+
+
+@Override
+public int deleteUoperCd(List<String> deleteUoperCd) {
+	int a = 0;
+	for (int i = 0; i < deleteUoperCd.size(); i++) {
+		String line1 = deleteUoperCd.get(i);
+
+		CodeVO vo = new CodeVO();
+		vo.setCode(line1);
+		a += eqmMapper.deleteUoperCd(vo);
+	}
+	return a;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

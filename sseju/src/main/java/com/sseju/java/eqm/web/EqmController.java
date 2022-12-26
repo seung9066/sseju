@@ -49,7 +49,8 @@ public class EqmController {
 	@PostMapping("insUoprCode")
 	@ResponseBody
 	public int insUoprCode(CodeVO vo) {
-	 return cdService.insertCode(vo);
+	 System.out.println("결과" + vo);
+	 return eqmService.insUoprCode(vo);
 	}
 
 	// 거래처 정보
@@ -65,6 +66,16 @@ public class EqmController {
 	   public List<EqmVO> getEmpList(){
 	      return eqmService.getEmpList();
 	   }
+	  
+		/*
+		 * // 직원 정보
+		 * 
+		 * @GetMapping("getReqList")
+		 * 
+		 * @ResponseBody public List<EqmVO> getReqList(){ EqmVO vo = new EqmVO();
+		 * vo.setEqmCode(vo.getEqmCode()); vo.setFix_req_date(vo.getChkNdate());
+		 * vo.setFix_state("수리요청"); return eqmService. }
+		 */
 
 
 	@GetMapping("/eqmList")
@@ -92,6 +103,15 @@ public class EqmController {
 		model.addAttribute("line", eqmService.getEqmLineList());
 		return "admin/eqm/eqmUoper";
 	}
+	
+	@GetMapping("/eqmFixed")
+	public String eqmFixed(Model model) {
+		model.addAttribute("line", eqmService.getEqmLineList());
+		model.addAttribute("eqm", eqmService.selectEqmList());
+		return "admin/eqm/eqmFixed";
+	}
+	
+	
 	
 	@GetMapping("/eqmState")
 	public String eqmState() {
@@ -140,12 +160,32 @@ public class EqmController {
 		return eqmService.getChkList();
 	}
 	
+	// 정기점검에서 '수리요청' 들어간 애들만 가져오기
+		@GetMapping("/getReqList")
+		@ResponseBody
+		public List<EqmVO> getReqList(){
+		
+			return eqmService.getReqList();
+		}
+	
 	
 
 	@GetMapping("/uoperList")
 	@ResponseBody
 	public List<EqmVO> uoperList() {
 		return eqmService.getUoperList();
+	}
+	
+	@GetMapping("/getFixingList")
+	@ResponseBody
+	public List<EqmVO> getFixingList() {
+		return eqmService.getFixingList();
+	}
+	
+	@GetMapping("/getFixedList")
+	@ResponseBody
+	public List<EqmVO> getFixedList() {
+		return eqmService.getFixedList();
 	}
 
 	@PostMapping("/deleteEqm")
@@ -155,11 +195,7 @@ public class EqmController {
 	}
 	
 
-	@PostMapping("/deleteUoper")
-	@ResponseBody
-	public int deleteUoper(@RequestParam(value = "deleteUoper[]", required = false) List<String> deleteUoper) {
-		return eqmService.deleteUoper(deleteUoper);
-	}
+	
 	
 	@PostMapping("/deleteChk")
 	@ResponseBody
@@ -255,13 +291,23 @@ public class EqmController {
 		@RequestMapping("/updateUoprCd")
 		@ResponseBody
 		public int updateUoprCd(@RequestBody CodeVO vo) {
-			
-			return cdService.updateCode(vo);
+			return eqmService.updateUoprCd(vo);
 		}
+	
+	// 비가동 공통코드 삭제
+		@PostMapping("/deleteUoperCd")
+		@ResponseBody
+		public int deleteUoperCd(@RequestParam(value = "deleteUoperCd[]"
+				+ "", required = false) List<String> cd) {
+			return eqmService.deleteUoperCd(cd);
+		}
+		
+		
+
 
 	@PostMapping("/deleteLine")
 	@ResponseBody
-	public int deleteLine(@RequestParam(value = "line[]"
+	public int deleteLine(@RequestParam(value = "delLine[]"
 			+ "", required = false) List<String> line) {
 		return eqmService.deleteLine(line);
 	}
@@ -277,6 +323,64 @@ public class EqmController {
 	public int updateChk(@RequestBody EqmVO eqmVO) {
 		return eqmService.updateEqmChk(eqmVO);
 	}
+	
+	// 수리이력 등록
+		@PostMapping("/insFix")
+		@ResponseBody
+		public int insFix(@RequestBody List<EqmVO> list) {
+			int a = 0;
+			for(int i = 0; i<list.size(); i++) {
+				System.out.println("for문");
+				a += eqmService.insFix(list.get(i));
+			}
+			return a;
+		}
+		
+	// 수리이력 수정
+		@PostMapping("updateFix")
+		@ResponseBody
+		public int updateFix(@RequestBody List<EqmVO> updList) {
+			int a = 0;
+			for(int i = 0; i<updList.size(); i++) {
+				a += eqmService.updateFix(updList.get(i));
+			}
+			return a;
+		}
+	
+		// 수리중 삭제
+				@PostMapping("fixingDel")
+				@ResponseBody
+				public int fixingDel(@RequestBody List<EqmVO> fixingList) {
+					int a = 0;
+					for(int i = 0; i<fixingList.size(); i++) {
+						a += eqmService.fixingDel(fixingList.get(i));
+					}
+					return a;
+				}
+				
+				// 수리완료 삭제
+				@PostMapping("fixedDel")
+				@ResponseBody
+				public int fixedDel(@RequestBody List<EqmVO> fixedList) {
+					int a = 0;
+					for(int i = 0; i<fixedList.size(); i++) {
+						a += eqmService.fixedDel(fixedList.get(i));
+					}
+					return a;
+				}
+				
+				// 비가동 내역 삭제
+				@PostMapping("/deleteUoper")
+				@ResponseBody
+				public int deleteUoper(@RequestBody List<EqmVO> uoperList) {
+					int a = 0;
+					for(int i=0; i<uoperList.size(); i++) {
+						a += eqmService.deleteUoper(uoperList.get(i));
+					}
+					return a;
+				}
+	
+	
 	
 	
 	
