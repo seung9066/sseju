@@ -273,7 +273,7 @@
 		var token = $("meta[name='_csrf']").attr("content");
 		var header = $("meta[name='_csrf_header']").attr("content");
 		
-new Vue({
+/* new Vue({
 	el: '#msg',
 	data : {
 		msgCount: 0
@@ -299,7 +299,7 @@ new Vue({
 				})
 		}
 	}
-})
+}) */
 
 // toastr
 toastr.options = {
@@ -311,7 +311,7 @@ toastr.options = {
        "timeOut" : 2500
 }
 
-let msgList = [];
+/** let msgList = [];
 let msgListNo = [];
 
 
@@ -470,7 +470,8 @@ function msgListClick(a) {
 	} else if (msgContent.includes('제품')) {
 		location.href = "/lotTrack"
 	}
-}
+	*/
+} 
 </script>
 	</header>
 	<!-- End Header -->
@@ -612,6 +613,8 @@ function msgListClick(a) {
 						<li><a href="/eqmCheck"> <i class="bi bi-circle"></i><span>설비점검관리</span>
 						</a></li>
 						<li><a href="/eqmUoper"> <i class="bi bi-circle"></i><span>비가동관리</span>
+						</a></li>
+						<li><a href="/eqmFixed"> <i class="bi bi-circle"></i><span>설비수리현황</span>
 						</a></li>
 						<li><a href="/eqmState"> <i class="bi bi-circle"></i><span>설비가동현황</span>
 						</a></li>

@@ -141,23 +141,40 @@
 		WHERE line_no = #{lineNo}
 	</update>
 
-	<!-- 라인정보 삭제 : 설비가 N(비가동)인 라인들만 삭제가능 -->
-	<delete id="deleteEqmLine" parameterType="EqmVO">
-		DELETE 
-		FROM eqm_line l 
-		WHERE l.LINE_NO = (SELECT e.LINE_NO FROM EQM e WHERE e.EQM_YN = 'N' AND e.LINE_NO = #{lineNo})
-	</delete>
-	
+	<!-- 라인정보 삭제 : 설비가 없으면 바로 삭제 / 설비가 연결돼있으면 삭제불가능 => 다른 라인으로 수정해야 됨 -->
+   <delete id="deleteEqmLine" parameterType="EqmVO">
+      DELETE 
+      FROM eqm_line l 
+      WHERE l.line_no = #{lineNo}
+      AND l.line_no NOT IN (SELECT q.line_no 
+                   FROM eqm q JOIN eqm_line l
+                   ON q.line_no = l.line_no
+                   )
+      
+   </delete>
+   
+   <insert id="insUoprCode" parameterType="CodeVO">
+   		<selectKey keyProperty="code" resultType="String" order="BEFORE">
+   			SELECT 'UOR_' || LPAD(NVL(MAX(SUBSTR((select code from CODE WHERE code LIKE 'UOR%'),-3)),0)+1,3,0) 
+   			FROM code
+   		</selectKey>
+   		INSERT INTO CODE (code, div_name,code_name,div_code)
+   		VALUES (#{code},
+   				#{divName},
+   				#{codeName},
+   				#{divCode}
+   				)
+   </insert>
 
 
 	<!-- 정기점검 전체조회 -->
 	<select id="getEqmChkList" resultType="EqmVO">
-
-    SELECT c.CHK_NO,
-	        c.CHK_DATE, c.CHK_NDATE, c.CHK_STATE, c.CHK_SOL,
-	        c.chk_emp_no,q.EQM_CODE, q.EQM_NAME, q.eqm_check, q.eqm_check_term,q.line_no
+	 SELECT c.CHK_NO,
+           c.CHK_DATE, c.CHK_NDATE, c.CHK_STATE, c.CHK_SOL,
+           c.chk_emp_no,q.EQM_CODE, q.EQM_NAME, q.eqm_check, q.eqm_check_term,q.line_no
       FROM EQM_CHK c
       JOIN EQM q ON c.eqm_code = q.eqm_code
+   
     </select>
 
 	<!-- 정기점검 등록 -->
@@ -188,11 +205,14 @@
 	
 	<!-- 정기점검 모달 가져오기 -->
 	<select id="getChkList" resultType="EqmVO">
+		
 		SELECT q.eqm_code,q.eqm_name,q.eqm_check,q.eqm_check_term,c.chk_date,c.chk_ndate
 		FROM EQM_CHK c
 		JOIN EQM q
 		ON c.eqm_code = q.eqm_code
-		
+		WHERE c.chk_ndate is not null
+        AND  TO_DATE(c.chk_ndate,'YYYY-MM-DD')- TO_DATE(SYSDATE,'YYYY-MM-DD') &lt; 30
+       
 	</select>
 	
 	<!-- 정기점검일 update하기 -->
@@ -286,8 +306,9 @@
 		
 	<!-- 비가동 삭제 -->
 	<delete id="deleteUoper" parameterType="EqmVO">
-		DELETE FROM EQM_UOPER
-		WHERE uoper_code = #{uoperCode}
+		DELETE FROM EQM_UOPER u
+		WHERE u.uoper_code = #{uoperCode}
+		AND u.EQM_CODE = (SELECT DISTINCT q.EQM_CODE FROM EQM q WHERE q.EQM_YN = 'Y' AND EQM_CODE = #{eqmCode})
 	</delete>
 	
 
@@ -326,15 +347,94 @@
 	<update id="updateUoprCd" parameterType="CodeVO">
 		UPDATE CODE
 		<set>
-		<if test="code != null and !code.equals('')">
-			code = #{code},
-		</if>
 		<if test="codeName != null and !codeName.equals('')">
-			codeName = #{codeName}
+			code_name = #{codeName}
 		</if>
 		</set>
-		WHERE div_code = 'UOR'
+		WHERE code = #{code}
 	</update>
+	
+	<delete id="deleteUoperCd" parameterType="CodeVO">
+		DELETE FROM CODE
+		WHERE code = #{code}
+	</delete>
+	
+	<!-- '정기점검'리스트에서 '수리요청' 들어간 것만 찾아오기 -->
+	<select id="getReqList" resultType="EqmVO">
+		SELECT q.EQM_CODE	, c.CHK_DATE, c.CHK_SOL , c.CHK_NO
+		FROM EQM_CHK c
+		JOIN EQM q
+		ON q.eqm_code = c.eqm_code
+		WHERE c.CHK_SOL = '수리요청'
+		ORDER BY 2 DESC
+	</select>
+	
+	<!-- "수리중" 전체조회-->
+	<select id="getFixingList" resultType="EqmVO">
+		SELECT *
+	    FROM EQM_FIX
+	    WHERE fix_state = '수리중' 
+	    ORDER BY FIX_NO
+	</select>
+	
+	<!-- 수리이력 등록 -->
+	<insert id="insFix" parameterType="EqmVO">
+		<selectKey keyProperty="fixNo" resultType="String"
+			order="BEFORE">
+			SELECT 'fix' ||
+					LPAD(NVL(MAX(SUBSTR(fix_no,	-3)),0)+1,3,0) 
+			  FROM eqm_fix
+		</selectKey>
+		INSERT INTO EQM_FIX (fix_no, eqm_code,fix_req_date,fix_str_date,fix_state)
+		VALUES(
+				#{fixNo},
+				#{eqmCode},
+				#{fixReqDate},
+				#{fixStrDate},
+				#{fixState}
+		)
+	</insert>
+	
+	<!-- 수리이력 수정 -->
+	<update id="updateFix" parameterType="EqmVO">
+		UPDATE EQM_FIX
+		<set>
+			<if test="fixEndDate != null and !fixEndDate.equals('')">
+				fix_end_date = #{fixEndDate},
+			</if>
+			<if test="fixState != null and !fixState.equals('')">
+				fix_state = #{fixState},
+			</if>
+			<if test="fixSol != null and !fixSol.equals('')">
+				fix_sol = #{fixSol},
+			</if>
+				fix_num = #{fixNum},
+				fix_price = #{fixPrice},
+			<if test="fixNum != null and !fixNum.equals('') and fixPrice != null and !fixPrice.equals('')">
+				fix_tot_prc = #{fixNum} * #{fixPrice}
+			</if>
+		</set>
+		WHERE fix_state = '수리중' AND fix_no = #{fixNo}
+	</update>
+	
+	<!-- "수리완료" 전체조회 -->
+	<select id="getFixedList" resultType="EqmVO">
+		SELECT * 
+		FROM EQM_FIX
+		WHERE FIX_STATE = '수리완료'
+	</select>
+	
+	<!-- "수리중" 삭제 -->
+	<delete id="fixingDel" parameterType="EqmVO">
+		DELETE FROM EQM_FIX
+		WHERE FIX_NO = #{fixNo} AND FIX_STATE = '수리중'
+	</delete>
+	
+	<!-- 수리완료 삭제 -->
+	<delete id="fixedDel" parameterType="EqmVO">
+		DELETE FROM EQM_FIX
+		WHERE FIX_NO = #{fixNo} AND FIX_STATE = '수리완료'
+	</delete>
 
 
 

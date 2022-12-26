@@ -41,7 +41,7 @@ public class EqmVO {
    private String cpTel;
    
    //
-   private String code; 
+   private String uorCode; 
    private String divName;
    private String codeName;
    private String divCode;
@@ -78,6 +78,24 @@ public class EqmVO {
    private String uoperStartTime; //비가동 시작시간
    private String uoperEndTime; // 재가동 시간
    private String uoperRsnCode; // 비가동사유 코드
+   
+   // 수리
+   private String fixNo; // 수리이력번호
+   @DateTimeFormat(pattern = "yyyy-MM-dd")
+   @JsonFormat(pattern = "yyyy-MM-dd")
+   private Date fixReqDate;
+   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+   @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+   private Date fixStrDate;
+   @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+   @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+   private Date fixEndDate;
+   private String fixState;
+   private String fixSol;
+   private int fixNum;
+   private int fixPrice;
+   private int fixTotPrc;
+  
    
    
 

@@ -45,10 +45,17 @@ img {
 .table  td  input {
 	width: 150px;
 }
+.table *{
+	vertical-align: middle;
+}
 
 .showModal {
 	/* 커서 손모양 */
 	cursor: pointer;
+}
+
+#work *{
+	vertical-align: middle;
 }
 
 </style>
@@ -67,13 +74,11 @@ img {
 	<article layout:fragment="content">
 		<main id="main" class="main">
 			<h4>
-				<strong>비가동 관리</strong>
+				<b>비가동 관리</b>
 			</h4>
 			<div class="row">
 				<div class="col-6">
-					<h5>
-						<b>설비조회</b>
-					</h5>
+					
 					<hr>
 					<div>
 						<label style="padding-right: 15px;">설비현황</label> <input
@@ -126,8 +131,7 @@ img {
 
 							<th class="col1">비가동사유</th>
 							<td><input type="text" id="uoperRsn" name="uoperRsn" data-bs-toggle="modal" data-bs-target="#rsnModal" class="showModal" readonly></td>
-						</tr>
-						<tr>
+						
 
 							<th class="col1">작업자</th>
 							<td><input type="text" name="empId" id="empId"
@@ -141,25 +145,23 @@ img {
 									<p>비가동</p>
 								</button>
 							</th>
-							<td><input type="text" id="uoperStartTime"
+							<td><input type="text" id="uoperStartTime" style="width:160px;"
 								name="uoperStartTime"></td>
 
 							<th><button type="button" id="strBtn" disabled>
 									<img src="assets/img/play-button.png" alt="play이미지">
 									<p>재가동</p>
 								</button></th>
-							<td><input type="text" id="uoperEndTime" name="uoperEndTime"></td>
+							<td><input type="text" id="uoperEndTime" name="uoperEndTime" style="width:160px;"></td>
 						</tr>
-						<tr id="work" style="display: none;">
-							<th class="col1">작업내용</th>
-							<td><textarea placeholder="종료 누른 후에 입력가능.." id="uoperWork"
-									name="uoperWork" style="width: 250px;"></textarea></td>
-							<td><input type="hidden" id="uoperCode" name="uoperCode"></td>
-						</tr>
-						<tr>
+						
 					</table>
-
-				</div>
+					<div id="work" style="display:none;">
+					<label for="uoperWork"><b>작업내용</b></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<textarea id="uoperWork"
+										name="uoperWork" style="width: 250px;"></textarea>
+								<input type="hidden" id="uoperCode" name="uoperCode">	
+					</div>
 
 			</div>
 			<!-- 사원 모달  -->
@@ -252,11 +254,6 @@ img {
 				});  
 			 
 		
-						
-				  
-			
-				   
-
 			 	  // 사원 모달-그리드
 				   var empgrid = new tui.Grid({
 		               el : document.getElementById('empgrid'),
@@ -455,12 +452,7 @@ img {
 	             });
 
 	                
-	           /*  eqmReset.addEventListener('click', () => {
-	                document.getElementById('lineSearch').value = '';
-	                eqmGrid.unfilter('lineNo');
-	               
-	             })  */  
-                
+	      
                 
 	            eqmGrid.on("click", event => {
 	                // 설비가 가동중('Y')일때만 등록 input 태그에다 뿌려주기 & 등록 폼 보여주기
@@ -490,7 +482,6 @@ img {
 	            	
 	            	console.log(eqmCode);
 	            	var data = {'uoperCode':uoperCode, 'eqmCode':eqmCode, 'eqmName' : eqmName , 'uoperRsn':uoperRsn,'empId':empId,'uoperStartTime':uoperStartTime,'uoperEndTime':uoperEndTime,'uoperWork':uoperWork}
-	            	console.log("====",data);
 	            	$.ajax({
 	            		url:'insertUoper',
 	            		type : 'POST',
@@ -531,17 +522,15 @@ img {
 					columns : [ {
 						header : '비가동',
 						name : 'uoperCode',
-						width : 70
+						width:70
 					}, {
 						header : '설비코드',
 						name : 'eqmCode',
 						align : 'center',
-						width : 80
 					}, {
 						header : '설비명',
 						name : 'eqmName',
 						align : 'center',
-						width : 80
 					}, {
 						header : '시작시간',
 						name : 'uoperStartTime'
@@ -552,17 +541,16 @@ img {
 						header : '비가동사유',
 						name: 'uoperRsn',
 						align : 'center',
-						width : 80
+						width : 78
 					}, {
 						header : '담당자',
 						name : 'empId',
 						align : 'center',
-						width : 30
+						width : 60
 					}, {
 						header : '작업내용',
 						name : 'uoperWork',
 						align : 'center',
-						width : 100
 					} ]
 				});
 				
@@ -632,14 +620,17 @@ img {
 		            
 		            function deleteUoper(){
 		                
-		                let deleteUoper = [];
-		                for(eq of uoperGrid.getCheckedRows()){
+		               /*  for(eq of uoperGrid.getCheckedRows()){
 		                	deleteUoper.push(eq.uoperCode);
-		                }
+		                } */
+		                
+		                let deleteUoper = uoperGrid.getCheckedRows();
+		                
 		                $.ajax({
 		                   url:'deleteUoper',
 		                   type:'POST',
-		                   data : {deleteUoper:deleteUoper},
+		                   contentType : 'application/JSON',
+		                   data : JSON.stringify(deleteUoper),
 		                   dataType:"json",
 		                   async:false,
 		                   beforeSend : function(xhr){
@@ -651,7 +642,11 @@ img {
 		                         uoperShow();
 		                         reset();
 		                      } else {
-		                         alert("삭제실패");
+		                    	  Swal.fire({
+		                    		  icon: 'error',
+		                    		  title: '삭제실패!',
+		                    		  text : '현재 비가동중입니다. 재가동 후 다시 시도하세요'
+		                    		})
 		                      }
 		                   },
 		                   error:function(reject){

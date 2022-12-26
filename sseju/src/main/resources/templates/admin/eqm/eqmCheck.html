@@ -23,7 +23,6 @@
 <!--FileSaver savaAs 이용 -->
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
 
 
 
@@ -132,19 +131,19 @@ table, th, td {
 	<article layout:fragment="content">
 		<main id="main" class="main">
 			<h4>
-				<strong>설비점검관리</strong>
+				<strong>설비 점검관리</strong>
 			</h4>
 
 			<hr>
 			<div id="input-group">
 				<ul class="ul-style">
 					<li><div>
-							<label for="chkDate" style="width: 100px">차기점검일</label> <input
+							<label for="chkDate" style="width: 100px"><b>차기점검일</b></label> <input
 								type="date" class="form-control"
 								style="width: 200px; display: inline" id="chkDateInput">&nbsp;~
 							<input type="date" class="form-control"
 								style="width: 200px; display: inline" id="chkNdateInput">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<label style="width: 100px">라인명</label> <select name="lineNo"
+							<label style="width: 100px"><b>라인명</b></label> <select name="lineNo"
 								id="lineNo">
 								<option selected>--전체--</option>
 								<th:block th:each="li:${line}">
@@ -182,6 +181,7 @@ table, th, td {
 			<input type="hidden" th:name="${_csrf.parameterName}"
 				th:value="${_csrf.token}" />
 			<div id='dis' style="display: none;" class="row">
+			<form id="chkForm">
 				<div>
 					<div style="float: right;">
 
@@ -207,7 +207,7 @@ table, th, td {
 									<option value="">--선택--</option>
 									<option value="해당사항없음">해당사항없음</option>
 									<option value="수리요청">수리요청</option>
-									<option value="" id="direct">직접입력</option>
+									<option value="direct" >직접입력</option>
 							</select> <input type="text" id="selboxDirect" name="selboxDirect" /></td>
 
 						</tr>
@@ -231,7 +231,7 @@ table, th, td {
 						</tr>
 					</table>
 				</div>
-
+			</form>
 			</div>
 
 			<div id="insertGrid"></div>
@@ -311,7 +311,7 @@ table, th, td {
 
 
 
-			<script type="text/javascript">
+			<script>
          function dis(){
             if($('#dis').css('display') == 'none'){
                $('#dis').show();
@@ -322,17 +322,20 @@ table, th, td {
             
             // '직접입력 인풋박스'
             $(function(){
+            	// 기존엔 숨어있다가
             	$('#selboxDirect').hide();
             	
-          $("#chkSol").change(function() {
-
-    		if($("#direct").on('click')) {
-    			$("#selboxDirect").show();
-    		}  else {
-    			$("#selboxDirect").hide();
-    		}
-    	}) 
+		          $("#chkSol").change(function() {
+					// 직접입력을 누를때 나타남
+		    		if($("#chkSol").val() == "direct") {
+		    			$("#selboxDirect").show();
+		    		}  else {
+		    			$("#selboxDirect").hide();
+		    		}
+		    	}) 
             });
+            
+            
          document.addEventListener('shown.bs.modal', function (){
                 eqmGrid.refreshLayout();
                 }, '.modal');
@@ -476,16 +479,14 @@ table, th, td {
                   align : 'center',
                   formatter({value}){
                 	  return `${value.substring(0,10)}`;
-                  },
+                  }, 
                   filter:'text'
                   
                }, {
                   header : '차기점검일',
                   name : 'chkNdate',
                   align : 'center',
-                  formatter({value}){
-                	  return `${value.substring(0,10)}`;
-                  },
+                 
                 
                 filter:'text'
                   
@@ -642,7 +643,8 @@ table, th, td {
                     		    Swal.fire(
                     		      '삭제성공','','success'
                     		    )
-                    		    chkList();    
+                    		    chkList();  
+                    		    chk();// 설비점검예정리스트 새로고침
                                 reset();
                     		  }
                     		})
@@ -707,19 +709,13 @@ table, th, td {
                 })
              }
             
-           // 몰라
+         
             function chkList() {
                 
                 fetch("eqmChkList") 
                 .then(res=>res.json())
                 .then(obj=>{
                     chkGrid.resetData(obj);
-                    /*obj.forEach((item,index,arr) => {
-                    	if(getDateDiff(sysdate,$('#chkNdate')) <0){
-                    		background-color : red;
-                    	}
-                    }*/
-                
          })
            }
             
@@ -731,51 +727,45 @@ table, th, td {
 		   
 		   // 등록 
 		   function insertChk(){
-			   let chkNo = $('#chkNo').val();
-               let eqmCode = $('#eqmCode').val();
-               let eqmName = $('#eqmName').val();
-               let chkDate = $('#chkDate').val();
-               let chkNdate = $('#chkNdate').val();
-               let chkState = $('input[name="chkState"]:checked').val();
-               let chkSol = $('#chkSol option:selected').val();
-               let chkEmpNo = $('#chkEmpNo').val();
-			   
-                let insChk={'chkNo':chkNo, 'eqmCode':eqmCode,'eqmName':eqmName, 'chkDate':chkDate, 'chkNdate':chkNdate, 'chkState':chkState, 'chkSol':chkSol, 'chkEmpNo':chkEmpNo};
+			  
+             var insChk= $('#chkForm').serialize();
+             
+             var eqmCode = document.getElementById("eqmCode");
+             var chkDate = document.getElementById("chkDate");
+             var chkNdate= document.getElementById("chkNdate");
+             var chkEmpNo= document.getElementById("chkEmpNo");
 				
-             // 유효성 체크 : 차기점검일이 점검일 보다 빠르면 alert창 뜨면서 값 들어가지 못하게 하기        
-	               var date1 = new Date($('#chkDate').val());
-	  			   var date2 = new Date($('#chkNdate').val());
+             // 유효성 체크 1) 빈값이면 에러메세지
+             
+             if(eqmCode.value == ''){
+            	 toastr.error("설비코드를 선택해주세요");
+                 lineNo.focus(); // 커서가 깜빡이는 현상.
+                 return false; // 아무것도 반환하지 마라. 밑에 코드부터 진행하지 말것.
+             }
+             if(chkDate.value == ''){
+            	 toastr.error("점검일자를 선택해주세요");
+            	 chkDate.focus(); 
+                 return false; 
+             }
+            /*  if(chkNdate.value == ''){
+            	 toastr.error("차기점검일자를 선택해주세요");
+            	 chkNdate.focus(); 
+                 return false; 
+             } */
+             if(chkEmpNo.value == ''){
+            	 toastr.error("담당자를 선택해주세요");
+            	 chkEmpNo.focus(); 
+                 return false; 
+             }
+             
+             // 유효성 체크 2) 차기점검일이 점검일 보다 빠르면 alert창 뜨면서 값 들어가지 못하게 하기
+             	// chkDate.value()는 오류
+			if(chkNdate.value != '' && chkDate.value > chkNdate.value){
+				toastr.error("차기점검일보다 점검일이 더 큽니다!");
+				chkEmpNo.focus();
+				return false;
+			}
 	              
-	              if(date1.getTime() > date2.getTime()){
-	                 toastr.warning('차기점검일을 정확하게 입력하세요!');
-	                 $('#chkNdate').val('');
-	                 date2.focus();
-	                 return false;
-	              }
-	              
-	         // 점검일 입력하면 자동으로 차기점검일 계산해서 입력
-	   		 $(document).ready(function(){			
-				$("#chkDate").mouseleave(function() { 
-	   			   var date = $('#chkDate').val(); // date :string타입
-	                  date = new Date(date); // string -> date타입으로
-	                  
-	                  if($('#eqmCheckTerm').val() == '일'){
-	                     var a = new Date(date.getFullYear() , date.getMonth(),date.getDate()+ parseInt($('#eqmCheck').val()));
-	                     $('#chkNdate').val(toStringByFormatting(a));
-	                  }else if($('#eqmCheckTerm').val() == '달'){
-	                     var b = new Date(date.getFullYear() , date.getMonth()+ parseInt($('#eqmCheck').val()),date.getDate());
-	                     $('#chkNdate').val(toStringByFormatting(b));
-	                  }else if($('#eqmCheckTerm').val() == '년'){
-	                     var c = new Date(date.getFullYear()+ parseInt($('#eqmCheck').val()) , date.getMonth(),date.getDate());
-	                     $('#chkNdate').val(toStringByFormatting(c));
-	                  }
-	   		   })});
-	   		   
-	   			   
-	   		   
-     	
-       	
-			   
            let header = $("meta[name='_csrf_header']").attr('content');
            let token = $("meta[name='_csrf']").attr('content');
            $.ajax({
@@ -791,6 +781,7 @@ table, th, td {
             	  if(data > 0) {
             		  toastr.success("등록 되었습니다!")
             		  chkList();
+            		  chk();
                       reset();
                    } else {
                       alert("입력실패!");
@@ -802,13 +793,7 @@ table, th, td {
            });
     		} 
 		   
-		   
-            
-	
-			  
-			  
-		  
-		 
+		
 		   
 		   // 설비코드 모달-그리드
 		   var eqmGrid = new tui.Grid({
@@ -967,7 +952,7 @@ table, th, td {
                     align : 'center',
                     formatter({value}){
                   	  return `${value.substring(0,10)}`;
-                    },
+                    }, 
                     renderer: {
                         styles: {
                           fontWeight: 'bold',
